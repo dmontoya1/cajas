@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=cajas
+POSTGRES_USER=offIdZZyrifEHVkimoPTqiSozqvfSPOK
+POSTGRES_PASSWORD=OfUzaYipMuNqQUjc0zcpLvsXPdwbHm62rR7MB8f1APkzPznLZCgYbtWZ1glz0onW
