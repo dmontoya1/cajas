@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = [
 ]
 LOCAL_APPS = [
     'cajas.users.apps.UsersAppConfig',
+    'cajas.general_config.apps.GeneralConfigConfig',
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

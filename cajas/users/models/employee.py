@@ -67,7 +67,6 @@ class Employee(models.Model):
         return 'Empleado {} con cargo {}'.format(self.user.get_full_name(), self.get_employee_type_display())
 
 
-
     class Meta:
         verbose_name = 'Empleado'
         verbose_name_plural = 'Empleados'
