@@ -16,6 +16,11 @@ class Country(models.Model):
         'Nombre',
         max_length=255,
     )
+    abbr = models.CharField(
+        'Abreviatura',
+        max_length=255,
+        help_text='MXN, COL, HON, GUA'
+    )
     currency = models.ForeignKey(
         Currency,
         verbose_name='Divisa',

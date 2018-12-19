@@ -22,7 +22,7 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # though not all of them may be available with every OS.
 # In Windows, this must be set to your system time zone.
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = 'es-co'
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
@@ -72,7 +72,9 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'cajas.users.apps.UsersAppConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
-    # Your stuff: custom apps go here
+    'cajas.office.apps.OfficeConfig',
+    'cajas.inventory.apps.InventoryConfig',
+    'cajas.movement.apps.MovementConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

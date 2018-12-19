@@ -28,7 +28,7 @@ class User(AbstractUser):
     )
     is_abstract = models.BooleanField(
         "Tiene acceso a la plataforma?",
-        default=False
+        default=True
     )
 
     def __str__(self):

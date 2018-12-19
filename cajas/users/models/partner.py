@@ -18,10 +18,12 @@ class Partner(models.Model):
 
     DIRECTO = 'DIR'
     INDIRECTO = 'INDIR'
+    DONJUAN = 'DJ'
 
     PARTNER_TYPE = (
         (DIRECTO, 'Directo'),
-        (INDIRECTO, 'Indirecto')
+        (INDIRECTO, 'Indirecto'),
+        (DONJUAN, 'Don Juan')
         
     )
 
@@ -43,6 +45,7 @@ class Partner(models.Model):
         'self',
         verbose_name='Socio Directo',
         on_delete=models.CASCADE,
+        blank=True, null=True
     )
 
     def get_full_name(self):
