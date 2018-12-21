@@ -27,7 +27,7 @@ class Partner(models.Model):
         
     )
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE
@@ -37,7 +37,7 @@ class Partner(models.Model):
         max_length=255,
     )
     partner_type = models.CharField(
-        'Tipo de empleado',
+        'Tipo de socio',
         max_length=10,
         choices=PARTNER_TYPE,
     )

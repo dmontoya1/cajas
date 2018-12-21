@@ -70,11 +70,14 @@ THIRD_PARTY_APPS = [
     'rest_framework',
 ]
 LOCAL_APPS = [
-    'cajas.users.apps.UsersAppConfig',
+    'cajas.boxes.apps.BoxesConfig',
+    'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
-    'cajas.office.apps.OfficeConfig',
     'cajas.inventory.apps.InventoryConfig',
     'cajas.movement.apps.MovementConfig',
+    'cajas.office.apps.OfficeConfig',
+    'cajas.units.apps.UnitsConfig',
+    'cajas.users.apps.UsersAppConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

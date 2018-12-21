@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from cajas.users.forms import UserChangeForm, UserCreationForm
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
+from cajas.users.models.charges import Charge
 
 User = get_user_model()
 
@@ -31,3 +32,10 @@ class UserAdmin(auth_admin.UserAdmin):
     list_display = ["username", "first_name", "last_name", "is_superuser"]
     search_fields = ["first_name"]
     inlines = [PartnerAdmin, EmployeeAdmin,]
+
+
+@admin.register(Charge)
+class ChargeAdmin(admin.ModelAdmin):
+
+    list_display = ['name', ]
+    search_fields = ['name', ]

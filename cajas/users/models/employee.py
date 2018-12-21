@@ -5,6 +5,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from cajas.users.models.charges import Charge
+
 User = get_user_model()
 
 def user_passport_path(instance, filename, name):
@@ -16,29 +18,8 @@ def user_cv_path(instance, filename, name):
 
 class Employee(models.Model):
 
-    PRESIDENTE = 'PRESI'
-    SUBGERENTE = 'SUBGER'
-    ASISTENTE_ADMIN = 'ASADMI'
-    ADMIN_SENIOR = 'ASENI'
-    ADMIN_JUNIOR = 'AJUNI'
-    SECRETARIA = 'SECRE'
-    SUPERVISOR = 'SUPERV'
-    COBRADOR = 'COBRA'
-    TARJETERO = 'TARJET'
 
-    EMPLOYEE_TYPES = (
-        (PRESIDENTE, 'Presidente'),
-        (SUBGERENTE, 'Subgerente'),
-        (ASISTENTE_ADMIN, 'Asistente Administrativa'),
-        (ADMIN_SENIOR, 'Administrador Senior'),
-        (ADMIN_JUNIOR, 'Administrador Junior'),
-        (SECRETARIA, 'Secretaria'),
-        (SUPERVISOR, 'Supervisor'),
-        (COBRADOR, 'Cobrador'),
-        (TARJETERO, 'Tarjetero')
-    )
-
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE
@@ -51,10 +32,11 @@ class Employee(models.Model):
         'Hoja de vida',
         upload_to=user_cv_path
     )
-    employee_type = models.CharField(
-        'Tipo de empleado',
-        max_length=10,
-        choices=EMPLOYEE_TYPES
+    charge = models.ForeignKey(
+        Charge,
+        verbose_name='Cargo de empleado',
+        on_delete=models.SET_NULL,
+        blank=True, null=True
     )
 
     def get_full_name(self):
@@ -64,7 +46,7 @@ class Employee(models.Model):
 
 
     def __str__(self):
-        return 'Empleado {} con cargo {}'.format(self.user.get_full_name(), self.get_employee_type_display())
+        return 'Empleado {} con cargo {}'.format(self.user.get_full_name(), self.charge.name)
 
 
     class Meta:

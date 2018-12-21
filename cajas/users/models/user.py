@@ -32,6 +32,8 @@ class User(AbstractUser):
     )
 
     def __str__(self):
+        # if self.partner:
+        #     return "{} ({})".format(self.get_full_name(), self.partnet.code)
         return "{} ({})".format(self.get_full_name(), self.document_id)
 
     def get_absolute_url(self):

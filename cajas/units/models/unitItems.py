@@ -4,16 +4,16 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from inventory.models.brand import Brand
-from office.models.office import Office
+from units.models.units import Unit
 
 
-class OfficeItems(models.Model):
+class UnitItems(models.Model):
     """
     """
 
-    office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
+    unit = models.ForeignKey(
+        Unit,
+        verbose_name='Unidad',
         on_delete=models.CASCADE,
         related_name='related_items'
     )
@@ -34,7 +34,7 @@ class OfficeItems(models.Model):
         verbose_name='Marca',
         on_delete=models.SET_NULL,
         blank=True, null=True,
-        related_name='related_office_items'
+        related_name='related_unit_items'
     )
     is_deleted = models.BooleanField(
         'Item Eliminado?',
@@ -47,10 +47,10 @@ class OfficeItems(models.Model):
     )
 
     def __str__(self):
-        return '%s de la oficina %s' % (self.name, self.office.name)
+        return '%s de la unidad %s' % (self.name, self.unit.name)
 
 
     class Meta:
-        verbose_name = 'Inventario oficina'
-        verbose_name_plural = 'Inventarios oficinas'
+        verbose_name = 'Inventario unidad'
+        verbose_name_plural = 'Inventarios unidades'
 
