@@ -12,6 +12,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "0.0.0.0",
     "127.0.0.1",
+    "stage.apptitud.com.co:8000",
 ]
 
 # CACHES
