@@ -22,7 +22,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path('jet/', include('jet.urls', 'jet')),
-    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
+    path('jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),  # Django JET dashboard URLS
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )
