@@ -9,10 +9,10 @@ from cajas.users.models.charges import Charge
 
 User = get_user_model()
 
-def user_passport_path(instance, filename, name):
+def user_passport_path(instance, filename):
     return 'archivos/{0}/passport/{1}'.format(instance.user.document_id, filename)
 
-def user_cv_path(instance, filename, name):
+def user_cv_path(instance, filename):
     return 'archivos/{0}/cv/{1}'.format(instance.user.document_id, filename)
 
 
