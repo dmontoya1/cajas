@@ -19,5 +19,5 @@ class UnirAdmin(admin.ModelAdmin):
     """
 
     list_display = ('name', 'partner', 'collector', 'supervisor')
-    search_fields = ('name', 'partner__first_name', 'partner__partnet__code')
+    search_fields = ('name', 'partner__first_name', 'partner__partner__code')
     inlines = [UnitItemsAdmin, ]
