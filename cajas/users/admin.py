@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
+from units.admin import UnitInline
 from cajas.users.forms import UserChangeForm, UserCreationForm
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
@@ -16,11 +17,13 @@ class EmployeeAdmin(admin.StackedInline):
     extra = 0
 
 
-class PartnerAdmin(admin.StackedInline):
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    # list_display = ['get_full_name', 'code', 'direct_partner']
+    list_display = ['get_full_name', 'code', 'direct_partner']
     extra = 0
+    inlines= [UnitInline, ]
 
 
 @admin.register(User)
@@ -31,7 +34,7 @@ class UserAdmin(auth_admin.UserAdmin):
     fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", {"fields": ("document_type", 'document_id', 'is_abstract')}),)
     list_display = ["username", "first_name", "last_name", "is_superuser"]
     search_fields = ["first_name"]
-    inlines = [PartnerAdmin, EmployeeAdmin,]
+    inlines = [EmployeeAdmin,]
 
 
 @admin.register(Charge)

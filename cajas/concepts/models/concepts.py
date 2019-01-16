@@ -9,6 +9,7 @@ class Concept(models.Model):
 
     SIMPLE = 'SM'
     DOUBLE = 'DB'
+    SIMPLEDOUBLE = 'SD'
     
     PARTNER = 'PA'
     OFFICE = 'OF'
@@ -21,7 +22,8 @@ class Concept(models.Model):
 
     TYPES_CONCEPT = (
         (SIMPLE, 'Simple'),
-        (DOUBLE, 'Doble partida')
+        (DOUBLE, 'Doble partida'),
+        (SIMPLEDOUBLE, 'Simple y Doble Partida')
     )
 
     CROSSOVER = (

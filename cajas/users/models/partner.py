@@ -24,7 +24,6 @@ class Partner(models.Model):
         (DIRECTO, 'Directo'),
         (INDIRECTO, 'Indirecto'),
         (DONJUAN, 'Don Juan')
-        
     )
 
     user = models.OneToOneField(
