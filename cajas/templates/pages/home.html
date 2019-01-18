@@ -402,6 +402,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('#table').DataTable({
+                dom: 'lBfrtip',
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    'excel', 'print'
+                ],
                 language: {
                     "sProcessing":     "Procesando...",
                     "sLengthMenu":     "Mostrar _MENU_ registros",

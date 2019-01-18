@@ -63,7 +63,8 @@ class Concept(models.Model):
     counterpart_name = models.CharField(
         'Nombre Contrapartida',
         max_length=255,
-        help_text='Nombre de la contrapartida cuando el concepto es de cruce. Ejm. Venta--> Compra. '
+        help_text='Nombre de la contrapartida cuando el concepto es de cruce. Ejm. Venta--> Compra. ',
+        blank=True, null=True
     )
     relationship = models.CharField(
         'Relacion del movimiento',
@@ -71,19 +72,6 @@ class Concept(models.Model):
         choices=RELATIONSHIPS,
         blank=True, null=True
     )
-    # unit = models.ForeignKey(
-    #     Unit,
-    #     verbose_name='Unidad',
-    #     on_delete=models.SET_NULL,
-    #     blank=True, null=True
-    # )
-    # user = models.ForeignKey(
-    #     User,
-    #     'Socio, empleado',
-    #     on_delete=models.SET_NULL,
-    #     blank=True, null=True
-    # )
-
 
     def __str__(self):
         return 'Concepto %s de tipo %s' % (self.name, self.get_concept_type_display())

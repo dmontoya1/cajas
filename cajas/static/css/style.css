@@ -672,7 +672,7 @@ aside.left-panel {
           .navbar .navbar-nav li.menu-item-has-children a:hover:before {
             border-color: #fff #fff transparent transparent; }
         .navbar .navbar-nav li.menu-item-has-children .sub-menu {
-          background: #fff;
+          background: var(--aqua);
           border: none;
           -webkit-box-shadow: none;
                   box-shadow: none;
@@ -681,7 +681,7 @@ aside.left-panel {
           .navbar .navbar-nav li.menu-item-has-children .sub-menu li {
             position: relative; }
           .navbar .navbar-nav li.menu-item-has-children .sub-menu i {
-            color: #c8c9ce;
+            color: #fff;
             float: left;
             padding: 0;
             position: absolute;
@@ -1119,7 +1119,7 @@ header .form-inline {
     -webkit-box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
             box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05); }
     .user-area .user-menu .nav-link {
-      color: #fff;
+      color: #607d8b;
       display: block;
       font-size: 13px;
       line-height: 22px;
@@ -2046,7 +2046,7 @@ header .form-inline {
     line-height: 50px;
     position: absolute;
     left: 30px;
-    top: 20px; }
+    top: 10px; }
   .stat-widget-five .stat-content {
     margin-left: 100px; }
   .stat-widget-five .stat-text {

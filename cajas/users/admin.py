@@ -7,6 +7,7 @@ from cajas.users.forms import UserChangeForm, UserCreationForm
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.charges import Charge
+from cajas.users.models.auth_logs import AuthLogs
 
 User = get_user_model()
 
@@ -42,3 +43,12 @@ class ChargeAdmin(admin.ModelAdmin):
 
     list_display = ['name', ]
     search_fields = ['name', ]
+
+
+@admin.register(AuthLogs)
+class AuthLogsAdmin(admin.ModelAdmin):
+    """
+    """
+
+    list_display = ['user', 'date', 'action', 'ip' ]
+    search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip' ]
