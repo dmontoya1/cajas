@@ -5,6 +5,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from office.models.office import Office
+
 User = get_user_model()
 
 def user_passport_path(instance, filename, name):
@@ -24,7 +26,6 @@ class Partner(models.Model):
         (DIRECTO, 'Directo'),
         (INDIRECTO, 'Indirecto'),
         (DONJUAN, 'Don Juan')
-        
     )
 
     user = models.OneToOneField(
@@ -32,9 +33,18 @@ class Partner(models.Model):
         verbose_name='Usuario',
         on_delete=models.CASCADE
     )
+    office = models.ForeignKey(
+        Office,
+        verbose_name='Oficina',
+        on_delete=models.SET_NULL,
+        blank=True, 
+        null=True
+    )
     code = models.CharField(
         'Código',
         max_length=255,
+        blank=True,
+        null=True
     )
     partner_type = models.CharField(
         'Tipo de socio',
@@ -56,7 +66,23 @@ class Partner(models.Model):
 
     def __str__(self):
         return 'Socio {}'.format(self.get_full_name())
+    
+    def save(self, *args, **kwargs):
+        "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
+        try:
+            office_country = Office.objects.filter(country=self.office.country)
+            
+        except Exception as e:
+            print ("Exception")
+            print (e)
 
+        super(Request, self).save(*args, **kwargs)
+        try:
+            d = self.request_date
+            self.booking = 'RE{}{}{}{}'.format(d.month, d.day, self.user.pk, self.pk)
+        except:
+            pass
+        super(Request, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Socio'

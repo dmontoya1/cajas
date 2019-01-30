@@ -1,12 +1,10 @@
 
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.country import Country
-
-User = get_user_model()
+from cajas.users.models.employee import Employee
 
 
 class Office(models.Model):
@@ -34,21 +32,21 @@ class Office(models.Model):
         on_delete=models.CASCADE
     )
     admin_senior = models.OneToOneField(
-        User,
+        Employee,
         verbose_name='Adminsitrador Senior',
         on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='related_senior_office'
     )
     admin_junior = models.OneToOneField(
-        User,
+        Employee,
         verbose_name='Adminsitrador Junior',
         on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='related_junior_office'
     )
     secretary = models.OneToOneField(
-        User,
+        Employee,
         verbose_name='Secretaria',
         on_delete=models.SET_NULL,
         blank=True, null=True,

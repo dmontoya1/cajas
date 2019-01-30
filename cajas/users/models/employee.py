@@ -17,12 +17,37 @@ def user_cv_path(instance, filename):
 
 
 class Employee(models.Model):
+    """
+    """
 
+    FIXED = 'FX'
+    PERCENTAGE = 'PE'
+
+    SALARY_TYPE = (
+        (FIXED, 'Salario Fijo'),
+        (PERCENTAGE, 'Porcentaje de comisión')
+    )
 
     user = models.OneToOneField(
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE
+    )
+    charge = models.ForeignKey(
+        Charge,
+        verbose_name='Cargo de empleado',
+        on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
+    salary = models.IntegerField(
+        'Salario Empleado',
+        default=0
+    )
+    salary_type = models.CharField(
+        'Tipo de salario',
+        max_length=2,
+        choices=SALARY_TYPE,
+        default=FIXED
     )
     passport = models.FileField(
         'Pasaporte',
@@ -31,12 +56,6 @@ class Employee(models.Model):
     cv = models.FileField(
         'Hoja de vida',
         upload_to=user_cv_path
-    )
-    charge = models.ForeignKey(
-        Charge,
-        verbose_name='Cargo de empleado',
-        on_delete=models.SET_NULL,
-        blank=True, null=True
     )
 
     def get_full_name(self):

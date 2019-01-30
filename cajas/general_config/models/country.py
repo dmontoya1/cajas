@@ -26,6 +26,10 @@ class Country(models.Model):
         verbose_name='Divisa',
         on_delete=models.CASCADE
     )
+    is_active = models.BooleanField(
+        "País Activo?",
+        default=True
+    )
 
 
     def __str__(self):

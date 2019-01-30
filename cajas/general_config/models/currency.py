@@ -18,6 +18,10 @@ class Currency(models.Model):
         max_length=10,
         help_text='COP, MXN, GTQ'
     )
+    is_active = models.BooleanField(
+        "Divisa Activa?",
+        default=True
+    )
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.abbr)

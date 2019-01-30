@@ -9,6 +9,7 @@ class Concept(models.Model):
 
     SIMPLE = 'SM'
     DOUBLE = 'DB'
+    SIMPLEDOUBLE = 'SD'
     
     PARTNER = 'PA'
     OFFICE = 'OF'
@@ -21,7 +22,8 @@ class Concept(models.Model):
 
     TYPES_CONCEPT = (
         (SIMPLE, 'Simple'),
-        (DOUBLE, 'Doble partida')
+        (DOUBLE, 'Doble partida'),
+        (SIMPLEDOUBLE, 'Simple y Doble Partida')
     )
 
     CROSSOVER = (
@@ -37,7 +39,6 @@ class Concept(models.Model):
         (CHAIN, 'Cadena'),
         (OFFICE, 'Oficina')
     )
-
 
 
     name = models.CharField(
@@ -61,7 +62,8 @@ class Concept(models.Model):
     counterpart_name = models.CharField(
         'Nombre Contrapartida',
         max_length=255,
-        help_text='Nombre de la contrapartida cuando el concepto es de cruce. Ejm. Venta--> Compra. '
+        help_text='Nombre de la contrapartida cuando el concepto es de cruce. Ejm. Venta--> Compra. ',
+        blank=True, null=True
     )
     relationship = models.CharField(
         'Relacion del movimiento',
@@ -69,19 +71,15 @@ class Concept(models.Model):
         choices=RELATIONSHIPS,
         blank=True, null=True
     )
-    # unit = models.ForeignKey(
-    #     Unit,
-    #     verbose_name='Unidad',
-    #     on_delete=models.SET_NULL,
-    #     blank=True, null=True
-    # )
-    # user = models.ForeignKey(
-    #     User,
-    #     'Socio, empleado',
-    #     on_delete=models.SET_NULL,
-    #     blank=True, null=True
-    # )
-
+    movement_type = models.BooleanField(
+        'El concepto genera movimiento en la caja?',
+        default = True,
+        help_text = 'Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. Éste no génera movimiento en la caja'
+    )
+    is_active = models.BooleanField(
+        'Concepto activo?',
+        default=True
+    )
 
     def __str__(self):
         return 'Concepto %s de tipo %s' % (self.name, self.get_concept_type_display())

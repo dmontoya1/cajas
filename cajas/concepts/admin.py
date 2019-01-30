@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-
 from concepts.models.concepts import Concept
 from concepts.models.stops import Stop
 
