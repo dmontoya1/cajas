@@ -15,9 +15,9 @@ class BoxCountryAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('country', 'balance', 'is_active')
+    list_display = ('country', 'balance', 'currency', 'is_active')
     inlines = [MovementCountryInline, ]
-    search_fields = ('country__name', )
+    search_fields = ('country__name', 'currency__name', 'currency__abbr' )
 
 
 @admin.register(BoxDailySquare)

@@ -41,7 +41,6 @@ class Concept(models.Model):
     )
 
 
-
     name = models.CharField(
         'Nombre',
         max_length=255,
@@ -71,6 +70,15 @@ class Concept(models.Model):
         max_length=10,
         choices=RELATIONSHIPS,
         blank=True, null=True
+    )
+    movement_type = models.BooleanField(
+        'El concepto genera movimiento en la caja?',
+        default = True,
+        help_text = 'Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. Éste no génera movimiento en la caja'
+    )
+    is_active = models.BooleanField(
+        'Concepto activo?',
+        default=True
     )
 
     def __str__(self):

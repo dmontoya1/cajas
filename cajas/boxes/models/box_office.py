@@ -12,7 +12,8 @@ class BoxOffice(models.Model):
         Office,
         verbose_name='Oficina',
         on_delete=models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='box'
     )
     balance = models.IntegerField(
         "Saldo de la caja",

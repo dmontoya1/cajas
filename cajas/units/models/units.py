@@ -35,6 +35,10 @@ class Unit(models.Model):
         blank=True, null=True,
         related_name='related_supervisor_units'
     )
+    is_active = models.BooleanField(
+        'Unidad Activa',
+        default=True
+    )
 
 
     def __str__(self):

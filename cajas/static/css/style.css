@@ -21,9 +21,9 @@ Googel Fonts  */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
 
 :root {
-  --green: #76C1A0;
-  --aqua: #7DD1AF;
-  --blue: #5C6BC0;
+  --green-box: #3CC1A2;
+  --aqua: #34D2AF;
+  --blue: #5A6BBC;
 }
 
 .bg-flat-color-1 {
@@ -42,7 +42,7 @@ Googel Fonts  */
   background: #66bb6a; }
 
 .bg-flat-color-6 {
-  background: #5c6bc0; }
+  background: #5A6BBC; }
 
 .bg-transparent {
   background-color: transparent; }
@@ -66,7 +66,7 @@ Googel Fonts  */
   color: #66bb6a; }
 
 .flat-color-6 {
-  color: #5c6bc0; }
+  color: #5A6BBC; }
 
 .bg-twitter {
   background: #1da1f2; }
@@ -163,7 +163,7 @@ Googel Fonts  */
   background: #66bb6a; }
 
 .bg-flat-color-6 {
-  background: #5c6bc0; }
+  background: #5A6BBC; }
 
 .bg-transparent {
   background-color: transparent; }
@@ -187,7 +187,7 @@ Googel Fonts  */
   color: #66bb6a; }
 
 .flat-color-6 {
-  color: #5c6bc0; }
+  color: #5A6BBC; }
 
 .bg-twitter {
   background: #1da1f2; }
@@ -617,7 +617,7 @@ aside.left-panel {
       padding-left: 30px;
       padding-right: 30px; }
       .navbar .navbar-nav > li.active {
-        background: var(--green); }
+        background: var(--green-box); }
     .navbar .navbar-nav li {
       width: 100%; }
       .navbar .navbar-nav li.active .menu-icon, .navbar .navbar-nav li:hover .toggle_nav_button:before,
@@ -633,7 +633,8 @@ aside.left-panel {
         line-height: 26px;
         padding: 10px 0;
         position: relative;
-        width: 100%; }
+        width: 100%;
+        font-weight: bold;}
         .navbar .navbar-nav li > a:hover, .navbar .navbar-nav li > a:hover .menu-icon {
           color: #fff; }
         .navbar .navbar-nav li > a .menu-icon {
@@ -1314,7 +1315,7 @@ header .form-inline {
       padding: 1.125em; }
     .card .card-top.bg-flat-color-1,
     .card .card-footer.bg-flat-color-1 {
-      background: #5c6bc0;
+      background: #5A6BBC;
       border: none; }
     .card .card-top.bg-flat-color-2,
     .card .card-footer.bg-flat-color-2 {
@@ -1411,7 +1412,7 @@ header .form-inline {
 .traffic-chart .ct-series-c .ct-area,
 .traffic-chart .ct-series-c .ct-slice-donut-solid,
 .traffic-chart .ct-series-c .ct-slice-pie {
-  fill: #5c6bc0; }
+  fill: #5A6BBC; }
 
 .flotRealtime2 {
   height: 445px; }
@@ -2160,6 +2161,61 @@ footer.site-footer {
     .calender-cont.widget-calender .fc-day-grid-container {
       max-height: 250px !important;
       overflow: hidden !important; }
+
+
+.label-container{
+  position:fixed;
+  bottom:48px;
+  right:105px;
+  display:table;
+  visibility: hidden;
+}
+
+.label-text{
+  color:#FFF;
+  background:rgba(51,51,51,0.5);
+  display:table-cell;
+  vertical-align:middle;
+  padding:10px;
+  border-radius:3px;
+}
+
+.label-arrow{
+  display:table-cell;
+  vertical-align:middle;
+  color:#333;
+  opacity:0.5;
+}
+
+.float{
+  position:fixed;
+  width:60px;
+  height:60px;
+  bottom:40px;
+  right:40px;
+  background-color:var(--blue);
+  color:#FFF;
+  border-radius:50px;
+  text-align:center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+  font-size:24px;
+  margin-top:18px;
+}
+
+a.float + div.label-container {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s ease;
+}
+
+a.float:hover + div.label-container{
+  visibility: visible;
+  opacity: 1;
+}
+
 
 @media (max-width: 1680px) {
   .timeline li {

@@ -21,6 +21,10 @@ class Brand(models.Model):
         on_delete=models.CASCADE,
         related_name='related_brands'
     )
+    is_active = models.BooleanField(
+        "Marca Activa?",
+        default=True
+    )
 
 
     def __str__(self):

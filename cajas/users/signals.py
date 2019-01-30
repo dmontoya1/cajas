@@ -6,8 +6,6 @@ from cajas.users.models.auth_logs import AuthLogs
 
 @receiver(user_logged_in)
 def after_user_logged_in(sender, request, user, **kwargs):
-    print (user)
-    print ("Logged in")
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -23,8 +21,6 @@ def after_user_logged_in(sender, request, user, **kwargs):
 
 @receiver(user_logged_out)
 def after_user_logged_out(sender, request, user, **kwargs):
-    print (user)
-    print ("Logged in")
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
