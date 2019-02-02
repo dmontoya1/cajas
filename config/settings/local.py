@@ -70,3 +70,5 @@ INSTALLED_APPS += ['django_extensions']  # noqa F405
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+API_KEY=env('API_KEY')

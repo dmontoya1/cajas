@@ -49,7 +49,12 @@ class MovementMixin(models.Model):
     )
     ip = models.GenericIPAddressField(
         "Dirección IP responsable", 
-        protocol='both'
+        protocol='both',
+        blank=True, null=True
+    )
+    balance = models.IntegerField(
+        'Saldo',
+        default=0
     )
 
 

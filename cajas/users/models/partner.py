@@ -67,22 +67,22 @@ class Partner(models.Model):
     def __str__(self):
         return 'Socio {}'.format(self.get_full_name())
     
-    def save(self, *args, **kwargs):
-        "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
-        try:
-            office_country = Office.objects.filter(country=self.office.country)
+    # def save(self, *args, **kwargs):
+    #     "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
+    #     try:
+    #         office_country = Office.objects.filter(country=self.office.country)
             
-        except Exception as e:
-            print ("Exception")
-            print (e)
+    #     except Exception as e:
+    #         print ("Exception")
+    #         print (e)
 
-        super(Request, self).save(*args, **kwargs)
-        try:
-            d = self.request_date
-            self.booking = 'RE{}{}{}{}'.format(d.month, d.day, self.user.pk, self.pk)
-        except:
-            pass
-        super(Request, self).save(*args, **kwargs)
+    #     super(Partner, self).save(*args, **kwargs)
+    #     try:
+    #         d = self.request_date
+    #         self.code = 'RE{}{}{}{}'.format(d.month, d.day, self.user.pk, self.pk)
+    #     except:
+    #         pass
+    #     super(Partner, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Socio'
