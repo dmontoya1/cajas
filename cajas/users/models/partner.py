@@ -28,7 +28,7 @@ class Partner(models.Model):
         (DONJUAN, 'Don Juan')
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE
