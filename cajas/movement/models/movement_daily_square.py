@@ -17,7 +17,8 @@ class MovementDailySquare(MovementMixin):
         BoxDailySquare,
         verbose_name='Caja Cuadre Diario',
         on_delete=models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='movements'
     )
     unit = models.ForeignKey(
         Unit,

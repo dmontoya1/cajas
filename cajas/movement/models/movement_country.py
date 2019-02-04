@@ -12,7 +12,8 @@ class MovementCountry(MovementMixin):
         BoxCountry,
         verbose_name='Caja País',
         on_delete=models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='movements'
     )
 
     def __str__(self):

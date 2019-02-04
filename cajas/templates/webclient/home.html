@@ -10,7 +10,7 @@
 {% block navbar %}
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="/"><i class="menu-icon fa fa-laptop"></i>Oficina MX1 </a>
+            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office.name}}</a>
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown active">
@@ -126,13 +126,15 @@
                         </div>
                     </div>
                 </div>
-                <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
-                    <i class="fa fa-plus my-float"></i>
-                </a>
-                <div class="label-container">
-                    <div class="label-text">Añadir movimiento</div>
-                    <i class="fa fa-play label-arrow"></i>
-                </div>
+                {% if request.user.employee.charge.name == 'Secretaria' %}
+                    <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+                        <i class="fa fa-plus my-float"></i>
+                    </a>
+                    <div class="label-container">
+                        <div class="label-text">Añadir movimiento</div>
+                        <i class="fa fa-play label-arrow"></i>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

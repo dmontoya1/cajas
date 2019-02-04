@@ -57,6 +57,10 @@ class Partner(models.Model):
         on_delete=models.CASCADE,
         blank=True, null=True
     )
+    is_daily_square = models.BooleanField(
+        'Es cuadre diario?',
+        default=False
+    )
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
@@ -67,23 +71,22 @@ class Partner(models.Model):
     def __str__(self):
         return 'Socio {}'.format(self.get_full_name())
     
-    # def save(self, *args, **kwargs):
-    #     "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
-    #     try:
-    #         office_country = Office.objects.filter(country=self.office.country)
-            
-    #     except Exception as e:
-    #         print ("Exception")
-    #         print (e)
-
-    #     super(Partner, self).save(*args, **kwargs)
-    #     try:
-    #         d = self.request_date
-    #         self.code = 'RE{}{}{}{}'.format(d.month, d.day, self.user.pk, self.pk)
-    #     except:
-    #         pass
-    #     super(Partner, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
+        try:
+            if not self.code:
+                if self.partner_type != self.DONJUAN:
+                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
+                else:
+                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, 'DJ')
+                self.office.consecutive += 1
+                self.office.save()
+            print (self.code)
+        except:
+            pass
+        super(Partner, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Socio'
         verbose_name_plural = 'Socios'
+        unique_together = ("office", "user")

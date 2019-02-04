@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from cajas.users.models.charges import Charge
+# from office.models.office import Office
 
 User = get_user_model()
 
@@ -39,6 +40,13 @@ class Employee(models.Model):
         on_delete=models.SET_NULL,
         blank=True, null=True
     )
+    # office = models.ForeignKey(
+    #     Office,
+    #     verbose_name='Oficina',
+    #     on_delete=models.SET_NULL,
+    #     blank=True, 
+    #     null=True
+    # )
     salary = models.IntegerField(
         'Salario Empleado',
         default=0
@@ -57,6 +65,10 @@ class Employee(models.Model):
         'Hoja de vida',
         upload_to=user_cv_path
     )
+    is_daily_square = models.BooleanField(
+        'Es cuadre diario?',
+        default=False
+    )
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
@@ -65,7 +77,7 @@ class Employee(models.Model):
 
 
     def __str__(self):
-        return 'Empleado {} con cargo {}'.format(self.user.get_full_name(), self.charge.name)
+        return '{}'.format(self.user.get_full_name())
 
 
     class Meta:

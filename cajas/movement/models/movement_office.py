@@ -22,9 +22,9 @@ class MovementOffice(MovementMixin):
     
     def save(self, *args, **kwargs):
         try:
-            last_balance = MovementOffice.objects.last()
-            l_balance = last_balance.balance
-        except:
+            l_balance = self.box_office.balance
+        except Exception as e:
+            print (e)
             l_balance = 0
         
         if self.movement_type == MovementOffice.IN:
@@ -34,6 +34,7 @@ class MovementOffice(MovementMixin):
 
         super(MovementOffice, self).save(*args, **kwargs)
         self.box_office.balance = self.balance
+        self.box_office.last_movement_id = self.pk
         self.box_office.save()
 
 
