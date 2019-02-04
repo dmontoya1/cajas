@@ -100,23 +100,21 @@
                                             <th>Nombre</th>
                                             <th>Apellidos</th>
                                             <th>Código</th>
+                                            <th>Tipo de Socio</th>
+                                            <th>Email</th>
                                             <th>Detalle</th>
-                                            <th>Entra</th>
-                                            <th>Sale</th>
-                                            <th>Saldo</th>
                                             <!-- <th></th> -->
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for m in office.box.movements.all %}
+                                        {% for p in partners %}
                                             <tr>
-                                                <td>{{m.responsible.get_full_name}}</td>
-                                                <td>{{m.date|date:"d-M-Y"}}</td>
-                                                <td>{{m.concept.name}}</td>
+                                                <td>{{p.user.first_name}}</td>
+                                                <td>{{p.user.last_name}}</td>
+                                                <td>{{p.code|default:"Sin Codigo"}}</td>
+                                                <td>{{p.get_partner_type_display}}</td>
+                                                <td>{{p.user.email}}</td>
                                                 <td><a href="#">Detalle</a></td>
-                                                <td>{% if m.movement_type == 'IN' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
-                                                <td>{% if m.movement_type == 'OUT' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
-                                                <td>${{m.balance|intcomma}}{{office.country.currency.abbr}}</td>
                                                 <!-- <td>Actions</td> -->
                                             </tr>
                                         {% endfor %}
@@ -130,7 +128,7 @@
                     <i class="fa fa-plus my-float"></i>
                 </a>
                 <div class="label-container">
-                    <div class="label-text">Añadir movimiento</div>
+                    <div class="label-text">Añadir socio</div>
                     <i class="fa fa-play label-arrow"></i>
                 </div>
             </div>
