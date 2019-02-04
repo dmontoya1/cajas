@@ -33,7 +33,7 @@ class Home(LoginRequiredMixin, TemplateView):
         return context
 
 
-class BoxDonJuanBox(LoginRequiredMixin, TemplateView):
+class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
     """
     """
 
@@ -42,13 +42,15 @@ class BoxDonJuanBox(LoginRequiredMixin, TemplateView):
     template_name = 'webclient/donjuanbox.html'
 
     def get_context_data(self, **kwargs):
-        context = super(BoxDonJuanBox, self).get_context_data(**kwargs)
+        context = super(BoxDonJuanOffice, self).get_context_data(**kwargs)
+        # concepts = Concept.objects.filter(is_active=True)
         # try:
         #     office = Office.objects.get(secretary=self.request.user.employee)
         # except:
         #     office = None
         # if office:
         #     context['office'] = office
+        # context['concepts'] = concepts
         return context
 
 
