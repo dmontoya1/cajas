@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.country import Country
@@ -52,10 +53,23 @@ class Office(models.Model):
         blank=True, null=True,
         related_name='related_secretary_office'
     )
+    slug = models.SlugField(
+        'slug',
+        unique=True,
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return '{} - {}'.format(self.name, self.country.name)
+        try:
+            return '{} - {}'.format(self.name, self.country.name)
+        except:
+            return "Oficina"
 
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Office, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Oficina'

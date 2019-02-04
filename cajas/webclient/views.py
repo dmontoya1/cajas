@@ -5,7 +5,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, View
 
+from cajas.users.models.partner import Partner
 from boxes.models.box_office import BoxOffice
+from boxes.models.box_partner import BoxPartner
 from concepts.models.concepts import Concept
 from movement.models.movement_office import MovementOffice
 from office.models.office import Office
@@ -29,6 +31,51 @@ class Home(LoginRequiredMixin, TemplateView):
             context['office'] = office
         context['concepts'] = concepts
         return context
+
+
+class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
+    """
+    """
+
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+    template_name = 'webclient/donjuanbox.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BoxDonJuanOffice, self).get_context_data(**kwargs)
+        # concepts = Concept.objects.filter(is_active=True)
+        # try:
+        #     office = Office.objects.get(secretary=self.request.user.employee)
+        # except:
+        #     office = None
+        # if office:
+        #     context['office'] = office
+        # context['concepts'] = concepts
+        return context
+
+
+class PartnerList(LoginRequiredMixin, TemplateView):
+    """
+    """
+
+    login_url = '/accounts/login/'
+    redirect_field_name = 'redirect_to'
+    template_name = 'webclient/partners_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PartnerList, self).get_context_data(**kwargs)
+        try:
+            office = Office.objects.get(secretary=self.request.user.employee)
+        except:
+            office = None
+        if office:
+            partners = Partner.objects.filter(office=office)
+            context['office'] = office
+            context['partners'] = partners
+        # context['concepts'] = concepts
+        return context
+
+
 
 
 class CreateOfficeMovement(View):

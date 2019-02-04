@@ -13,6 +13,6 @@ class StopAdmin(admin.StackedInline):
 @admin.register(Concept)
 class ConceptAdmin(admin.ModelAdmin):
 
-    list_display = ['name', 'concept_type', 'counterpart_name']
-    search_fields = ['name', 'counterpart_name, relationship']
+    list_display = ['name', 'concept_type', 'counterpart']
+    search_fields = ['name', 'counterpart__name, relationship']
     inlines = [StopAdmin, ]
