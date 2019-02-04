@@ -22,6 +22,10 @@ class BoxPartner(models.Model):
         "Caja Activa?",
         default=True
     )
+    last_movement_id = models.IntegerField(
+        'id último movimiento',
+        default=0
+    )
 
     def __str__(self):
         return "Caja de {}".format(self.partner.user.get_full_name())

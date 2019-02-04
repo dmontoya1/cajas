@@ -23,6 +23,10 @@ class BoxOffice(models.Model):
         "Caja Activa?",
         default=True
     )
+    last_movement_id = models.IntegerField(
+        'id último movimiento',
+        default=0
+    )
 
     def __str__(self):
         try:

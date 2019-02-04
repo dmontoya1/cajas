@@ -22,9 +22,15 @@ class EmployeeAdmin(admin.StackedInline):
 class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    list_display = ['get_full_name', 'code', 'direct_partner']
+    list_display = ['get_full_name', 'code', 'direct_partner', 'is_daily_square']
     extra = 0
     inlines= [UnitInline, ]
+    readonly_fields = ('code', )
+
+    class Media:
+        js = (
+            'js/admin/partner_admin.js',
+        )
 
 
 @admin.register(User)

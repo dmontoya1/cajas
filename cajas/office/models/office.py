@@ -13,9 +13,9 @@ class Office(models.Model):
     """
 
 
-    name = models.CharField(
-        'Nombre',
-        max_length=255,
+    number = models.IntegerField(
+        'Número de la oficina',
+        default=1
     )
     phone_number = models.CharField(
         'Telefono',
@@ -59,16 +59,21 @@ class Office(models.Model):
         null=True,
         blank=True,
     )
+    consecutive = models.IntegerField(
+        'Consecutivo Socios',
+        default=1
+    )
 
     def __str__(self):
         try:
-            return '{} - {}'.format(self.name, self.country.name)
+            return '{}{} - {}'.format(self.country.abbr ,self.number, self.country.name)
         except:
             return "Oficina"
 
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        text = '{}{}'.format(self.country.abbr, self.number)
+        self.slug = slugify(text)
         super(Office, self).save(*args, **kwargs)
 
     class Meta:

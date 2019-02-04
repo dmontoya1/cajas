@@ -31,6 +31,10 @@ class BoxCountry(models.Model):
         blank=True,
         null=True
     )
+    last_movement_id = models.IntegerField(
+        'id último movimiento',
+        default=0
+    )
     
 
     def __str__(self):
