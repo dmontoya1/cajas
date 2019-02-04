@@ -7,6 +7,7 @@ from django.views import defaults as default_views
 
 urlpatterns = [
     path("", include("cajas.webclient.urls", namespace="webclient")),
+    path("api/", include("cajas.api.urls", namespace="api")),
     path(
         "about/",
         TemplateView.as_view(template_name="webclient/about.html"),

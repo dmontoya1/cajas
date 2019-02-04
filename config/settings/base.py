@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
 ]
 LOCAL_APPS = [
+    'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
@@ -197,6 +198,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'cajas.webclient.context_processors.webclient_processor'
             ],
         },
     },
@@ -257,3 +259,14 @@ SOCIALACCOUNT_ADAPTER = 'cajas.users.adapters.SocialAccountAdapter'
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+# DRF Config
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'api.permissions.HasAPIAccess',
+    ),
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework.authentication.TokenAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # )
+}

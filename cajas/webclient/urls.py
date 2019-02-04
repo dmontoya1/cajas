@@ -6,4 +6,5 @@ from . import views
 app_name = 'webclient'
 urlpatterns = [
     path("", views.Home.as_view(), name='home'),
+    path("create-office-movement/", views.CreateOfficeMovement.as_view(), name='create-office-movement'),
 ]
