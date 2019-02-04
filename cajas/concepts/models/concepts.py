@@ -59,11 +59,12 @@ class Concept(models.Model):
         choices=CROSSOVER,
         blank=True, null=True
     )
-    counterpart_name = models.CharField(
-        'Nombre Contrapartida',
-        max_length=255,
-        help_text='Nombre de la contrapartida cuando el concepto es de cruce. Ejm. Venta--> Compra. ',
-        blank=True, null=True
+    counterpart = models.ForeignKey(
+        'self',
+        verbose_name='Concepto Contrapartida',
+        help_text='Concepto de contrapartida cuando el concepto es de cruce.',
+        blank=True, null=True,
+        on_delete=models.SET_NULL
     )
     relationship = models.CharField(
         'Relacion del movimiento',

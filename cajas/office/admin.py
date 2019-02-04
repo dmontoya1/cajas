@@ -31,6 +31,7 @@ class OfficeAdmin(admin.ModelAdmin):
 
     list_display = ('name', 'country', 'secretary')
     search_fields = ('name', 'country__name')
+    readonly_fields = ('slug', )
     inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
 
 

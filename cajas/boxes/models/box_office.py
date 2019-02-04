@@ -25,7 +25,10 @@ class BoxOffice(models.Model):
     )
 
     def __str__(self):
-        return "Caja de {}".format(self.office.name)
+        try:
+            return "Caja de {}".format(self.office.name)
+        except:
+            return "Caja de oficina"
 
 
     class Meta:

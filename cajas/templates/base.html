@@ -35,81 +35,83 @@
     <aside id="left-panel" class="left-panel">
         <nav class="navbar navbar-expand-sm navbar-default">
             <div id="main-menu" class="main-menu collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="/"><i class="menu-icon fa fa-laptop"></i>Oficina MX1 </a>
-                    </li>
-                    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Caja oficina
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Caja Don Juan
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Inventario Oficina
-                        </a>
-                    </li>
+                {% block navbar %}
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="/"><i class="menu-icon fa fa-laptop"></i>Oficina MX1 </a>
+                        </li>
+                        <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Caja oficina
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Caja Don Juan
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Inventario Oficina
+                            </a>
+                        </li>
 
-                    <li class="menu-title">Socios</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Lista de socios
-                        </a>
-                    </li>
+                        <li class="menu-title">Socios</li><!-- /.menu-title -->
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Lista de socios
+                            </a>
+                        </li>
 
-                    <li class="menu-title">Empleados</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Lista de empleados
-                        </a>
-                    </li>
-                    
+                        <li class="menu-title">Empleados</li><!-- /.menu-title -->
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Lista de empleados
+                            </a>
+                        </li>
+                        
 
-                    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+                        <li class="menu-title">Secretaria</li><!-- /.menu-title -->
 
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Árbol de unidades
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Cuadres diarios
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Aprovisionamiento
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Préstamos
-                        </a>
-                    </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#"> 
-                            <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                            Cadenas
-                        </a>
-                    </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Árbol de unidades
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Cuadres diarios
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Aprovisionamiento
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Préstamos
+                            </a>
+                        </li>
+                        <li class="menu-item-has-children dropdown">
+                            <a href="#"> 
+                                <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+                                Cadenas
+                            </a>
+                        </li>
 
-                </ul>
+                    </ul>
+                {% endblock %}
             </div><!-- /.navbar-collapse -->
         </nav>
     </aside>
