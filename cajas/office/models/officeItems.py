@@ -47,7 +47,7 @@ class OfficeItems(models.Model):
     )
 
     def __str__(self):
-        return '%s de la oficina %s' % (self.name, self.office.name)
+        return '{} de la oficina {}{}'.format(self.name, self.office.country.abbr, self.office.number)
 
 
     class Meta:
