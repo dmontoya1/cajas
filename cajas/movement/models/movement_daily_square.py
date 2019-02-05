@@ -46,6 +46,23 @@ class MovementDailySquare(MovementMixin):
         blank=True, null=True
     )
 
+    def save(self, *args, **kwargs):
+        try:
+            l_balance = self.box_daily_square.balance
+        except Exception as e:
+            print (e)
+            l_balance = 0
+        
+        if self.movement_type == MovementDailySquare.IN:
+            self.balance = int(l_balance) + int(self.value)
+        else:
+            self.balance = int(l_balance) - int(self.value)
+
+        super(MovementDailySquare, self).save(*args, **kwargs)
+        self.box_daily_square.balance = self.balance
+        self.box_daily_square.last_movement_id = self.pk
+        self.box_daily_square.save()
+
     def __str__(self):
         return "Movimiento del {}".format(self.box_daily_square.user)
 
