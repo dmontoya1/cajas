@@ -28,7 +28,10 @@ class BoxPartner(models.Model):
     )
 
     def __str__(self):
-        return "Caja de {}".format(self.partner.user.get_full_name())
+        try:
+            return "Caja de {}".format(self.partner.user.get_full_name())
+        except:
+            return "Caja de usuario eliminado"
 
 
     class Meta:

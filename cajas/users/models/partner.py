@@ -31,7 +31,8 @@ class Partner(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Usuario',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='partner'
     )
     office = models.ForeignKey(
         Office,
@@ -69,7 +70,7 @@ class Partner(models.Model):
 
 
     def __str__(self):
-        return 'Socio {}'.format(self.get_full_name())
+        return 'Socio {} ({})'.format(self.get_full_name(), self.code)
     
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"

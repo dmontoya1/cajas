@@ -10,7 +10,7 @@
 {% block navbar %}
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office.name}}</a>
+            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office}}</a>
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown active">
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:daily-square-list' %}"> 
                 <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Cuadres diarios
             </a>
