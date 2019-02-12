@@ -47,8 +47,8 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = auth_admin.UserAdmin.fieldsets +
-        (("Datos personales", {"fields": ("document_type", 'document_id', 'is_abstract')}),)
+    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", 
+        {"fields": ("document_type", 'document_id', 'is_abstract')}),)
     list_display = ["username", "first_name", "last_name", "is_superuser"]
     readonly_fields = ('last_login', 'date_joined')
     search_fields = ["first_name"]

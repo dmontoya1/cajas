@@ -12,5 +12,5 @@ def webclient_processor(request):
         'API_KEY': settings.API_KEY,
         'concepts': concepts,
     }
-    
+
     return context
