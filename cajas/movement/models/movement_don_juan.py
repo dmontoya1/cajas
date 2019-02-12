@@ -20,12 +20,11 @@ class MovementDonJuan(MovementMixin):
         return "Movimiento de la caja de {} de Don Juan".format(self.box_don_juan.office)
 
     def save(self, *args, **kwargs):
-        try:
+        if self.box_don_juan.balance:
             l_balance = self.box_don_juan.balance
-        except Exception as e:
-            print (e)
+        else:
             l_balance = 0
-        
+
         if self.movement_type == MovementDonJuan.IN:
             self.balance = int(l_balance) + int(self.value)
         else:
@@ -35,7 +34,6 @@ class MovementDonJuan(MovementMixin):
         self.box_don_juan.balance = self.balance
         self.box_don_juan.last_movement_id = self.pk
         self.box_don_juan.save()
-
 
     class Meta:
         verbose_name = 'Movimiento de Don Juan'

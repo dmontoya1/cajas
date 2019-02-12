@@ -34,7 +34,6 @@ class OfficeAdmin(admin.ModelAdmin):
     readonly_fields = ('slug', 'consecutive')
     inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
 
-
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "admin_senior":
             charge = Charge.objects.filter(name__contains="Administrador Senior").first()

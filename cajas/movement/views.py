@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 from rest_framework import generics
 
@@ -12,4 +11,3 @@ class MovementOfficeCreate(generics.CreateAPIView):
 
     serializer_class = MovementOfficeSerializer
     queryset = MovementOffice.objects.all()
-

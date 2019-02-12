@@ -5,6 +5,7 @@ from django.contrib import messages
 from .helpers import generate_key
 from .models import APIKey
 
+
 class ApiKeyAdmin(admin.ModelAdmin):
     """
     Clase para administrar las API Keys de la plataforma

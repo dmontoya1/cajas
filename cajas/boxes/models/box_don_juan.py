@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from cajas.users.models.partner import Partner
@@ -35,11 +34,9 @@ class BoxDonJuan(models.Model):
     )
 
     def __str__(self):
-        try:
+        if self.office is not None:
             return "Caja de Don Juan de la oficina".format(self.office)
-        except:
-            return "Caja de don Juan"
-
+        return "Caja de don Juan"
 
     class Meta:
         verbose_name = 'Caja de Don Juan'

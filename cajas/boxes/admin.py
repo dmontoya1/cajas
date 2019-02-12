@@ -1,7 +1,12 @@
 from django.contrib import admin
 
-
-from movement.admin import MovementCountryInline, MovementDailySquareInline, MovementDonJuanInline, MovementOfficeInline,  MovementPartnerInline
+from movement.admin import (
+    MovementCountryInline,
+    MovementDailySquareInline,
+    MovementDonJuanInline,
+    MovementOfficeInline,
+    MovementPartnerInline
+)
 
 from .models.box_country import BoxCountry
 from .models.box_daily_square import BoxDailySquare
@@ -66,6 +71,6 @@ class BoxPartnerAdmin(admin.ModelAdmin):
 
     list_display = ('partner', 'balance', 'is_active')
     inlines = [MovementPartnerInline, ]
-    search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code', 'partner__user__document_id' )
+    search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
+                     'partner__user__document_id')
     exclude = ('last_movement_id', )
-

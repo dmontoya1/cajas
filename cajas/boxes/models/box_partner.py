@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from cajas.users.models.partner import Partner
@@ -28,11 +27,9 @@ class BoxPartner(models.Model):
     )
 
     def __str__(self):
-        try:
+        if self.partner is not None:
             return "Caja de {}".format(self.partner.user.get_full_name())
-        except:
-            return "Caja de usuario eliminado"
-
+        return "Caja de usuario eliminado"
 
     class Meta:
         verbose_name = 'Caja de socio'

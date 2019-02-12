@@ -1,8 +1,6 @@
 
 from django.contrib import admin
-from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
 
 from units.models.units import Unit

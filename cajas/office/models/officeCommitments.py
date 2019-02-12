@@ -1,7 +1,4 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from office.models.office import Office
 
@@ -17,7 +14,6 @@ class OfficeCommitments(models.Model):
         (MONTHTLY, 'Mensual'),
         (WEEKLY, 'Semanal')
     )
-
 
     office = models.ForeignKey(
         Office,
@@ -43,11 +39,9 @@ class OfficeCommitments(models.Model):
         auto_now_add=True
     )
 
-
     def __str__(self):
         return '%s - %s' % (self.name, self.get_periodicidad_display())
 
-    
     class Meta:
         verbose_name = 'Compromiso Oficina'
         verbose_name_plural = 'Compromisos Oficina'

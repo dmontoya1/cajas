@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from cajas.users.models.user import User
@@ -29,7 +28,6 @@ class BoxDailySquare(models.Model):
 
     def __str__(self):
         return "Caja de {}".format(self.user.get_full_name())
-
 
     class Meta:
         verbose_name = 'Caja de Cuadre Diario'

@@ -12,7 +12,6 @@ class BrandAdmin(admin.StackedInline):
     extra = 1
 
 
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """

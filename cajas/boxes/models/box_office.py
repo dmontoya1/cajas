@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 
 from office.models.office import Office
@@ -29,11 +28,9 @@ class BoxOffice(models.Model):
     )
 
     def __str__(self):
-        try:
+        if self.office is not None:
             return "Caja de {}".format(self.office.name)
-        except:
-            return "Caja de oficina"
-
+        return "Caja de oficina"
 
     class Meta:
         verbose_name = 'Caja de oficinas'

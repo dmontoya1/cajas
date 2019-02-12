@@ -11,10 +11,10 @@ from cajas.users.models.auth_logs import AuthLogs
 
 User = get_user_model()
 
+
 class EmployeeAdminInline(admin.StackedInline):
 
     model = Employee
-    # list_display = ['get_full_name', 'employee_type']
     extra = 0
 
 
@@ -33,7 +33,7 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'code', 'office', 'direct_partner', 'is_daily_square']
     search_fields = ['user__first_name', 'user__last_name', 'code', 'office__number', 'office__country__abbr',]
     extra = 0
-    inlines= [UnitInline, ]
+    inlines = [UnitInline, ]
     readonly_fields = ('code', 'consecutive')
 
     class Media:
@@ -47,11 +47,12 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", {"fields": ("document_type", 'document_id', 'is_abstract')}),)
+    fieldsets = auth_admin.UserAdmin.fieldsets +
+        (("Datos personales", {"fields": ("document_type", 'document_id', 'is_abstract')}),)
     list_display = ["username", "first_name", "last_name", "is_superuser"]
     readonly_fields = ('last_login', 'date_joined')
     search_fields = ["first_name"]
-    inlines = [EmployeeAdminInline,]
+    inlines = [EmployeeAdminInline, ]
 
 
 @admin.register(Charge)
@@ -66,5 +67,5 @@ class AuthLogsAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ['user', 'date', 'action', 'ip' ]
-    search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip' ]
+    list_display = ['user', 'date', 'action', 'ip']
+    search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip']

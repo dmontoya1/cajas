@@ -1,7 +1,5 @@
 
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 
 class Currency(models.Model):
@@ -25,7 +23,6 @@ class Currency(models.Model):
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.abbr)
-
 
     class Meta:
         verbose_name = 'Divisa'

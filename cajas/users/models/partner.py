@@ -1,32 +1,35 @@
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+
+from enumfields import EnumField
+from enumfields import Enum
 
 from office.models.office import Office
 
 User = get_user_model()
 
+
 def user_passport_path(instance, filename, name):
     return 'archivos/{0}/passport/{1}'.format(instance.user.document_id, filename)
+
 
 def user_cv_path(instance, filename, name):
     return 'archivos/{0}/cv/{1}'.format(instance.user.document_id, filename)
 
 
-class Partner(models.Model):
-
+class PartnerType(Enum):
     DIRECTO = 'DIR'
     INDIRECTO = 'INDIR'
     DONJUAN = 'DJ'
 
-    PARTNER_TYPE = (
-        (DIRECTO, 'Directo'),
-        (INDIRECTO, 'Indirecto'),
-        (DONJUAN, 'Don Juan')
-    )
+    class Labels:
+        DIRECTO = 'Directo'
+        INDIRECTO = 'Indirecto'
+        DONJUAN = 'Don Juan'
+
+
+class Partner(models.Model):
 
     user = models.ForeignKey(
         User,
@@ -47,10 +50,10 @@ class Partner(models.Model):
         blank=True,
         null=True
     )
-    partner_type = models.CharField(
-        'Tipo de socio',
-        max_length=10,
-        choices=PARTNER_TYPE,
+    partner_type = EnumField(
+        PartnerType,
+        verbose_name='Tipo de socio',
+        max_length=5,
     )
     direct_partner = models.ForeignKey(
         'self',
@@ -72,23 +75,18 @@ class Partner(models.Model):
 
     get_full_name.short_description = 'Nombres'
 
-
     def __str__(self):
         return 'Socio {} ({})'.format(self.get_full_name(), self.code)
-    
+
     def save(self, *args, **kwargs):
-        "Funcion para generar el código del socio, y para validar que solo este en una oficina por país"
-        try:
-            if not self.code:
-                if self.partner_type != self.DONJUAN:
-                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
-                else:
-                    self.code = 'DONJUAN'
-                self.office.consecutive += 1
-                self.office.save()
-            print (self.code)
-        except:
-            pass
+        "Funcion para generar el código del socio"
+        if not self.code:
+            if self.partner_type != self.DONJUAN:
+                self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
+            else:
+                self.code = 'DONJUAN'
+            self.office.consecutive += 1
+            self.office.save()
         super(Partner, self).save(*args, **kwargs)
 
     class Meta:

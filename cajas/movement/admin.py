@@ -62,4 +62,3 @@ class MovementPartnerInline(admin.TabularInline):
 
     model = MovementPartner
     extra = 0
-

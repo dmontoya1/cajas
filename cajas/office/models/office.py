@@ -1,8 +1,6 @@
 
 from django.db import models
-from django.urls import reverse
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.country import Country
 from cajas.users.models.employee import Employee
@@ -11,7 +9,6 @@ from cajas.users.models.employee import Employee
 class Office(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
     """
-
 
     country = models.ForeignKey(
         Country,
@@ -65,11 +62,9 @@ class Office(models.Model):
     )
 
     def __str__(self):
-        try:
-            return '{}{} - {}'.format(self.country.abbr ,self.number, self.country.name)
-        except:
-            return "Oficina"
-
+        if self.country:
+            return '{}{} - {}'.format(self.country.abbr, self.number, self.country.name)
+        return "Oficina"
 
     def save(self, *args, **kwargs):
         text = '{}{}'.format(self.country.abbr, self.number)

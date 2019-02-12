@@ -6,8 +6,8 @@ from django.dispatch import receiver
 from boxes.models.box_partner import BoxPartner
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.auth_logs import AuthLogs
-# from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
+
 
 @receiver(user_logged_in)
 def after_user_logged_in(sender, request, user, **kwargs):
@@ -16,13 +16,14 @@ def after_user_logged_in(sender, request, user, **kwargs):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-        
+
     log = AuthLogs(
         ip=ip,
         user=user,
         action=AuthLogs.LOGIN
     )
     log.save()
+
 
 @receiver(user_logged_out)
 def after_user_logged_out(sender, request, user, **kwargs):
@@ -31,7 +32,7 @@ def after_user_logged_out(sender, request, user, **kwargs):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-        
+
     log = AuthLogs(
         ip=ip,
         user=user,
@@ -44,21 +45,17 @@ def after_user_logged_out(sender, request, user, **kwargs):
 def create_partner_box(sender, **kwargs):
     if kwargs.get('created'):
         instance = kwargs.get('instance')
-        try:
-            box = BoxPartner(
-                partner=instance,
-            )
-            box.save()
-        except Exception as e:
-            print (e)
+        box = BoxPartner(
+            partner=instance,
+        )
+        box.save()
         if instance.is_daily_square:
-            try:
+            if BoxDailySquare.objects.get(user=instance.user):
                 box_daily = BoxDailySquare.objects.get(user=instance.user)
-            except:
+            else:
                 box_daily = None
             if not box_daily:
                 box1 = BoxDailySquare(
                     user=instance.user
                 )
                 box1.save()
-

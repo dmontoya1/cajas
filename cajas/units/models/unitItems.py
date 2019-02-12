@@ -1,7 +1,4 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from inventory.models.brand import Brand
 from units.models.units import Unit
@@ -49,8 +46,6 @@ class UnitItems(models.Model):
     def __str__(self):
         return '%s de la unidad %s' % (self.name, self.unit.name)
 
-
     class Meta:
         verbose_name = 'Inventario unidad'
         verbose_name_plural = 'Inventarios unidades'
-
