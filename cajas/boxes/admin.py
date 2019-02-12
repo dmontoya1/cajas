@@ -1,10 +1,11 @@
 from django.contrib import admin
 
 
-from movement.admin import MovementCountryInline, MovementDailySquareInline, MovementOfficeInline,  MovementPartnerInline
+from movement.admin import MovementCountryInline, MovementDailySquareInline, MovementDonJuanInline, MovementOfficeInline,  MovementPartnerInline
 
 from .models.box_country import BoxCountry
 from .models.box_daily_square import BoxDailySquare
+from .models.box_don_juan import BoxDonJuan
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
 
@@ -30,6 +31,18 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
     list_display = ('user', 'balance', 'is_active')
     inlines = [MovementDailySquareInline, ]
     search_fields = ('user__first_name', 'user__last_name', 'user__document_id' )
+    exclude = ('last_movement_id', )
+
+
+@admin.register(BoxDonJuan)
+class BoxDonJuanAdmin(admin.ModelAdmin):
+    """Administrador de las cajas de don Juan por oficina
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'balance', 'is_active')
+    inlines = [MovementDonJuanInline, ]
+    search_fields = ('office__country__abbr', 'office__number', )
     exclude = ('last_movement_id', )
 
 

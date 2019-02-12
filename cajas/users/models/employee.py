@@ -47,15 +47,15 @@ class Employee(models.Model):
     #     blank=True, 
     #     null=True
     # )
-    salary = models.IntegerField(
-        'Salario Empleado',
-        default=0
-    )
     salary_type = models.CharField(
         'Tipo de salario',
         max_length=2,
         choices=SALARY_TYPE,
         default=FIXED
+    )
+    salary = models.IntegerField(
+        'Salario Empleado',
+        default=0
     )
     passport = models.FileField(
         'Pasaporte',

@@ -148,7 +148,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-movement" action="/create-office-movement/">
+                    <form method="POST" class="add-movement" action="/create_office_movement/">
                         {% csrf_token %}
                         <input type="hidden" name="box_office" value="{{request.user.employee.related_secretary_office.box.pk}}">
                         <div class="form-row">

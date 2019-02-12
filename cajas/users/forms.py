@@ -7,6 +7,14 @@ User = get_user_model()
 
 class UserChangeForm(forms.UserChangeForm):
 
+    password = forms.ReadOnlyPasswordHashField(
+        label=_("Password"),
+        help_text=_(
+            "Para cambiar la contraseña del usuario, has click "
+            "<a href=\"{}\">aquí</a>."
+        ),
+    )
+
     class Meta(forms.UserChangeForm.Meta):
         model = User
 

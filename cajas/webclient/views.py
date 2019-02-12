@@ -144,7 +144,7 @@ class PartnerCreate(LoginRequiredMixin, TemplateView):
         box_partner.save()
 
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el socio exitosamente')
-        return HttpResponseRedirect(reverse('webclient:partners-list'))
+        return HttpResponseRedirect(reverse('webclient:partners_list'))
 
 
 class DailySquareList(LoginRequiredMixin, TemplateView):
@@ -254,7 +254,7 @@ class CreatePartnerMovement(View):
         )
         movement.save()
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(reverse('webclient:partner-box', kwargs={'pk': request.POST['partner_id']}))
+        return HttpResponseRedirect(reverse('webclient:partner_box', kwargs={'pk': request.POST['partner_id']}))
 
 
 class CreateDailySquareMovement(View):
@@ -288,4 +288,4 @@ class CreateDailySquareMovement(View):
         )
         movement.save()
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(reverse('webclient:daily-square-box', kwargs={'pk': request.POST['user_id']}))
+        return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'pk': request.POST['user_id']}))

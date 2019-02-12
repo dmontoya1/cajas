@@ -62,18 +62,3 @@ def create_partner_box(sender, **kwargs):
                 )
                 box1.save()
 
-
-# @receiver(post_save, sender=Employee)
-# def create_employee_daily_square(sender, **kwargs):
-#     if kwargs.get('created'):
-#         instance = kwargs.get('instance')
-#         if instance.is_daily_square:
-#             try:
-#                 box_daily = BoxDailySquare.objects.get(user=instance.user)
-#             except:
-#                 box_daily = None
-#             if not box_daily:
-#                 box1 = BoxDailySquare(
-#                     user=instance.user
-#                 )
-#                 box1.save()

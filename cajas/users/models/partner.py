@@ -62,6 +62,10 @@ class Partner(models.Model):
         'Es cuadre diario?',
         default=False
     )
+    consecutive = models.IntegerField(
+        'Consecutivo Mini-Socios',
+        default=1
+    )
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
@@ -79,7 +83,7 @@ class Partner(models.Model):
                 if self.partner_type != self.DONJUAN:
                     self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
                 else:
-                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, 'DJ')
+                    self.code = 'DONJUAN'
                 self.office.consecutive += 1
                 self.office.save()
             print (self.code)

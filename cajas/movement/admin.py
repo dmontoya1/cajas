@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.db import models
+from django.forms import Textarea
 
 from .models.movement_country import MovementCountry
 from .models.movement_daily_square import MovementDailySquare
+from .models.movement_don_juan import MovementDonJuan
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
 
@@ -12,6 +15,9 @@ class MovementCountryInline(admin.TabularInline):
 
     model = MovementCountry
     extra = 0
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+    }
 
 
 class MovementDailySquareInline(admin.TabularInline):
@@ -21,6 +27,22 @@ class MovementDailySquareInline(admin.TabularInline):
     model = MovementDailySquare
     extra = 0
 
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+    }
+
+
+class MovementDonJuanInline(admin.TabularInline):
+    """Inline para los movimientos de la caja de Don Juan
+    """
+
+    model = MovementDonJuan
+    extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+    }
+
 
 class MovementOfficeInline(admin.TabularInline):
     """Inline para los movimientos de la caja de una oficina
@@ -28,6 +50,10 @@ class MovementOfficeInline(admin.TabularInline):
 
     model = MovementOffice
     extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+    }
 
 
 class MovementPartnerInline(admin.TabularInline):

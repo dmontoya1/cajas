@@ -13,24 +13,14 @@ class Office(models.Model):
     """
 
 
-    number = models.IntegerField(
-        'Número de la oficina',
-        default=1
-    )
-    phone_number = models.CharField(
-        'Telefono',
-        max_length=255,
-        blank=True, null=True
-    )
-    address = models.CharField(
-        'Direccion',
-        max_length=255,
-        blank=True, null=True
-    )
     country = models.ForeignKey(
         Country,
         verbose_name='Pais',
         on_delete=models.CASCADE
+    )
+    number = models.IntegerField(
+        'Número de la oficina',
+        default=1
     )
     admin_senior = models.OneToOneField(
         Employee,
@@ -52,6 +42,16 @@ class Office(models.Model):
         on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='related_secretary_office'
+    )
+    phone_number = models.CharField(
+        'Telefono',
+        max_length=255,
+        blank=True, null=True
+    )
+    address = models.CharField(
+        'Direccion',
+        max_length=255,
+        blank=True, null=True
     )
     slug = models.SlugField(
         'slug',
