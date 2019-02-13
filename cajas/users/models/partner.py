@@ -41,7 +41,7 @@ class Partner(models.Model):
         Office,
         verbose_name='Oficina',
         on_delete=models.SET_NULL,
-        blank=True, 
+        blank=True,
         null=True
     )
     code = models.CharField(
@@ -81,7 +81,7 @@ class Partner(models.Model):
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
         if not self.code:
-            if self.partner_type != self.DONJUAN:
+            if self.partner_type != 'DJ':
                 self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
             else:
                 self.code = 'DONJUAN'

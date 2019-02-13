@@ -10,7 +10,7 @@
 {% block navbar %}
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office.name}}</a>
+            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office}}</a>
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown">
@@ -20,7 +20,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown active">
-            <a href="#"> 
+            <a href="{% url 'webclient:box_don_juan' %}"> 
                 <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja Don Juan
             </a>
@@ -34,7 +34,7 @@
 
         <li class="menu-title">Socios</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:partners_list' %}">  
                 <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Lista de socios
             </a>
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:daily_square_list' %}"> 
                 <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Cuadres diarios
             </a>
@@ -108,7 +108,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for m in office.box.movements.all %}
+                                        {% for m in box.movements.all %}
                                             <tr>
                                                 <td>{{m.responsible.get_full_name}}</td>
                                                 <td>{{m.date|date:"d-M-Y"}}</td>

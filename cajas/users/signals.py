@@ -8,6 +8,8 @@ from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.auth_logs import AuthLogs
 from cajas.users.models.partner import Partner
 
+from movement.views.movement_don_juan.movement_don_juan import MovementDonJuan
+
 
 @receiver(user_logged_in)
 def after_user_logged_in(sender, request, user, **kwargs):

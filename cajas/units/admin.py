@@ -28,7 +28,7 @@ class UnitInline(admin.StackedInline):
                 url=url,
                 text="Editar esta %s separadamente" % obj._meta.verbose_name,
             ))
-        return _("Guarde y continúe editando para poder ver el link de edición")
+        return "Guarde y continúe editando para poder ver el link de edición"
     get_edit_link.short_description = "Editar Unidad"
     get_edit_link.allow_tags = True
 

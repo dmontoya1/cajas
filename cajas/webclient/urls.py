@@ -6,7 +6,7 @@ from . import views
 app_name = 'webclient'
 urlpatterns = [
     path("", views.Home.as_view(), name='home'),
-    path("donjuan/<slug:slug>/", views.BoxDonJuanOffice.as_view(), name='box_don_juan'),
+    path("donjuan/", views.BoxDonJuanOffice.as_view(), name='box_don_juan'),
     path("partners/", views.PartnerList.as_view(), name='partners_list'),
     path("daily-square/", views.DailySquareList.as_view(), name='daily_square_list'),
     path("partner/add/", views.PartnerCreate.as_view(), name='partner_add'),

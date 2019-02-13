@@ -30,7 +30,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    list_display = ['get_full_name', 'code', 'office', 'direct_partner', 'is_daily_square']
+    list_display = ['get_full_name', 'code', 'office', 'partner_type', 'is_daily_square']
     search_fields = ['user__first_name', 'user__last_name', 'code', 'office__number', 'office__country__abbr',]
     extra = 0
     inlines = [UnitInline, ]

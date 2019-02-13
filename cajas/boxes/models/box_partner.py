@@ -7,11 +7,12 @@ class BoxPartner(models.Model):
     """Modelo para la caja de un socio
     """
 
-    partner = models.ForeignKey(
+    partner = models.OneToOneField(
         Partner,
         verbose_name='Socio',
         on_delete=models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='box'
     )
     balance = models.IntegerField(
         "Saldo de la caja",

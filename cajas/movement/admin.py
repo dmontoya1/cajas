@@ -16,7 +16,7 @@ class MovementCountryInline(admin.TabularInline):
     model = MovementCountry
     extra = 0
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
 
 
@@ -28,7 +28,7 @@ class MovementDailySquareInline(admin.TabularInline):
     extra = 0
 
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
 
 
@@ -40,7 +40,7 @@ class MovementDonJuanInline(admin.TabularInline):
     extra = 0
 
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
 
 
@@ -52,7 +52,7 @@ class MovementOfficeInline(admin.TabularInline):
     extra = 0
 
     formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows':3, 'cols':30})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
 
 
@@ -62,3 +62,7 @@ class MovementPartnerInline(admin.TabularInline):
 
     model = MovementPartner
     extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
+    }
