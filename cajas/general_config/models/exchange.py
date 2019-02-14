@@ -1,7 +1,5 @@
 
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.currency import Currency
 
@@ -30,11 +28,9 @@ class Exchange(models.Model):
         'Factor divisa a Peso Colombiano',
         help_text='Factor de cambio para prestamos, abonos e intereses de la divisa a peso colombiano'
     )
-    
 
     def __str__(self):
         return '%s (%s)' % (self.month, self.currency.name)
-
 
     class Meta:
         verbose_name = 'Tasa de cambio'

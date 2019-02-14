@@ -1,8 +1,6 @@
 
 from django.contrib import admin
-from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
 
 from units.models.units import Unit
@@ -28,10 +26,10 @@ class UnitInline(admin.StackedInline):
             url = reverse('admin:%s_%s_change' % (obj._meta.app_label, obj._meta.model_name), args=[force_text(obj.pk)])
             return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
                 url=url,
-                text=_("Editar esta %s separadamente") % obj._meta.verbose_name,
+                text="Editar esta %s separadamente" % obj._meta.verbose_name,
             ))
-        return _("Guarde y continúe editando para poder ver el link de edición")
-    get_edit_link.short_description = _("Editar Unidad")
+        return "Guarde y continúe editando para poder ver el link de edición"
+    get_edit_link.short_description = "Editar Unidad"
     get_edit_link.allow_tags = True
 
 

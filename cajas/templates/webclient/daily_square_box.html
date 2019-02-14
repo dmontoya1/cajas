@@ -20,7 +20,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:box_don_juan' %}">  
                 <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja Don Juan
             </a>
@@ -34,7 +34,7 @@
 
         <li class="menu-title">Socios</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown ">
-            <a href="{% url 'webclient:partners-list' %}" >  
+            <a href="{% url 'webclient:partners_list' %}" >  
                 <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Lista de socios
             </a>
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown active">
-            <a href="{% url 'webclient:daily-square-list' %}"> 
+            <a href="{% url 'webclient:daily_square_list' %}"> 
                 <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Cuadres diarios
             </a>
@@ -150,7 +150,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-movement" action="{% url 'webclient:add-daily-square-movement' %}">
+                    <form method="POST" class="add-movement" action="{% url 'webclient:add_daily_square_movement' %}">
                         {% csrf_token %}
                         
                         <input type="hidden" name="user_id" value="{{box.user.pk}}">

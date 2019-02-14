@@ -9,6 +9,7 @@ from .movement_mixin import MovementMixin
 
 User = get_user_model()
 
+
 class MovementDailySquare(MovementMixin):
     """Modelo para guardar los movimientos de las cajas del cuadre diario
     """
@@ -47,12 +48,11 @@ class MovementDailySquare(MovementMixin):
     )
 
     def save(self, *args, **kwargs):
-        try:
+        if self.box_daily_square.balance:
             l_balance = self.box_daily_square.balance
-        except Exception as e:
-            print (e)
+        else:
             l_balance = 0
-        
+
         if self.movement_type == MovementDailySquare.IN:
             self.balance = int(l_balance) + int(self.value)
         else:
@@ -65,7 +65,6 @@ class MovementDailySquare(MovementMixin):
 
     def __str__(self):
         return "Movimiento del {}".format(self.box_daily_square.user)
-
 
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'

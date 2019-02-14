@@ -1,10 +1,16 @@
 from django.contrib import admin
 
-
-from movement.admin import MovementCountryInline, MovementDailySquareInline, MovementOfficeInline,  MovementPartnerInline
+from movement.admin import (
+    MovementCountryInline,
+    MovementDailySquareInline,
+    MovementDonJuanInline,
+    MovementOfficeInline,
+    MovementPartnerInline
+)
 
 from .models.box_country import BoxCountry
 from .models.box_daily_square import BoxDailySquare
+from .models.box_don_juan import BoxDonJuan
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
 
@@ -33,6 +39,18 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
     exclude = ('last_movement_id', )
 
 
+@admin.register(BoxDonJuan)
+class BoxDonJuanAdmin(admin.ModelAdmin):
+    """Administrador de las cajas de don Juan por oficina
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'balance', 'is_active')
+    inlines = [MovementDonJuanInline, ]
+    search_fields = ('office__country__abbr', 'office__number', )
+    exclude = ('last_movement_id', )
+
+
 @admin.register(BoxOffice)
 class BoxOfficeAdmin(admin.ModelAdmin):
     """Administrador de las cajas de una oficina
@@ -53,6 +71,6 @@ class BoxPartnerAdmin(admin.ModelAdmin):
 
     list_display = ('partner', 'balance', 'is_active')
     inlines = [MovementPartnerInline, ]
-    search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code', 'partner__user__document_id' )
+    search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
+                     'partner__user__document_id')
     exclude = ('last_movement_id', )
-

@@ -2622,3 +2622,7 @@ button.add-movement {
   border-radius: 10px;
   padding: 10px;
 }
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination {
+  justify-content: center !important;
+}

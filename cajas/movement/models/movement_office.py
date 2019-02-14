@@ -19,14 +19,12 @@ class MovementOffice(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_office.office)
 
-    
     def save(self, *args, **kwargs):
-        try:
+        if self.box_office.balance:
             l_balance = self.box_office.balance
-        except Exception as e:
-            print (e)
+        else:
             l_balance = 0
-        
+
         if self.movement_type == MovementOffice.IN:
             self.balance = int(l_balance) + int(self.value)
         else:
@@ -36,7 +34,6 @@ class MovementOffice(MovementMixin):
         self.box_office.balance = self.balance
         self.box_office.last_movement_id = self.pk
         self.box_office.save()
-
 
     class Meta:
         verbose_name = 'Movimiento de la oficina'

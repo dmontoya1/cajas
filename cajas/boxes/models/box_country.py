@@ -1,6 +1,4 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-
 
 from general_config.models.country import Country
 from general_config.models.currency import Currency
@@ -35,11 +33,9 @@ class BoxCountry(models.Model):
         'id último movimiento',
         default=0
     )
-    
 
     def __str__(self):
         return "Caja de {}".format(self.country.name)
-
 
     class Meta:
         unique_together = ("country", "currency")

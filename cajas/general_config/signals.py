@@ -14,23 +14,17 @@ from .models.currency import Currency
 def create_country_boxes(sender, **kwargs):
     if kwargs.get('created'):
         instance = kwargs.get('instance')
-        try:
-            box1 = BoxCountry(
-                country=instance,
-                currency=instance.currency
-            )
-            box1.save()
-        except Exception as e:
-            print (e)
+        box1 = BoxCountry(
+            country=instance,
+            currency=instance.currency
+        )
+        box1.save()
         usd_dolar, created = Currency.objects.get_or_create(
             name='Dólar Americano',
             abbr='USD',
         )
-        try:
-            box2 = BoxCountry(
-                country=instance,
-                currency=usd_dolar
-            )
-            box2.save()
-        except Exception as e:
-            print (e)
+        box2 = BoxCountry(
+            country=instance,
+            currency=usd_dolar
+        )
+        box2.save()

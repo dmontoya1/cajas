@@ -31,9 +31,8 @@ class OfficeAdmin(admin.ModelAdmin):
 
     list_display = ('country', 'number', 'secretary')
     search_fields = ('number', 'country__name')
-    readonly_fields = ('slug', )
+    readonly_fields = ('slug', 'consecutive')
     inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
-
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "admin_senior":

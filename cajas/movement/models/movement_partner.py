@@ -20,12 +20,11 @@ class MovementPartner(MovementMixin):
         return "Movimiento del {}".format(self.box_partner.partner)
 
     def save(self, *args, **kwargs):
-        try:
+        if self.box_partner.balance:
             l_balance = self.box_partner.balance
-        except Exception as e:
-            print (e)
+        else:
             l_balance = 0
-        
+
         if self.movement_type == MovementPartner.IN:
             self.balance = int(l_balance) + int(self.value)
         else:
@@ -35,7 +34,6 @@ class MovementPartner(MovementMixin):
         self.box_partner.balance = self.balance
         self.box_partner.last_movement_id = self.pk
         self.box_partner.save()
-
 
     class Meta:
         verbose_name = 'Movimiento del socio'

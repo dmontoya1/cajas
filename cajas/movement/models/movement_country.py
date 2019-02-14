@@ -19,7 +19,6 @@ class MovementCountry(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_country.country)
 
-
     class Meta:
         verbose_name = 'Movimiento del país'
         verbose_name_plural = 'Movimientos del país'

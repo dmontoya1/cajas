@@ -40,10 +40,8 @@ class Unit(models.Model):
         default=True
     )
 
-
     def __str__(self):
         return 'Unidad %s de %s' % (self.name, self.partner.get_full_name())
-
 
     class Meta:
         verbose_name = 'Unidad'

@@ -1,8 +1,6 @@
 
 from django.db import models
-from django.urls import reverse
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.country import Country
 from cajas.users.models.employee import Employee
@@ -12,25 +10,14 @@ class Office(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
     """
 
-
-    number = models.IntegerField(
-        'Número de la oficina',
-        default=1
-    )
-    phone_number = models.CharField(
-        'Telefono',
-        max_length=255,
-        blank=True, null=True
-    )
-    address = models.CharField(
-        'Direccion',
-        max_length=255,
-        blank=True, null=True
-    )
     country = models.ForeignKey(
         Country,
         verbose_name='Pais',
         on_delete=models.CASCADE
+    )
+    number = models.IntegerField(
+        'Número de la oficina',
+        default=1
     )
     admin_senior = models.OneToOneField(
         Employee,
@@ -53,6 +40,16 @@ class Office(models.Model):
         blank=True, null=True,
         related_name='related_secretary_office'
     )
+    phone_number = models.CharField(
+        'Telefono',
+        max_length=255,
+        blank=True, null=True
+    )
+    address = models.CharField(
+        'Direccion',
+        max_length=255,
+        blank=True, null=True
+    )
     slug = models.SlugField(
         'slug',
         unique=True,
@@ -65,11 +62,9 @@ class Office(models.Model):
     )
 
     def __str__(self):
-        try:
-            return '{}{} - {}'.format(self.country.abbr ,self.number, self.country.name)
-        except:
-            return "Oficina"
-
+        if self.country:
+            return '{}{} - {}'.format(self.country.abbr, self.number, self.country.name)
+        return "Oficina"
 
     def save(self, *args, **kwargs):
         text = '{}{}'.format(self.country.abbr, self.number)

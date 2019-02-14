@@ -11,21 +11,30 @@ from cajas.users.models.auth_logs import AuthLogs
 
 User = get_user_model()
 
-class EmployeeAdmin(admin.StackedInline):
+
+class EmployeeAdminInline(admin.StackedInline):
 
     model = Employee
-    # list_display = ['get_full_name', 'employee_type']
     extra = 0
+
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+
+    model = Employee
+    list_display = ['get_full_name', 'salary_type', 'salary']
+    search_fields = ['user__first_name', 'user__last_name', 'salary',]
 
 
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    list_display = ['get_full_name', 'code', 'direct_partner', 'is_daily_square']
+    list_display = ['get_full_name', 'code', 'office', 'partner_type', 'is_daily_square']
+    search_fields = ['user__first_name', 'user__last_name', 'code', 'office__number', 'office__country__abbr',]
     extra = 0
-    inlines= [UnitInline, ]
-    readonly_fields = ('code', )
+    inlines = [UnitInline, ]
+    readonly_fields = ('code', 'consecutive')
 
     class Media:
         js = (
@@ -38,10 +47,12 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", {"fields": ("document_type", 'document_id', 'is_abstract')}),)
+    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", 
+        {"fields": ("document_type", 'document_id', 'is_abstract')}),)
     list_display = ["username", "first_name", "last_name", "is_superuser"]
+    readonly_fields = ('last_login', 'date_joined')
     search_fields = ["first_name"]
-    inlines = [EmployeeAdmin,]
+    inlines = [EmployeeAdminInline, ]
 
 
 @admin.register(Charge)
@@ -56,5 +67,5 @@ class AuthLogsAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ['user', 'date', 'action', 'ip' ]
-    search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip' ]
+    list_display = ['user', 'date', 'action', 'ip']
+    search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip']

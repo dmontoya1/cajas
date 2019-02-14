@@ -2,9 +2,10 @@
 import uuid
 from django.db import models
 
+
 class APIKey(models.Model):
     """
-    Clase para manejar las restricciones en las API's
+    Clase para manejar las restricciones en las APIs
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

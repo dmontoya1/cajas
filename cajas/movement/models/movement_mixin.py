@@ -7,14 +7,14 @@ User = get_user_model()
 
 
 class MovementMixin(models.Model):
-    """Modelo base para todos los movimientos de las cajas y 
+    """Modelo base para todos los movimientos de las cajas y
     cuadre diario
     """
 
     IN = 'IN'
     OUT = 'OUT'
 
-    MOVEMENT_TYPE =(
+    MOVEMENT_TYPE = (
         (IN, 'Entra'),
         (OUT, 'Sale')
     )
@@ -56,7 +56,6 @@ class MovementMixin(models.Model):
         'Saldo',
         default=0
     )
-
 
     class Meta:
         abstract = True

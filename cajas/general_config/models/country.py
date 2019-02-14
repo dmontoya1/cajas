@@ -1,16 +1,12 @@
 
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from general_config.models.currency import Currency
-
 
 
 class Country(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
     """
-
 
     name = models.CharField(
         'Nombre',
@@ -31,10 +27,8 @@ class Country(models.Model):
         default=True
     )
 
-
     def __str__(self):
         return '{}'.format(self.name)
-
 
     class Meta:
         verbose_name = 'País'
