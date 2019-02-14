@@ -31,6 +31,7 @@ class Relationship(Enum):
     COUNTRY = 'COUNTRY'
     LOAN = 'PREST'
     CHAIN = 'CHAIN'
+    OFFICE = 'OF'
 
     class Labels:
         UNIT = 'Unidad'
@@ -38,6 +39,7 @@ class Relationship(Enum):
         COUNTRY = 'País'
         LOAN = 'Préstamo'
         CHAIN = 'Cadena'
+        OFFICE = 'Oficina'
 
 
 class Concept(models.Model):
