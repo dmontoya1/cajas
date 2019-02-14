@@ -41,7 +41,9 @@ class Unit(models.Model):
     )
 
     def __str__(self):
-        return 'Unidad %s de %s' % (self.name, self.partner.get_full_name())
+        if self.partner:
+            return 'Unidad %s de %s' % (self.name, self.partner.get_full_name())
+        return 'Unidad %s' % (self.name)
 
     class Meta:
         verbose_name = 'Unidad'
