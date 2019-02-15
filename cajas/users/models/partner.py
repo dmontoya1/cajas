@@ -83,10 +83,10 @@ class Partner(models.Model):
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
                 self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
+                self.office.consecutive += 1
+                self.office.save()
             else:
                 self.code = 'DONJUAN'
-            self.office.consecutive += 1
-            self.office.save()
         super(Partner, self).save(*args, **kwargs)
 
     class Meta:
