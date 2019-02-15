@@ -81,7 +81,7 @@ class Partner(models.Model):
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
         if not self.code:
-            if self.partner_type != PartnerType.DONJUAN':
+            if self.partner_type != PartnerType.DONJUAN:
                 self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
             else:
                 self.code = 'DONJUAN'
