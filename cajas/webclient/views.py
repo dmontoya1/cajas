@@ -258,36 +258,36 @@ class CreatePartnerMovement(View):
 
         if concept.concept_type == ConceptType.SIMPLE:
             movement = MovementPartnerHandler.create_simple(
-                box_partner,
-                concept,
-                date,
-                movement_type,
-                value,
-                detail,
-                request.user,
-                ip,
+                box=box_partner,
+                concept=concept,
+                date=date,
+                movement_type=movement_type,
+                value=value,
+                detail=detail,
+                responsible=request.user,
+                ip=ip,
             )
         elif concept.concept_type == ConceptType.DOUBLE:
             movement = MovementPartnerHandler.create_double(
-                partner,
-                concept,
-                date,
-                movement_type,
-                value,
-                detail,
-                request.user,
-                ip,
+                partner=partner,
+                concept=concept,
+                date=date,
+                movement_type=movement_type,
+                value=value,
+                detail=detail,
+                responsible=request.user,
+                ip=ip,
             )
         elif concept.concept_type == ConceptType.SIMPLEDOUBLE:
             movement = MovementPartnerHandler.create_simple_double_movement(
-                box_partner,
-                concept,
-                date,
-                movement_type,
-                value,
-                detail,
-                request.user,
-                ip,
+                partner=partner,
+                concept=concept,
+                date=date,
+                movement_type=movement_type,
+                value=value,
+                detail=detail,
+                responsible=request.user,
+                ip=ip,
             )
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return HttpResponseRedirect(reverse('webclient:partner_box', kwargs={'pk': request.POST['partner_id']}))

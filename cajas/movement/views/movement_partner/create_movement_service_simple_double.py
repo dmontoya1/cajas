@@ -53,24 +53,24 @@ class CreateMovementSimpleDoubleService(object):
         elif self._partner.partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
             movement2 = CreateMovementSimpleService(
-                box_direct_partner,
-                self._concept,
-                contrapart,
-                self._value,
-                self._detail,
-                self._date,
-                self._responsible,
-                self._ip
+                box=box_direct_partner,
+                concept=self._concept,
+                movement_type=contrapart,
+                value=self._value,
+                detail=self._detail,
+                date=self._date,
+                responsible=self._responsible,
+                ip=self._ip
             ).call()
         movement3 = CreateMovementSimpleService(
-            self._partner.box,
-            self._concept,
-            self._movement_type,
-            self._value,
-            self._detail,
-            self._date,
-            self._responsible,
-            self._ip
+            box=self._partner.box,
+            concept=self._concept,
+            movement_type=contrapart,
+            value=self._value,
+            detail=self._detail,
+            date=self._date,
+            responsible=self._responsible,
+            ip=self._ip
         ).call()
 
         return movement1

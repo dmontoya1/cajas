@@ -28,7 +28,9 @@ class Country(models.Model):
     )
 
     def __str__(self):
-        return '{}'.format(self.name)
+        if self.name:
+            return '{}'.format(self.name)
+        return "País"
 
     class Meta:
         verbose_name = 'País'

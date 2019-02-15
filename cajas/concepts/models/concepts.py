@@ -88,7 +88,7 @@ class Concept(models.Model):
     )
 
     def __str__(self):
-        return 'Concepto %s de tipo %s' % (self.name, self.get_concept_type_display())
+        return '%s de tipo %s' % (self.name, self.get_concept_type_display())
 
     class Meta:
         verbose_name = 'Concepto'
