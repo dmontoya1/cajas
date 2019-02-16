@@ -8,7 +8,6 @@ from general_config.models.exchange import Exchange
 class ExchangeAdmin(admin.StackedInline):
 
     model = Exchange
-    # list_display = ['month', 'exchange_dolar', 'exchange_cop']
     extra = 0
 
 

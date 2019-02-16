@@ -1,7 +1,5 @@
 
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 
 class Currency(models.Model):
@@ -18,10 +16,13 @@ class Currency(models.Model):
         max_length=10,
         help_text='COP, MXN, GTQ'
     )
+    is_active = models.BooleanField(
+        "Divisa Activa?",
+        default=True
+    )
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.abbr)
-
 
     class Meta:
         verbose_name = 'Divisa'

@@ -20,3 +20,4 @@ coreapi==2.3.3  # https://github.com/core-api/python-client
 
 #Cajas
 django-jet==1.0.8
+django-enumfields

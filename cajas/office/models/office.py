@@ -1,22 +1,44 @@
 
-from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.text import slugify
 
 from general_config.models.country import Country
-
-User = get_user_model()
+from cajas.users.models.employee import Employee
 
 
 class Office(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
     """
 
-
-    name = models.CharField(
-        'Nombre',
-        max_length=255,
+    country = models.ForeignKey(
+        Country,
+        verbose_name='Pais',
+        on_delete=models.CASCADE
+    )
+    number = models.IntegerField(
+        'Número de la oficina',
+        default=1
+    )
+    admin_senior = models.OneToOneField(
+        Employee,
+        verbose_name='Adminsitrador Senior',
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name='related_senior_office'
+    )
+    admin_junior = models.OneToOneField(
+        Employee,
+        verbose_name='Adminsitrador Junior',
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name='related_junior_office'
+    )
+    secretary = models.OneToOneField(
+        Employee,
+        verbose_name='Secretaria',
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name='related_secretary_office'
     )
     phone_number = models.CharField(
         'Telefono',
@@ -28,36 +50,26 @@ class Office(models.Model):
         max_length=255,
         blank=True, null=True
     )
-    country = models.ForeignKey(
-        Country,
-        verbose_name='Pais',
-        on_delete=models.CASCADE
+    slug = models.SlugField(
+        'slug',
+        unique=True,
+        null=True,
+        blank=True,
     )
-    admin_senior = models.OneToOneField(
-        User,
-        verbose_name='Adminsitrador Senior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_senior_office'
-    )
-    admin_junior = models.OneToOneField(
-        User,
-        verbose_name='Adminsitrador Junior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_junior_office'
-    )
-    secretary = models.OneToOneField(
-        User,
-        verbose_name='Secretaria',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_secretary_office'
+    consecutive = models.IntegerField(
+        'Consecutivo Socios',
+        default=1
     )
 
     def __str__(self):
-        return '{} - {}'.format(self.name, self.country.name)
+        if self.country:
+            return '{}{} - {}'.format(self.country.abbr, self.number, self.country.name)
+        return "Oficina"
 
+    def save(self, *args, **kwargs):
+        text = '{}{}'.format(self.country.abbr, self.number)
+        self.slug = slugify(text)
+        super(Office, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Oficina'

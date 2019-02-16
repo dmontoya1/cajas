@@ -1,7 +1,4 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
 
 from inventory.models.brand import Brand
 from office.models.office import Office
@@ -47,10 +44,8 @@ class OfficeItems(models.Model):
     )
 
     def __str__(self):
-        return '%s de la oficina %s' % (self.name, self.office.name)
-
+        return '{} de la oficina {}{}'.format(self.name, self.office.country.abbr, self.office.number)
 
     class Meta:
         verbose_name = 'Inventario oficina'
         verbose_name_plural = 'Inventarios oficinas'
-
