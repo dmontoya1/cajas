@@ -61,7 +61,7 @@ class PartnerCreate(LoginRequiredMixin, View):
             ip = get_ip(request)
             data = {
                 'partner': partner,
-                'initial_value': initial_value,
+                'value': initial_value,
                 'responsible': request.user,
                 'ip': ip,
             }

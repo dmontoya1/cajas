@@ -12,7 +12,7 @@ class BoxCreate(object):
     def call(self):
         if not BoxDailySquare.objects.filter(user=self._user):
             box = BoxDailySquare(
-                user=instance.user
+                user=self._user
             )
             box.save()
         else:
