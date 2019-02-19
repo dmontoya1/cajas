@@ -2580,6 +2580,9 @@ button.close {
   height: 40px;
   padding: 0 !important;
   margin: 0 !important;
+  position: absolute;
+  right: 20px;
+  top: 8px;
 }
 
 button.btn.btn-submit {
@@ -2622,6 +2625,21 @@ button.add-movement {
   border-radius: 10px;
   padding: 10px;
 }
+
+.accept-mv {
+  background-color: var(--aqua-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+}
+
+.decline-mv {
+  background-color: #f3034b;
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+}
+
 
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center !important;

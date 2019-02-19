@@ -10,15 +10,15 @@ from .create_movement_service_simple import CreateMovementSimpleService
 
 class CreateMovementDoubleService(object):
 
-    def __init__(self, partner, concept, movement_type, value, detail, date, responsible, ip):
-        self._partner = partner
-        self._concept = concept
-        self._movement_type = movement_type
-        self._value = value
-        self._detail = detail
-        self._date = date
-        self._responsible = responsible
-        self._ip = ip
+    def __init__(self, data):
+        self._partner = data['partner']
+        self._concept = data['concept']
+        self._movement_type = data['movement_type']
+        self._value = data['value']
+        self._detail = data['detail']
+        self._date = data['date']
+        self._responsible = data['responsible']
+        self._ip = data['ip']
 
     def call(self):
         movement1 = CreateMovementSimpleService(

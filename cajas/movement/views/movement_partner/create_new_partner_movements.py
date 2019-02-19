@@ -13,11 +13,11 @@ from .create_movement_service_simple import CreateMovementSimpleService
 
 class CreateNewPartnerMovements(object):
 
-    def __init__(self, partner, value, responsible, ip):
-        self._partner = partner
-        self._value = value
-        self._responsible = responsible
-        self._ip = ip
+    def __init__(self, data):
+        self._partner = data['partner']
+        self._value = data['value']
+        self._responsible = data['responsible']
+        self._ip = data['ip']
 
     def call(self):
         concept = Concept.objects.get(name='Aporte Socio', concept_type='SD')
@@ -38,7 +38,7 @@ class CreateNewPartnerMovements(object):
                 concept,
                 'OUT',
                 int(self._value)*2,
-                'Salida Aporte Nuevo socio',
+                'Salida Aporte Nuevo socio {}'.format(self._partner),
                 datetime.now(),
                 self._responsible,
                 self._ip
@@ -50,7 +50,7 @@ class CreateNewPartnerMovements(object):
                 concept,
                 'OUT',
                 int(self._value)*2,
-                'Salida Aporte Nuevo socio',
+                'Salida Aporte Nuevo socio {}'.format(self._partner),
                 datetime.now(),
                 self._responsible,
                 self._ip

@@ -110,10 +110,10 @@
                                     <tbody>
                                         {% for m in office.box.movements.all %}
                                             <tr>
-                                                <td>{{m.responsible.get_full_name}}</td>
+                                                <td>{{m.responsible.get_full_name}} {{m.id}}</td>
                                                 <td>{{m.date|date:"d-M-Y"}}</td>
                                                 <td>{{m.concept.name}}</td>
-                                                <td><a href="#">Detalle</a></td>
+                                                <td>{{m.detail}}</td>
                                                 <td>{% if m.movement_type == 'IN' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>{% if m.movement_type == 'OUT' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>${{m.balance|intcomma}}{{office.country.currency.abbr}}</td>

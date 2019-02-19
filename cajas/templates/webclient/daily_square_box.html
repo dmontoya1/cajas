@@ -104,7 +104,7 @@
                                             <th>Entra</th>
                                             <th>Sale</th>
                                             <th>Saldo</th>
-                                            <!-- <th></th> -->
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -113,11 +113,14 @@
                                                 <td>{{m.responsible.get_full_name}}</td>
                                                 <td>{{m.date|date:"d-M-Y"}}</td>
                                                 <td>{{m.concept.name}}</td>
-                                                <td><a href="#">Detalle</a></td>
+                                                <td>{{m.detail}}</td>
                                                 <td>{% if m.movement_type == 'IN' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>{% if m.movement_type == 'OUT' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>${{m.balance|intcomma}}{{office.country.currency.abbr}}</td>
-                                                <!-- <td>Actions</td> -->
+                                                <td>
+                                                    <a href="#" class="accept-mv" data-id="{{m.pk}}">Aprobar</a>
+                                                    <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -160,7 +163,7 @@
                                 <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
                                     <option disabled selected value="">Selecciona un concepto</option>
                                     {% for concept in concepts %}
-                                        <option value="{{concept.pk}}">{{concept}}</option>
+                                        <option value="{{concept.pk}}" data-relationship="{{concept.relationship}}">{{concept}}</option>
                                     {% endfor %}
                                 </select>
 
@@ -173,7 +176,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="movement_type">Entra / Sale</label>
-                                <select class="form-control" id="movement_type" name="movement_type" required>
+                                <select class="form-control" id="movement_type" name="movement_type" style="width: 100%; height: 20px;" required>
                                     <option selected disabled value="">Selecciona el tipo de movimiento</option>
                                     <option value="IN">Entra</option>
                                     <option value="OUT">Sale</option>
@@ -182,6 +185,57 @@
                             <div class="form-group col-md-6">
                                 <label for="value">Valor</label>
                                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 office-select d-none">
+                                <label for="office">Oficina</label>
+                                <select class="form-control" id="office" name="office" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 partner-select d-none">
+                                <label for="partner">Socio</label>
+                                <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;">
+                                    <option value="" selected disabled>Selecciona un socio</option>
+                                    {% for p in partners %}
+                                        <option value="{{p.pk}}">{{p}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 unit-select d-none">
+                                <label for="unit">Unidad</label>
+                                <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;">
+                                    <option value="" selected disabled>Selecciona primero un socio</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 user-select d-none">
+                                <label for="user">Persona</label>
+                                <select class="form-control" id="user" name="user" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 country-select d-none">
+                                <label for="country">País</label>
+                                <select class="form-control" id="country" name="country" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 loan-select d-none">
+                                <label for="loan">Préstamo</label>
+                                <select class="form-control" id="loan" name="loan" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 chain-select d-none">
+                                <label for="chain">Cadena</label>
+                                <select class="form-control" id="chain" name="chain" style="width: 100%; height: 20px;">
+                                    
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -209,9 +263,8 @@
     <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
     <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
     <script type="text/javascript">
+    
         $(document).ready(function() {
             $('#table').DataTable({
                 responsive: {
@@ -249,9 +302,100 @@
                 }
             });
 
-            $('#concept').select2({
-                language: "es"
+            $('select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
             });
         });
+
+        $('#concept').on('change', function(){
+            relationship = $("option:selected", this).data('relationship')
+            switch(relationship) {
+                case 'Oficina':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').removeClass('d-none')
+                    break;
+                case 'Unidad':
+                    $('.unit-select').removeClass('d-none')
+                    $('.partner-select').removeClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Persona':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').removeClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'País':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').removeClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Préstamo':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').removeClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Cadena':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').removeClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                default:
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    console.log('None')
+            }
+        })
+    
+        $('#partner').on('change', function(){
+            axios.get(`/api/units/${$(this).val()}/list`)
+            .then(function (response) {
+                data = response.data
+                $('#unit').empty()
+                $.each(data, function (k,v){
+                    $('#unit').append(
+                        `<option value=${v.id}>${v.name}</option>`
+                    )
+                })
+                $('#unit').prepend(
+                    '<option value="" selected disabled>Selecciona una unidad</option>'
+                )
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+        })
     </script>
 {% endblock%}
