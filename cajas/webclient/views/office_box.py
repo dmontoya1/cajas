@@ -12,7 +12,7 @@ class OfficeBox(LoginRequiredMixin, TemplateView):
 
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
-    template_name = 'webclient/daily_square_box.html'
+    template_name = 'webclient/office_box.html'
 
     def get_context_data(self, **kwargs):
         context = super(OfficeBox, self).get_context_data(**kwargs)

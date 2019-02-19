@@ -8,6 +8,7 @@ from .views.create_partner_movement import CreatePartnerMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
 from .views.home_view import Home
+from .views.office_box import OfficeBox
 from .views.partner_box import PartnerBox
 from .views.partner_create import PartnerCreate
 from .views.partner_list import PartnerList
@@ -15,7 +16,7 @@ from .views.partner_list import PartnerList
 app_name = 'webclient'
 urlpatterns = [
     path("", Home.as_view(), name='home'),
-    path("office/<slug:slug>/", Home.as_view(), name='office'),
+    path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),
     path("donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
     path("partners/", PartnerList.as_view(), name='partners_list'),
     path("daily-square/", DailySquareList.as_view(), name='daily_square_list'),

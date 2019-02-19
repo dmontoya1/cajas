@@ -5,8 +5,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
+from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquareHandler
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
+from cajas.users.views.partner.partner_handler import PartnerHandler
+from cajas.users.views.users.user_handler import UsersHandler
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from office.models.office import Office
 
@@ -35,27 +38,27 @@ class PartnerCreate(LoginRequiredMixin, View):
             daily_square = False
         initial_value = request.POST['initial_value']
         office = Office.objects.get(pk=request.POST['office'])
-        user = User(
-            email=email,
-            username=email,
-            first_name=first_name,
-            last_name=last_name,
-            document_type=document_type,
-            document_id=document_id
-        )
-        user.save()
-
-        partner = Partner(
-            user=user,
-            office=office,
-            partner_type=partner_type,
-            direct_partner=direct_partner,
-            is_daily_square=daily_square
-        )
-        partner.save()
+        data_user = {
+            'email': email,
+            'username': email,
+            'first_name': first_name,
+            'last_name': last_name,
+            'document_type': document_type,
+            'document_id': document_id
+        }
+        user = UsersHandler.create_user(data_user)
+        data_partner = {
+            'user': user,
+            'office': office,
+            'partner_type': partner_type,
+            'direct_partner': direct_partner,
+            'is_daily_square': daily_square
+        }
+        partner = PartnerHandler.partner_create(data_partner)
+        if daily_square:
+            box_daily_square = BoxDailySquareHandler.box_daily_square_create(user)
         if int(initial_value) > 0:
             ip = get_ip(request)
-
             data = {
                 'partner': partner,
                 'initial_value': initial_value,

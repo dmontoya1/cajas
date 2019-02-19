@@ -46,13 +46,3 @@ def create_partner_box(sender, **kwargs):
             partner=instance,
         )
         box.save()
-        if instance.is_daily_square:
-            if BoxDailySquare.objects.get(user=instance.user):
-                box_daily = BoxDailySquare.objects.get(user=instance.user)
-            else:
-                box_daily = None
-            if not box_daily:
-                box1 = BoxDailySquare(
-                    user=instance.user
-                )
-                box1.save()
