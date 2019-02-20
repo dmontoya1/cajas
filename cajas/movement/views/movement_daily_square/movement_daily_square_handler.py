@@ -7,5 +7,5 @@ class MovementDailySquareHandler(object):
     """
 
     @staticmethod
-    def create_movement(cls, data):
+    def create_movement(data):
         return MovementCreate(data).call()

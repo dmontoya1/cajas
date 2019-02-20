@@ -15,17 +15,27 @@ class MovementCreate(object):
         self._date = data['date']
         self._responsible = data['responsible']
         self._ip = data['ip']
+        self._unit = data['unit']
+        self._user = data['user']
+        self._country = data['country']
+        self._loan = data['loan']
+        self._chain = data['chain']
+        self._office = data['office']
 
     def call(self):
         movement = MovementDailySquare(
-            box_partner=self._box,
+            box_daily_square=self._box,
             concept=self._concept,
             movement_type=self._movement_type,
             value=self._value,
             detail=self._detail,
             date=self._date,
             responsible=self._responsible,
-            ip=self._ip
+            ip=self._ip,
+            unit=self._unit,
+            user=self._user,
+            country=self._country,
+            office=self._office,
         )
         movement.save()
         return movement

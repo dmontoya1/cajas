@@ -5,5 +5,5 @@ from .create_movement_service import CreateMovementService
 class MovementDonJuan(object):
 
     @staticmethod
-    def create(cls, data):
+    def create(data):
         return CreateMovementService(data).call()

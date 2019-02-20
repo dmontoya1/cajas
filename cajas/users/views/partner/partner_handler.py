@@ -7,5 +7,5 @@ class PartnerHandler(object):
     """
 
     @staticmethod
-    def partner_create(cls, data):
+    def partner_create(data):
         return PartnerCreate(data).call()

@@ -7,5 +7,5 @@ class UsersHandler(object):
     """
 
     @staticmethod
-    def create_user(cls, data):
+    def create_user(data):
         return CreateUser(data).call()
