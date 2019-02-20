@@ -6,6 +6,6 @@ class PartnerHandler(object):
     """
     """
 
-    @classmethod
+    @staticmethod
     def partner_create(cls, data):
         return PartnerCreate(data).call()

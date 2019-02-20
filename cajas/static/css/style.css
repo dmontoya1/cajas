@@ -2644,3 +2644,12 @@ button.add-movement {
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center !important;
 }
+
+input#daily_square {
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  height: 23px;
+  width: 23px;
+  background-color: #ffffff;
+}

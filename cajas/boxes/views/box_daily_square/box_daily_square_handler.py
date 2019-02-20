@@ -6,6 +6,6 @@ class BoxDailySquareHandler(object):
     """
     """
 
-    @classmethod
+    @staticmethod
     def box_daily_square_create(cls, user):
         return BoxCreate(user).call()

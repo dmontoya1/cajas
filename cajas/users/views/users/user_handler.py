@@ -6,6 +6,6 @@ class UsersHandler(object):
     """
     """
 
-    @classmethod
+    @staticmethod
     def create_user(cls, data):
         return CreateUser(data).call()

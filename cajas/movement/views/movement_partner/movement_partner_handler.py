@@ -7,19 +7,19 @@ from .create_new_partner_movements import CreateNewPartnerMovements
 
 class MovementPartnerHandler(object):
 
-    @classmethod
+    @staticmethod
     def create_simple(cls, data):
         return CreateMovementSimpleService(data).call()
 
-    @classmethod
+    @staticmethod
     def create_double(cls, data):
         return CreateMovementDoubleService(data).call()
 
-    @classmethod
+    @staticmethod
     def create_simple_double(cls, data):
         return CreateNewPartnerMovements(data).call()
 
-    @classmethod
+    @staticmethod
     def create_partner_movements(cls, data):
         """función para crear los movimientos cuando se crea un nuevo socio, y éste entra
         con precio inicial > 0

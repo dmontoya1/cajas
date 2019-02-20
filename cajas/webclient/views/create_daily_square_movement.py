@@ -8,7 +8,7 @@ from django.views.generic import View
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from concepts.models.concepts import Concept
-from movement.models.movement_daily_square import MovementDailySquare
+from movement.views.movement_daily_square.movement_daily_square_handler import MovementDailySquareHandler
 
 from .get_ip import get_ip
 
@@ -28,16 +28,16 @@ class CreateDailySquareMovement(View):
 
         ip = get_ip(request)
 
-        movement = MovementDailySquare(
-            box_daily_square=box_daily_square,
-            concept=concept,
-            date=date,
-            movement_type=movement_type,
-            value=value,
-            detail=detail,
-            responsible=request.user,
-            ip=ip,
-        )
-        movement.save()
+        data = {
+            'box_daily_square': box_daily_square,
+            'concept': concept,
+            'date': date,
+            'movement_type': movement_type,
+            'value': value,
+            'detail': detail,
+            'responsible': request.user,
+            'ip': ip,
+        }
+        movement = MovementDailySquareHandler.create_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'pk': request.POST['user_id']}))
