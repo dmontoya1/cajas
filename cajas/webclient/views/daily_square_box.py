@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
+from office.models.office import Office
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -21,8 +22,10 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         user_pk = self.kwargs['pk']
         user = User.objects.get(pk=user_pk)
         box_daily_square = get_object_or_404(BoxDailySquare, user=user)
+        offices = Office.objects.all()
         partners = Partner.objects.filter(office=box_daily_square.office)
         context['box'] = box_daily_square
+        context['offices'] = offices
         context['partners'] = partners
         context['box_user'] = user
         return context

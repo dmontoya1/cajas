@@ -14,6 +14,14 @@ class MovementDailySquare(MovementMixin):
     """Modelo para guardar los movimientos de las cajas del cuadre diario
     """
 
+    APPROVED = 'AP'
+    DENIED = 'DE'
+
+    STATUS = (
+        (APPROVED, 'Aprobado'),
+        (DENIED, 'Rechazado')
+    )
+
     box_daily_square = models.ForeignKey(
         BoxDailySquare,
         verbose_name='Caja Cuadre Diario',
@@ -46,6 +54,22 @@ class MovementDailySquare(MovementMixin):
         on_delete=models.SET_NULL,
         blank=True, null=True
     )
+    review = models.BooleanField(
+        'Movimiento Revisado?',
+        default=False
+    )
+    status = models.CharField(
+        'Estado de la revisión',
+        max_length=2,
+        choices=STATUS,
+        blank=True,
+        null=True,
+    )
+    denied_detail = models.TextField(
+        'Detalle del rechazo del movimiento',
+        blank=True,
+        null=True
+    )
 
     def save(self, *args, **kwargs):
         if self.box_daily_square.balance:
@@ -64,7 +88,7 @@ class MovementDailySquare(MovementMixin):
         self.box_daily_square.save()
 
     def __str__(self):
-        return "Movimiento del {}".format(self.box_daily_square.user)
+        return "Movimiento de {}".format(self.box_daily_square.user)
 
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'

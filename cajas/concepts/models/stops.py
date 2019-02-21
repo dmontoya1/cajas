@@ -27,7 +27,7 @@ class Stop(models.Model):
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
-        User, 
+        User,
         verbose_name='Socio, empleado',
         on_delete=models.CASCADE,
         blank=True, null=True

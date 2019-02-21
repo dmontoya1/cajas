@@ -1,8 +1,7 @@
 from django.urls import path
 
-from .views import movement_don_juan
-from .views.movement_office.movement_office_create import MovementOfficeCreate
-from .views.movement_office.movement_detail import MovementOfficeDetail
+from .api.views.movement_office.movement_office_create import MovementOfficeCreate
+from .api.views.movement_office.movement_detail import MovementOfficeDetail
 
 app_name = 'movements'
 urlpatterns = [

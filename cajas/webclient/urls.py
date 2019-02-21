@@ -1,6 +1,9 @@
 from django.conf import settings
 from django.urls import include, path
 
+from movement.api.views.movement_daily_square.accept_movement import AcceptMovement
+from movement.api.views.movement_daily_square.denied_movement import DeniedMovement
+
 from .views.box_don_juan_office import BoxDonJuanOffice
 from .views.create_daily_square_movement import CreateDailySquareMovement
 from .views.create_office_movement import CreateOfficeMovement
@@ -26,4 +29,6 @@ urlpatterns = [
     path("create_office_movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("create-partner-movement/", CreatePartnerMovement.as_view(), name='add_partner_movement'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
+    path("accept-daily-square-movement/", AcceptMovement.as_view(), name='accept_daily_square_movement'),
+    path("denied-daily-square-movement/", DeniedMovement.as_view(), name='denied_daily_square_movement'),
 ]

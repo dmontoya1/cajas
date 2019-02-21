@@ -21,16 +21,17 @@ class CreateMovementDoubleService(object):
         self._ip = data['ip']
 
     def call(self):
-        movement1 = CreateMovementSimpleService(
-            self._partner.box,
-            self._concept,
-            self._movement_type,
-            self._value,
-            self._detail,
-            self._date,
-            self._responsible,
-            self._ip
-        ).call()
+        data1 = {
+            'box': self._partner.box,
+            'concept': self._concept,
+            'movement-type': self._movement_type,
+            'value': self._value,
+            'detail': self._detail,
+            'date': self._date,
+            'responsible': self._responsible,
+            'ip': self._ip
+        }
+        movement1 = CreateMovementSimpleService(data1).call()
         if self._movement_type == 'IN':
             contrapart = 'OUT'
         else:
@@ -49,14 +50,15 @@ class CreateMovementDoubleService(object):
             )
         elif self._partner.partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
-            movement2 = CreateMovementSimpleService(
-                box_direct_partner,
-                self._concept,
-                contrapart,
-                self._value,
-                self._detail,
-                self._date,
-                self._responsible,
-                self._ip
-            ).call()
+            data2 = {
+                'box': box_direct_partner,
+                'concept': self._concept,
+                'movement-type': contrapart,
+                'value': self._value,
+                'detail': self._detail,
+                'date': self._date,
+                'responsible': self._responsible,
+                'ip': self._ip
+            }
+            movement2 = CreateMovementSimpleService(data2).call()
         return movement1

@@ -118,8 +118,12 @@
                                                 <td>{% if m.movement_type == 'OUT' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>${{m.balance|intcomma}}{{office.country.currency.abbr}}</td>
                                                 <td>
-                                                    <a href="#" class="accept-mv" data-id="{{m.pk}}">Aprobar</a>
-                                                    <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</button>
+                                                    {% if not m.review %}
+                                                        <a href="#" class="accept-mv" data-id="{{m.pk}}">Aprobar</a>
+                                                        <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</button>
+                                                    {% else %}
+                                                        {{m.get_status_display}}
+                                                    {% endif %}
                                                 </td>
                                             </tr>
                                         {% endfor %}
@@ -191,7 +195,10 @@
                             <div class="form-group col-md-6 office-select d-none">
                                 <label for="office">Oficina</label>
                                 <select class="form-control" id="office" name="office" style="width: 100%; height: 20px;">
-                                    
+                                    <option value="" selected disabled>Selecciona una oficina</option>
+                                    {% for o in offices %}
+                                        <option value="{{o.pk}}">{{o}}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <div class="form-group col-md-6 partner-select d-none">
@@ -395,6 +402,80 @@
             .catch(function (error) {
                 // handle error
                 console.log(error);
+            })
+        })
+    
+        $('.accept-mv').on('click', function(){
+            id = $(this).data('id')
+            Swal.fire({
+                title: 'Estas Seguro?',
+                text: "Seguro quieres aprobar este movimiento?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, Aprobar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true,
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.value) {
+                    axios.post('{% url "webclient:accept_daily_square_movement" %}', {
+                        movement_id: id,
+                    })
+                    .then(function (response) {
+                        Swal.fire({
+                            title: 'Exitoso!',
+                            text: response.data,
+                            type: 'success',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload()
+                            }
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        console.log(error.response)
+                    });
+                }
+            })
+        })
+
+        $('.decline-mv').on('click', function(){
+            id = $(this).data('id')
+            const {value: text} = Swal.fire({
+                title: 'Escribe el motivo del rechazo del movimiento',
+                input: 'textarea',
+                inputPlaceholder: 'Se rechaza el movimiento porque ...',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return !value && 'Debes escribir el motivo del rechazo'
+                },
+                allowOutsideClick: false,
+                showCloseButton: true
+            }).then((result) => {
+                axios.post('{% url "webclient:denied_daily_square_movement" %}', {
+                    movement_id: id,
+                    text: result.value
+                })
+                .then(function (response) {
+                    Swal.fire({
+                        title: 'Exitoso!',
+                        text: response.data,
+                        type: 'success',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload()
+                        }
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    console.log(error.response)
+                });
             })
         })
     </script>

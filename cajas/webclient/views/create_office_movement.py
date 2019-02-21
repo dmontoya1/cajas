@@ -25,7 +25,7 @@ class CreateOfficeMovement(View):
         detail = request.POST['detail']
         ip = get_ip(request)
 
-        movement = MovementOffice(
+        movement = MovementOffice.create(
             box_office=box_office,
             concept=concept,
             date=date,
@@ -34,8 +34,6 @@ class CreateOfficeMovement(View):
             detail=detail,
             responsible=request.user,
             ip=ip,
-
         )
-        movement.save()
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return HttpResponseRedirect('/')
