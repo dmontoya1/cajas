@@ -3,7 +3,7 @@ from datetime import datetime
 
 from boxes.models.box_don_juan import BoxDonJuan
 from boxes.models.box_partner import BoxPartner
-from concepts.models.concepts import Concept
+from concepts.models.concepts import Concept, ConceptType
 from cajas.users.models.partner import PartnerType
 
 from ...models.movement_partner import MovementPartner
@@ -20,7 +20,7 @@ class CreateNewPartnerMovements(object):
         self._ip = data['ip']
 
     def call(self):
-        concept1 = Concept.objects.get(name='Aporte personal socio', concept_type='SD')
+        concept1 = Concept.objects.get(name='Aporte personal socio', concept_type=ConceptType.SIMPLEDOUBLE)
         data1 = {
             'box': self._partner.box,
             'concept': concept1,
@@ -32,7 +32,7 @@ class CreateNewPartnerMovements(object):
             'ip': self._ip
         }
         movement1 = CreateMovementSimpleService(data1).call()
-        concept2 = Concept.objects.get(name='Aporte socio directo', concept_type='SD')
+        concept2 = Concept.objects.get(name='Aporte socio directo')
         if self._partner.partner_type == PartnerType.DIRECTO:
             box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
             data2 = {
