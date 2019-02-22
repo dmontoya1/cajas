@@ -16,7 +16,7 @@ class CreateUser(object):
             raise ValidationError('Todos los datos son obligatorios')
 
     def call(self):
-        user = User(
+        user = User.objects.create(
             email=self._email,
             username=self._username,
             first_name=self._first_name,

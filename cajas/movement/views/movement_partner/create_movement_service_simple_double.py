@@ -7,7 +7,7 @@ from concepts.models.concepts import Concept
 from cajas.users.models.partner import PartnerType
 
 from ...models.movement_partner import MovementPartner
-from ..movement_don_juan.movement_don_juan import MovementDonJuan
+from ..movement_don_juan.movement_don_juan_handler import MovementDonJuanHandler
 from .create_movement_service_simple import CreateMovementSimpleService
 
 
@@ -41,16 +41,17 @@ class CreateMovementSimpleDoubleService(object):
             contrapart = 'IN'
         if self._partner.partner_type == PartnerType.DIRECTO:
             box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
-            movement2 = MovementDonJuan.create(
-                box_don_juan,
-                self._concept,
-                contrapart,
-                self._value,
-                self._detail,
-                self._date,
-                self._responsible,
-                self._ip
-            )
+            data2 = {
+                'box': box_don_juan,
+                'concept': self._concept,
+                'movement_type': contrapart,
+                'value': self._value,
+                'detail': self._detail,
+                'date': self._date,
+                'responsible': self._responsible,
+                'ip': self._ip
+            }
+            movement2 = MovementDonJuanHandler.create(data2)
         elif self._partner.partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
             data2 = {

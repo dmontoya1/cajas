@@ -15,7 +15,7 @@ class CreateMovementCountry(object):
         self._ip = data['ip']
 
     def call(self):
-        movement = MovementCountry.create(
+        movement = MovementCountry.objects.create(
             box_country=self._box,
             concept=self._concept,
             movement_type=self._movement_type,

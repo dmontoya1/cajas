@@ -15,7 +15,7 @@ class CreateMovementSimpleService(object):
         self._ip = data['ip']
 
     def call(self):
-        movement = MovementPartner(
+        movement = MovementPartner.objects.create(
             box_partner=self._box,
             concept=self._concept,
             movement_type=self._movement_type,
@@ -25,5 +25,4 @@ class CreateMovementSimpleService(object):
             responsible=self._responsible,
             ip=self._ip
         )
-        movement.save()
         return movement

@@ -7,7 +7,7 @@ from concepts.models.concepts import Concept
 from cajas.users.models.partner import PartnerType
 
 from ...models.movement_partner import MovementPartner
-from ..movement_don_juan.movement_don_juan import MovementDonJuan
+from ..movement_don_juan.movement_don_juan_handler import MovementDonJuanHandler
 from .create_movement_service_simple import CreateMovementSimpleService
 
 
@@ -44,7 +44,7 @@ class CreateNewPartnerMovements(object):
                 'responsible': self._responsible,
                 'ip': self._ip
             }
-            movement2 = MovementDonJuan.create(data2)
+            movement2 = MovementDonJuanHandler.create(data2)
         elif self._partner.partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
             data2 = {

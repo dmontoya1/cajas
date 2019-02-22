@@ -17,12 +17,11 @@ class PartnerCreate(object):
             raise ValidationError('Todos los datos son obligatorios')
 
     def call(self):
-        partner = Partner(
+        partner = Partner.objects.create(
             user=self._user,
             office=self._office,
             partner_type=self._partner_type,
             direct_partner=self._direct_partner,
             is_daily_square=self._is_daily_square,
         )
-        partner.save()
         return partner

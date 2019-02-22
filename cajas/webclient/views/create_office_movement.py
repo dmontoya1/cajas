@@ -25,7 +25,7 @@ class CreateOfficeMovement(View):
         detail = request.POST['detail']
         ip = get_ip(request)
 
-        movement = MovementOffice.create(
+        movement = MovementOffice.objects.create(
             box_office=box_office,
             concept=concept,
             date=date,

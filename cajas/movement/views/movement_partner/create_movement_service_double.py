@@ -38,7 +38,7 @@ class CreateMovementDoubleService(object):
             contrapart = 'IN'
         if self._partner.partner_type == PartnerType.DIRECTO:
             box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
-            movement2 = MovementDonJuan.create(
+            movement2 = MovementDonJuan.objects.create(
                 box_don_juan,
                 self._concept,
                 contrapart,

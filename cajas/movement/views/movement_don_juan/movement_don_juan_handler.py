@@ -2,7 +2,7 @@
 from .create_movement_service import CreateMovementService
 
 
-class MovementDonJuan(object):
+class MovementDonJuanHandler(object):
 
     @staticmethod
     def create(data):
