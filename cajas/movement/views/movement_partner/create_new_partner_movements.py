@@ -20,10 +20,10 @@ class CreateNewPartnerMovements(object):
         self._ip = data['ip']
 
     def call(self):
-        concept = Concept.objects.get(name='Aporte Socio', concept_type='SD')
+        concept1 = Concept.objects.get(name='Aporte personal socio', concept_type='SD')
         data1 = {
             'box': self._partner.box,
-            'concept': concept,
+            'concept': concept1,
             'movement_type': 'IN',
             'value': self._value,
             'detail': 'Aporte Inicial Socio',
@@ -32,11 +32,12 @@ class CreateNewPartnerMovements(object):
             'ip': self._ip
         }
         movement1 = CreateMovementSimpleService(data1).call()
+        concept2 = Concept.objects.get(name='Aporte socio directo', concept_type='SD')
         if self._partner.partner_type == PartnerType.DIRECTO:
             box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
             data2 = {
                 'box': box_don_juan,
-                'concept': concept,
+                'concept': concept2,
                 'movement_type': 'OUT',
                 'value': int(self._value)*2,
                 'detail': 'Salida Aporte Nuevo socio {}'.format(self._partner),
@@ -49,7 +50,7 @@ class CreateNewPartnerMovements(object):
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
             data2 = {
                 'box': box_direct_partner,
-                'concept': concept,
+                'concept': concept2,
                 'movement_type': 'OUT',
                 'value': int(self._value)*2,
                 'detail': 'Salida Aporte Nuevo socio {}'.format(self._partner),
@@ -60,7 +61,7 @@ class CreateNewPartnerMovements(object):
             movement2 = CreateMovementSimpleService(data2).call()
         data3 = {
             'box': self._partner.box,
-            'concept': concept,
+            'concept': concept2,
             'movement_type': 'IN',
             'value': int(self._value)*2,
             'detail': 'Aporte Inicial Socio directo',
