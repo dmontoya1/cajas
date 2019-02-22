@@ -29,7 +29,7 @@ class BoxOffice(models.Model):
 
     def __str__(self):
         if self.office is not None:
-            return "Caja de {}".format(self.office.name)
+            return "Caja de {}".format(self.office)
         return "Caja de oficina"
 
     class Meta:
