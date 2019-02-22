@@ -4,7 +4,7 @@ from boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import PartnerType
 
 from ...models.movement_partner import MovementPartner
-from ..movement_don_juan.movement_don_juan import MovementDonJuan
+from ..movement_don_juan.movement_don_juan_handler import MovementDonJuanHandler
 from .create_movement_service_simple import CreateMovementSimpleService
 
 
