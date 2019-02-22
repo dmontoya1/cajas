@@ -15,7 +15,7 @@ class CreateMovementOffice(object):
         self._ip = data['ip']
 
     def call(self):
-        movement = MovementOffice.create(
+        movement = MovementOffice(
             box_office=self._box,
             concept=self._concept,
             movement_type=self._movement_type,
@@ -25,4 +25,5 @@ class CreateMovementOffice(object):
             responsible=self._responsible,
             ip=self._ip
         )
+        movement.save()
         return movement
