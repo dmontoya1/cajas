@@ -23,7 +23,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         user = User.objects.get(pk=user_pk)
         box_daily_square = get_object_or_404(BoxDailySquare, user=user)
         offices = Office.objects.all()
-        partners = Partner.objects.filter(office=box_daily_square.office)
+        partners = Partner.objects.filter(office=box_daily_square.office).order_by('user__first_name')
         context['box'] = box_daily_square
         context['offices'] = offices
         context['partners'] = partners
