@@ -303,11 +303,11 @@ $.fn.dynamicForm = function (selectedTarget, plusSelector, minusSelector, option
 	function normalizeClone(elmnt, index){
 		var match, matchRegEx = /(.+\[[^\[\]]+\]\[)(\d+)(\]\[[^\[\]]+\])$/;
 		elmnt.find(formFields).each(function(){
-			var that = $(this),
-			nameAttr = that.attr("name"), 
-			origNameAttr = that.attr("origname"),
-			idAttr = that.attr("id"),
-			newIdAttr = idAttr.slice(0,-1) + index,
+			var that = $(this)
+			nameAttr = that.attr("name")
+			origNameAttr = that.attr("origname")
+			idAttr = that.attr("id")
+			newIdAttr = idAttr.slice(0,-1) + index,newIdAttr = idAttr.slice(0,-1) + index
 			match = matchRegEx.exec(nameAttr);
 			that.attr("name", match[1]+index+match[3]);
 			

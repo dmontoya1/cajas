@@ -2640,6 +2640,14 @@ button.add-movement {
   padding: 7px 20px;
 }
 
+.dispersion-mv {
+  background-color: var(--green-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+  margin-left: 5px;
+}
+
 
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center !important;
@@ -2652,4 +2660,8 @@ input#daily_square {
   height: 23px;
   width: 23px;
   background-color: #ffffff;
+}
+
+.btn {
+  border-radius: 10px !important;
 }

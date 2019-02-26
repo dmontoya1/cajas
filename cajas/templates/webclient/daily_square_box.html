@@ -120,7 +120,11 @@
                                                 <td>
                                                     {% if not m.review %}
                                                         <a href="#" class="accept-mv" data-id="{{m.pk}}">Aprobar</a>
-                                                        <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</button>
+                                                        <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</a>
+                                                        <a href="#" class="dispersion-mv" data-pk="{{m.pk}}" data-value="{{m.value}}" data-toggle="modal" 
+                                                            data-target="#dispersionMovement">
+                                                            Dispersión
+                                                        </a>
                                                     {% else %}
                                                         {{m.get_status_display}}
                                                     {% endif %}
@@ -134,7 +138,7 @@
                     </div>
                 </div>
                 {% if request.user.employee.charge.name == 'Secretaria' %}
-                    <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+                    <a href="" class="float" data-toggle="modal" data-target="#addMovement">
                         <i class="fa fa-plus my-float"></i>
                     </a>
                     <div class="label-container">
@@ -147,7 +151,7 @@
     </div>
 
     <!-- Modal add movement -->
-    <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -255,6 +259,49 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal dispersion -->
+    <div class="modal fade" id="dispersionMovement" role="dialog" aria-labelledby="dispersionMovementTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Dispersión de movimiento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="dispersion-mv" action="{% url 'webclient:add_daily_square_movement' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="" class="movement-id">
+                        <input type="hidden" name="value" value="" class="movement-value">
+                        <div class="form-group" id="dynamic_form">
+                            <div class="row justify-content-center" id="field">
+                                <div class="col-md-5">
+                                    <label for="partner">Socio</label>
+                                    <select class="form-control select2-test" name="partner" id="partner" style="width: 100%">
+                                        <option value="" selected disabled>Selecciona un socio</option>
+                                        {% for p in partners %}
+                                            <option value="{{p.pk}}">{{p}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="value">Valor</label>
+                                    <input type="text" class="form-control" name="value" id="value" placeholder="Ingresa el Valor">
+                                </div>
+                                <div class="col-md-2 pt-4">
+                                    <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-primary float-right" id="plus5">Agregar socio</a>
+                        </div>
+                        <button type="submit" class="btn btn-submit float-right mt-5">Dispersar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -269,7 +316,8 @@
     <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
     <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
     <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
     <script type="text/javascript">
     
         $(document).ready(function() {
@@ -309,11 +357,25 @@
                 }
             });
 
-            $('select').each(function() {
+            $('.add-movement select').each(function() {
                 $(this).select2({
                     language: "es"
                 });
             });
+
+            var dynamic_form =  $("#dynamic_form").dynamicForm("#dynamic_form","#plus5", "#minus5", {
+		        limit:15,
+		        formPrefix : "form",
+                normalizeFullForm : true,
+		    });
+
+		    $("#dynamic_form #minus5").on('click', function(){
+		    	var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
+		    	if (initDynamicId === 2) {
+		    		$(this).closest('#dynamic_form').next().find('#minus5').hide();
+		    	}
+		    	$(this).closest('#dynamic_form').remove();
+		    });
         });
 
         $('#concept').on('change', function(){
@@ -420,7 +482,7 @@
                 allowOutsideClick: false
             }).then((result) => {
                 if (result.value) {
-                    axios.post('{% url "webclient:accept_daily_square_movement" %}', {
+                    axios.post('{% url "api:movements:accept_daily_square_movement" %}', {
                         movement_id: id,
                     })
                     .then(function (response) {
@@ -456,7 +518,7 @@
                 allowOutsideClick: false,
                 showCloseButton: true
             }).then((result) => {
-                axios.post('{% url "webclient:denied_daily_square_movement" %}', {
+                axios.post('{% url "api:movements:denied_daily_square_movement" %}', {
                     movement_id: id,
                     text: result.value
                 })
@@ -478,5 +540,55 @@
                 });
             })
         })
+        
+        $('.dispersion-mv').on('click', function(){
+            id = $(this).data('pk')
+            value = $(this).data('value')
+            $('.movement-id').val(id)
+            $('.movement-value').val(value)
+        })
+
+        $('form#dispersion-mv').on('submit', function(event){
+            event.preventDefault();
+            var values = {};
+            counter = -3
+            $.each($('form#dispersion-mv').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+                counter += 1
+            });
+            values['counter'] = counter
+            total = 0
+            for (var i = 0; i < counter / 2; i++) {
+                total = total + parseInt(values[`form[form][${i}][value]`])
+            }
+            if (total !== parseInt(values['value'])){
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: `El valor del movimiento y el de la suma de los movimiento de la dispersión son diferentes ($${total} difiere de $${values['value']})`,
+                })
+            }
+            else {
+                axios.post('{% url "api:movements:dispersion-movement" %}', values )
+                .then(function (response) {
+                    Swal.fire({
+                        title: 'Exitoso!',
+                        text: response.data,
+                        type: 'success',
+                        allowOutsideClick: false
+                    })
+                    .then((result) => {
+                        if (result.value) {
+                            location.reload()
+                        }
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    console.log(error.response)
+                });
+            }
+        })
+    
     </script>
 {% endblock%}
