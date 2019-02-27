@@ -4,18 +4,18 @@ from ...models.movement_partner import MovementPartner
 
 class CreateMovementSimpleService(object):
 
-    def __init__(self, box, concept, movement_type, value, detail, date, responsible, ip):
-        self._box = box
-        self._concept = concept
-        self._movement_type = movement_type
-        self._value = value
-        self._detail = detail
-        self._date = date
-        self._responsible = responsible
-        self._ip = ip
+    def __init__(self, data):
+        self._box = data['box']
+        self._concept = data['concept']
+        self._movement_type = data['movement_type']
+        self._value = data['value']
+        self._detail = data['detail']
+        self._date = data['date']
+        self._responsible = data['responsible']
+        self._ip = data['ip']
 
     def call(self):
-        movement = MovementPartner(
+        movement = MovementPartner.objects.create(
             box_partner=self._box,
             concept=self._concept,
             movement_type=self._movement_type,
@@ -25,5 +25,4 @@ class CreateMovementSimpleService(object):
             responsible=self._responsible,
             ip=self._ip
         )
-        movement.save()
         return movement

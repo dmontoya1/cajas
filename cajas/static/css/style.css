@@ -2580,6 +2580,9 @@ button.close {
   height: 40px;
   padding: 0 !important;
   margin: 0 !important;
+  position: absolute;
+  right: 20px;
+  top: 8px;
 }
 
 button.btn.btn-submit {
@@ -2623,6 +2626,42 @@ button.add-movement {
   padding: 10px;
 }
 
+.accept-mv {
+  background-color: var(--aqua-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+}
+
+.decline-mv {
+  background-color: #f3034b;
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+}
+
+.dispersion-mv {
+  background-color: var(--green-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+  margin-left: 5px;
+}
+
+
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center !important;
+}
+
+input#daily_square {
+  position: absolute;
+  top: 35px;
+  left: 10px;
+  height: 23px;
+  width: 23px;
+  background-color: #ffffff;
+}
+
+.btn {
+  border-radius: 10px !important;
 }

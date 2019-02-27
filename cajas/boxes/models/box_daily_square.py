@@ -1,6 +1,7 @@
 from django.db import models
 
 from cajas.users.models.user import User
+from office.models.office import Office
 
 
 class BoxDailySquare(models.Model):
@@ -12,6 +13,13 @@ class BoxDailySquare(models.Model):
         verbose_name='Usuario',
         on_delete=models.SET_NULL,
         blank=True, null=True
+    )
+    office = models.ForeignKey(
+        Office,
+        verbose_name='Oficina',
+        related_name='related_daily_square_boxes',
+        blank=True, null=True,
+        on_delete=models.SET_NULL
     )
     balance = models.IntegerField(
         "Saldo de la caja",

@@ -8,16 +8,15 @@ from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.auth_logs import AuthLogs
 from cajas.users.models.partner import Partner
 
+from webclient.views.get_ip import get_ip
+
 from movement.views.movement_don_juan.movement_don_juan import MovementDonJuan
 
 
 @receiver(user_logged_in)
 def after_user_logged_in(sender, request, user, **kwargs):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
+    ip = get_ip(request)
 
     log = AuthLogs(
         ip=ip,
@@ -29,11 +28,7 @@ def after_user_logged_in(sender, request, user, **kwargs):
 
 @receiver(user_logged_out)
 def after_user_logged_out(sender, request, user, **kwargs):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
+    ip = get_ip(request)
 
     log = AuthLogs(
         ip=ip,
@@ -51,13 +46,3 @@ def create_partner_box(sender, **kwargs):
             partner=instance,
         )
         box.save()
-        if instance.is_daily_square:
-            if BoxDailySquare.objects.get(user=instance.user):
-                box_daily = BoxDailySquare.objects.get(user=instance.user)
-            else:
-                box_daily = None
-            if not box_daily:
-                box1 = BoxDailySquare(
-                    user=instance.user
-                )
-                box1.save()

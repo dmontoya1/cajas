@@ -82,9 +82,14 @@ class Partner(models.Model):
         "Funcion para generar el código del socio"
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
-                self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
-                self.office.consecutive += 1
-                self.office.save()
+                if self.partner_type == PartnerType.DIRECTO:
+                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
+                    self.office.consecutive += 1
+                    self.office.save()
+                else:
+                    self.code = '{}-{}'.format(self.direct_partner.code, self.direct_partner.consecutive)
+                    self.direct_partner.consecutive += 1
+                    self.direct_partner.save()
             else:
                 self.code = 'DONJUAN'
         super(Partner, self).save(*args, **kwargs)

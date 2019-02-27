@@ -24,8 +24,6 @@ class MovementPartner(MovementMixin):
             l_balance = self.box_partner.balance
         else:
             l_balance = 0
-        print(self.value)
-        print(self.movement_type)
         if self.movement_type == MovementPartner.IN:
             self.balance = int(l_balance) + int(self.value)
         else:

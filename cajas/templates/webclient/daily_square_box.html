@@ -104,7 +104,7 @@
                                             <th>Entra</th>
                                             <th>Sale</th>
                                             <th>Saldo</th>
-                                            <!-- <th></th> -->
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -113,11 +113,22 @@
                                                 <td>{{m.responsible.get_full_name}}</td>
                                                 <td>{{m.date|date:"d-M-Y"}}</td>
                                                 <td>{{m.concept.name}}</td>
-                                                <td><a href="#">Detalle</a></td>
+                                                <td>{{m.detail}}</td>
                                                 <td>{% if m.movement_type == 'IN' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>{% if m.movement_type == 'OUT' %}${{m.value|intcomma}} {{office.country.currency.abbr}}{%else%}-{%endif%}</td>
                                                 <td>${{m.balance|intcomma}}{{office.country.currency.abbr}}</td>
-                                                <!-- <td>Actions</td> -->
+                                                <td>
+                                                    {% if not m.review %}
+                                                        <a href="#" class="accept-mv" data-id="{{m.pk}}">Aprobar</a>
+                                                        <a href="#" class="decline-mv" data-id="{{m.pk}}">Rechazar</a>
+                                                        <a href="#" class="dispersion-mv" data-pk="{{m.pk}}" data-value="{{m.value}}" data-toggle="modal" 
+                                                            data-target="#dispersionMovement">
+                                                            Dispersión
+                                                        </a>
+                                                    {% else %}
+                                                        {{m.get_status_display}}
+                                                    {% endif %}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -127,7 +138,7 @@
                     </div>
                 </div>
                 {% if request.user.employee.charge.name == 'Secretaria' %}
-                    <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+                    <a href="" class="float" data-toggle="modal" data-target="#addMovement">
                         <i class="fa fa-plus my-float"></i>
                     </a>
                     <div class="label-container">
@@ -140,7 +151,7 @@
     </div>
 
     <!-- Modal add movement -->
-    <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -160,7 +171,7 @@
                                 <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
                                     <option disabled selected value="">Selecciona un concepto</option>
                                     {% for concept in concepts %}
-                                        <option value="{{concept.pk}}">{{concept}}</option>
+                                        <option value="{{concept.pk}}" data-relationship="{{concept.relationship}}">{{concept}}</option>
                                     {% endfor %}
                                 </select>
 
@@ -173,7 +184,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="movement_type">Entra / Sale</label>
-                                <select class="form-control" id="movement_type" name="movement_type" required>
+                                <select class="form-control" id="movement_type" name="movement_type" style="width: 100%; height: 20px;" required>
                                     <option selected disabled value="">Selecciona el tipo de movimiento</option>
                                     <option value="IN">Entra</option>
                                     <option value="OUT">Sale</option>
@@ -184,11 +195,108 @@
                                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento" required>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 office-select d-none">
+                                <label for="office">Oficina</label>
+                                <select class="form-control" id="office" name="office" style="width: 100%; height: 20px;">
+                                    <option value="" selected disabled>Selecciona una oficina</option>
+                                    {% for o in offices %}
+                                        <option value="{{o.pk}}">{{o}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 partner-select d-none">
+                                <label for="partner">Socio</label>
+                                <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;">
+                                    <option value="" selected disabled>Selecciona un socio</option>
+                                    {% for p in partners %}
+                                        <option value="{{p.pk}}">{{p}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 unit-select d-none">
+                                <label for="unit">Unidad</label>
+                                <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;">
+                                    <option value="" selected disabled>Selecciona primero un socio</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 user-select d-none">
+                                <label for="user">Persona</label>
+                                <select class="form-control" id="user" name="user" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 country-select d-none">
+                                <label for="country">País</label>
+                                <select class="form-control" id="country" name="country" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 loan-select d-none">
+                                <label for="loan">Préstamo</label>
+                                <select class="form-control" id="loan" name="loan" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6 chain-select d-none">
+                                <label for="chain">Cadena</label>
+                                <select class="form-control" id="chain" name="chain" style="width: 100%; height: 20px;">
+                                    
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label for="detail">Detalle</label>
                             <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-submit">Añadir</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal dispersion -->
+    <div class="modal fade" id="dispersionMovement" role="dialog" aria-labelledby="dispersionMovementTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Dispersión de movimiento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" id="dispersion-mv" action="{% url 'webclient:add_daily_square_movement' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="" class="movement-id">
+                        <input type="hidden" name="value" value="" class="movement-value">
+                        <div class="form-group" id="dynamic_form">
+                            <div class="row justify-content-center" id="field">
+                                <div class="col-md-5">
+                                    <label for="partner">Socio</label>
+                                    <select class="form-control select2-test" name="partner" id="partner" style="width: 100%">
+                                        <option value="" selected disabled>Selecciona un socio</option>
+                                        {% for p in partners %}
+                                            <option value="{{p.pk}}">{{p}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="value">Valor</label>
+                                    <input type="text" class="form-control" name="value" id="value" placeholder="Ingresa el Valor">
+                                </div>
+                                <div class="col-md-2 pt-4">
+                                    <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
+                                </div>
+                            </div>
+                            <a href="#" class="btn btn-primary float-right" id="plus5">Agregar socio</a>
+                        </div>
+                        <button type="submit" class="btn btn-submit float-right mt-5">Dispersar</button>
                     </form>
                 </div>
             </div>
@@ -208,10 +316,10 @@
     <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
     <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
     <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
+    <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
     <script type="text/javascript">
+    
         $(document).ready(function() {
             $('#table').DataTable({
                 responsive: {
@@ -249,9 +357,238 @@
                 }
             });
 
-            $('#concept').select2({
-                language: "es"
+            $('.add-movement select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
             });
+
+            var dynamic_form =  $("#dynamic_form").dynamicForm("#dynamic_form","#plus5", "#minus5", {
+		        limit:15,
+		        formPrefix : "form",
+                normalizeFullForm : true,
+		    });
+
+		    $("#dynamic_form #minus5").on('click', function(){
+		    	var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
+		    	if (initDynamicId === 2) {
+		    		$(this).closest('#dynamic_form').next().find('#minus5').hide();
+		    	}
+		    	$(this).closest('#dynamic_form').remove();
+		    });
         });
+
+        $('#concept').on('change', function(){
+            relationship = $("option:selected", this).data('relationship')
+            switch(relationship) {
+                case 'Oficina':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').removeClass('d-none')
+                    break;
+                case 'Unidad':
+                    $('.unit-select').removeClass('d-none')
+                    $('.partner-select').removeClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Persona':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').removeClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'País':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').removeClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Préstamo':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').removeClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                case 'Cadena':
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').removeClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    break;
+                default:
+                    $('.unit-select').addClass('d-none')
+                    $('.partner-select').addClass('d-none')
+                    $('.user-select').addClass('d-none')
+                    $('.country-select').addClass('d-none')
+                    $('.loan-select').addClass('d-none')
+                    $('.chain-select').addClass('d-none')
+                    $('.office-select').addClass('d-none')
+                    console.log('None')
+            }
+        })
+    
+        $('#partner').on('change', function(){
+            axios.get(`/api/units/${$(this).val()}/list`)
+            .then(function (response) {
+                data = response.data
+                $('#unit').empty()
+                $.each(data, function (k,v){
+                    $('#unit').append(
+                        `<option value=${v.id}>${v.name}</option>`
+                    )
+                })
+                $('#unit').prepend(
+                    '<option value="" selected disabled>Selecciona una unidad</option>'
+                )
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+        })
+    
+        $('.accept-mv').on('click', function(){
+            id = $(this).data('id')
+            Swal.fire({
+                title: 'Estas Seguro?',
+                text: "Seguro quieres aprobar este movimiento?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, Aprobar',
+                cancelButtonText: 'Cancelar',
+                reverseButtons: true,
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.value) {
+                    axios.post('{% url "api:movements:accept_daily_square_movement" %}', {
+                        movement_id: id,
+                    })
+                    .then(function (response) {
+                        Swal.fire({
+                            title: 'Exitoso!',
+                            text: response.data,
+                            type: 'success',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload()
+                            }
+                        })
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        console.log(error.response)
+                    });
+                }
+            })
+        })
+
+        $('.decline-mv').on('click', function(){
+            id = $(this).data('id')
+            const {value: text} = Swal.fire({
+                title: 'Escribe el motivo del rechazo del movimiento',
+                input: 'textarea',
+                inputPlaceholder: 'Se rechaza el movimiento porque ...',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    return !value && 'Debes escribir el motivo del rechazo'
+                },
+                allowOutsideClick: false,
+                showCloseButton: true
+            }).then((result) => {
+                axios.post('{% url "api:movements:denied_daily_square_movement" %}', {
+                    movement_id: id,
+                    text: result.value
+                })
+                .then(function (response) {
+                    Swal.fire({
+                        title: 'Exitoso!',
+                        text: response.data,
+                        type: 'success',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload()
+                        }
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    console.log(error.response)
+                });
+            })
+        })
+        
+        $('.dispersion-mv').on('click', function(){
+            id = $(this).data('pk')
+            value = $(this).data('value')
+            $('.movement-id').val(id)
+            $('.movement-value').val(value)
+        })
+
+        $('form#dispersion-mv').on('submit', function(event){
+            event.preventDefault();
+            var values = {};
+            counter = -3
+            $.each($('form#dispersion-mv').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+                counter += 1
+            });
+            values['counter'] = counter
+            total = 0
+            for (var i = 0; i < counter / 2; i++) {
+                total = total + parseInt(values[`form[form][${i}][value]`])
+            }
+            if (total !== parseInt(values['value'])){
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: `El valor del movimiento y el de la suma de los movimiento de la dispersión son diferentes ($${total} difiere de $${values['value']})`,
+                })
+            }
+            else {
+                axios.post('{% url "api:movements:dispersion-movement" %}', values )
+                .then(function (response) {
+                    Swal.fire({
+                        title: 'Exitoso!',
+                        text: response.data,
+                        type: 'success',
+                        allowOutsideClick: false
+                    })
+                    .then((result) => {
+                        if (result.value) {
+                            location.reload()
+                        }
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    console.log(error.response)
+                });
+            }
+        })
+    
     </script>
 {% endblock%}
