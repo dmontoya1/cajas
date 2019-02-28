@@ -1,7 +1,6 @@
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 
@@ -20,6 +19,13 @@ class CreateDailySquareMovement(View):
     """
     """
 
+    @staticmethod
+    def get_object_or_none(self, Model, **kwargs):
+        try:
+            return Model.objects.get(kwargs)
+        except Model.DoesNotExist:
+            return None
+
     def post(self, request, *args, **kwargs):
         user = User.objects.get(pk=request.POST['user_id'])
         box_daily_square = BoxDailySquare.objects.get(user=user)
@@ -30,30 +36,12 @@ class CreateDailySquareMovement(View):
         detail = request.POST['detail']
 
         ip = get_ip(request)
-        try:
-            unit = get_object_or_404(Unit, pk=request.POST['unit'])
-        except:
-            unit = None
-        try:
-            user = get_object_or_404(User, pk=request.POST['user'])
-        except:
-            user = None
-        try:
-            country = get_object_or_404(Country, pk=request.POST['country'])
-        except:
-            country = None
-        try:
-            loan = request.POST['loan']
-        except:
-            loan = None
-        try:
-            chain = request.POST['chain']
-        except:
-            chain = None
-        try:
-            office = get_object_or_404(Office, pk=request.POST['office'])
-        except:
-            office = None
+        unit = self.get_object_or_none(Unit, pk=request.POST['unit'])
+        user = self.get_object_or_none(User, pk=request.POST['user'])
+        country = self.get_object_or_none(Country, pk=request.POST['country'])
+        office = self.get_object_or_none(Office, pk=request.POST['office'])
+        loan = request.POST['loan']
+        chain = request.POST['chain']
 
         data = {
             'box': box_daily_square,

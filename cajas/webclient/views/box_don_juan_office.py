@@ -19,7 +19,7 @@ class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(BoxDonJuanOffice, self).get_context_data(**kwargs)
         concepts = Concept.objects.filter(is_active=True)
-        office = get_object_or_404(Office, secretary=self.request.user.employee)
+        office = get_object_or_404(Office, slug=self.kwargs['slug'])
         box = get_object_or_404(BoxDonJuan, office=office)
         context['box'] = box
         context['concepts'] = concepts

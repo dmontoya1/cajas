@@ -17,7 +17,8 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DailySquareList, self).get_context_data(**kwargs)
-        office = get_object_or_404(Office, secretary=self.request.user.employee)
+        slug = self.kwargs['slug']
+        office = get_object_or_404(Office, slug=slug)
         partners = Partner.objects.filter(
             office=office,
             user__is_active=True,

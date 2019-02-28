@@ -13,7 +13,8 @@ class Office(models.Model):
     country = models.ForeignKey(
         Country,
         verbose_name='Pais',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='related_offices'
     )
     number = models.IntegerField(
         'Número de la oficina',
@@ -59,6 +60,11 @@ class Office(models.Model):
     consecutive = models.IntegerField(
         'Consecutivo Socios',
         default=1
+    )
+    image = models.ImageField(
+        'Imágen',
+        upload_to='contries/',
+        blank=True, null=True
     )
 
     def __str__(self):

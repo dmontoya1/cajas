@@ -1205,7 +1205,10 @@ header .form-inline {
 .content {
   float: left;
   padding: 1.875em;
-  width: 100%; }
+  width: 100%;
+  background: #f3f3f3;
+  min-height: 100vh;
+}
 
 .card {
   margin-bottom: 1.875em;
@@ -2664,4 +2667,67 @@ input#daily_square {
 
 .btn {
   border-radius: 10px !important;
+}
+
+/*Card-noborders*/
+.card-no-border .card {
+  border-color: #d7dfe3;
+  border-radius: 4px;
+  -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05); }
+
+.card-no-border .sidebar-footer {
+  background: #f2f6f8; }
+
+.card-no-border .sidebar-nav > ul > li > a.active {
+  background: #ffffff; }
+
+.card-no-border .shadow-none {
+  -webkit-box-shadow: none;
+  box-shadow: none; }
+
+.card-outline-danger, .card-outline-info, .card-outline-warning, .card-outline-success, .card-outline-primary {
+  background: #ffffff; }
+
+/*Blog widgets*/
+.blog-widget {
+  margin-top: 30px;
+}
+.blog-widget .blog-image img {
+  border-radius: 4px;
+  margin-top: -45px;
+  margin-bottom: 20px;
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); }
+
+
+.country-row {
+  background-color: #dddddd;
+  padding: 10px;
+  margin: 25px 0 15px 0;
+}
+
+.country-name span {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #3b5f48;
+}
+
+span.office-name {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #444;
+}
+
+ul.notify-list {
+  list-style-type: none;
+  font-size: 0.8em;
+}
+
+span.no-office-home {
+    display: block;
+    background: #eee;
+    font-size: 1.5em;
+    padding: 25px;
+    border: 1px solid #ddd;
 }
