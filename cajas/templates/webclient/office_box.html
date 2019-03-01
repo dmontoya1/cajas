@@ -10,11 +10,11 @@
 {% block navbar %}
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office}}</a>
+            <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{office}}</a>
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown active">
-            <a href="/"> 
+            <a href="{% url 'webclient:office' office.slug %}">
                 <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja oficina
             </a>

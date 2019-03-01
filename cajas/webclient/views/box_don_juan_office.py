@@ -21,6 +21,7 @@ class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
         concepts = Concept.objects.filter(is_active=True)
         office = get_object_or_404(Office, slug=self.kwargs['slug'])
         box = get_object_or_404(BoxDonJuan, office=office)
+        context['office'] = office
         context['box'] = box
         context['concepts'] = concepts
         return context
