@@ -18,7 +18,7 @@ class UnitSell(APIView):
     """ Api para la venta de unidades
     """
 
-    PROPERTIES = ['partner', 'unit', 'buyer_partner', 'total_price']
+    PROPERTIES = ['partner', 'unit', 'buyer_partner', 'total_price', 'price_items', 'unit_price']
 
     @staticmethod
     def __validate_data(self, data):
@@ -44,7 +44,12 @@ class UnitSell(APIView):
             'date': datetime.now(),
             'movement_type': 'IN',
             'value': price,
-            'detail': 'Venta de unidad {}'.format(unit),
+            'detail': 'Venta de unidad {} al socio {}. Precio inventario: ${} - Precio de venda+: ${}'.format(
+                unit.name,
+                buyer_partner.get_full_name(),
+                request.data['price_items'],
+                request.data['unit_price']
+            ),
             'responsible': request.user,
             'ip': ip,
         }
@@ -55,13 +60,18 @@ class UnitSell(APIView):
             'date': datetime.now(),
             'movement_type': 'OUT',
             'value': price,
-            'detail': 'Compra de unidad {}'.format(unit),
+            'detail': 'Compra de unidad {} del socio {}. Precio inventario: ${} - Precio de venda+: ${}'.format(
+                unit.name,
+                seller_partner.get_full_name(),
+                request.data['price_items'],
+                request.data['unit_price']
+            ),
             'responsible': request.user,
             'ip': ip,
         }
         movement_seller = MovementPartnerHandler.create_simple(data_buyer)
 
         return Response(
-            'El movimiento se ha aprobado exitosamente. Se ha creado el movimiento en la caja correspondiente',
+            'El movimiento se ha aprobado exitosamente. Se han creado los movimientos en las cajas correspondientes',
             status=status.HTTP_201_CREATED
         )

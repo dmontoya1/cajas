@@ -115,7 +115,7 @@
                                                 <td><a href="#">Detalle</a></td>
                                                 <td>
                                                     <button type="button" class="add-movement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento</button>
-                                                    <a href="{% url 'webclient:daily_square_box' p.user.pk %}" class="see-box"><i class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                                                    <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
                                                 </td>
                                             </tr>
                                         {% endfor %}

@@ -14,7 +14,7 @@
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown">
-            <a href="{% url '' %}">
+            <a href="{% url 'webclient:office' office.slug %}">
                 <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja oficina
             </a>
@@ -151,7 +151,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-movement" action="{% url 'webclient:add_partner_movement' %}">
+                    <form method="POST" class="add-movement" action="{% url 'webclient:add_partner_movement' office.slug %}">
                         {% csrf_token %}
                         
                         <input type="hidden" name="partner_id" value="{{box.partner.pk}}">

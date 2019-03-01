@@ -435,15 +435,26 @@
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
                 data = $(this).serialize()
-                print(data)
                 axios.post('{% url 'api:units:unit_sell' %}', data)
                 .then(function (response) {
                   data = response.data
-                  console.log(data)
+                  Swal.fire({
+                    type: 'success',
+                    title: 'Exitoso',
+                    text: data,
+                  }).then(result, function(){
+                    location.reload()
+                  })
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    Swal.fire({
+                      type: 'error',
+                      title: 'Error',
+                      text: error,
+                    }).then(result, function(){
+                      location.reload()
+                    })
                 })
               })
             });    

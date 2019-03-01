@@ -27,6 +27,8 @@ class CreateDailySquareMovement(View):
             return None
 
     def post(self, request, *args, **kwargs):
+        office_pk = request.session['office']
+        office_session = Office.objects.get(pk=office_pk)
         user = User.objects.get(pk=request.POST['user_id'])
         box_daily_square = BoxDailySquare.objects.get(user=user)
         concept = Concept.objects.get(pk=request.POST['concept'])
@@ -36,12 +38,30 @@ class CreateDailySquareMovement(View):
         detail = request.POST['detail']
 
         ip = get_ip(request)
-        unit = self.get_object_or_none(Unit, pk=request.POST['unit'])
-        user = self.get_object_or_none(User, pk=request.POST['user'])
-        country = self.get_object_or_none(Country, pk=request.POST['country'])
-        office = self.get_object_or_none(Office, pk=request.POST['office'])
-        loan = request.POST['loan']
-        chain = request.POST['chain']
+        try:
+            unit = self.get_object_or_none(Unit, pk=request.POST['unit'])
+        except:
+            unit = None
+        try:
+            user = self.get_object_or_none(User, pk=request.POST['user'])
+        except:
+            user = None
+        try:
+            country = self.get_object_or_none(Country, pk=request.POST['country'])
+        except:
+            country = None
+        try:
+            office = self.get_object_or_none(Office, pk=request.POST['office'])
+        except:
+            office = None
+        try:
+            loan = request.POST['loan']
+        except:
+            loan = None
+        try:
+            chain = request.POST['chain']
+        except:
+            chain = None
 
         data = {
             'box': box_daily_square,
@@ -62,4 +82,4 @@ class CreateDailySquareMovement(View):
 
         movement = MovementDailySquareHandler.create_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'pk': request.POST['user_id']}))
+        return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'slug': office_session.slug, 'pk': request.POST['user_id']}))

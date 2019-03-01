@@ -64,11 +64,11 @@
       <div class="row">
         {% for office in country.related_offices.all %}
 
-          <div class="col-lg-3 col-xlg-3 col-md-5">
+          <div class="col-lg-4 col-xlg-4 col-md-6">
             <div class="card blog-widget">
               <div class="card-body">
                 <div class="blog-image">
-                  <img src="{% if country.image %} {{ country.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}" alt="img" class="img-responsive">
+                  <img src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}" alt="img" class="img-responsive">
                 </div>
                 <a href="{% url 'webclient:office' office.slug %}">
                   <span class="office-name">{{ office }}</span>
