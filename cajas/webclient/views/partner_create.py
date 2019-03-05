@@ -7,9 +7,9 @@ from django.views.generic import View
 
 from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquareHandler
 from cajas.users.models.partner import Partner
-from cajas.users.models.user import User
+from cajas.users.services.user_service import UserManager
+from cajas.users.services.partner_service import PartnerManager
 from cajas.users.views.partner.partner_handler import PartnerHandler
-from cajas.users.views.users.user_handler import UsersHandler
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from office.models.office import Office
 
@@ -46,7 +46,7 @@ class PartnerCreate(LoginRequiredMixin, View):
             'document_type': document_type,
             'document_id': document_id
         }
-        user = UsersHandler.create_user(data_user)
+        user = UserManager.create_user(UserManager, data_user)
         data_partner = {
             'user': user,
             'office': office,
@@ -54,7 +54,7 @@ class PartnerCreate(LoginRequiredMixin, View):
             'direct_partner': direct_partner,
             'is_daily_square': daily_square
         }
-        partner = PartnerHandler.partner_create(data_partner)
+        partner = PartnerManager.create_partner(PartnerManager, data_partner)
         if daily_square:
             box_daily_square = BoxDailySquareHandler.box_daily_square_create(user)
         if int(initial_value) > 0:
@@ -67,4 +67,4 @@ class PartnerCreate(LoginRequiredMixin, View):
             }
             movement = MovementPartnerHandler.create_partner_movements(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el socio exitosamente')
-        return HttpResponseRedirect(reverse('webclient:partners_list'))
+        return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))

@@ -13,7 +13,7 @@ class PartnerManager(object):
                 raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
     def create_partner(self, data):
-        self.__validate_data(data)
+        self.__validate_data(self, data)
         partner = Partner.objects.create(
             user=data['user'],
             office=data['office'],

@@ -15,7 +15,7 @@ from ..models.units import Unit
 
 
 class UnitSell(APIView):
-    """ Api para la venta de unidades
+    """ Endpoint para la venta de unidades
     """
 
     PROPERTIES = ['partner', 'unit', 'buyer_partner', 'total_price', 'price_items', 'unit_price']

@@ -13,18 +13,12 @@ from office.models.office import Office
 from units.models.units import Unit
 
 from .get_ip import get_ip
+from .utils import get_object_or_none
 
 
 class CreateDailySquareMovement(View):
     """
     """
-
-    @staticmethod
-    def get_object_or_none(self, Model, **kwargs):
-        try:
-            return Model.objects.get(kwargs)
-        except Model.DoesNotExist:
-            return None
 
     def post(self, request, *args, **kwargs):
         office_pk = request.session['office']
@@ -38,30 +32,13 @@ class CreateDailySquareMovement(View):
         detail = request.POST['detail']
 
         ip = get_ip(request)
-        try:
-            unit = self.get_object_or_none(Unit, pk=request.POST['unit'])
-        except:
-            unit = None
-        try:
-            user = self.get_object_or_none(User, pk=request.POST['user'])
-        except:
-            user = None
-        try:
-            country = self.get_object_or_none(Country, pk=request.POST['country'])
-        except:
-            country = None
-        try:
-            office = self.get_object_or_none(Office, pk=request.POST['office'])
-        except:
-            office = None
-        try:
-            loan = request.POST['loan']
-        except:
-            loan = None
-        try:
-            chain = request.POST['chain']
-        except:
-            chain = None
+        request.POST.get('unit', '')
+        unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
+        user = get_object_or_none(User, pk=request.POST.get('user', None))
+        country = get_object_or_none(Country, pk=request.POST.get('country', None))
+        office = get_object_or_none(Office, pk=request.POST.get('office', None))
+        loan = request.POST.get('loan', None)
+        chain = request.POST.get('chain', None)
 
         data = {
             'box': box_daily_square,
