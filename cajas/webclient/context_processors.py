@@ -6,9 +6,9 @@ from concepts.models.concepts import Concept
 
 
 def webclient_processor(request):
-    try:
+    if 'office' in request.session:
         partners = Partner.objects.filter(office__pk=request.session['office'])
-    except:
+    else:
         partners = None
     all_partners = Partner.objects.all()
     concepts = Concept.objects.filter(is_active=True)
