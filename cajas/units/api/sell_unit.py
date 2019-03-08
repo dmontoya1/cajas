@@ -11,7 +11,9 @@ from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from webclient.views.get_ip import get_ip
+
 from ..models.units import Unit
+from ..serializers.unit_serializer import UnitSerializer
 
 
 class UnitSell(APIView):
@@ -22,9 +24,8 @@ class UnitSell(APIView):
 
     @staticmethod
     def __validate_data(self, data):
-        for property in self.PROPERTIES:
-            if property not in data:
-                raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        if not all(property in data for property in self.PROPERTIES):
+            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
     def post(self, request, format=None):
         self.__validate_data(self, request.data)

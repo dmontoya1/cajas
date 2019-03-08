@@ -3,8 +3,6 @@ from django.db import models
 from django.utils.text import slugify
 
 from general_config.models.country import Country
-from cajas.users.models.employee import Employee
-
 
 class Office(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
@@ -19,27 +17,6 @@ class Office(models.Model):
     number = models.IntegerField(
         'Número de la oficina',
         default=1
-    )
-    admin_senior = models.OneToOneField(
-        Employee,
-        verbose_name='Adminsitrador Senior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_senior_office'
-    )
-    admin_junior = models.OneToOneField(
-        Employee,
-        verbose_name='Adminsitrador Junior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_junior_office'
-    )
-    secretary = models.OneToOneField(
-        Employee,
-        verbose_name='Secretaria',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_secretary_office'
     )
     phone_number = models.CharField(
         'Telefono',

@@ -55,7 +55,7 @@ class PartnerCreate(LoginRequiredMixin, View):
         }
         partner = partner_manager.create_partner(data_partner)
         if daily_square:
-            box_daily_square = BoxDailySquareHandler.box_daily_square_create(user)
+            box_daily_square = BoxDailySquareHandler.box_daily_square_create(user, office)
         if int(initial_value) > 0:
             ip = get_ip(request)
             data = {

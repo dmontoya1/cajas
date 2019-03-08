@@ -98,7 +98,7 @@
                             </a>
                         </li>
                         <li class="menu-item-has-children dropdown">
-                            <a href="#">
+                            <a href="{% url 'webclient:loan_list' office.slug %}">
                                 <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                                 Préstamos
                             </a>
@@ -288,7 +288,7 @@
                           {% for p in partners %}
                             <option value="{{p.pk}}">{{p}}</option>
                           {% endfor %}
-                        </select req>
+                        </select>
                       </div>
                       <div class="form-group col-md-6 unit-select ">
                         <label for="unit">Unidad</label>
@@ -302,7 +302,7 @@
                       <div class="form-row">
                         <div class="form-group col-md-6 ">
                           <label for="partner">Nombre Unidad</label>
-                          <input class="form-control" type="text" name="unit_name" id="unit_name" value="" required>
+                          <input class="form-control" type="text" name="name" id="name" value="" required>
                         </div>
                         <div class="form-group col-md-6">
                           <label for="unit">Precio inventario</label>
