@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e990a76c-219a-40b7-b043-79b045b4644f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/models/loan.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/loans/models/loan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/models/loan_type.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/services/loan_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/loans/services/loan_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/loan_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/loan_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/users/models/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/loan_create.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/views/loan_create.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/loan_list.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/views/loan_list.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/base.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +36,38 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/users/models/user.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="325">
+              <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+              <folding>
+                <element signature="e#0#51#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/account/logout.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="169">
+              <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -55,7 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>request.session</find>
       <find>don</find>
       <find>Office</find>
       <find>url</find>
@@ -85,6 +108,7 @@
       <find>provider</find>
       <find>loan-third</find>
       <find>keyup</find>
+      <find>loan_list</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -128,7 +152,6 @@
         <option value="$PROJECT_DIR$/cajas/units/api/sell_unit.py" />
         <option value="$PROJECT_DIR$/cajas/users/services/user_service.py" />
         <option value="$PROJECT_DIR$/cajas/users/services/partner_service.py" />
-        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/partner_box.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/office_box.html" />
@@ -145,12 +168,13 @@
         <option value="$PROJECT_DIR$/cajas/webclient/views/partner_create.py" />
         <option value="$PROJECT_DIR$/cajas/boxes/views/box_daily_square/box_daily_square_handler.py" />
         <option value="$PROJECT_DIR$/cajas/boxes/views/box_daily_square/box_daily_square_create.py" />
-        <option value="$PROJECT_DIR$/cajas/users/models/user.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/loan_list.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/loan_create.py" />
         <option value="$PROJECT_DIR$/cajas/loans/models/loan.py" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/loan_list.html" />
         <option value="$PROJECT_DIR$/cajas/loans/services/loan_service.py" />
+        <option value="$PROJECT_DIR$/cajas/users/models/user.py" />
+        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
       </list>
     </option>
   </component>
@@ -178,42 +202,34 @@
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name=".envs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name=".envs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name=".local" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name=".envs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name=".production" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="account" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="compose" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="users" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="compose" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="local" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="compose" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="local" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="django" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="docs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -349,14 +365,15 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116378000" />
+    <option name="totallyTimeSpent" value="117641000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1920" height="1006" extended-state="6" />
+    <frame x="0" y="-2" width="1366" height="770" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.1745182" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.25570777" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286385" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -430,23 +447,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/employee.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13">
-          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/charges.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/api/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
@@ -611,12 +611,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0008_auto_20190125_2147.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0008_auto_20181218_2348.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0008_auto_20190125_2147.py" />
+    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0008_auto_20181218_2348.py" />
     <entry file="file://$PROJECT_DIR$/cajas/loans/models/loan_type.py" />
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
@@ -625,23 +621,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cajas/general_config/models/currency.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/user.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="421" column="24" selection-start-line="421" selection-start-column="24" selection-end-line="421" selection-end-column="47" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cajas/general_config/models/exchange.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -762,6 +741,35 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="589">
           <caret line="31" column="24" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-935" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/models/user.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/account/logout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
         </state>
       </provider>
     </entry>
