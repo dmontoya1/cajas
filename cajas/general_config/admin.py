@@ -1,8 +1,14 @@
 from django.contrib import admin
 
+from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
+
 from general_config.models.country import Country
 from general_config.models.currency import Currency
 from general_config.models.exchange import Exchange
+
+admin.site.unregister(SocialApp)
+admin.site.unregister(SocialToken)
+admin.site.unregister(SocialAccount)
 
 
 class ExchangeAdmin(admin.StackedInline):

@@ -16,10 +16,12 @@ class MovementDailySquare(MovementMixin):
 
     APPROVED = 'AP'
     DENIED = 'DE'
+    DISPERSED = 'DI'
 
     STATUS = (
         (APPROVED, 'Aprobado'),
-        (DENIED, 'Rechazado')
+        (DENIED, 'Rechazado'),
+        (DISPERSED, 'Dispersado')
     )
 
     box_daily_square = models.ForeignKey(

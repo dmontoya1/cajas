@@ -10,17 +10,17 @@
 {% block navbar %}
     <ul class="nav navbar-nav">
         <li class="active">
-            <a href="/"><i class="menu-icon fa fa-laptop"></i>{{request.user.employee.related_secretary_office}}</a>
+            <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{office}}</a>
         </li>
         <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown">
-            <a href="/"> 
+            <a href="{% url 'webclient:office' office.slug %}">
                 <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja oficina
             </a>
         </li>
         <li class="menu-item-has-children dropdown active">
-            <a href="{% url 'webclient:box_don_juan' %}"> 
+            <a href="{% url 'webclient:box_don_juan' office.slug %}">
                 <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Caja Don Juan
             </a>
@@ -34,7 +34,7 @@
 
         <li class="menu-title">Socios</li><!-- /.menu-title -->
         <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:partners_list' %}">  
+            <a href="{% url 'webclient:partners_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Lista de socios
             </a>
@@ -58,7 +58,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:daily_square_list' %}"> 
+            <a href="{% url 'webclient:daily_square_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Cuadres diarios
             </a>
@@ -70,7 +70,7 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:loan_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Préstamos
             </a>
@@ -148,9 +148,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-movement" action="/create_office_movement/">
+                    <form method="POST" class="add-movement" action="#">
                         {% csrf_token %}
-                        <input type="hidden" name="box_office" value="{{request.user.employee.related_secretary_office.box.pk}}">
+                        <input type="hidden" name="box_office" value="{{office.box.pk}}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="concept">Concepto</label>

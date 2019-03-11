@@ -1,8 +1,8 @@
 
 from rest_framework import generics
 
-from ...models.units import Unit
-from ...serializers.unit_serializer import UnitSerializer
+from ..models.units import Unit
+from ..serializers.unit_serializer import UnitSerializer
 
 
 class UnitList(generics.ListAPIView):
