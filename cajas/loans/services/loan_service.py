@@ -57,7 +57,7 @@ class LoanManager(object):
         #         'request': data['request']
         #     }
         #     self.interest_load_payment(data_1)
-        concept = get_object_or_404(Concept, name='Préstamo Personal Socio')
+        concept = get_object_or_404(Concept, name='Ingreso Préstamo Socio Directo')
         data = {
             'partner': lender_partner,
             'concept': concept,
