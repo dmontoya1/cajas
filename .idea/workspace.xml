@@ -5,93 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e990a76c-219a-40b7-b043-79b045b4644f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0002_auto_20190118_1908.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0003_boxcountry_currency.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0004_auto_20190125_1624.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0005_auto_20190125_1946.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0006_auto_20190125_1947.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0007_auto_20190128_1601.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0008_auto_20190128_1605.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0009_auto_20190204_2113.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0010_boxdonjuan.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0011_auto_20190213_1640.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0012_boxdailysquare_office.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/boxes/migrations/0013_auto_20190221_2014.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0002_auto_20181221_1909.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0003_auto_20190116_1520.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0004_auto_20190118_1908.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0005_concept_movement_type.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0006_concept_is_active.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0007_auto_20190204_1526.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0008_auto_20190212_2036.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/concepts/migrations/0009_auto_20190212_2037.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/inventory/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/inventory/migrations/0002_auto_20190125_1556.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0002_loanpayment.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0003_loan_office.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0004_auto_20190305_2059.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0005_auto_20190306_1431.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0006_loan_exchange.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0007_auto_20190307_2231.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0008_auto_20190308_2035.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/migrations/0009_loan_description.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0002_auto_20190118_1908.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0003_auto_20190128_1607.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0004_auto_20190130_1938.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0005_auto_20190201_1442.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0006_auto_20190204_2113.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0007_movementdonjuan.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0008_auto_20190220_2057.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0009_auto_20190221_2014.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/migrations/0010_auto_20190226_1724.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0002_auto_20181219_1532.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0003_officeitems.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0004_auto_20181219_1614.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0005_auto_20181219_1616.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0006_officecommitments.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0007_officeitems_brand.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0008_auto_20190125_2147.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0009_office_slug.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0010_auto_20190204_2150.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0011_auto_20190204_2158.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0012_auto_20190204_2210.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0013_auto_20190228_1604.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/migrations/0014_auto_20190306_1658.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/units/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/units/migrations/0002_auto_20190116_1523.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/units/migrations/0003_unit_is_active.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0002_auto_20181218_1536.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0003_auto_20181218_1550.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0004_employee.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0005_auto_20181218_2126.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0006_partner.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0007_partner_code.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0008_auto_20181218_2348.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0009_auto_20181219_1700.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0010_auto_20181219_2053.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0011_charge.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0012_auto_20181221_1654.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0013_auto_20190116_1519.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0014_authlogs.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0015_partner_office.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0016_auto_20190125_2228.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0017_employee_salary.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0018_employee_salary_type.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0019_user_is_daily_square.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0020_auto_20190204_1926.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0021_auto_20190204_1939.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0022_auto_20190204_2210.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0023_auto_20190204_2211.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0024_auto_20190204_2240.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0025_auto_20190211_1602.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0026_partner_consecutive.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/migrations/0027_auto_20190306_1926.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/users/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/users/models/user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/base.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -123,7 +37,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cajas/users/models/user.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="325">
@@ -131,6 +45,24 @@
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/account/logout.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="169">
+              <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -147,7 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>request.session</find>
       <find>don</find>
       <find>Office</find>
       <find>url</find>
@@ -177,6 +108,7 @@
       <find>provider</find>
       <find>loan-third</find>
       <find>keyup</find>
+      <find>loan_list</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -220,7 +152,6 @@
         <option value="$PROJECT_DIR$/cajas/units/api/sell_unit.py" />
         <option value="$PROJECT_DIR$/cajas/users/services/user_service.py" />
         <option value="$PROJECT_DIR$/cajas/users/services/partner_service.py" />
-        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/partner_box.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/office_box.html" />
@@ -243,6 +174,7 @@
         <option value="$PROJECT_DIR$/cajas/templates/webclient/loan_list.html" />
         <option value="$PROJECT_DIR$/cajas/loans/services/loan_service.py" />
         <option value="$PROJECT_DIR$/cajas/users/models/user.py" />
+        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
       </list>
     </option>
   </component>
@@ -276,14 +208,28 @@
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="account" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="users" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="users" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -419,7 +365,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="117095000" />
+    <option name="totallyTimeSpent" value="117641000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-2" width="1366" height="770" extended-state="6" />
@@ -501,23 +447,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/employee.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13">
-          <caret line="1" column="46" selection-start-line="1" selection-start-column="46" selection-end-line="1" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/charges.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/api/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="377">
@@ -693,13 +622,6 @@
     <entry file="file://$PROJECT_DIR$/cajas/general_config/models/currency.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="421" column="24" selection-start-line="421" selection-start-column="24" selection-end-line="421" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/general_config/models/exchange.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -822,6 +744,11 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-935" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/users/models/user.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
@@ -829,6 +756,20 @@
           <folding>
             <element signature="e#0#51#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/account/logout.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="169">
+          <caret line="13" column="33" lean-forward="true" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
         </state>
       </provider>
     </entry>
