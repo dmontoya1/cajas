@@ -22,7 +22,8 @@ class User(AbstractUser):
     document_id = models.CharField(
         "Número Documento",
         max_length=15,
-        unique=True
+        unique=False,
+        default='',
     )
     is_abstract = models.BooleanField(
         "Tiene acceso a la plataforma?",
