@@ -222,12 +222,30 @@
                         <label for="third_email">Correo electrónico</label>
                         <input class="form-control" type="email" name="third_email" id="third_email" placeholder="Email fondeador" required>
                       </div>
+                    </div>
+                    <div class="form-row">
                       <div class="form-group col-md-6">
-                        <label for="third_phone_number">Teléfono</label>
-                        <input class="form-control" type="number" name="third_phone_number" id="third_phone_number" placeholder="Teléfono fondeador" required>
+                        <label for="third_document_type">Tipo de documento</label>
+                        <select name="third_document_type" id="third_document_type" class="form-control" style="width: 100%; height: 20px;">
+                          <option value="" selected disabled>Selecciona el tipo de documento</option>
+                          <option value="CC">Cédula de ciudadanía</option>
+                          <option value="CE">Cédula de extranjería</option>
+                          <option value="PA">Pasaporte</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="third_document_number">Número de documento</label>
+                        <input class="form-control" type="text" name="third_document_number" id="third_document_number" placeholder="Número documento fondeador" required>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="third_description">Descripción del préstamo</label>
+                        <textarea class="form-control" name="third_description" id="third_description" cols="10" rows="3" placeholder="Para que es el préstamo?" required></textarea>
                       </div>
                     </div>
                   </div>
+
                   <hr>
                   <div class="loan-fields d-none">
                     <div class="form-row">
@@ -237,7 +255,7 @@
                       </div>
                       <div class="form-group col-md-6">
                         <label for="value_cop">Monto del préstamo (COP)</label>
-                        <input class="form-control" type="number" name="value_cop" id="value_cop" placeholder="Ingresa el monto del préstamo en COP" required>
+                        <input class="form-control" type="number" name="value_cop" id="value_cop" value="0" placeholder="Ingresa el monto del préstamo en COP" readonly>
                       </div>
                     </div>
                     <div class="form-row">
@@ -247,11 +265,11 @@
                       </div>
                       <div class="form-group col-md-6">
                         <label for="time">Plazo (En meses)</label>
-                        <input class="form-control" type="number" name="time" id="time" placeholder="Ingresa el plazo en meses" required>
+                        <input class="form-control" type="number" name="time" id="time" placeholder="Ingresa el plazo en meses (opcional)">
                       </div>
                       <div class="form-group col-md-6">
                         <label for="exchange">Tasa de cambio</label>
-                        <input class="form-control" type="number" name="exchange" id="exchange" placeholder="Ingresa el plazo en meses" required>
+                        <input class="form-control" type="text" name="exchange" id="exchange" value="{{ exchange.exchange_cop }}" data-value="{{ exchange.exchange_cop }}" placeholder="Ingresa el plazo en meses" readonly>
                       </div>
                     </div>
                   </div>
@@ -279,82 +297,93 @@
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
       <script type="text/javascript">
-          $(document).ready(function() {
-              $('#table').DataTable({
-                  responsive: {
-                      details: true
-                  },
-                  dom: 'lBfrtip',
-                  lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                  buttons: [
-                      'excel', 'print'
-                  ],
-                  "order": [[ 1, "asc" ]],
-                  language: {
-                      "sProcessing":     "Procesando...",
-                      "sLengthMenu":     "Mostrar _MENU_ registros",
-                      "sZeroRecords":    "No se encontraron resultados",
-                      "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                      "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                      "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                      "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                      "sInfoPostFix":    "",
-                      "sSearch":         "Buscar:",
-                      "sUrl":            "",
-                      "sInfoThousands":  ",",
-                      "sLoadingRecords": "Cargando...",
-                      "oPaginate": {
-                          "sFirst":    "Primero",
-                          "sLast":     "Último",
-                          "sNext":     "Siguiente",
-                          "sPrevious": "Anterior"
-                      },
-                      "oAria": {
-                          "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                          "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                      }
-                  }
-              });
-
-              $('.add-loan select').each(function() {
-                $(this).select2({
-                    language: "es"
-                });
+        $(document).ready(function() {
+            $('#table').DataTable({
+                responsive: {
+                    details: true
+                },
+                dom: 'lBfrtip',
+                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                buttons: [
+                    'excel', 'print'
+                ],
+                "order": [[ 1, "asc" ]],
+                language: {
+                    "sProcessing":     "Procesando...",
+                    "sLengthMenu":     "Mostrar _MENU_ registros",
+                    "sZeroRecords":    "No se encontraron resultados",
+                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":    "",
+                    "sSearch":         "Buscar:",
+                    "sUrl":            "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":     "Último",
+                        "sNext":     "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                }
             });
+
+            $('.add-loan select').each(function() {
+              $(this).select2({
+                  language: "es"
+              });
           });
+        });
 
-          $('#loan_type').on('change', function(){
-            if ( $(this).val() == 'DIR'){
-              $('.loan-fields').removeClass('d-none')
-              $('.lender_partner').removeClass('d-none')
-              $('.box-select').addClass('d-none')
-            }
-            else if ( $(this).val() == 'EMP'){
-              $('.box-select').removeClass('d-none')
-              $('.loan-fields').addClass('d-none')
-              $('.lender_partner').addClass('d-none')
-            }
-            else {
-              $('.loan-fields').removeClass('d-none')
-              $('.lender_partner').addClass('d-none')
-              $('.box-select').addClass('d-none')
-            }
-          })
-
-          $('#box_from').on('change', function(){
-            if ( $(this).val() === 'partner'){
-              $('.partner-select-row').removeClass('d-none')
-              $('.loan-fields').addClass('d-none')
-            }
-            else {
-              $('.partner-select-row').addClass('d-none')
-              $('.loan-fields').removeClass('d-none')
-            }
-          })
-          $('#partner_provider').on('change', function(){
+        $('#loan_type').on('change', function(){
+          if ( $(this).val() === 'DIR'){
             $('.loan-fields').removeClass('d-none')
-            $('.lender_employee').removeClass('d-none')
-          })
+            $('.lender_partner').removeClass('d-none')
+            $('.box-select').addClass('d-none')
+            $('.third-fields').addClass('d-none')
+          }
+          else if ( $(this).val() === 'EMP'){
+            $('.box-select').removeClass('d-none')
+            $('.loan-fields').addClass('d-none')
+            $('.third-fields').addClass('d-none')
+            $('.lender_partner').addClass('d-none')
+          }
+          else {
+            $('.loan-fields').removeClass('d-none')
+            $('.lender_partner').addClass('d-none')
+            $('.box-select').addClass('d-none')
+            $('.third-fields').removeClass('d-none')
+          }
+        })
+
+        $('#box_from').on('change', function(){
+          if ( $(this).val() === 'partner'){
+            $('.partner-select-row').removeClass('d-none')
+            $('.loan-fields').addClass('d-none')
+          }
+          else {
+            $('.partner-select-row').addClass('d-none')
+            $('.loan-fields').removeClass('d-none')
+          }
+        })
+
+        $('#partner_provider').on('change', function(){
+          $('.loan-fields').removeClass('d-none')
+          $('.lender_employee').removeClass('d-none')
+        })
+
+        $('#value').keyup(function(){
+          value = parseInt($(this).val())
+          exchange = parseInt($('#exchange').data('value'))
+          $('#value_cop').val(value * exchange)
+        })
+
       </script>
   {% endblock%}
 

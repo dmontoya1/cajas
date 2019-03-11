@@ -51,12 +51,12 @@ class LoanManager(object):
             exchange=data['exchange'],
             balance=data['value']
         )
-        if old_loan:
-            data_1 = {
-                'lender': lender,
-                'request': data['request']
-            }
-            self.interest_load_payment(data_1)
+        # if old_loan:
+        #     data_1 = {
+        #         'lender': lender,
+        #         'request': data['request']
+        #     }
+        #     self.interest_load_payment(data_1)
         concept = get_object_or_404(Concept, name='Préstamo Personal Socio')
         data = {
             'partner': lender_partner,
@@ -81,11 +81,19 @@ class LoanManager(object):
     def create_third_loan(self, data):
         self.__validate_data(data)
         lender = get_object_or_404(User, username='donjuan')
-        donjuan = lender.partner
+        donjuan = get_object_or_404(Partner, user=lender)
         office = get_object_or_404(Office, pk=data['office'])
-        box_don_juan = BoxDonJuan.objects.filter(partner=donjuan, office=office)
+        box_don_juan = BoxDonJuan.objects.get(partner=donjuan, office=office)
         concept = get_object_or_404(Concept, name='Ingreso Préstamo Terceros')
+        provider, created = User.objects.get_or_create(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            document_type=data['document_type'],
+            document_id=data['document_id']
+        )
         loan = Loan.objects.create(
+            provider=provider,
             lender=lender,
             office=office,
             loan_type=data['loan_type'],
@@ -106,6 +114,7 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
+        print(data)
         movement = MovementDonJuanHandler.create(data)
         return loan
 

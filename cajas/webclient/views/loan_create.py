@@ -22,7 +22,7 @@ class LoanCreate(LoginRequiredMixin, View):
         value = request.POST['value']
         value_cop = request.POST['value_cop']
         interest = request.POST['interest']
-        time = request.POST['time']
+        time = request.POST.get('time', None)
         exchange = request.POST['exchange']
         office = request.POST['office']
         office_obj = get_object_or_404(Office, pk=office)
@@ -50,6 +50,13 @@ class LoanCreate(LoginRequiredMixin, View):
                 data['provider'] = request.POST['provider']
             loan = loan_manager.create_employee_loan(data)
         elif loan_type == 'TER':
+            data['first_name'] = request.POST['third_first_name']
+            data['last_name'] = request.POST['third_last_name']
+            data['email'] = request.POST['third_email']
+            data['document_type'] = request.POST['third_document_type']
+            data['document_id'] = request.POST['third_document_number']
+            data['description'] = request.POST['third_description']
+
             loan = loan_manager.create_third_loan(data)
 
         messages.add_message(request, messages.SUCCESS, 'Se ha registrado el préstamo exitosamente')

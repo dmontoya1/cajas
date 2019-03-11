@@ -59,7 +59,9 @@ class Loan(models.Model):
         'Porcentaje de interés'
     )
     time = models.IntegerField(
-        'Plazo (en meses)'
+        'Plazo (en meses)',
+        blank=True,
+        null=True
     )
     balance = models.FloatField(
         'Saldo a la fecha'
@@ -67,6 +69,11 @@ class Loan(models.Model):
     exchange = models.FloatField(
         'Tasa de cambio',
         default=0
+    )
+    description = models.TextField(
+        'Descripción del Préstamo (terceros)',
+        blank=True,
+        null=True
     )
 
     def __str__(self):
