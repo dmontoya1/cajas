@@ -328,7 +328,7 @@
                           <label for="partner_buyer">Socio a vender</label>
                           <select class="form-control" id="partner_buyer" name="buyer_partner" style="width: 100%; height: 20px;" required>
                             <option value="" selected disabled>Selecciona el socio comprador</option>
-                            {% for p in all_partners %}
+                            {% for p in partners %}
                               <option value="{{p.pk}}">{{p}}</option>
                             {% endfor %}
                           </select>
@@ -406,7 +406,7 @@
                 axios.get(`/api/units/${$(this).val()}/detail`)
                 .then(function (response) {
                   data = response.data
-                  $('#unit_name').val(data.name)
+                  $('#name').val(data.name)
                   $('#price_items').val(data.unit_price)
                   $('.unit-fields').removeClass('d-none')
                   $('.modal-footer').removeClass('d-none')
@@ -442,22 +442,30 @@
                     type: 'success',
                     title: 'Exitoso',
                     text: data,
-                  }).then(result, function(){
-                    location.reload()
-                  })
+                  }).then((result) => {
+                    if (result.value) {
+                      location.reload()
+                    }
                 })
                 .catch(function (error) {
                     // handle error
-                    Swal.fire({
-                      type: 'error',
-                      title: 'Error',
-                      text: error,
-                    }).then(result, function(){
+                  console.log(error)
+                  Swal.fire({
+                    title: 'Ha ocurrido un error',
+                    text: error,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Aceptar'
+                  }).then((result) => {
+                    if (result.value) {
                       location.reload()
-                    })
+                    }
+                  })
                 })
               })
-            });    
+            })
+          })
         </script>
 
     {% endblock %}
