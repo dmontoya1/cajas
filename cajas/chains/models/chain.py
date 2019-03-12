@@ -1,10 +1,19 @@
 from django.db import models
 
+from office.models.office import Office
+
 
 class Chain(models.Model):
     """
 
     """
+    office = models.ForeignKey(
+        Office,
+        verbose_name='Oficina',
+        related_name='related_chaines',
+        on_delete=models.CASCADE,
+        null=True
+    )
     name = models.CharField(
         'Nombre Cadena',
         max_length=255,

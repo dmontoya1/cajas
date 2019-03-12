@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from .chains import Chain
+from .chain import Chain
 
 
 class ChainPlace(models.Model):
