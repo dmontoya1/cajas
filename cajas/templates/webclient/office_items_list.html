@@ -113,7 +113,7 @@
                                                 <td>{{i.price}}</td>
                                                 <td>{{i.description}}</td>
                                                 <td>
-                                                    <a href="#" class="accept-mv" data-id="{{i.id}}" data-toggle="modal" data-target="#addOfficeItem">Editar</a>
+                                                    <a href="#" class="edit-item" data-id="{{i.id}}" data-toggle="modal" data-target="#editOfficeItem">Editar</a>
                                                     <a href="#" class="decline-mv" data-id="{{i.pk}}">Eliminar</a>
                                                 </td>
                                             </tr>
@@ -160,7 +160,7 @@
                             <div class="form-group col-md-6">
                                 <label for="category">Categoría </label>
                                 <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;" required>
-                                    <option disabled selected value="0" >Selecciona una categoría</option>
+                                    <option disabled value="" selected>Selecciona una categoría</option>
                                     {% for category in categories %}
                                         <option value="{{category.pk}}">{{category}}</option>
                                     {% endfor %}
@@ -171,7 +171,7 @@
                             <div class="form-group col-md-6">
                                 <label for="brand">Marca </label>
                                 <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;" required>
-                                    <option disabled selected value="">Selecciona una marca</option>
+                                    <option disabled value="" selected>Selecciona una marca</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
@@ -192,6 +192,59 @@
         </div>
     </div>
 
+    <!-- Modal edit office item -->
+    <div class="modal fade" id="editOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" class="edit_item">
+                        {% csrf_token %}
+                        <input type="hidden" name="office" value="{{office.box.pk}}">                        
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="name">Nombre </label>
+                                <input type="text" id="edit_name" name="name" class="form-control" placeholder="Nombre del item" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="category">Categoría </label>
+                                <select class="form-control" id="edit_category" name="category" style="width: 100%; height: 20px;" required>
+                                    <option disabled value="" selected>Selecciona una categoría</option>
+                                    {% for category in categories %}
+                                        <option value="{{category.pk}}">{{category}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="brand">Marca </label>
+                                <select class="form-control" id="edit_brand" name="brand" style="width: 100%; height: 20px;" required>
+                                    <option disabled value="" selected>Selecciona una marca</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="price">Precio</label>
+                                <input type="number" class="form-control" id="edit_price" name="price" placeholder="Precio del item" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="description">Descripción</label>
+                                <textarea rows="2" style="resize: none;" class="form-control" id="edit_description" name="description" placeholder="Ingresa una descripción" required></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-submit">Editar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -211,14 +264,11 @@
     <script type="text/javascript">
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-        $(document).ready(function() {
-
-        var fill_categories =  function(id) {  
-            console.log("hleo");
-            axios.get(`/api/inventory/${id}/brand`)
+        $('#category').on('change', function(){
+            axios.get(`/api/inventory/${$(this).val()}/brand`)
             .then(function (response) {
                 data = response.data
-                console.log(data);
+
                 $('#brand').empty()
                 $.each(data, function (k,v){
                     $('#brand').append(
@@ -226,75 +276,28 @@
                     )
                 })
                 $('#brand').prepend(
-                    '<option value="" selected disabled>Selecciona una marca</option>'
+                    '<option value="" disabled>Selecciona una marca</option>'
                 )
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
             })
-        }
-
-        $('#table').DataTable({
-                responsive: {
-                    details: true
-                },
-                dom: 'lBfrtip',
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                buttons: [
-                    'excel', 'print'
-                ],
-                "order": [[ 1, "asc" ]],
-                language: {
-                    "sProcessing":     "Procesando...",
-                    "sLengthMenu":     "Mostrar _MENU_ registros",
-                    "sZeroRecords":    "No se encontraron resultados",
-                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":    "",
-                    "sSearch":         "Buscar:",
-                    "sUrl":            "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":     "Último",
-                        "sNext":     "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                }
-            });
-
-        $('.create-item select').each(function() {
-                $(this).select2({
-                    language: "es"
-                });
-            });
-
-        $('#category').on('change', function(){
-            fill_categories($(this).val());
         })
 
+        //create items
         $('.create-item').on('submit', function(e){
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 data = $(this).serialize()
-                console.log(data)
-                axios.post('{% url 'webclient:create_office_item' %}', data)
+                axios.post("{% url 'webclient:create_office_item' %}", data)
                 .then(function (response) {
-                  console.log(data);
                   data = response.data
                   Swal.fire({
                     type: 'success',
                     title: 'Exitoso',
-                    text: data,
-                  }).then(result, function(){
+                    text: data.name,
+                  }).then(function(){
                     location.reload()
                   })
                 })
@@ -304,72 +307,98 @@
                       type: 'error',
                       title: 'Error',
                       text: error,
-                    }).then(result, function(){
+                    }).then(function(){
                       location.reload()
                     })
                 })
-            })
-            
-            $('.accept-mv').on('click',function(){
-                var pk = $(this).data("id")
-                console.log(pk)
-                $('#addOfficeItem').on('show.bs.modal', function (event) {
-                    var button = $(event.relatedTarget)
-                    var recipient = button.data('whatever') 
-                    var modal = $(this)
-                    modal.find('.modal-title').text('Editar Inventario')
-                    axios.get(`/api/office/${pk}/office-item-detail`)
+        })
+
+        //edit items
+        $('.edit-item').on('click',function(){
+            var office_item_pk = $(this).data("id") 
+            //when modal open
+            $('#editOfficeItem').on('show.bs.modal', function (event) {
+                var modal = $(this)
+                modal.find('.modal-title').text('Editar Inventario')
+                //get info of office item
+                axios.get(`/api/office/${office_item_pk}/office-item-detail`)
+                .then(function (response) {
+                    data = response.data
+
+                    $("#edit_name").val(data.name)
+                    $("#edit_price").val(data.price)
+                    $("#edit_description").val(data.description)
+
+                    $("#edit_category option").prop("selected", false);
+                    //fill brands and category select depending previously selected item
+                    axios.get(`/api/inventory/${data.brand}/brand`)
                     .then(function (response) {
                         data = response.data
-                        $("#name").val(data.name)
-                        $("#price").val(data.price)
-                        $("#description").val(data.description)
-                        $("#category option[value='" + "0" + "']").removeAttr("selected");
-                        $("#category option[value='" + "1" + "']").attr("selected","selected");
-                        fill_categories(data.brand);
-                        $("#brand option[value='" + data.brand + "']").attr("selected","selected");
-                        console.log(data);
+                    
+                        $("#edit_category option[value='" + data[0].category.id + "']").prop("selected",true);
+                        $("#edit_category").trigger('change');
 
-                        $('.create-item').on('submit', function(e){
-                            e.preventDefault()
-                            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                            data = $(this).serialize()
-                            console.log("BOTÓN JEJE",data)
-                            axios.post(`/api/office/${pk}/office-item-detail`)
-                            .then(function (response) {
-                            console.log(data);
-                            data = response.data
-                            Swal.fire({
-                                type: 'success',
-                                title: 'Exitoso',
-                                text: data,
-                            }).then(result, function(){
-                                location.reload()
-                            })
-                            })
-                            .catch(function (error) {
-                                // handle error
-                                Swal.fire({
-                                type: 'error',
-                                title: 'Error',
-                                text: error,
-                                }).then(result, function(){
-                                location.reload()
-                                })
-                            })
+                        $('#edit_brand').empty()
+                        $.each(data, function (k,v){
+                            $('#edit_brand').append(
+                                `<option value=${v.id}>${v.name}</option>`
+                            )
                         })
+                        $('#edit_brand').prepend(
+                            '<option value="" disabled>Selecciona una marca</option>'
+                        )
                     })
                     .catch(function (error) {
                         // handle error
                         console.log(error);
                     })
 
+                    $("#edit_brand option").prop("selected", false);
+                    $("#edit_brand option[value='" + data.brand + "']").prop("selected",true);
+                    $("#edit_brand").trigger("click")
+                    
+                    //and then submit the form
+                    $('.edit_item').on('submit', function(e){
+                        e.preventDefault()
+                        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+                        data = $(this).serialize()
+
+                        axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
+                        .then(function (response) {
+                            data = response.data
+                            Swal.fire({
+                                type: 'success',
+                                title: 'Exitoso',
+                                text: data,
+                            }).then( function(){
+                                location.reload()
+                            })
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            Swal.fire({
+                            type: 'error',
+                            title: 'Error',
+                            text: error,
+                            }).then( function(){
+                            location.reload()
+                            })
+                        })
+                    })
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
                 })
             })
+        })
+        $('#editOfficeItem').on('hidden.bs.modal', function () {
+            location.reload()
+        })
 
-            $('.decline-mv').on('click', function(){
-            id = $(this).data('id')
-            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        //delete items
+        $('.decline-mv').on('click', function(){
+            pk = $(this).data('id')
             const {value: text} = Swal.fire({
                 title: 'Escribe el motivo de eliminación del item',
                 input: 'textarea',
@@ -381,10 +410,10 @@
                 allowOutsideClick: false,
                 showCloseButton: true
             }).then((result) => {
-                axios.post(`/api/office/${id}/office-item-detail`, {
-                    office_id: id,
-                    description: result.value
-                })
+                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+                axios.delete(`/api/office/${pk}/office-item-delete`,
+                    { data: { description: result.value } }                    
+                )
                 .then(function (response) {
                     Swal.fire({
                         title: 'Exitoso!',
@@ -404,6 +433,54 @@
             })
         })
 
+
+        $(document).ready(function() {        
+            $('#table').DataTable({
+                    responsive: {
+                        details: true
+                    },
+                    dom: 'lBfrtip',
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    buttons: [
+                        'excel', 'print'
+                    ],
+                    "order": [[ 1, "asc" ]],
+                    language: {
+                        "sProcessing":     "Procesando...",
+                        "sLengthMenu":     "Mostrar _MENU_ registros",
+                        "sZeroRecords":    "No se encontraron resultados",
+                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix":    "",
+                        "sSearch":         "Buscar:",
+                        "sUrl":            "",
+                        "sInfoThousands":  ",",
+                        "sLoadingRecords": "Cargando...",
+                        "oPaginate": {
+                            "sFirst":    "Primero",
+                            "sLast":     "Último",
+                            "sNext":     "Siguiente",
+                            "sPrevious": "Anterior"
+                        },
+                        "oAria": {
+                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                        }
+                    }
+                });
+
+            $('.create-item select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
+            });       
+            $('.edit_item select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
+            });  
         }) //end document ready
 
     </script>
