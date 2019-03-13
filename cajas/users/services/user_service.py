@@ -8,14 +8,12 @@ class UserManager:
 
     PROPERTIES = ['email', 'username', 'first_name', 'last_name', 'document_type', 'document_id']
 
-    @staticmethod
     def __validate_data(self, data):
-        for property in self.PROPERTIES:
-            if property not in data:
-                raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        if not all(property in data for property in self.PROPERTIES):
+            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
     def create_user(self, data):
-        self.__validate_data(self, data)
+        self.__validate_data(data)
         try:
             user = User.objects.create(
                 email=data['email'],

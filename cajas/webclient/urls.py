@@ -2,12 +2,15 @@ from django.conf import settings
 from django.urls import include, path
 
 from .views.box_don_juan_office import BoxDonJuanOffice
+from .views.chain_list import ChainList
 from .views.create_daily_square_movement import CreateDailySquareMovement
 from .views.create_office_movement import CreateOfficeMovement
 from .views.create_partner_movement import CreatePartnerMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
 from .views.home_view import Home
+from .views.loan_create import LoanCreate
+from .views.loan_list import LoanList
 from .views.office_box import OfficeBox
 from .views.partner_box import PartnerBox
 from .views.partner_create import PartnerCreate
@@ -25,5 +28,8 @@ urlpatterns = [
     path("office/<slug:slug>/daily-square/<int:pk>/box/", DailySquareBox.as_view(), name='daily_square_box'),
     path("office/<slug:slug>/create_office_movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("office/<slug:slug>/create-partner-movement/", CreatePartnerMovement.as_view(), name='add_partner_movement'),
+    path("office/<slug:slug>/loan-list/", LoanList.as_view(), name='loan_list'),
+    path("office/<slug:slug>/chain-list/", ChainList.as_view(), name='chain_list'),
+    path("office/<slug:slug>/loan-create/", LoanCreate.as_view(), name='loan_create'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
 ]

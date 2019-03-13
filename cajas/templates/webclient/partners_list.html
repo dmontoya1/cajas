@@ -70,13 +70,13 @@
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:loan_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Préstamos
             </a>
         </li>
         <li class="menu-item-has-children dropdown">
-            <a href="#"> 
+            <a href="{% url 'webclient:chain_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Cadenas
             </a>
@@ -152,7 +152,7 @@
                 <div class="modal-body">
                     <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
                         {% csrf_token %}
-                        <input type="hidden" name="office" value="{{request.user.employee.related_secretary_office.pk}}">
+                        <input type="hidden" name="office" value="{{office.pk}}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="concept">Nombres</label>
@@ -175,7 +175,7 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="document_id">Número de documento</label>
-                                <input type="number" class="form-control" id="document_id" name="document_id" placeholder="Número de documento" required>
+                                <input type="text" class="form-control" id="document_id" name="document_id" placeholder="Número de documento" required>
                             </div>
                         </div>
                         <div class="form-row">

@@ -4,9 +4,6 @@ from office.models.office import Office
 from office.models.officeItems import OfficeItems
 from office.models.officeCommitments import OfficeCommitments
 
-from cajas.users.models.charges import Charge
-from cajas.users.models.employee import Employee
-
 
 class OfficeItemsAdmin(admin.StackedInline):
     """
@@ -29,19 +26,7 @@ class OfficeAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ('country', 'number', 'secretary')
+    list_display = ('country', 'number', )
     search_fields = ('number', 'country__name')
     readonly_fields = ('slug', 'consecutive')
     inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "admin_senior":
-            charge = Charge.objects.filter(name__contains="Administrador Senior").first()
-            kwargs["queryset"] = Employee.objects.filter(charge=charge).order_by('pk')
-        if db_field.name == "admin_junior":
-            charge = Charge.objects.filter(name__contains="Administrador Junior").first()
-            kwargs["queryset"] = Employee.objects.filter(charge=charge).order_by('pk')
-        if db_field.name == "secretary":
-            charge = Charge.objects.filter(name__contains="Secretaria").first()
-            kwargs["queryset"] = Employee.objects.filter(charge=charge).order_by('pk')
-        return super(OfficeAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)

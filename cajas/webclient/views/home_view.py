@@ -14,15 +14,11 @@ class Home(LoginRequiredMixin, TemplateView):
     template_name = 'webclient/home.html'
 
     def get(self, request, format=None):
-        try:
+        if 'office' in request.session:
             del request.session['office']
-        except KeyError:
-            pass
-
         return super(Home, self).get(request)
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
-        countries = Country.objects.all()
-        context['countries'] = countries
+        context['countries'] = Country.objects.all()
         return context
