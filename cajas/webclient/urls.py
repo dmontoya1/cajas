@@ -4,7 +4,6 @@ from django.urls import include, path
 from .views.box_don_juan_office import BoxDonJuanOffice
 from .views.create_daily_square_movement import CreateDailySquareMovement
 from .views.create_office_movement import CreateOfficeMovement
-from .views.create_office_item import CreateOfficeItem
 from .views.create_partner_movement import CreatePartnerMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
@@ -16,6 +15,9 @@ from .views.office_items_list import OfficeItemsList
 from .views.partner_box import PartnerBox
 from .views.partner_create import PartnerCreate
 from .views.partner_list import PartnerList
+
+
+from office.api.create_office_item import CreateOfficeItem
 
 app_name = 'webclient'
 urlpatterns = [

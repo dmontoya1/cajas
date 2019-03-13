@@ -16,11 +16,6 @@ class OfficeItemsList(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'redirect_to'
     template_name = 'webclient/office_items_list.html'
 
-    def get(self, request, slug):
-        office = Office.objects.get(slug=slug)
-        request.session['office'] = office.pk
-        return super(OfficeItemsList, self).get(request)
-
     def get_context_data(self, **kwargs):
         context = super(OfficeItemsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
@@ -31,4 +26,3 @@ class OfficeItemsList(LoginRequiredMixin, TemplateView):
         context['items'] = items
         context['categories'] = categories
         return context
-
