@@ -1,10 +1,9 @@
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic import View
 
-from boxes.models.box_office import BoxOffice
 from concepts.models.concepts import Concept
 from movement.models.movement_office import MovementOffice
 from office.models.office import Office
@@ -17,7 +16,8 @@ class CreateOfficeMovement(View):
     """
 
     def post(self, request, *args, **kwargs):
-        box_office = BoxOffice.objects.get(pk=request.user.employee.related_secretary_office.box.pk)
+        slug = self.kwargs['slug']
+        office = get_object_or_404(Office, slug=slug)
         concept = Concept.objects.get(pk=request.POST['concept'])
         date = request.POST['date']
         movement_type = request.POST['movement_type']
@@ -26,7 +26,7 @@ class CreateOfficeMovement(View):
         ip = get_ip(request)
 
         movement = MovementOffice.objects.create(
-            box_office=box_office,
+            box_office=office.box,
             concept=concept,
             date=date,
             movement_type=movement_type,

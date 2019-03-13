@@ -73,9 +73,11 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
+    'cajas.chains.apps.ChainsConfig',
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
     'cajas.inventory.apps.InventoryConfig',
+    'cajas.loans.apps.LoansConfig',
     'cajas.movement.apps.MovementConfig',
     'cajas.office.apps.OfficeConfig',
     'cajas.units.apps.UnitsConfig',

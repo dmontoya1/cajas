@@ -1,13 +1,11 @@
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
-from cajas.users.models.user import User
 from concepts.models.concepts import Concept, ConceptType
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 
