@@ -6,4 +6,5 @@ urlpatterns = [
     path('units/', include('units.urls', namespace='units'), name='units'),
     path('office/', include('office.urls', namespace='office'), name='office'),
     path('inventory/', include('inventory.urls', namespace='inventory'), name='inventory'),
+    path('users/', include('users.urls', namespace='users'), name='users'),
 ]

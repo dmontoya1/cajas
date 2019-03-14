@@ -242,7 +242,12 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="initial_value">Sueldo</label>
-                            <input readonly type="text" class="form-control" id="detail_salary" name="salary" required>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">$</div>
+                                </div>
+                                <input readonly type="text" class="form-control" id="detail_salary" name="salary" required>
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="daily_square">Cargo</label><br>
@@ -252,11 +257,15 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="initial_value">Hoja de vida</label>
-                            <input readonly type="text" class="form-control" id="detail_cv" name="cv" required>
+                            <div class="form-control">
+                                <a target="_blank" id="detail_cv" name="cv" href="">Ver hoja de vida</a>
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="daily_square">Pasaporte</label><br>
-                            <input readonly type="text" class="form-control" id="detail_passport" name="passport" required>
+                            <div class="form-control">
+                                <a target="_blank" id="detail_passport" name="passport" href="">Ver pasaporte</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -275,7 +284,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
+                    <form method="POST" class="edit_employee_form">
                     {% csrf_token %}
                     <input type="hidden" name="office" value="{{office.pk}}">
                     <div class="form-row">
@@ -291,21 +300,34 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="initial_value">Sueldo</label>
-                            <input type="text" class="form-control" id="edit_salary" name="salary" required>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <div class="input-group-text">$</div>
+                                </div>
+                                <input type="number" class="form-control" id="edit_salary" name="salary" required>
+                            </div>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="daily_square">Cargo</label><br>
-                            <input type="text" class="form-control" id="edit_charge" name="charge" required>
+                            <select class="form-control" id="edit_charge" name="charge" style="width: 100%; height: 20px;" required>
+                                <option disabled value="" selected>Selecciona una categoría</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="initial_value">Hoja de vida</label>
-                            <input type="text" class="form-control" id="edit_cv" name="cv" required>
+                            <div class="form-control">
+                                <a target="_blank" id="edit_cv" name="cv" href="">Ver hoja de vida</a>
+                            </div>
+                            <!--input type="file" class="form-control-file" id="edit_cv" name="cv" required-->
                         </div>
                         <div class="form-group col-md-6">
                             <label for="daily_square">Pasaporte</label><br>
-                            <input type="text" class="form-control" id="edit_passport" name="passport" required>
+                            <div class="form-control">
+                                <a target="_blank" id="edit_passport" name="passport" href="">Ver pasaporte</a>
+                            </div>
+                            <!--input type="file" class="form-control-file" id="edit_passport" name="passport" required-->
                         </div>
                     </div>
                     <button type="submit" class="btn btn-submit">Editar</button>
@@ -332,28 +354,110 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script type="text/javascript">
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-
+        //Ver detalles modal functionality
         $('.employee_detail').on('click',function(){
-
-            var office_item_pk = $(this).data("id") 
+            var employee_pk = $(this).data("id") 
             $('#modalDetail').on('show.bs.modal', function (event) {
                 var modal = $(this)
-                console.log("employee_pk",office_item_pk)
-                //get employee data depending <a> data-id 
-
-                axios.post("{% url 'webclient:create_office_item' %}", data)
+                console.log("employee_pk",employee_pk)
+                //get employee data depending <a> data-id
+                axios.get(`/api/users/${employee_pk}/employee-detail`)
                 .then(function (response) {
                     data = response.data
+                    console.log("data",data)
                     $("#detail_first_name").val(data.user.first_name)
                     $("#detail_last_name").val(data.user.last_name)
-                    $("#detail_salary").val(data.user.salary)
+                    $("#detail_salary").val(data.salary)
+                    $("#detail_charge").val(data.charge.name)
+                    $("#detail_charge").attr("data-id",data.charge.id)
+                    $("#detail_cv").attr("href",data.cv)
+                    $("#detail_passport").attr("href",data.passport)
                 })
                 .catch(function (error) {
                     // handle error
                     console.log(error);
                 })
-              })
+            })
+        })
+
+        //Edit an employee
+        $('.edit-item').on('click',function(){
+            var employee_pk = $(this).data("id") 
+            $('#editEmployee').on('show.bs.modal', function (event) {
+                var modal = $(this)
+
+                //fill charges select input
+                axios.get(`/api/inventory/${$(this).val()}/brand`)
+                .then(function (response) {
+                    data = response.data
+
+                    $('#edit_charge').empty()
+                    $.each(data, function (k,v){
+                        $('#edit_charge').append(
+                            `<option value=${v.id}>${v.name}</option>`
+                        )
+                    })
+                    $('#edit_charge').prepend(
+                        '<option value="" disabled>Selecciona una marca</option>'
+                    )
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+
+                console.log("employee_pk",employee_pk)
+                //get employee data
+                axios.get(`/api/users/${employee_pk}/employee-detail`)
+                .then(function (response) {
+                    data = response.data
+                    console.log("data",data)
+                    $("#edit_first_name").val(data.user.first_name)
+                    $("#edit_last_name").val(data.user.last_name)
+                    $("#edit_salary").val(data.salary)
+                    $("#edit_charge").val(data.charge.name)
+                    $("#edit_charge").attr("data-id",data.charge.id)
+                    $("#edit_cv").attr("href",data.cv)
+                    $("#edit_passport").attr("href",data.passport)
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+
+                //and then submit the form
+                $('.edit_employee_form').on('submit', function(e){
+                    e.preventDefault()
+                    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+                    data = $(this).serialize()
+
+                    axios.patch(`/api/users/${employee_pk}/employee-detail`, data)
+                    .then(function (response) {
+                        data = response.data
+                        Swal.fire({
+                            type: 'success',
+                            title: 'Exitoso',
+                            text: data,
+                        }).then( function(){
+                            location.reload()
+                        })
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        Swal.fire({
+                        type: 'error',
+                        title: 'Error',
+                        text: error,
+                        }).then( function(){
+                        location.reload()
+                        })
+                    })
+                })
+
+
+            })
         })
 
         //delete items
@@ -433,6 +537,11 @@
             $('#concept').select2({
                 language: "es"
             });
+            $('.edit_employee_form select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
+            });  
         });
 
         //initialites table
