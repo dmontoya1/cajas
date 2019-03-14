@@ -4,6 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
+from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
 from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
@@ -17,6 +18,8 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def update(self, request, *args, **kwargs):
+        print(request.data)
+        charge = Charge.objects.get(pk=request.data["charge"])
         item = Employee.objects.get(pk=kwargs['pk'])
         user = User.objects.get(pk=item.user.pk)
         user.first_name = request.data["first_name"]
@@ -24,7 +27,7 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         user.save()
         item.user = user
         item.salary = request.data["salary"]
-        # item.charge = request.data["charge"]
+        item.charge = charge
         item.save()
         return Response(
             'El item se ha actualizado correctamente',

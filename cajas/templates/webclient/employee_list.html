@@ -33,7 +33,7 @@
         </li>
 
         <li class="menu-title">Socios</li><!-- /.menu-title -->
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown ">
             <a href="{% url 'webclient:partners_list' office.slug %}">
                 <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Lista de socios
@@ -41,7 +41,7 @@
         </li>
 
         <li class="menu-title">Empleados</li><!-- /.menu-title -->
-        <li class="menu-item-has-children dropdown">
+        <li class="menu-item-has-children dropdown active">
             <a href="#"> 
                 <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                 Lista de empleados
@@ -107,17 +107,19 @@
                                     </thead>
                                     <tbody>
                                         {% for e in employees %}
-                                            <tr>
-                                                <td>{{e.user.first_name}}</td>
-                                                <td>{{e.user.last_name}}</td>
-                                                <td>{{e.charge}}</td>
-                                                <td>{{e.salary}}</td>
-                                                <td><a href="#" class="employee_detail" data-id="{{e.id}}" data-toggle="modal" data-target="#modalDetail">Ver detalle</a></td>
-                                                <td>
-                                                    <a href="#" class="edit-item" data-id="{{e.id}}" data-toggle="modal" data-target="#editEmployee">Editar</a>
-                                                    <a href="#" class="decline-mv" data-id="{{e.id}}">Inhabilitar</a>
-                                                </td>
-                                            </tr>
+                                            {% if e.user.is_active and e.user.is_abstract %}
+                                                <tr>
+                                                    <td>{{e.user.first_name}}</td>
+                                                    <td>{{e.user.last_name}}</td>
+                                                    <td>{{e.charge}}</td>
+                                                    <td>{{e.salary}}</td>
+                                                    <td><a href="#" class="employee_detail" data-id="{{e.id}}" data-toggle="modal" data-target="#modalDetail">Ver detalle</a></td>
+                                                    <td>
+                                                        <a href="#" class="edit-item" data-id="{{e.id}}" data-toggle="modal" data-target="#editEmployee">Editar</a>
+                                                        <a href="#" class="decline-mv" data-id="{{e.id}}">Inhabilitar</a>
+                                                    </td>
+                                                </tr>
+                                            {% endif %}
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -125,29 +127,29 @@
                         </div>
                     </div>
                 </div>
-                <a href="" class="float" data-toggle="modal" data-target="#modalPartner">
+                <a href="" class="float" data-toggle="modal" data-target="#addEmployee">
                     <i class="fa fa-plus my-float"></i>
                 </a>
                 <div class="label-container">
-                    <div class="label-text">Añadir socio</div>
+                    <div class="label-text">Añadir empleado</div>
                     <i class="fa fa-play label-arrow"></i>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal add partner -->
-    <div class="modal fade" id="modalPartner" role="dialog" aria-labelledby="modalPartnerTitle" aria-hidden="true">
+    <!-- Modal add employee -->
+    <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="addEmployeeTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Socio</h5>
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Empleado</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
+                    <form method="POST" class="add-employee" action="{% url 'webclient:partner_add' %}">
                         {% csrf_token %}
                         <input type="hidden" name="office" value="{{office.pk}}">
                         <div class="form-row">
@@ -178,39 +180,59 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="email">Correo electrónico</label>
-                                <input type="email" class="form-control" name="email" id="email" required>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com" required>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="partner_type">Tipo de Socio</label>
-                                <select class="form-control" id="partner_type" name="partner_type" required>
-                                    <option selected disabled value="">Selecciona el tipo de sociedad</option>
-                                    <option value="DIR">Directa</option>
-                                    <option value="INDIR">Indirecta</option>
+                                <label for="salary_type">Tipo de Salario</label>
+                                <select class="form-control" id="salary_type" name="salary_type" required>
+                                    <option selected disabled value="">Selecciona el tipo de salario</option>
+                                    <option value="FX">Salario Fijo</option>
+                                    <option value="PE">Porcentaje de comisión</option>
                                 </select>
                             </div>
-                            <div class="form-group col-md-6 d-none direct-partner">
-                                <label for="direct_partner">Socio Directo</label>
-                                <select class="form-control" id="direct_partner" name="direct_partner">
-                                    <option selected disabled value="">Selecciona el socio directo</option>
-                                    {% for p in partners %}
-                                        <option value="{{p.pk}}">{{p.user.get_full_name}} ({{p.code}})</option>
-                                    {% endfor %}
-                                </select>
+                            <div class="form-group col-md-6">
+                                <label for="initial_value">Salario empleado</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text" id="type_icon">$</div>
+                                    </div>
+                                    <input type="number" class="form-control" id="salary" name="salary" required>
+                                </div>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="initial_value">Inversión inicial</label>
-                                <input type="text" class="form-control" id="initial_value" name="initial_value" value="0" required>
+                                <label for="cv">Hoja de vida</label>
+                                <input type="file" class="form-control-file" id="cv" name="cv">
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="daily_square">Cuadre Diario</label><br>
-                                <input type="checkbox" name="daily_square" id="daily_square">
+                                <label for="passport">Pasaporte</label>
+                                <input type="file" class="form-control-file" id="passport" name="passport">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-submit">Añadir</button>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="is_abstract">
+                                    <label class="form-check-label" for="is_abstract">
+                                        ¿Tiene acceso a la plataforma?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row d-none" id="password_inputs">
+                            <div class="form-group col-md-6">
+                                <label for="password1">Contraseña</label>
+                                <input required type="password" class="form-control" id="password1" placeholder="Password">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="password2">Repetir Contraseña</label>
+                                <input required type="password" class="form-control" id="password2" placeholder="Password Again">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-submit" id="addEmployee">Añadir</button>
                     </form>
                 </div>
             </div>
@@ -218,7 +240,7 @@
     </div>
 
     <!-- Modal detail -->
-    <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalPartnerTitle" aria-hidden="true">
+    <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -274,11 +296,11 @@
     </div>
 
     <!-- Modal edit Employee-->
-    <div class="modal fade" id="editEmployee" role="dialog" aria-labelledby="modalPartnerTitle" aria-hidden="true">
+    <div class="modal fade" id="editEmployee" role="dialog" aria-labelledby="editEmployeeTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Detalle Empleado</h5>
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar Empleado</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -310,7 +332,6 @@
                         <div class="form-group col-md-6">
                             <label for="daily_square">Cargo</label><br>
                             <select class="form-control" id="edit_charge" name="charge" style="width: 100%; height: 20px;" required>
-                                <option disabled value="" selected>Selecciona una categoría</option>
                             </select>
                         </div>
                     </div>
@@ -356,7 +377,54 @@
     <script type="text/javascript">
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-        //Ver detalles modal functionality
+        //create an employee
+        $('.add-employee').on('submit', function(e){
+                e.preventDefault()
+                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+                data = $(this).serialize()
+                axios.post("{% url 'api:users:employee-create' %}", data)
+                .then(function (response) {
+                  data = response.data
+                  Swal.fire({
+                    type: 'success',
+                    title: 'Exitoso',
+                    text: data.name,
+                  }).then(function(){
+                    location.reload()
+                  })
+                })
+                .catch(function (error) {
+                    // handle error
+                    Swal.fire({
+                      type: 'error',
+                      title: 'Error',
+                      text: error,
+                    }).then(function(){
+                      location.reload()
+                    })
+                })
+        })
+
+
+        //changes icon depending salary type
+        $("#salary_type").on("change", function(){
+            if($(this).find(":selected").val() == "PE"){
+                $("#type_icon").text("%")
+            } else {
+                $("#type_icon").text("$")
+            }
+        })
+
+        //hide and show password inputs if checkbox is active or not
+        $('#is_abstract').click(function() {
+            if ($(this).is(':checked')) {
+                $("#password_inputs").removeClass("d-none");
+            } else {
+                $("#password_inputs").addClass("d-none");
+            }
+        });
+
+        //"Ver detalles" modal functionality
         $('.employee_detail').on('click',function(){
             var employee_pk = $(this).data("id") 
             $('#modalDetail').on('show.bs.modal', function (event) {
@@ -389,18 +457,19 @@
                 var modal = $(this)
 
                 //fill charges select input
-                axios.get(`/api/inventory/${$(this).val()}/brand`)
+                axios.get("{% url 'api:users:charge-list' %}")
                 .then(function (response) {
                     data = response.data
 
                     $('#edit_charge').empty()
                     $.each(data, function (k,v){
+                        //console.log(v.name,v.id)
                         $('#edit_charge').append(
                             `<option value=${v.id}>${v.name}</option>`
                         )
                     })
                     $('#edit_charge').prepend(
-                        '<option value="" disabled>Selecciona una marca</option>'
+                        '<option value="" selected disabled>Selecciona un cargo</option>'
                     )
                 })
                 .catch(function (error) {
@@ -417,10 +486,13 @@
                     $("#edit_first_name").val(data.user.first_name)
                     $("#edit_last_name").val(data.user.last_name)
                     $("#edit_salary").val(data.salary)
-                    $("#edit_charge").val(data.charge.name)
-                    $("#edit_charge").attr("data-id",data.charge.id)
                     $("#edit_cv").attr("href",data.cv)
                     $("#edit_passport").attr("href",data.passport)
+
+                    $("#edit_charge").find('option:selected').remove()
+                    $("#edit_charge option[value='" + data.charge.id + "']").prop("selected",true);
+                    $("#edit_charge").trigger("click")
+
                 })
                 .catch(function (error) {
                     // handle error
@@ -465,7 +537,8 @@
             pk = $(this).data('id')
             const {value: text} = Swal.fire({
                 title: '¿Está seguro de inabilitar el empleado?',
-                input: 'textarea',
+                input: 'text',
+                type: 'warning',
                 inputPlaceholder: 'Motivo',
                 showCancelButton: true,
                 inputValidator: (value) => {
@@ -475,8 +548,8 @@
                 showCloseButton: true
             }).then((result) => {
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                axios.delete(`/api/office/${pk}/office-item-delete`,
-                    { data: { description: result.value } }                    
+                axios.delete(`/api/users/${pk}/employee-delete`,
+                    { data: { description: result.value } }
                 )
                 .then(function (response) {
                     Swal.fire({
@@ -543,16 +616,6 @@
                 });
             });  
         });
-
-        //initialites table
-        $('#partner_type').on('change', function(){
-            if ( $(this).val() == 'DIR'){
-                $('.direct-partner').addClass('d-none')
-            }
-            else {
-                $('.direct-partner').removeClass('d-none')
-            }
-        })
 
     </script>
 {% endblock%}
