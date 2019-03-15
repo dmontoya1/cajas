@@ -4,7 +4,7 @@ from rest_framework import serializers
 from inventory.models.category import Category
 
 
-class CateogrySerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     """
     """
 

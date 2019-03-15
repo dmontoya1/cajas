@@ -12,12 +12,11 @@ class OfficeItemDelete(generics.DestroyAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def destroy(self, request, *args, **kwargs):
-        desc = request.data['description']
         item = OfficeItems.objects.get(pk=kwargs['pk'])
-        item.description = desc
+        item.description = request.data['description']
         item.is_deleted = True
         item.save()
         return Response(
             'El item se ha eliminado correctamente',
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_200_OK
         )

@@ -390,7 +390,7 @@
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 data = $(this).serialize()
                 console.log(data)
-                axios.post("{% url 'api:users:employee-create' %}", data)
+                axios.post("{% url 'api:users:employee_create' %}", data)
                 .then(function (response) {
                   data = response.data
                   Swal.fire({

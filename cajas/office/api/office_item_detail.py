@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,9 +22,9 @@ class OfficeItemDetail(generics.RetrieveUpdateAPIView):
         item.category = request.data["category"]
         item.price = request.data["price"]
         item.description = request.data["description"]
-        item.brand = Brand.objects.filter(pk=request.data["brand"])[0]
+        item.brand = get_object_or_404(Brand, pk=request.data["brand"])
         item.save()
         return Response(
             'El item se ha actualizado correctamente',
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_200_OK
         )

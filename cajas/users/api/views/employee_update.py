@@ -18,7 +18,6 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         charge = Charge.objects.get(pk=request.data["charge"])
         item = Employee.objects.get(pk=kwargs['pk'])
         user = User.objects.get(pk=item.user.pk)
@@ -31,5 +30,5 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         item.save()
         return Response(
             'El item se ha actualizado correctamente',
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_200_OK
         )

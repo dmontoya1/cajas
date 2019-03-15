@@ -7,8 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
     """
     """
 
-    #category = CateogrySerializer(many=False, read_only=True)
-
     class Meta:
         model = User
         fields = '__all__'
