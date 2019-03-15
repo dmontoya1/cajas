@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py" line="120" />
+    <bookmark url="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py" line="124" />
     <bookmark url="file://$PROJECT_DIR$/cajas/chains/services/chains_manager.py" line="41" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e990a76c-219a-40b7-b043-79b045b4644f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/general_config/models/country.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/general_config/models/country.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/models/loan.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/loans/models/loan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/office/models/office.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/office/models/office.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/loans/services/loan_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/loans/services/loan_service.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -102,11 +98,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cajas/loans/models/loan.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="441">
               <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="375">
+              <caret line="53" column="21" selection-start-line="53" selection-start-column="21" selection-end-line="53" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -169,7 +174,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/partners_list.html" />
         <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/accept_movement.py" />
         <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/denied_movement.py" />
@@ -220,6 +224,7 @@
         <option value="$PROJECT_DIR$/cajas/general_config/models/country.py" />
         <option value="$PROJECT_DIR$/cajas/templates/base.html" />
         <option value="$PROJECT_DIR$/cajas/loans/models/loan.py" />
+        <option value="$PROJECT_DIR$/cajas/loans/services/loan_service.py" />
       </list>
     </option>
   </component>
@@ -271,20 +276,7 @@
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="loans" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="office" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="office" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="models" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="services" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -439,7 +431,7 @@
       <workItem from="1552571142739" duration="23943000" />
       <workItem from="1552613353433" duration="30000" />
       <workItem from="1552663759231" duration="7303000" />
-      <workItem from="1552684520823" duration="105000" />
+      <workItem from="1552684520823" duration="859000" />
     </task>
     <servers />
   </component>
@@ -452,7 +444,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="196310000" />
+    <option name="totallyTimeSpent" value="197064000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-2" width="1366" height="770" extended-state="6" />
@@ -516,11 +508,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/office_box.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3353" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/units/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -886,6 +873,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="441">
           <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="53" column="21" selection-start-line="53" selection-start-column="21" selection-end-line="53" selection-end-column="21" />
         </state>
       </provider>
     </entry>
