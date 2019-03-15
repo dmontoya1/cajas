@@ -443,7 +443,6 @@
                     $('.loan-select').addClass('d-none')
                     $('.chain-select').addClass('d-none')
                     $('.office-select').addClass('d-none')
-                    console.log('None')
             }
         })
     
@@ -557,19 +556,14 @@
             var values = {};
             counter = -3
             $.each($('form#dispersion-mv').serializeArray(), function(i, field) {
-              console.log(field)
               values[field.name] = field.value;
               counter += 1
             });
-            console.log(counter)
             values['counter'] = counter
             total = 0
             for (var i = 0; i < counter / 2; i++) {
-              console.log(values[`form[form][${i}][value]`])
               total = total + parseInt(values[`form[form][${i}][value]`])
-              console.log(total)
             }
-            console.log(total)
             if (total !== parseInt(values['value'])){
               Swal.fire({
                 type: 'error',
