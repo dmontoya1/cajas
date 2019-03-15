@@ -39,6 +39,10 @@ class LoanManager(object):
             provider = lender_partner.direct_partner.user
         else:
             provider = get_object_or_404(User, username='donjuan')
+        if data['time'] == '':
+            time = 0
+        else:
+            time = data['time']
         loan = Loan.objects.create(
             lender=lender,
             provider=provider,
@@ -47,7 +51,7 @@ class LoanManager(object):
             value=data['value'],
             value_cop=data['value_cop'],
             interest=data['interest'],
-            time=data['time'],
+            time=time,
             exchange=data['exchange'],
             balance=data['value']
         )
@@ -114,7 +118,6 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        print(data)
         movement = MovementDonJuanHandler.create(data)
         return loan
 
