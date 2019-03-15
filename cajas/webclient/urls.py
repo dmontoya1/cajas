@@ -1,5 +1,4 @@
-from django.conf import settings
-from django.urls import include, path
+from django.urls import path
 
 from .views.box_don_juan_office import BoxDonJuanOffice
 from .views.chain_list import ChainList
