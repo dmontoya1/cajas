@@ -118,7 +118,6 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        print(data)
         movement = MovementDonJuanHandler.create(data)
         return loan
 
