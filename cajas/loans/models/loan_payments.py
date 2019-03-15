@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.db.models import Sum
 
 from .loan import Loan
 
@@ -12,6 +13,7 @@ class LoanPayment(models.Model):
         Loan,
         verbose_name='Préstamo',
         on_delete=models.CASCADE,
+        related_name='related_payments'
     )
     value = models.FloatField(
         'Valor del pago'

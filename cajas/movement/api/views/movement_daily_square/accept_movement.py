@@ -6,8 +6,8 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Relationship
-from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
 from movement.views.movement_partner.create_movement_service_simple import CreateMovementSimpleService
 from movement.views.movement_country.create_movement import CreateMovementCountry
 from movement.views.movement_office.create_movement import CreateMovementOffice

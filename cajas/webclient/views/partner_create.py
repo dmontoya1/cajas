@@ -7,12 +7,14 @@ from django.views.generic import View
 
 from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquareHandler
 from cajas.users.models.partner import Partner
-from cajas.users.services.user_service import user_manager
+from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import partner_manager
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from office.models.office import Office
 
 from .get_ip import get_ip
+
+user_manager = UserManager()
 
 
 class PartnerCreate(LoginRequiredMixin, View):

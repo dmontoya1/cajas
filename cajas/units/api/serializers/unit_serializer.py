@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from ..models.units import Unit
+from ...models.units import Unit
 
 
 class UnitSerializer(serializers.ModelSerializer):
