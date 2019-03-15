@@ -1,6 +1,7 @@
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Sum
 
 from enumfields import EnumField
 from enumfields import Enum
@@ -82,6 +83,11 @@ class Loan(models.Model):
             self.lender.get_full_name(),
             self.value
         )
+
+    def save(self, *args, **kwargs):
+        loans = self.related_payments.all().aggregate(Sum('value'))
+        self.balance = self.value - loans['value__sum']
+        super(Loan, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Préstamo'

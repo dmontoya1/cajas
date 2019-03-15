@@ -76,7 +76,7 @@
               </a>
           </li>
           <li class="menu-item-has-children dropdown">
-              <a href="#">
+              <a href="{% url 'webclient:chain_list' office.slug %}">
                   <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                   Cadenas
               </a>
@@ -120,7 +120,10 @@
                                                   <td>{{l.balance}}</td>
                                                   <td><a href="#">Abonos</a></td>
                                                   <td>
-                                                      <button type="button" class="add-movement"><i class="fas fa-plus"></i>Realizar abono</button>
+                                                      <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal" data-target="#modalAddPayment">
+                                                        <i class="fas fa-plus mr-1"></i>
+                                                        Realizar abono
+                                                      </button>
                                                   </td>
                                               </tr>
                                           {% endfor %}
@@ -279,6 +282,37 @@
             </div>
         </div>
       </div>
+
+      <div class="modal fade" id="modalAddPayment" role="dialog" aria-labelledby="modalAddPaymentTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-center" id="exampleModalLongTitle">Realizar abono</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" class="add-loan-payment" action="{% url 'api:loans:loan_payment_create' %}">
+                {% csrf_token %}
+                <input type="hidden" name="loan" id="loan" value="">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="value">Valor del abono</label>
+                    <input class="form-control" type="number" name="value" id="value" value="" placeholder="Ingresa el valor a abonar" placeholder="$">
+                  </div>
+                  <div class="form-group col-md-6 box-select">
+                    <label for="date">Fecha del abono</label>
+                    <input type="date" name="date" id="date" class="form-control datepicker" placeholder="AAAA-MM-DD">
+                  </div>
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-submit">Abonar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
   {% endblock %}
 
   {% block extra_js %}
@@ -298,43 +332,43 @@
 
       <script type="text/javascript">
         $(document).ready(function() {
-            $('#table').DataTable({
-                responsive: {
-                    details: true
-                },
-                dom: 'lBfrtip',
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                buttons: [
-                    'excel', 'print'
-                ],
-                "order": [[ 1, "asc" ]],
-                language: {
-                    "sProcessing":     "Procesando...",
-                    "sLengthMenu":     "Mostrar _MENU_ registros",
-                    "sZeroRecords":    "No se encontraron resultados",
-                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":    "",
-                    "sSearch":         "Buscar:",
-                    "sUrl":            "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":     "Último",
-                        "sNext":     "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                }
-            });
+          $('#table').DataTable({
+              responsive: {
+                  details: true
+              },
+              dom: 'lBfrtip',
+              lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+              buttons: [
+                  'excel', 'print'
+              ],
+              "order": [[ 1, "asc" ]],
+              language: {
+                  "sProcessing":     "Procesando...",
+                  "sLengthMenu":     "Mostrar _MENU_ registros",
+                  "sZeroRecords":    "No se encontraron resultados",
+                  "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                  "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                  "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                  "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                  "sInfoPostFix":    "",
+                  "sSearch":         "Buscar:",
+                  "sUrl":            "",
+                  "sInfoThousands":  ",",
+                  "sLoadingRecords": "Cargando...",
+                  "oPaginate": {
+                      "sFirst":    "Primero",
+                      "sLast":     "Último",
+                      "sNext":     "Siguiente",
+                      "sPrevious": "Anterior"
+                  },
+                  "oAria": {
+                      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                  }
+              }
+          });
 
-            $('.add-loan select').each(function() {
+          $('.add-loan select').each(function() {
               $(this).select2({
                   language: "es"
               });
@@ -383,6 +417,45 @@
           exchange = parseInt($('#exchange').data('value'))
           $('#value_cop').val(value * exchange)
         })
+
+        $('.add-pay').on('click', function () {
+          $('#loan').val($(this).data('id'))
+        })
+
+        $('.add-loan-payment').on('submit', function(e){
+          e.preventDefault()
+          data = $(this).serialize()
+          data = $(this).serialize()
+          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+          axios.post('{% url 'api:loans:loan_payment_create' %}', data)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data,
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+          })
+          .catch(function (error) {
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+        })
+      })
+
 
       </script>
   {% endblock%}
