@@ -118,9 +118,6 @@ class LoanManager(object):
         movement = MovementDonJuanHandler.create(data)
         return loan
 
-    def loan_payment(self, data):
-        pass
-
     def interest_load_payment(self, data):
         lender = data['lender']
         total_balance = Loan.objects.filter(lender=lender).aggregate(Sum('balance'))

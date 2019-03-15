@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from ..models.unitItems import UnitItems
+from ...models.unitItems import UnitItems
 
 
 class UnitItemSerializer(serializers.ModelSerializer):

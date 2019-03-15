@@ -1,7 +1,7 @@
 
 from rest_framework import generics
 
-from ..models.units import Unit
+from ...models.units import Unit
 from ..serializers.unit_serializer import UnitSerializer
 
 

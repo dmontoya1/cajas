@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
 from cajas.users.models.partner import Partner
-from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
+from api.CsrfExempt import CsrfExemptSessionAuthentication
 from movement.models.movement_daily_square import MovementDailySquare
 from movement.views.movement_partner.create_movement_service_simple import CreateMovementSimpleService
 from webclient.views.get_ip import get_ip
