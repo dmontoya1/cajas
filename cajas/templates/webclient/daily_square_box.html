@@ -321,61 +321,61 @@
     <script type="text/javascript">
     
         $(document).ready(function() {
-            $('#table').DataTable({
-                responsive: {
-                    details: true
-                },
-                dom: 'lBfrtip',
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                buttons: [
-                    'excel', 'print'
-                ],
-                "order": [[ 1, "asc" ]],
-                language: {
-                    "sProcessing":     "Procesando...",
-                    "sLengthMenu":     "Mostrar _MENU_ registros",
-                    "sZeroRecords":    "No se encontraron resultados",
-                    "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix":    "",
-                    "sSearch":         "Buscar:",
-                    "sUrl":            "",
-                    "sInfoThousands":  ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst":    "Primero",
-                        "sLast":     "Último",
-                        "sNext":     "Siguiente",
-                        "sPrevious": "Anterior"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                    }
-                }
-            });
+          $('#table').DataTable({
+              responsive: {
+                  details: true
+              },
+              dom: 'lBfrtip',
+              lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+              buttons: [
+                  'excel', 'print'
+              ],
+              "order": [[ 1, "asc" ]],
+              language: {
+                  "sProcessing":     "Procesando...",
+                  "sLengthMenu":     "Mostrar _MENU_ registros",
+                  "sZeroRecords":    "No se encontraron resultados",
+                  "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                  "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                  "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                  "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                  "sInfoPostFix":    "",
+                  "sSearch":         "Buscar:",
+                  "sUrl":            "",
+                  "sInfoThousands":  ",",
+                  "sLoadingRecords": "Cargando...",
+                  "oPaginate": {
+                      "sFirst":    "Primero",
+                      "sLast":     "Último",
+                      "sNext":     "Siguiente",
+                      "sPrevious": "Anterior"
+                  },
+                  "oAria": {
+                      "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                      "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                  }
+              }
+          });
 
-            $('.add-movement select').each(function() {
-                $(this).select2({
-                    language: "es"
-                });
-            });
+          $('.add-movement select').each(function() {
+              $(this).select2({
+                  language: "es"
+              });
+          });
 
-            var dynamic_form =  $("#dynamic_form").dynamicForm("#dynamic_form","#plus5", "#minus5", {
-		        limit:15,
-		        formPrefix : "form",
-                normalizeFullForm : true,
-		    });
+          var dynamic_form =  $("#dynamic_form").dynamicForm("#dynamic_form","#plus5", "#minus5", {
+            limit:15,
+            formPrefix : "form",
+            normalizeFullForm : true,
+          });
 
-		    $("#dynamic_form #minus5").on('click', function(){
-		    	var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
-		    	if (initDynamicId === 2) {
-		    		$(this).closest('#dynamic_form').next().find('#minus5').hide();
-		    	}
-		    	$(this).closest('#dynamic_form').remove();
-		    });
+          $("#dynamic_form #minus5").on('click', function(){
+            var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
+            if (initDynamicId === 2) {
+              $(this).closest('#dynamic_form').next().find('#minus5').hide();
+            }
+            $(this).closest('#dynamic_form').remove();
+          });
         });
 
         $('#concept').on('change', function(){
@@ -555,7 +555,7 @@
         $('form#dispersion-mv').on('submit', function(event){
             event.preventDefault();
             var values = {};
-            counter = -3
+            counter = -5
             $.each($('form#dispersion-mv').serializeArray(), function(i, field) {
                 values[field.name] = field.value;
                 counter += 1
@@ -573,7 +573,7 @@
                 })
             }
             else {
-                axios.post('{% url "api:movements:dispersion-movement" %}', values )
+                axios.post('{% url "api:movements:dispersion_movement" %}', values )
                 .then(function (response) {
                     Swal.fire({
                         title: 'Exitoso!',

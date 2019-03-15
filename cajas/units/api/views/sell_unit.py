@@ -12,8 +12,7 @@ from concepts.models.concepts import Concept
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from webclient.views.get_ip import get_ip
 
-from ..models.units import Unit
-from ..serializers.unit_serializer import UnitSerializer
+from ...models.units import Unit
 
 
 class UnitSell(APIView):

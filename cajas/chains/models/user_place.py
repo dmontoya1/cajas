@@ -32,6 +32,10 @@ class UserPlace(models.Model):
     def __str__(self):
         return "Puesto de {} de la cadena {}".format(self.user, self.chain_place.chain)
 
+    def get_user_value(self):
+        return (self.place_porcentaje * self.chain_place.chain.place_value) / 100
+
     class Meta:
         verbose_name = "Usuario por puesto"
         verbose_name_plural = "Usuarios por puesto"
+        ordering = ['id']

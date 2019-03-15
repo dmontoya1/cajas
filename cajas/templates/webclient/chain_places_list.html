@@ -87,55 +87,83 @@
 
   {% block content %}
       <div class="row">
-          <div class="col-lg-12">
-              <div class="card">
-                  <div class="row">
-
-                      <div class="col-md-12">
-                          <div class="card">
-                              <div class="card-body">
-                                  <table id="table" class="table table-striped table-bordered display responsive display nowrap" cellspacing="0" style="width:100%">
-                                      <thead>
-                                          <tr>
-                                              <th>Nombre</th>
-                                              <th># de puestos</th>
-                                              <th>Valor puesto</th>
-                                              <th>Tipo de cadena</th>
-                                              <th>Socios</th>
-                                              <th></th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          {% for c in chains %}
-                                              <tr>
-                                                  <td>{{c.name}}</td>
-                                                  <td>{{c.places}}</td>
-                                                  <td>$ {{c.place_value|intcomma}}</td>
-                                                  <td>{% if c.external_chain %}Externa{% else %}Interna{% endif %}</td>
-                                                  <td><a href="{% url 'webclient:chain_places_list' office.slug c.pk %}">Ver socios</a></td>
-                                                  <td>
-                                                      <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal" data-target="#modalAddPayment">
-                                                        <i class="fas fa-plus mr-1"></i>
-                                                        Realizar pago
-                                                      </button>
-                                                  </td>
-                                              </tr>
-                                          {% endfor %}
-                                      </tbody>
-                                  </table>
-                              </div>
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="mb-3">Detalle Cadena</h2>
+                    <form class="create-chain">
+                      {% csrf_token %}
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="chain-name">Nombre Cadena</label>
+                          <input type="text" class="form-control name" value="{{ chain.name }}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="places">Número de puestos</label>
+                          <input type="number" class="form-control" value="{{ chain.places }}" readonly>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="place_value">Valor del puesto</label>
+                          <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text">$</div>
+                            </div>
+                            <input type="text" class="form-control" value="{{ chain.place_value|intcomma }}" readonly>
                           </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="chain_type">Tipo de cadena</label>
+                          <input class="form-control" type="text" value="{{ chain.get_chain_type_display }}" readonly>
+                        </div>
                       </div>
+                      <hr>
+                      <div class="places">
+                        <div class="form-row places-list">
+                          {% for p in chain.related_places.all %}
+                            <div class="form-group col-md-6">
+                              <div class="places-item">
+                                <span class="place-name">{{ p.name }}</span>
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="">Fecha de pago del puesto</label>
+                                    <input type="text" class="form-control" value="{{ p.pay_date }}" readonly>
+                                  </div>
+                                </div>
+                                <div class="form-group table-responsive">
+                                  <table class="table table-striped">
+                                    <thead>
+                                      <tr>
+                                        <th>Socio</th>
+                                        <th>Porcentaje</th>
+                                        <th>Valor</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for u in p.related_users.all %}
+                                      <tr>
+                                        <th>{{ u.user }}</th>
+                                        <td>{{ u.place_porcentaje }}%</td>
+                                        <td>${{ u.get_user_value|intcomma }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                      </div>
+                    </form>
                   </div>
-                  <a href="{% url 'webclient:chain_create' office.slug %}" class="float">
-                      <i class="fa fa-plus my-float"></i>
-                  </a>
-                  <div class="label-container">
-                      <div class="label-text">Crear Cadena</div>
-                      <i class="fa fa-play label-arrow"></i>
-                  </div>
+                </div>
               </div>
+            </div>
           </div>
+        </div>
       </div>
 
   {% endblock %}
@@ -152,6 +180,7 @@
       <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
       <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
       <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+      <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -192,14 +221,7 @@
                   }
               }
           });
-
-          $('.add-loan select').each(function() {
-              $(this).select2({
-                  language: "es"
-              });
-          });
         });
-
       </script>
   {% endblock%}
 

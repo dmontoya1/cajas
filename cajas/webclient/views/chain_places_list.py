@@ -10,19 +10,19 @@ from office.models.office import Office
 User = get_user_model()
 
 
-class ChainList(LoginRequiredMixin, TemplateView):
+class ChainPlacesList(LoginRequiredMixin, TemplateView):
     """
     """
 
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
-    template_name = 'webclient/chain_list.html'
+    template_name = 'webclient/chain_places_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ChainList, self).get_context_data(**kwargs)
+        context = super(ChainPlacesList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
-        chains = Chain.objects.filter(office=office)
+        chain = get_object_or_404(Chain, pk=self.kwargs['pk'])
         context['office'] = office
-        context['chains'] = chains
+        context['chain'] = chain
         return context

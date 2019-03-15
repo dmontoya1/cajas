@@ -31,6 +31,6 @@ urlpatterns = [
     path(
         "dispersion-movement/",
         DispersionMovement.as_view(),
-        name='dispersion-movement'
+        name='dispersion_movement'
     ),
 ]

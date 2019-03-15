@@ -13,7 +13,7 @@ class ChainPlaceInline(admin.StackedInline):
     """
 
     model = ChainPlace
-    fields = ["pay_date", "get_edit_link", ]
+    fields = ["name", "pay_date", "get_edit_link", ]
     readonly_fields = ["get_edit_link", ]
     extra = 0
 
@@ -33,7 +33,7 @@ class ChainPlaceInline(admin.StackedInline):
 @admin.register(Chain)
 class ChainAdmin(admin.ModelAdmin):
 
-    list_display = ('name', 'places', 'place_value', 'external_chain', )
+    list_display = ('name', 'places', 'place_value', 'chain_type', )
     search_fields = ('name', 'places', )
     inlines = [ChainPlaceInline, ]
 
