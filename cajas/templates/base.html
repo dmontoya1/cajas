@@ -124,8 +124,8 @@
             <header id="header" class="header">
                 <div class="top-left">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo" ></a>
-                        <a class="navbar-brand hidden" href="./"><img src="{% static 'images/favicons/favicon.png' %}" alt="Logo"></a>
+                        <a class="navbar-brand" href="{% url 'webclient:home' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" ></a>
+                        <a class="navbar-brand hidden" href="{% url 'webclient:home' %}"><img src="{% static 'images/favicons/favicon.png' %}" alt="Logo"></a>
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                     </div>
                 </div>
@@ -347,7 +347,7 @@
                         </div>
                       </div>
                     </div>
-
+                  </form>
                 </div>
                 <div class="modal-footer d-none">
                     <button type="button" class="btn btn-secondary" style="padding: 7px 40px;" data-dismiss="modal">Cancelar</button>
