@@ -555,22 +555,27 @@
         $('form#dispersion-mv').on('submit', function(event){
             event.preventDefault();
             var values = {};
-            counter = -5
+            counter = -3
             $.each($('form#dispersion-mv').serializeArray(), function(i, field) {
-                values[field.name] = field.value;
-                counter += 1
+              console.log(field)
+              values[field.name] = field.value;
+              counter += 1
             });
+            console.log(counter)
             values['counter'] = counter
             total = 0
             for (var i = 0; i < counter / 2; i++) {
-                total = total + parseInt(values[`form[form][${i}][value]`])
+              console.log(values[`form[form][${i}][value]`])
+              total = total + parseInt(values[`form[form][${i}][value]`])
+              console.log(total)
             }
+            console.log(total)
             if (total !== parseInt(values['value'])){
-                Swal.fire({
-                    type: 'error',
-                    title: 'Error',
-                    text: `El valor del movimiento y el de la suma de los movimiento de la dispersión son diferentes ($${total} difiere de $${values['value']})`,
-                })
+              Swal.fire({
+                type: 'error',
+                title: 'Error',
+                text: `El valor del movimiento y el de la suma de los movimientos de la dispersión son diferentes ($${total} difiere de $${values['value']})`,
+              })
             }
             else {
                 axios.post('{% url "api:movements:dispersion_movement" %}', values )
