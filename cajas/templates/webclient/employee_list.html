@@ -149,16 +149,16 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-employee" action="{% url 'webclient:partner_add' %}">
+                    <form method="POST" class="add-employee" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="hidden" name="office" value="{{office.pk}}">
+                        <input type="hidden" name="office" value="{{office.box.pk}}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="concept">Nombres</label>
+                                <label for="first_name">Nombres</label>
                                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres" required>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="concept">Apellidos</label>
+                                <label for="last_name">Apellidos</label>
                                 <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Apellidos" required>
                             </div>
                         </div>
@@ -215,21 +215,27 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="is_abstract">
+                                    <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
                                     <label class="form-check-label" for="is_abstract">
                                         ¿Tiene acceso a la plataforma?
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        <div class="form-row d-none" id="username_input">
+                            <div class="form-group col-md-12">
+                                <label for="username">Nombre de Usuario</label>
+                                <input type="text" class="form-control d-none" id="username" name="username" placeholder="Username">
+                            </div>
+                        </div>
                         <div class="form-row d-none" id="password_inputs">
                             <div class="form-group col-md-6">
                                 <label for="password1">Contraseña</label>
-                                <input required type="password" class="form-control" id="password1" placeholder="Password">
+                                <input type="password" class="form-control d-none" name="password1" id="password1" placeholder="Password">
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="password2">Repetir Contraseña</label>
-                                <input required type="password" class="form-control" id="password2" placeholder="Password Again">
+                                <input type="password" class="form-control d-none" name="password2" id="password2" placeholder="Password Again">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-submit" id="addEmployee">Añadir</button>
@@ -378,10 +384,12 @@
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
         //create an employee
+        
         $('.add-employee').on('submit', function(e){
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 data = $(this).serialize()
+                console.log(data)
                 axios.post("{% url 'api:users:employee-create' %}", data)
                 .then(function (response) {
                   data = response.data
@@ -419,8 +427,22 @@
         $('#is_abstract').click(function() {
             if ($(this).is(':checked')) {
                 $("#password_inputs").removeClass("d-none");
+                $("#username_input").removeClass("d-none");
+                $("#password1").prop('required',true);
+                $("#password2").prop('required',true);
+                $("#password1").removeClass("d-none");
+                $("#password2").removeClass("d-none");
+                $("#username").removeClass("d-none");
+                $('#is_abstract').prop('checked', true);
             } else {
                 $("#password_inputs").addClass("d-none");
+                $("#username_input").addClass("d-none");
+                $("#password1").prop('required',false);
+                $("#password2").prop('required',false);
+                $("#password2").addClass("d-none");
+                $("#password1").addClass("d-none");
+                $("#username").addClass("d-none");
+                $('#is_abstract').prop('checked', false);
             }
         });
 
