@@ -6,7 +6,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e990a76c-219a-40b7-b043-79b045b4644f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/movement/views/movement_don_juan/create_movement_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/views/movement_don_juan/create_movement_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/webclient/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,72 +45,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_don_juan_movement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="349" column="25" selection-start-line="349" selection-start-column="25" selection-end-line="349" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/home_view.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="22" column="52" selection-start-line="22" selection-start-column="52" selection-end-line="22" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/office/models/office.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
-              <caret line="59" column="27" selection-start-line="59" selection-start-column="27" selection-end-line="59" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/loans/models/loan.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="441">
-              <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="464">
-              <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
+            <state relative-caret-position="201">
+              <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
               <folding>
-                <element signature="e#900#1054#0" />
-                <element signature="e#1105#2663#0" />
-                <element signature="e#2715#2973#0" />
-                <element signature="e#3022#4493#0" />
+                <element signature="e#1#36#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/loans/views.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/loan_list.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py">
+        <entry file="file://$PROJECT_DIR$/cajas/movement/services/don_juan_service.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="72" column="12" selection-start-line="72" selection-start-column="12" selection-end-line="72" selection-end-column="12" />
+            <state relative-caret-position="165">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -114,8 +69,29 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cajas/webclient/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-129">
-              <caret column="24" selection-start-column="24" selection-end-column="24" />
+            <state relative-caret-position="368">
+              <caret line="37" column="105" lean-forward="true" selection-start-line="37" selection-start-column="105" selection-end-line="37" selection-end-column="105" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="681">
+              <caret line="152" column="61" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="61" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_daily_square_movement.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="27" column="65" lean-forward="true" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="65" />
             </state>
           </provider>
         </entry>
@@ -132,8 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>loan_list</find>
-      <find>ya existe</find>
       <find>save_mo</find>
       <find>modal(</find>
       <find>type=&quot;date</find>
@@ -162,6 +136,8 @@
       <find>orderi</find>
       <find>print(</find>
       <find>partner_id</find>
+      <find>create_office_movement</find>
+      <find>add_daily_square_movement</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -178,10 +154,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/accept_movement.py" />
-        <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/denied_movement.py" />
-        <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/dispersion_movement.py" />
-        <option value="$PROJECT_DIR$/cajas/webclient/views/chain_list.py" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/create_chain.html" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/create_chain.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/chain_create.py" />
@@ -215,13 +187,11 @@
         <option value="$PROJECT_DIR$/cajas/users/services/user_service.py" />
         <option value="$PROJECT_DIR$/cajas/users/views/employee/employee_handler.py" />
         <option value="$PROJECT_DIR$/cajas/users/services/employee_service.py" />
-        <option value="$PROJECT_DIR$/cajas/webclient/urls.py" />
         <option value="$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py" />
         <option value="$PROJECT_DIR$/cajas/chains/services/chains_manager.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/partner_create.py" />
         <option value="$PROJECT_DIR$/cajas/boxes/models/box_country.py" />
         <option value="$PROJECT_DIR$/.envs/.local/.django" />
-        <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/home_view.py" />
         <option value="$PROJECT_DIR$/cajas/office/models/office.py" />
         <option value="$PROJECT_DIR$/cajas/general_config/models/country.py" />
@@ -229,6 +199,12 @@
         <option value="$PROJECT_DIR$/cajas/loans/models/loan.py" />
         <option value="$PROJECT_DIR$/cajas/loans/services/loan_service.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py" />
+        <option value="$PROJECT_DIR$/cajas/movement/views/movement_don_juan/create_movement_service.py" />
+        <option value="$PROJECT_DIR$/cajas/movement/services/don_juan_service.py" />
+        <option value="$PROJECT_DIR$/cajas/webclient/urls.py" />
+        <option value="$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html" />
+        <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" />
+        <option value="$PROJECT_DIR$/cajas/webclient/views/create_don_juan_movement.py" />
       </list>
     </option>
   </component>
@@ -246,17 +222,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="cajas" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cajas" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -292,6 +257,43 @@
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="api" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="api" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="views" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="api" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="views" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement_office" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="services" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
@@ -300,6 +302,17 @@
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="views" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="cajas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cajas" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -454,7 +467,8 @@
       <workItem from="1552571142739" duration="23943000" />
       <workItem from="1552613353433" duration="30000" />
       <workItem from="1552663759231" duration="7303000" />
-      <workItem from="1552684520823" duration="1594000" />
+      <workItem from="1552684520823" duration="2513000" />
+      <workItem from="1552744475937" duration="2059000" />
     </task>
     <servers />
   </component>
@@ -467,7 +481,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="197799000" />
+    <option name="totallyTimeSpent" value="200777000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-2" width="1366" height="770" extended-state="6" />
@@ -475,7 +489,7 @@
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="1" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.22754946" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.21232876" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32789558" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32952693" />
@@ -524,89 +538,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html</url>
-          <line>448</line>
+          <line>447</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cajas/movement/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/account/base_auth.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="78" selection-start-line="13" selection-start-column="78" selection-end-line="13" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/movement/views/movement_daily_square/movement_daily_square_handler.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/movement/views/movement_daily_square/movement_create.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-144" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/dispersion_movement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="26" column="49" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/chains/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/employee.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="52" lean-forward="true" selection-start-line="7" selection-start-column="52" selection-end-line="7" selection-end-column="52" />
-          <folding>
-            <element signature="e#1#47#0" expanded="true" />
-            <element signature="e#575#3093#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/loans/api/loan_pay.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="49" lean-forward="true" selection-start-line="17" selection-start-column="8" selection-end-line="18" selection-end-column="49" />
-          <folding>
-            <element signature="e#1#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/chains/api/serializers/chain_serializer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-          <folding>
-            <element signature="e#1#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/office/views.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/movement/views/movement_partner/create_movement_service_double.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -773,13 +711,6 @@
     <entry file="file://$PROJECT_DIR$/cajas/users/services/partner_service.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/users/services/user_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/chains/api/views/chain_create.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -828,10 +759,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html">
+    <entry file="file://$PROJECT_DIR$/cajas/boxes/models/box_partner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8775">
-          <caret line="585" column="25" selection-start-line="585" selection-start-column="25" selection-end-line="585" selection-end-column="25" />
+        <state>
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="413">
+          <caret line="71" column="29" selection-start-line="71" selection-start-column="29" selection-end-line="71" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5235">
+          <caret line="349" column="25" selection-start-line="349" selection-start-column="25" selection-end-line="349" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -849,40 +796,92 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+    <entry file="file://$PROJECT_DIR$/cajas/loans/models/loan.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="349" column="25" selection-start-line="349" selection-start-column="25" selection-end-line="349" selection-end-column="25" />
+        <state relative-caret-position="1260">
+          <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/loans/models/loan.py">
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/loan_list.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/merge_production_dotenvs_in_dotenv.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="91" column="37" selection-start-line="91" selection-start-column="37" selection-end-line="91" selection-end-column="37" />
+        <state>
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/movement/views/movement_don_juan/movement_don_juan_handler.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/services/user_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="34" lean-forward="true" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/boxes/views/box_daily_square/box_daily_square_create.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/boxes/views/box_daily_square/box_daily_square_handler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/movement/views/movement_don_juan/create_movement_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="19" lean-forward="true" selection-start-line="17" selection-start-column="19" selection-end-line="17" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cajas/loans/views.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/loan_list.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/loans/services/loan_service.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="464">
-          <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
+          <caret line="141" selection-start-line="141" selection-end-line="141" />
           <folding>
             <element signature="e#900#1054#0" />
-            <element signature="e#1105#2663#0" />
-            <element signature="e#2715#2973#0" />
-            <element signature="e#3022#4493#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/boxes/models/box_partner.py">
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="37" column="105" lean-forward="true" selection-start-line="37" selection-start-column="105" selection-end-line="37" selection-end-column="105" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="165" column="24" selection-start-line="165" selection-start-column="24" selection-end-line="165" selection-end-column="24" />
+          <folding>
+            <element signature="n#div#2;n#!!top" />
+            <element signature="e#18198#20591#0#HTML" />
+            <element signature="e#20640#24027#0#HTML" />
+            <element signature="e#24079#24730#0#HTML" />
+            <element signature="e#24783#26382#0#HTML" />
+            <element signature="e#26432#27799#0#HTML" />
+            <element signature="e#28094#29646#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/boxes/models/box_don_juan.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -891,17 +890,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/webclient/urls.py">
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_daily_square_movement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-129">
-          <caret column="24" selection-start-column="24" selection-end-column="24" />
+        <state relative-caret-position="195">
+          <caret line="27" column="65" lean-forward="true" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py">
+    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="72" column="12" selection-start-line="72" selection-start-column="12" selection-end-line="72" selection-end-column="12" />
+        <state relative-caret-position="681">
+          <caret line="152" column="61" selection-start-line="152" selection-start-column="51" selection-end-line="152" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/movement/services/don_juan_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_don_juan_movement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="22" column="47" selection-start-line="22" selection-start-column="47" selection-end-line="22" selection-end-column="47" />
+          <folding>
+            <element signature="e#1#36#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

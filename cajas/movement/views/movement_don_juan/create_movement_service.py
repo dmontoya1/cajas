@@ -1,5 +1,4 @@
 
-from concepts.models.concepts import Concept
 
 from ...models.movement_don_juan import MovementDonJuan
 
