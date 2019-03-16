@@ -8,12 +8,14 @@ from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from concepts.models.concepts import Concept
 from general_config.models.country import Country
-from movement.views.movement_daily_square.movement_daily_square_handler import MovementDailySquareHandler
+from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.office import Office
 from units.models.units import Unit
 
 from .get_ip import get_ip
 from .utils import get_object_or_none
+
+daily_square_manager = MovementDailySquareManager()
 
 
 class CreateDailySquareMovement(View):
@@ -32,7 +34,6 @@ class CreateDailySquareMovement(View):
         detail = request.POST['detail']
 
         ip = get_ip(request)
-        request.POST.get('unit', '')
         unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
         user = get_object_or_none(User, pk=request.POST.get('user', None))
         country = get_object_or_none(Country, pk=request.POST.get('country', None))
@@ -57,6 +58,6 @@ class CreateDailySquareMovement(View):
             'chain': chain,
         }
 
-        movement = MovementDailySquareHandler.create_movement(data)
+        movement = daily_square_manager.create_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'slug': office_session.slug, 'pk': request.POST['user_id']}))

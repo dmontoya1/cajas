@@ -10,15 +10,15 @@ from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
 from office.models.office import Office
-from movement.views.movement_don_juan.movement_don_juan_handler import MovementDonJuanHandler
+from movement.services.don_juan_service import DonJuanManager
 from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
 from webclient.views.get_ip import get_ip
 from webclient.views.utils import get_object_or_none
 
 from ..models.loan import Loan
 
-
 User = get_user_model()
+donjuan_manager = DonJuanManager()
 
 
 class LoanManager(object):
@@ -118,7 +118,7 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        movement = MovementDonJuanHandler.create(data)
+        movement = donjuan_manager.create_movement(data)
         return loan
 
     def interest_load_payment(self, data):
