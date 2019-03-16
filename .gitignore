@@ -276,3 +276,7 @@ cajas/media/
 .env
 .envs/*
 !.envs/.local/
+
+Dockerrun.aws.json
+buildspec.yml
+sac.zip

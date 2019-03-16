@@ -86,15 +86,20 @@ zip -r sac.zip *
 
 source .env
 
-RESOURCE="${AWS_S3_TARGET_FILE}"
-DATE_VALUE=`date +'%a, %d %b %Y %H:%M:%S %z'`
-STRING_TO_SIGN="PUT\n\n${S3_SOURCE_CONTENT_TYPE}\n${DATE_VALUE}\n${RESOURCE}"
-SIGNATURE=`echo -en ${STRING_TO_SIGN} | openssl sha1 -hmac ${AWS_SECRET_ACCESS_KEY} -binary | base64`
-curl -X PUT -T "${S3_SOURCE_FILE}" \
-  -H "Host: ${AWS_S3_BUCKET}.amazonaws.com" \
-  -H "Date: ${DATE_VALUE}" \
-  -H "Content-Type: ${S3_SOURCE_CONTENT_TYPE}" \
-  -H "Authorization: AWS ${AWS_ACCESS_KEY_ID}:${SIGNATURE}" \
-  https://${AWS_S3_BUCKET}.amazonaws.com${AWS_S3_TARGET_FILE}
+file="${AWS_S3_TARGET_FILE}"
+bucket=${AWS_S3_BUCKET}
+resource="/${bucket}/${file}"
+contentType="application/zip"
+dateValue=`date -R`
+stringToSign="PUT\n\n${contentType}\n${dateValue}\n${resource}"
+s3Key=${AWS_ACCESS_KEY_ID}
+s3Secret=${AWS_SECRET_ACCESS_KEY}
+signature=`echo -en ${stringToSign} | openssl sha1 -hmac ${s3Secret} -binary | base64`
+curl -X PUT -T "${file}" \
+  -H "Host: ${bucket}.s3.amazonaws.com" \
+  -H "Date: ${dateValue}" \
+  -H "Content-Type: ${contentType}" \
+  -H "Authorization: AWS ${s3Key}:${signature}" \
+  https://${bucket}.s3.amazonaws.com/${file}
 
 
