@@ -5,7 +5,6 @@ from django.db import models
 
 from cajas.users.models.charges import Charge
 from office.models.office import Office
-from webclient.views.utils import get_object_or_none
 
 User = get_user_model()
 
@@ -76,6 +75,7 @@ class Employee(models.Model):
         help_text='Motivo para deshabilitar el empleado',
         blank=True, null=True
     )
+
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
 
@@ -84,24 +84,13 @@ class Employee(models.Model):
     def __str__(self):
         return '{}'.format(self.user.get_full_name())
 
-    # def save(self, *args, **kwargs):
-    #     charge_secretary = Charge.objects.get(name='Secretaria')
-    #     charge_presidente = Charge.objects.get(name='Presidente')
-    #     charge_admin_senior = Charge.objects.get(name='Administrador Senior')
-    #     secretary = get_object_or_none(Employee, charge=charge_secretary, office=self.office)
-    #     print(secretary)
-    #     admin_senior = get_object_or_none(Employee, charge=charge_admin_senior, office=self.office)
-    #     print(admin_senior)
-    #     print(self.charge)
-    #     if self.charge == charge_presidente or (self.charge == charge_secretary and not secretary):
-    #         super(Employee, self).save(*args, **kwargs)
-    #     else:
-    #         raise ValidationError('Ya existe una secretaria para esta oficina')
-    #
-    #     if self.charge == charge_admin_senior and not admin_senior:
-    #         super(Employee, self).save(*args, **kwargs)
-    #     else:
-    #         raise ValidationError('Ya existe un administrador senior para esta oficina')
+    def is_admin_charge(self):
+        charge_secretary = Charge.objects.get(name='Secretaria')
+        charge_admin_junior = Charge.objects.get(name='Administrador Junior')
+        charge_admin_senior = Charge.objects.get(name='Administrador Senior')
+        if self.charge == charge_admin_junior or self.charge == charge_secretary or self.charge == charge_admin_senior:
+            return True
+        return False
 
     class Meta:
         verbose_name = 'Empleado'
