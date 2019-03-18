@@ -148,7 +148,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-movement" action="#">
+                    <form method="POST" class="add-movement" action="{% url 'webclient:create_donjuan_movement' office.slug %} ">
                         {% csrf_token %}
                         <input type="hidden" name="box_office" value="{{office.box.pk}}">
                         <div class="form-row">

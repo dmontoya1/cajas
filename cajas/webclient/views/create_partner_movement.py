@@ -64,4 +64,10 @@ class CreatePartnerMovement(View):
             }
             movement = MovementPartnerHandler.create_simple_double_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(reverse('webclient:partner_box', kwargs={'pk': request.POST['partner_id']}))
+        return HttpResponseRedirect(
+            reverse(
+                'webclient:partner_box',
+                kwargs={
+                    'slug': partner.office.slug,
+                    'pk': partner.pk}
+            ))

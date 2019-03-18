@@ -36,7 +36,9 @@ class BoxCountry(models.Model):
     )
 
     def __str__(self):
-        return "Caja de {}".format(self.country.name)
+        if self.country:
+            return "Caja de {}".format(self.country.name)
+        return "Caja de país"
 
     class Meta:
         unique_together = ("country", "currency")

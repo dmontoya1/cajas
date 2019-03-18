@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from inventory.models.brand import Brand
 from office.models.officeItems import OfficeItems

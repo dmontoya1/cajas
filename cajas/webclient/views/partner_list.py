@@ -19,7 +19,9 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context = super(PartnerList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
-        partners = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+        if self.request.user.is_superuser:
+            context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+        else:
+            context['partner'] = self.request.user.partner.get()
         context['office'] = office
-        context['partners'] = partners
         return context

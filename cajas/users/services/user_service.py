@@ -45,5 +45,3 @@ class UserManager:
             except:
                 raise Exception('Ha ocurrido un error al crear el usuario')
         return user
-
-user_manager = UserManager()

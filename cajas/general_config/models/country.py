@@ -35,3 +35,4 @@ class Country(models.Model):
     class Meta:
         verbose_name = 'País'
         verbose_name_plural = 'Paises'
+        ordering = ['name']
