@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <li class="menu-item-has-children dropdown">
-                            <a href="#">
+                            <a href="{% url 'webclient:office_items_list' office.slug %}">
                                 <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                                 Inventario Oficina
                             </a>
@@ -71,7 +71,7 @@
 
                         <li class="menu-title">Empleados</li><!-- /.menu-title -->
                         <li class="menu-item-has-children dropdown">
-                            <a href="#">
+                            <a href="{% url 'webclient:employee-list' office.slug %}">
                                 <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                                 Lista de empleados
                             </a>
