@@ -2629,7 +2629,7 @@ button.add-movement {
   padding: 10px;
 }
 
-.accept-mv {
+.accept-mv, .edit-item{
   background-color: var(--aqua-box);
   color: #fff;
   border-radius: 10px;

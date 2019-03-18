@@ -71,7 +71,11 @@ class Employee(models.Model):
         'Es cuadre diario?',
         default=False
     )
-
+    observations = models.TextField(
+        'Motivo de despido',
+        help_text='Motivo para deshabilitar el empleado',
+        blank=True, null=True
+    )
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
 
