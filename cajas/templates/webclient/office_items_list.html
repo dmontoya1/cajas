@@ -131,9 +131,13 @@
                         <td>{{ i.price }}</td>
                         <td>{{ i.description }}</td>
                         <td>
-                          <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
-                             data-target="#editOfficeItem">Editar</a>
-                          <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
+                          {% if perms.office.change_officeitems %}
+                            <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
+                               data-target="#editOfficeItem">Editar</a>
+                          {% endif %}
+                          {% if perms.office.delete_officeitems %}
+                            <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
+                          {% endif %}
                         </td>
                       </tr>
                     {% endif %}
@@ -144,7 +148,7 @@
             </div>
           </div>
         </div>
-        {% if request.user.employee.charge.name == 'Secretaria' %}
+        {% if perms.office.add_officeitems %}
           <a href="" class="float" data-toggle="modal" data-target="#addOfficeItem">
             <i class="fa fa-plus my-float"></i>
           </a>

@@ -139,13 +139,15 @@
                       <td>${{ m.balance|intcomma }}{{ office.country.currency.abbr }}</td>
                       <td>
                         {% if not m.review %}
-                          <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
-                          <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
-                          <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
-                             data-toggle="modal"
-                             data-target="#dispersionMovement">
-                            Dispersión
-                          </a>
+                          {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
+                            <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
+                            <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
+                            <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
+                               data-toggle="modal"
+                               data-target="#dispersionMovement">
+                              Dispersión
+                            </a>
+                          {% endif %}
                         {% else %}
                           {{ m.get_status_display }}
                         {% endif %}
@@ -158,7 +160,7 @@
             </div>
           </div>
         </div>
-        {% if request.user.employee.charge.name == 'Secretaria' %}
+        {% if perms.movement.add_movementdailysquare %}
           <a href="" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
