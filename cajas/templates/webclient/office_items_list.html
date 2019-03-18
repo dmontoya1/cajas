@@ -2,486 +2,511 @@
 
 {% load static humanize %}
 
-{% block extra_css%}
-    <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-{% endblock%}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+{% endblock %}
 
 {% block navbar %}
-    <ul class="nav navbar-nav">
-        <li class="active">
-            <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{office}}</a>
-        </li>
-        <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+    </li>
+    {% if perms.office %}
+      <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+      {% if perms.office.change_office %}
         <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:office' office.slug %}">
-                <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Caja oficina
-            </a>
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina
+          </a>
         </li>
+      {% endif %}
+      {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:box_don_juan' office.slug %}">
-                <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Caja Don Juan
-            </a>
+          <a href="{% url 'webclient:box_don_juan' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Don Juan
+          </a>
         </li>
+      {% endif %}
+      {% if perms.office.change_officeitems %}
         <li class="menu-item-has-children dropdown active">
-            <a href="{% url 'webclient:office_items_list' office.slug %}"> 
-                <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Inventario Oficina
-            </a>
+          <a href="{% url 'webclient:office_items_list' office.slug %}">
+            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inventario Oficina
+          </a>
         </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_partner %}
+      <li class="menu-title">Socios</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de socios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.users.change_employee %}
+      <li class="menu-title">Empleados</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de empleados
+        </a>
+      </li>
+    {% endif %}
 
-        <li class="menu-title">Socios</li><!-- /.menu-title -->
-        <li class="menu-item-has-children dropdown ">
-            <a href="{% url 'webclient:partners_list' office.slug %}" >
-                <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Lista de socios
-            </a>
-        </li>
-
-        <li class="menu-title">Empleados</li><!-- /.menu-title -->
-        <li class="menu-item-has-children dropdown">
-            <a href="#"> 
-                <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Lista de empleados
-            </a>
-        </li>
-        
-
-        <li class="menu-title">Secretaria</li><!-- /.menu-title -->
-
-        <li class="menu-item-has-children dropdown">
-            <a href="#"> 
-                <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Árbol de unidades
-            </a>
-        </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:daily_square_list' office.slug %}">
-                <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Cuadres diarios
-            </a>
-        </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="#"> 
-                <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Aprovisionamiento
-            </a>
-        </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:loan_list' office.slug %}">
-                <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Préstamos
-            </a>
-        </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="#"> 
-                <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Cadenas
-            </a>
-        </li>
-
-    </ul>
+    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+    {% if perms.units.change_unit %}
+      <li class="menu-item-has-children dropdown">
+        <a href="#">
+          <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Árbol de unidades
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.boxes.change_boxdailysquare %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cuadres diarios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.office.change_officecommitments %}
+      <li class="menu-item-has-children dropdown">
+        <a href="#">
+          <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Aprovisionamiento
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.loans.change_loan %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:loan_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Préstamos
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.chains.change_chain %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:chain_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cadenas
+        </a>
+      </li>
+    {% endif %}
+  </ul>
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-12">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+
+          <div class="col-md-12">
             <div class="card">
-                <div class="row">
-
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <table id="table" class="table table-striped table-bordered display responsive display nowrap" cellspacing="0" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Categoría</th>
-                                            <th>Precio</th>
-                                            <th>Descripción</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for i in items %}
-                                            {% if not i.is_deleted %}
-                                            <tr>
-                                                <td>{{i.name}}</td>
-                                                <td>{{i.brand}}</td>
-                                                <td>{{i.price}}</td>
-                                                <td>{{i.description}}</td>
-                                                <td>
-                                                    <a href="#" class="edit-item" data-id="{{i.id}}" data-toggle="modal" data-target="#editOfficeItem">Editar</a>
-                                                    <a href="#" class="decline-mv" data-id="{{i.pk}}">Eliminar</a>
-                                                </td>
-                                            </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% if request.user.employee.charge.name == 'Secretaria' %}
-                    <a href="" class="float" data-toggle="modal" data-target="#addOfficeItem">
-                        <i class="fa fa-plus my-float"></i>
-                    </a>
-                    <div class="label-container">
-                        <div class="label-text">Añadir inventario</div>
-                        <i class="fa fa-play label-arrow"></i>
-                    </div>
-                {% endif %}
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
+                       cellspacing="0" style="width:100%">
+                  <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for i in items %}
+                    {% if not i.is_deleted %}
+                      <tr>
+                        <td>{{ i.name }}</td>
+                        <td>{{ i.brand }}</td>
+                        <td>{{ i.price }}</td>
+                        <td>{{ i.description }}</td>
+                        <td>
+                          <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
+                             data-target="#editOfficeItem">Editar</a>
+                          <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
+                        </td>
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
+        {% if request.user.employee.charge.name == 'Secretaria' %}
+          <a href="" class="float" data-toggle="modal" data-target="#addOfficeItem">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Añadir inventario</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-    <!-- Modal add office item -->
-    <div class="modal fade" id="addOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" class="create-item">
-                        {% csrf_token %}
-                        <input type="hidden" name="office" value="{{office.box.pk}}">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="name">Nombre </label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="category">Categoría </label>
-                                <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;" required>
-                                    <option disabled value="" selected>Selecciona una categoría</option>
-                                    {% for category in categories %}
-                                        <option value="{{category.pk}}">{{category}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="brand">Marca </label>
-                                <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;" required>
-                                    <option disabled value="" selected>Selecciona una marca</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price">Precio</label>
-                                <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="description">Descripción</label>
-                                <textarea rows="2" style="resize: none;" class="form-control" id="description" name="description" placeholder="Ingresa una descripción" required></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-submit">Añadir</button>
-                    </form>
-                </div>
-            </div>
+  <!-- Modal add office item -->
+  <div class="modal fade" id="addOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <form method="POST" class="create-item">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.box.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Nombre </label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="category">Categoría </label>
+                <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;" required>
+                  <option disabled value="" selected>Selecciona una categoría</option>
+                  {% for category in categories %}
+                    <option value="{{ category.pk }}">{{ category }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="brand">Marca </label>
+                <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;" required>
+                  <option disabled value="" selected>Selecciona una marca</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="price">Precio</label>
+                <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
+                       required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="description">Descripción</label>
+                <textarea rows="2" style="resize: none;" class="form-control" id="description" name="description"
+                          placeholder="Ingresa una descripción" required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-submit">Añadir</button>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Modal edit office item -->
-    <div class="modal fade" id="editOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" class="edit_item">
-                        {% csrf_token %}
-                        <input type="hidden" name="office" value="{{office.box.pk}}">                        
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="name">Nombre </label>
-                                <input type="text" id="edit_name" name="name" class="form-control" placeholder="Nombre del item" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="category">Categoría </label>
-                                <select class="form-control" id="edit_category" name="category" style="width: 100%; height: 20px;" required>
-                                    <option disabled value="" selected>Selecciona una categoría</option>
-                                    {% for category in categories %}
-                                        <option value="{{category.pk}}">{{category}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="brand">Marca </label>
-                                <select class="form-control" id="edit_brand" name="brand" style="width: 100%; height: 20px;" required>
-                                    <option disabled value="" selected>Selecciona una marca</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="price">Precio</label>
-                                <input type="number" class="form-control" id="edit_price" name="price" placeholder="Precio del item" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="description">Descripción</label>
-                                <textarea rows="2" style="resize: none;" class="form-control" id="edit_description" name="description" placeholder="Ingresa una descripción" required></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-submit">Editar</button>
-                    </form>
-                </div>
-            </div>
+  <!-- Modal edit office item -->
+  <div class="modal fade" id="editOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <form method="POST" class="edit_item">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.box.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="name">Nombre </label>
+                <input type="text" id="edit_name" name="name" class="form-control" placeholder="Nombre del item"
+                       required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="category">Categoría </label>
+                <select class="form-control" id="edit_category" name="category" style="width: 100%; height: 20px;"
+                        required>
+                  <option disabled value="" selected>Selecciona una categoría</option>
+                  {% for category in categories %}
+                    <option value="{{ category.pk }}">{{ category }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="brand">Marca </label>
+                <select class="form-control" id="edit_brand" name="brand" style="width: 100%; height: 20px;" required>
+                  <option disabled value="" selected>Selecciona una marca</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="price">Precio</label>
+                <input type="number" class="form-control" id="edit_price" name="price" placeholder="Precio del item"
+                       required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="description">Descripción</label>
+                <textarea rows="2" style="resize: none;" class="form-control" id="edit_description" name="description"
+                          placeholder="Ingresa una descripción" required></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-submit">Editar</button>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 {% endblock %}
 
 {% block extra_js %}
 
 
-    <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
-    <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
-    <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
-    <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
-    <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
-    <script type="text/javascript">
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <script type="text/javascript">
+    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-        $('#category').on('change', function(){
-            axios.get(`/api/inventory/${$(this).val()}/brand`)
-            .then(function (response) {
+    $('#category').on('change', function () {
+      axios.get(`/api/inventory/${$(this).val()}/brand`)
+        .then(function (response) {
+          data = response.data
+
+          $('#brand').empty()
+          $.each(data, function (k, v) {
+            $('#brand').append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $('#brand').prepend(
+            '<option value="" disabled>Selecciona una marca</option>'
+          )
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    //create items
+    $('.create-item').on('submit', function (e) {
+      e.preventDefault()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      data = $(this).serialize()
+      axios.post("{% url 'webclient:create_office_item' %}", data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data.name,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
+    })
+
+    //edit items
+    $('.edit-item').on('click', function () {
+      var office_item_pk = $(this).data("id")
+      //when modal open
+      $('#editOfficeItem').on('show.bs.modal', function (event) {
+        var modal = $(this)
+        modal.find('.modal-title').text('Editar Inventario')
+        //get info of office item
+        axios.get(`/api/office/${office_item_pk}/office-item-detail`)
+          .then(function (response) {
+            data = response.data
+
+            $("#edit_name").val(data.name)
+            $("#edit_price").val(data.price)
+            $("#edit_description").val(data.description)
+
+            $("#edit_category option").prop("selected", false);
+            //fill brands and category select depending previously selected item
+            axios.get(`/api/inventory/${data.brand}/brand`)
+              .then(function (response) {
                 data = response.data
 
-                $('#brand').empty()
-                $.each(data, function (k,v){
-                    $('#brand').append(
-                        `<option value=${v.id}>${v.name}</option>`
-                    )
+                $("#edit_category option[value='" + data[0].category.id + "']").prop("selected", true);
+                $("#edit_category").trigger('change');
+
+                $('#edit_brand').empty()
+                $.each(data, function (k, v) {
+                  $('#edit_brand').append(
+                    `<option value=${v.id}>${v.name}</option>`
+                  )
                 })
-                $('#brand').prepend(
-                    '<option value="" disabled>Selecciona una marca</option>'
+                $('#edit_brand').prepend(
+                  '<option value="" disabled>Selecciona una marca</option>'
                 )
-            })
-            .catch(function (error) {
+              })
+              .catch(function (error) {
                 // handle error
                 console.log(error);
-            })
-        })
+              })
 
-        //create items
-        $('.create-item').on('submit', function(e){
-                e.preventDefault()
-                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                data = $(this).serialize()
-                axios.post("{% url 'webclient:create_office_item' %}", data)
+            $("#edit_brand option").prop("selected", false);
+            $("#edit_brand option[value='" + data.brand + "']").prop("selected", true);
+            $("#edit_brand").trigger("click")
+
+            //and then submit the form
+            $('.edit_item').on('submit', function (e) {
+              e.preventDefault()
+              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+              data = $(this).serialize()
+
+              axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
                 .then(function (response) {
                   data = response.data
                   Swal.fire({
                     type: 'success',
                     title: 'Exitoso',
-                    text: data.name,
-                  }).then(function(){
+                    text: data,
+                  }).then(function () {
                     location.reload()
                   })
                 })
                 .catch(function (error) {
-                    // handle error
-                    Swal.fire({
-                      type: 'error',
-                      title: 'Error',
-                      text: error,
-                    }).then(function(){
-                      location.reload()
-                    })
-                })
-        })
-
-        //edit items
-        $('.edit-item').on('click',function(){
-            var office_item_pk = $(this).data("id") 
-            //when modal open
-            $('#editOfficeItem').on('show.bs.modal', function (event) {
-                var modal = $(this)
-                modal.find('.modal-title').text('Editar Inventario')
-                //get info of office item
-                axios.get(`/api/office/${office_item_pk}/office-item-detail`)
-                .then(function (response) {
-                    data = response.data
-
-                    $("#edit_name").val(data.name)
-                    $("#edit_price").val(data.price)
-                    $("#edit_description").val(data.description)
-
-                    $("#edit_category option").prop("selected", false);
-                    //fill brands and category select depending previously selected item
-                    axios.get(`/api/inventory/${data.brand}/brand`)
-                    .then(function (response) {
-                        data = response.data
-                    
-                        $("#edit_category option[value='" + data[0].category.id + "']").prop("selected",true);
-                        $("#edit_category").trigger('change');
-
-                        $('#edit_brand').empty()
-                        $.each(data, function (k,v){
-                            $('#edit_brand').append(
-                                `<option value=${v.id}>${v.name}</option>`
-                            )
-                        })
-                        $('#edit_brand').prepend(
-                            '<option value="" disabled>Selecciona una marca</option>'
-                        )
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                    })
-
-                    $("#edit_brand option").prop("selected", false);
-                    $("#edit_brand option[value='" + data.brand + "']").prop("selected",true);
-                    $("#edit_brand").trigger("click")
-                    
-                    //and then submit the form
-                    $('.edit_item').on('submit', function(e){
-                        e.preventDefault()
-                        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                        data = $(this).serialize()
-
-                        axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
-                        .then(function (response) {
-                            data = response.data
-                            Swal.fire({
-                                type: 'success',
-                                title: 'Exitoso',
-                                text: data,
-                            }).then( function(){
-                                location.reload()
-                            })
-                        })
-                        .catch(function (error) {
-                            // handle error
-                            Swal.fire({
-                            type: 'error',
-                            title: 'Error',
-                            text: error,
-                            }).then( function(){
-                            location.reload()
-                            })
-                        })
-                    })
-                })
-                .catch(function (error) {
-                    // handle error
-                    console.log(error);
+                  // handle error
+                  Swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: error,
+                  }).then(function () {
+                    location.reload()
+                  })
                 })
             })
-        })
-        $('#editOfficeItem').on('hidden.bs.modal', function () {
-            location.reload()
-        })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      })
+    })
+    $('#editOfficeItem').on('hidden.bs.modal', function () {
+      location.reload()
+    })
 
-        //delete items
-        $('.decline-mv').on('click', function(){
-            pk = $(this).data('id')
-            const {value: text} = Swal.fire({
-                title: 'Escribe el motivo de eliminación del item',
-                input: 'textarea',
-                inputPlaceholder: 'Se elimina el item porque ...',
-                showCancelButton: true,
-                inputValidator: (value) => {
-                    return !value && 'Debes escribir el motivo del eliminación'
-                },
-                allowOutsideClick: false,
-                showCloseButton: true
+    //delete items
+    $('.decline-mv').on('click', function () {
+      pk = $(this).data('id')
+      const {value: text} = Swal.fire({
+        title: 'Escribe el motivo de eliminación del item',
+        input: 'textarea',
+        inputPlaceholder: 'Se elimina el item porque ...',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return !value && 'Debes escribir el motivo del eliminación'
+        },
+        allowOutsideClick: false,
+        showCloseButton: true
+      }).then((result) => {
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.delete(`/api/office/${pk}/office-item-delete`,
+          {data: {description: result.value}}
+        )
+          .then(function (response) {
+            Swal.fire({
+              title: 'Exitoso!',
+              text: response.data,
+              type: 'success',
+              allowOutsideClick: false
             }).then((result) => {
-                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                axios.delete(`/api/office/${pk}/office-item-delete`,
-                    { data: { description: result.value } }                    
-                )
-                .then(function (response) {
-                    Swal.fire({
-                        title: 'Exitoso!',
-                        text: response.data,
-                        type: 'success',
-                        allowOutsideClick: false
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload()
-                        }
-                    })
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    console.log(error.response)
-                });
+              if (result.value) {
+                location.reload()
+              }
             })
-        })
+          })
+          .catch(function (error) {
+            console.log(error);
+            console.log(error.response)
+          });
+      })
+    })
 
 
-        $(document).ready(function() {        
-            $('#table').DataTable({
-                    responsive: {
-                        details: true
-                    },
-                    dom: 'lBfrtip',
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                    buttons: [
-                        'excel', 'print'
-                    ],
-                    "order": [[ 1, "asc" ]],
-                    language: {
-                        "sProcessing":     "Procesando...",
-                        "sLengthMenu":     "Mostrar _MENU_ registros",
-                        "sZeroRecords":    "No se encontraron resultados",
-                        "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                        "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                        "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                        "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-                        "sInfoPostFix":    "",
-                        "sSearch":         "Buscar:",
-                        "sUrl":            "",
-                        "sInfoThousands":  ",",
-                        "sLoadingRecords": "Cargando...",
-                        "oPaginate": {
-                            "sFirst":    "Primero",
-                            "sLast":     "Último",
-                            "sNext":     "Siguiente",
-                            "sPrevious": "Anterior"
-                        },
-                        "oAria": {
-                            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-                            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                        }
-                    }
-                });
+    $(document).ready(function () {
+      $('#table').DataTable({
+        responsive: {
+          details: true
+        },
+        dom: 'lBfrtip',
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        buttons: [
+          'excel', 'print'
+        ],
+        "order": [[1, "asc"]],
+        language: {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+        }
+      });
 
-            $('.create-item select').each(function() {
-                $(this).select2({
-                    language: "es"
-                });
-            });       
-            $('.edit_item select').each(function() {
-                $(this).select2({
-                    language: "es"
-                });
-            });  
-        }) //end document ready
+      $('.create-item select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+      $('.edit_item select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+    }) //end document ready
 
-    </script>
-{% endblock%}
+  </script>
+{% endblock %}
