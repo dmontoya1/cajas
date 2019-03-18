@@ -45,6 +45,5 @@ urlpatterns = [
     path("office/<slug:slug>/chain-list/<int:pk>/", ChainPlacesList.as_view(), name='chain_places_list'),
     path("office/<slug:slug>/chain-create/", ChainCreate.as_view(), name='chain_create'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
-    path("create-office-item/", CreateOfficeItem.as_view(), name='create_office_item'),
+    path("units-list/", CreateDailySquareMovement.as_view(), name='units_list'),
 ]
-

@@ -154,8 +154,83 @@
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="name">Nombre </label>
-                                <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item" required>
+                                <label for="document_type">Tipo de Documento</label>
+                                <select class="form-control" id="document_type" name="document_type" required style="width: 100%; height: 20px;">
+                                    <option selected disabled value="">Selecciona el tipo de documento</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="CE">Cédula Extranjera</option>
+                                    <option value="PA">Pasaporte</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="document_id">Número de documento</label>
+                                <input type="text" class="form-control" id="document_id" name="document_id" placeholder="Número de documento" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="email">Correo electrónico</label>
+                                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="daily_square">Cargo</label><br>
+                                <select class="form-control" id="charge" name="charge" style="width: 100%; height: 20px;" required>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="salary_type">Tipo de Salario</label>
+                                <select class="form-control" id="salary_type" name="salary_type" required style="width: 100%; height: 20px;">
+                                    <option selected disabled value="">Selecciona el tipo de salario</option>
+                                    <option value="FX">Salario Fijo</option>
+                                    <option value="PE">Porcentaje de comisión</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="initial_value">Salario empleado</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text" id="type_icon">$</div>
+                                    </div>
+                                    <input type="number" class="form-control" id="salary" name="salary" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="cv">Hoja de vida</label>
+                                <input type="file" filename="cv" class="form-control-file" id="cv" name="cv" >
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="passport">Pasaporte</label>
+                                <input type="file" filename="passport" class="form-control-file" id="passport" name="passport" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
+                                    <label class="form-check-label" for="is_abstract">
+                                        ¿Tiene acceso a la plataforma?
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row d-none" id="username_input">
+                            <div class="form-group col-md-12">
+                                <label for="username">Nombre de Usuario</label>
+                                <input type="text" class="form-control d-none" id="username" name="username" placeholder="Username">
+                            </div>
+                        </div>
+                        <div class="form-row d-none" id="password_inputs">
+                            <div class="form-group col-md-6">
+                                <label for="password1">Contraseña</label>
+                                <input type="password" class="form-control d-none" name="password1" id="password1" placeholder="Password">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="password2">Repetir Contraseña</label>
+                                <input type="password" class="form-control d-none" name="password2" id="password2" placeholder="Password Again">
                             </div>
                         </div>
 
@@ -308,6 +383,7 @@
         //create an employee
         $('#addEmployee').on('show.bs.modal', function (event) {
             //fill charges select input
+
             axios.get("{% url 'api:users:charge-list' %}")
             .then(function (response) {
                 data = response.data
@@ -335,18 +411,19 @@
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-                //var formData = new FormData($(this));
-
-                var form = new FormData();
-                form.append('name', 'name');
-
                 data = $(this).serialize()
-                console.log(form);
+                console.log(data);
 
-                axios.post("{% url 'api:users:employee_create' %}", data,
+
+                var formData = new FormData();
+                var imagefile = document.querySelector('#cv');
+                formData.append("cv", imagefile.files[0]);
+                console.log(formData)
+
+                axios.post("{% url 'api:users:employee_create' %}", formData,
                     {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data'
                         }
                     }
                 )
@@ -480,7 +557,6 @@
                 //and then submit the form
                 $('.edit_employee_form').on('submit', function(e){
                     e.preventDefault()
-                    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                     data = $(this).serialize()
 
                     axios.patch(`/api/users/${employee_pk}/employee-detail`, data)
@@ -526,7 +602,6 @@
                 allowOutsideClick: false,
                 showCloseButton: true
             }).then((result) => {
-                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 axios.delete(`/api/users/${pk}/employee-delete`,
                     { data: { description: result.value } }
                 )
@@ -550,6 +625,8 @@
         })
 
         $(document).ready(function() {
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
             $('#table').DataTable({
                 responsive: {
                     details: true

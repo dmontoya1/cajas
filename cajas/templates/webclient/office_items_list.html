@@ -290,7 +290,7 @@
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
                 data = $(this).serialize()
-                axios.post("{% url 'webclient:create_office_item' %}", data)
+                axios.post("{% url 'api:office:office_item_create' %}", data)
                 .then(function (response) {
                   data = response.data
                   Swal.fire({
