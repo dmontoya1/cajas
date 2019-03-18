@@ -6,7 +6,7 @@ from rest_framework import status
 
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
-from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 User = get_user_model()
 

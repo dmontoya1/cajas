@@ -7,7 +7,7 @@ from rest_framework import status
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
-from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 User = get_user_model()
 
@@ -18,6 +18,7 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def update(self, request, *args, **kwargs):
+        print(request.data)
         charge = Charge.objects.get(pk=request.data["charge"])
         item = Employee.objects.get(pk=kwargs['pk'])
         user = User.objects.get(pk=item.user.pk)

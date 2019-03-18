@@ -12,7 +12,7 @@ class EmployeeManager:
         if not all(property in data for property in self.PROPERTIES):
             raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
-    def create_user(self, data):
+    def create_employee(self, data):
         self.__validate_data(data)
         try:
             employee = Employee.objects.create(

@@ -84,7 +84,6 @@
 
     </ul>
 {% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
@@ -138,112 +137,36 @@
         </div>
     </div>
 
-    <!-- Modal add employee -->
-    <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="addEmployeeTitle" aria-hidden="true">
+
+
+    <!-- Modal add office item -->
+    <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Empleado</h5>
+                    <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" class="add-employee" enctype="multipart/form-data">
+                    <form method="POST" class="add-employee" enctype="multipart/form-data" >
                         {% csrf_token %}
-                        <input type="hidden" name="office" value="{{office.box.pk}}">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="first_name">Nombres</label>
-                                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="last_name">Apellidos</label>
-                                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Apellidos" required>
+                                <label for="name">Nombre </label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item" required>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="document_type">Tipo de Documento</label>
-                                <select class="form-control" id="document_type" name="document_type" required>
-                                    <option selected disabled value="">Selecciona el tipo de documento</option>
-                                    <option value="CC">Cédula de Ciudadanía</option>
-                                    <option value="CE">Cédula Extranjera</option>
-                                    <option value="PA">Pasaporte</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="document_id">Número de documento</label>
-                                <input type="text" class="form-control" id="document_id" name="document_id" placeholder="Número de documento" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <label for="email">Correo electrónico</label>
-                                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com" required>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="salary_type">Tipo de Salario</label>
-                                <select class="form-control" id="salary_type" name="salary_type" required>
-                                    <option selected disabled value="">Selecciona el tipo de salario</option>
-                                    <option value="FX">Salario Fijo</option>
-                                    <option value="PE">Porcentaje de comisión</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="initial_value">Salario empleado</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text" id="type_icon">$</div>
-                                    </div>
-                                    <input type="number" class="form-control" id="salary" name="salary" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="cv">Hoja de vida</label>
-                                <input type="file" class="form-control-file" id="cv" name="cv">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="passport">Pasaporte</label>
-                                <input type="file" class="form-control-file" id="passport" name="passport">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
-                                    <label class="form-check-label" for="is_abstract">
-                                        ¿Tiene acceso a la plataforma?
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-row d-none" id="username_input">
-                            <div class="form-group col-md-12">
-                                <label for="username">Nombre de Usuario</label>
-                                <input type="text" class="form-control d-none" id="username" name="username" placeholder="Username">
-                            </div>
-                        </div>
-                        <div class="form-row d-none" id="password_inputs">
-                            <div class="form-group col-md-6">
-                                <label for="password1">Contraseña</label>
-                                <input type="password" class="form-control d-none" name="password1" id="password1" placeholder="Password">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="password2">Repetir Contraseña</label>
-                                <input type="password" class="form-control d-none" name="password2" id="password2" placeholder="Password Again">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-submit" id="addEmployee">Añadir</button>
+
+                        <button type="submit" class="btn btn-submit">Añadir</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Modal detail -->
     <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
@@ -381,16 +304,52 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <script type="text/javascript">
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
         //create an employee
-        
+        $('#addEmployee').on('show.bs.modal', function (event) {
+            //fill charges select input
+            axios.get("{% url 'api:users:charge-list' %}")
+            .then(function (response) {
+                data = response.data
+
+                $('#charge').empty()
+                $.each(data, function (k,v){
+                    //console.log(v.name,v.id)
+                    $('#charge').append(
+                        `<option value=${v.id}>${v.name}</option>`
+                    )
+                })
+                $('#charge').prepend(
+                    '<option value="" selected disabled>Selecciona un cargo</option>'
+                )
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+        })
+
+
+        //create items
         $('.add-employee').on('submit', function(e){
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+                //var formData = new FormData($(this));
+
+                var form = new FormData();
+                form.append('name', 'name');
+
                 data = $(this).serialize()
-                console.log(data)
-                axios.post("{% url 'api:users:employee_create' %}", data)
+                console.log(form);
+
+                axios.post("{% url 'api:users:employee_create' %}", data,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }
+                )
                 .then(function (response) {
                   data = response.data
                   Swal.fire({
@@ -510,17 +469,14 @@
                     $("#edit_salary").val(data.salary)
                     $("#edit_cv").attr("href",data.cv)
                     $("#edit_passport").attr("href",data.passport)
-
                     $("#edit_charge").find('option:selected').remove()
                     $("#edit_charge option[value='" + data.charge.id + "']").prop("selected",true);
                     $("#edit_charge").trigger("click")
-
                 })
                 .catch(function (error) {
                     // handle error
                     console.log(error);
                 })
-
                 //and then submit the form
                 $('.edit_employee_form').on('submit', function(e){
                     e.preventDefault()
@@ -549,9 +505,10 @@
                         })
                     })
                 })
-
-
             })
+        })
+        $('#modalDetail').on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
         })
 
         //delete items
@@ -633,6 +590,11 @@
                 language: "es"
             });
             $('.edit_employee_form select').each(function() {
+                $(this).select2({
+                    language: "es"
+                });
+            });  
+            $('.add-employee select').each(function() {
                 $(this).select2({
                     language: "es"
                 });
