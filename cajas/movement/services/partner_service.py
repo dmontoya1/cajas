@@ -20,16 +20,6 @@ class MovementPartnerManager(object):
         if not all(property in data for property in self.PROPERTIES):
             raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
-    def __init__(self, data):
-        self._partner = data['partner']
-        self._concept = data['concept']
-        self._movement_type = data['movement_type']
-        self._value = data['value']
-        self._detail = data['detail']
-        self._date = data['date']
-        self._responsible = data['responsible']
-        self._ip = data['ip']
-
     def create_simple(self, data):
         self.__validate_data(data)
         movement = MovementPartner.objects.create(
@@ -57,34 +47,34 @@ class MovementPartnerManager(object):
             'ip': data['ip']
         }
         movement1 = self.create_simple(data1)
-        if self._movement_type == 'IN':
+        if data['movement_type'] == 'IN':
             contrapart = 'OUT'
         else:
             contrapart = 'IN'
-        if self._partner.partner_type == PartnerType.DIRECTO:
-            box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
+        if data['partner'].partner_type == PartnerType.DIRECTO:
+            box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
             data2 = {
                 'box': box_don_juan,
-                'concept': self._concept.counterpart,
+                'concept': data['concept'].counterpart,
                 'movement_type': contrapart,
-                'value': self._value,
-                'detail': self._detail,
-                'date': self._date,
-                'responsible': self._responsible,
-                'ip': self._ip
+                'value': data['value'],
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = donjuan_manager.create_movement(data2)
-        elif self._partner.partner_type == PartnerType.INDIRECTO:
-            box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
+        elif data['partner'].partner_type == PartnerType.INDIRECTO:
+            box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
             data2 = {
                 'box': box_direct_partner,
-                'concept': self._concept.counterpart,
+                'concept': data['concept'].counterpart,
                 'movement_type': contrapart,
-                'value': self._value,
-                'detail': self._detail,
-                'date': self._date,
-                'responsible': self._responsible,
-                'ip': self._ip
+                'value': data['value'],
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = self.create_simple(data2)
         return movement1
@@ -92,55 +82,55 @@ class MovementPartnerManager(object):
     def create_simple_double(self, data):
         self.__validate_data(data)
         data1 = {
-            'box': self._partner.box,
-            'concept': self._concept,
-            'movement-type': self._movement_type,
-            'value': self._value,
-            'detail': self._detail,
-            'date': self._date,
-            'responsible': self._responsible,
-            'ip': self._ip
+            'box': data['partner'].box,
+            'concept': data['concept'],
+            'movement-type': data['movement_type'],
+            'value': data['value'],
+            'detail': data['detail'],
+            'date': data['date'],
+            'responsible': data['responsible'],
+            'ip': data['ip']
         }
         movement1 = self.create_simple(data1)
-        if self._movement_type == 'IN':
+        if data['movement_type'] == 'IN':
             contrapart = 'OUT'
         else:
             contrapart = 'IN'
-        if self._partner.partner_type == PartnerType.DIRECTO:
-            box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
+        if data['partner'].partner_type == PartnerType.DIRECTO:
+            box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
             data2 = {
                 'box': box_don_juan,
-                'concept': self._concept,
+                'concept': data['concept'],
                 'movement_type': contrapart,
-                'value': self._value,
-                'detail': self._detail,
-                'date': self._date,
-                'responsible': self._responsible,
-                'ip': self._ip
+                'value': data['value'],
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = donjuan_manager.create_movement(data2)
-        elif self._partner.partner_type == PartnerType.INDIRECTO:
-            box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
+        elif data['partner'].partner_type == PartnerType.INDIRECTO:
+            box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
             data2 = {
                 'box': box_direct_partner,
-                'concept': self._concept,
+                'concept': data['concept'],
                 'movement-type': contrapart,
-                'value': self._value,
-                'detail': self._detail,
-                'date': self._date,
-                'responsible': self._responsible,
-                'ip': self._ip
+                'value': data['value'],
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = self.create_simple(data2)
         data3 = {
-            'box': self._partner.box,
-            'concept': self._concept,
+            'box': data['partner'].box,
+            'concept': data['concept'],
             'movement-type': contrapart,
-            'value': self._value,
-            'detail': self._detail,
-            'date': self._date,
-            'responsible': self._responsible,
-            'ip': self._ip
+            'value': data['value'],
+            'detail': data['detail'],
+            'date': data['date'],
+            'responsible': data['responsible'],
+            'ip': data['ip']
         }
         movement3 = self.create_simple(data3)
 
@@ -149,52 +139,52 @@ class MovementPartnerManager(object):
     def create_partner_movements(self, data):
         concept1 = Concept.objects.get(name='Aporte personal socio', concept_type=ConceptType.SIMPLEDOUBLE)
         data1 = {
-            'box': self._partner.box,
+            'box': data['partner'].box,
             'concept': concept1,
             'movement_type': 'IN',
-            'value': self._value,
+            'value': data['value'],
             'detail': 'Aporte Inicial Socio',
             'date': datetime.now(),
-            'responsible': self._responsible,
-            'ip': self._ip
+            'responsible': data['responsible'],
+            'ip': data['ip']
         }
         movement1 = self.create_simple(data1)
         concept2 = Concept.objects.get(name='Aporte socio directo')
-        if self._partner.partner_type == PartnerType.DIRECTO:
-            box_don_juan = BoxDonJuan.objects.get(office=self._partner.office)
+        if data['partner'].partner_type == PartnerType.DIRECTO:
+            box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
             data2 = {
                 'box': box_don_juan,
                 'concept': concept2,
                 'movement_type': 'OUT',
-                'value': int(self._value) * 2,
-                'detail': 'Salida Aporte Nuevo socio {}'.format(self._partner),
+                'value': int(data['value']) * 2,
+                'detail': 'Salida Aporte Nuevo socio {}'.format(data['partner']),
                 'date': datetime.now(),
-                'responsible': self._responsible,
-                'ip': self._ip
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = donjuan_manager.create_movement(data2)
-        elif self._partner.partner_type == PartnerType.INDIRECTO:
-            box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
+        elif data['partner'].partner_type == PartnerType.INDIRECTO:
+            box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
             data2 = {
                 'box': box_direct_partner,
                 'concept': concept2,
                 'movement_type': 'OUT',
-                'value': int(self._value) * 2,
-                'detail': 'Salida Aporte Nuevo socio {}'.format(self._partner),
+                'value': int(data['value']) * 2,
+                'detail': 'Salida Aporte Nuevo socio {}'.format(data['partner']),
                 'date': datetime.now(),
-                'responsible': self._responsible,
-                'ip': self._ip
+                'responsible': data['responsible'],
+                'ip': data['ip']
             }
             movement2 = self.create_simple(data2)
         data3 = {
-            'box': self._partner.box,
+            'box': data['partner'].box,
             'concept': concept2,
             'movement_type': 'IN',
-            'value': int(self._value) * 2,
+            'value': int(data['value']) * 2,
             'detail': 'Aporte Inicial Socio directo',
             'date': datetime.now(),
-            'responsible': self._responsible,
-            'ip': self._ip
+            'responsible': data['responsible'],
+            'ip': data['ip']
         }
         movement3 = self.create_simple(data3)
 

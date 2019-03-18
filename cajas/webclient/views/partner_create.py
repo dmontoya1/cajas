@@ -9,7 +9,7 @@ from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import partner_manager
-from cajas.movement.services.partner_service import MovementPartnerManager
+from movement.services.partner_service import MovementPartnerManager
 from office.models.office import Office
 
 from .get_ip import get_ip
@@ -29,10 +29,7 @@ class PartnerCreate(LoginRequiredMixin, View):
         document_type = request.POST['document_type']
         document_id = request.POST['document_id']
         partner_type = request.POST['partner_type']
-        try:
-            direct_partner = Partner.objects.get(pk=request.POST['direct_partner'])
-        except:
-            direct_partner = None
+        direct_partner = Partner.objects.get(pk=request.POST.get('direct_partner', None))
         try:
             request.POST['daily_square']
             daily_square = True
