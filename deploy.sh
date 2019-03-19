@@ -1,5 +1,7 @@
 #!/bin/bash -ex
 
+source .env
+
 # There are two important configuration files required
 # by AWS so the services know exactly what to do once
 # our code makes it to their system. The first one is
@@ -19,19 +21,27 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - \$(aws ecr get-login --region eu-west-1)
+     - echo Logging in to Amazon ECR...
+     - \$(aws ecr get-login --no-include-email --region eu-west-1)
+     - echo Pulling Docker Images for cache ... | tee -a log.txt
+     - docker-compose -f production.yml pull --ignore-pull-failures
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
-      - docker build -t sac .
-      - docker tag sac 226814578700.dkr.ecr.us-east-1.amazonaws.com/sac:latest
+     - echo Building the Docker image...
+     - docker-compose -f production.yml build django
+     - docker tag "${COMPOSE_PROJECT_NAME}_${SERVICE_DJANGO_BUILD_NAME}" "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest"
+     - docker-compose -f production.yml build nginx
+     - docker tag "${COMPOSE_PROJECT_NAME}_${SERVICE_NGINX_BUILD_NAME}" "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest"
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push 226814578700.dkr.ecr.us-east-1.amazonaws.com/sac:latest
+     - echo Pushing the Docker image...
+     - docker-compose -f production.yml push
+     - docker push "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest"
+     - docker push "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest"
+     - echo printenv | tee -a log.txt
+     - printenv | tee -a log.txt
 artifacts:
   files:
     - 'Dockerrun.aws.json'
@@ -48,18 +58,32 @@ cat << EOF > Dockerrun.aws.json
   "AWSEBDockerrunVersion": 2,
   "containerDefinitions": [
     {
-      "name": "sac-webapp",
-      "image": "226814578700.dkr.ecr.us-east-1.amazonaws.com/sac:latest",
-      "essential": true,
-      "memory": 960,
-      "portMappings": [
+     "name": "django",
+     "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest",
+     "essential": true,
+     "command": [
+        "/uwsgi.sh"
+      ],
+     "memory": 768
+    },
+    {
+     "name": "nginx",
+     "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest",
+     "essential": true,
+     "memory": 128,
+     "links": [
+        "django"
+     ],
+     "portMappings": [
+       {
+         "hostPort": 80,
+         "containerPort": 80
+       }
+     ],
+     "mountPoints": [
         {
-          "hostPort": 80,
-          "containerPort": 80
-        },
-        {
-          "hostPort": 443,
-          "containerPort": 80
+          "sourceVolume": "awseb-logs-nginx",
+          "containerPath": "/var/log/nginx"
         }
       ]
     }
@@ -83,8 +107,6 @@ zip -r sac.zip *
 # AWS_ACCESS_KEY_ID         (Required) Access Key ID for the target AWS account
 # AWS_SECRET_ACCESS_KEY     (Required, Secret) Secret Access Key for the target AWS account
 # See: http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html
-
-source .env
 
 file="${AWS_S3_TARGET_FILE}"
 bucket=${AWS_S3_BUCKET}
