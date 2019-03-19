@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4a16e902-cf32-47b6-9f96-f3780eb85a31" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/deploy.sh" beforeDir="false" afterPath="$PROJECT_DIR$/deploy.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/production.yml" beforeDir="false" afterPath="$PROJECT_DIR$/production.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,11 +15,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/deploy.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="94" column="23" selection-start-line="94" selection-start-column="23" selection-end-line="94" selection-end-column="23" />
+            <state relative-caret-position="640">
+              <caret line="113" column="29" lean-forward="true" selection-start-line="113" selection-start-column="29" selection-end-line="113" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/production.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="10" lean-forward="true" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -123,7 +132,6 @@
         <option value="$PROJECT_DIR$/cajas/users/services/partner_service.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/create_daily_square_movement.py" />
         <option value="$PROJECT_DIR$/compose/production/nginx/nginx.conf" />
-        <option value="$PROJECT_DIR$/production.yml" />
         <option value="$PROJECT_DIR$/.envs/.production/.postgres" />
         <option value="$PROJECT_DIR$/.envs/.production/.django" />
         <option value="$PROJECT_DIR$/compose/production/nginx/Dockerfile" />
@@ -133,6 +141,7 @@
         <option value="$PROJECT_DIR$/.env1" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/deploy.sh" />
+        <option value="$PROJECT_DIR$/production.yml" />
       </list>
     </option>
   </component>
@@ -266,12 +275,12 @@
       <workItem from="1550789946172" duration="684000" />
       <workItem from="1550856340172" duration="492000" />
       <workItem from="1551276903752" duration="2319000" />
-      <workItem from="1553029389007" duration="5425000" />
+      <workItem from="1553029389007" duration="5550000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17314000" />
+    <option name="totallyTimeSpent" value="17439000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="23" width="1836" height="1057" extended-state="0" />
@@ -486,13 +495,6 @@
     <entry file="file://$PROJECT_DIR$/compose/production/django/Dockerfile">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/production.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.envs/.production/.postgres">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -583,8 +585,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/deploy.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="94" column="23" selection-start-line="94" selection-start-column="23" selection-end-line="94" selection-end-column="23" />
+        <state relative-caret-position="640">
+          <caret line="113" column="29" lean-forward="true" selection-start-line="113" selection-start-column="29" selection-end-line="113" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/production.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" column="10" lean-forward="true" selection-start-line="22" selection-start-column="10" selection-end-line="22" selection-end-column="10" />
         </state>
       </provider>
     </entry>
