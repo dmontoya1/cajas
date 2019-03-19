@@ -16,9 +16,10 @@ class UnitsList(LoginRequiredMixin, TemplateView):
     template_name = 'webclient/units_list.html'
 
     def get_context_data(self, **kwargs):
-        context = super(OfficeItemsList, self).get_context_data(**kwargs)
+        context = super(UnitsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
         units = Unit.objects.filter(partner__office=office)
-        print(units)
+        context['office'] = office
+        context['units'] = units
         return context

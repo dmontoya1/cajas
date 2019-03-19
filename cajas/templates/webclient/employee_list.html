@@ -146,13 +146,16 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" data-toggle="modal" data-target="#addEmployee">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Añadir empleado</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
+
+        {% if request.user.employee.charge.name == 'Secretaria' %}
+          <a href="" class="float" data-toggle="modal" data-target="#addEmployee">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Añadir empleado</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

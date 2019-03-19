@@ -22,8 +22,6 @@ from .views.partner_list import PartnerList
 from .views.units_list import UnitsList
 
 
-from office.api.create_office_item import CreateOfficeItem
-
 app_name = 'webclient'
 
 urlpatterns = [
@@ -46,5 +44,5 @@ urlpatterns = [
     path("office/<slug:slug>/chain-list/<int:pk>/", ChainPlacesList.as_view(), name='chain_places_list'),
     path("office/<slug:slug>/chain-create/", ChainCreate.as_view(), name='chain_create'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
-    path("units-list/", UnitsList.as_view(), name='units_list'),
+    path("units/<slug:slug>/units-list/", UnitsList.as_view(), name='units_list'),
 ]
