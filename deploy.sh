@@ -92,7 +92,7 @@ cat << EOF > Dockerrun.aws.json
 EOF
 
 # Compress all files recursively into a ZIP
-zip -r sac.zip *
+zip -r sac.zip * .[^.]*
 
 
 # UPLOAD ZIP TO S3
