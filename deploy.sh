@@ -27,7 +27,7 @@ phases:
      - docker-compose -f production.yml pull --ignore-pull-failures
   build:
     commands:
-      - echo Build started on `date`
+     - echo Build started on `date`
      - echo Building the Docker image...
      - docker-compose -f production.yml build django
      - docker tag "${COMPOSE_PROJECT_NAME}_${SERVICE_DJANGO_BUILD_NAME}" "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest"
@@ -35,7 +35,7 @@ phases:
      - docker tag "${COMPOSE_PROJECT_NAME}_${SERVICE_NGINX_BUILD_NAME}" "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest"
   post_build:
     commands:
-      - echo Build completed on `date`
+     - echo Build completed on `date`
      - echo Pushing the Docker image...
      - docker-compose -f production.yml push
      - docker push "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest"
