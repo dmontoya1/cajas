@@ -58,7 +58,7 @@ cat << EOF > Dockerrun.aws.json
   "containerDefinitions": [
     {
      "name": "redis",
-     "image": redis:3.2,
+     "image": "redis:3.2",
      "essential": true,
      "memory": 128
     },
@@ -72,7 +72,7 @@ cat << EOF > Dockerrun.aws.json
      "command": [
         "/start"
       ],
-     "memory": 768
+     "memory": 650
     },
     {
      "name": "nginx",
