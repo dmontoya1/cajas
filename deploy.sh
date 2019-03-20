@@ -22,7 +22,7 @@ phases:
   pre_build:
     commands:
      - echo Logging in to Amazon ECR...
-     - \$(aws ecr get-login --no-include-email --region eu-west-1)
+     - \$(aws ecr get-login --no-include-email --region us-east-1)
      - echo Pulling Docker Images for cache ... | tee -a log.txt
      - docker-compose -f production.yml pull --ignore-pull-failures
   build:
