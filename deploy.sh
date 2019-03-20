@@ -72,7 +72,7 @@ cat << EOF > Dockerrun.aws.json
      "command": [
         "/start"
       ],
-     "memory": 650
+     "memory": 512
     },
     {
      "name": "nginx",
