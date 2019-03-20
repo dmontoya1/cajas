@@ -57,9 +57,18 @@ cat << EOF > Dockerrun.aws.json
   "AWSEBDockerrunVersion": 2,
   "containerDefinitions": [
     {
+     "name": "redis",
+     "image": redis:3.2,
+     "essential": true,
+     "memory": 128
+    },
+    {
      "name": "django",
      "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest",
      "essential": true,
+     "links":[
+       "redis"
+     ],
      "command": [
         "/start"
       ],
