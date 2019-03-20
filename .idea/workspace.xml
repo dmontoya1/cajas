@@ -6,27 +6,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e990a76c-219a-40b7-b043-79b045b4644f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.envs/.local/.django" beforeDir="false" afterPath="$PROJECT_DIR$/.envs/.local/.django" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/loans/models/loan.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/loans/models/loan.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/api/serializers/movement_office_serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/api/serializers/movement_office_serializer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/models/movement_daily_square.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/models/movement_daily_square.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/services/daily_square_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/services/daily_square_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/services/partner_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/services/partner_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/signals.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/signals.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/movement/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/movement/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/account/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/account/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/account/password_change.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/account/password_change.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/account/password_reset.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/account/password_reset.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/account/password_reset_from_key_done.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/account/password_reset_from_key_done.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/chains/services/chains_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/chains/services/chains_manager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cajas/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/partner_box.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/partner_box.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/create_daily_square_movement.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/views/create_daily_square_movement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cajas/webclient/views/daily_square_box.py" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/webclient/views/daily_square_box.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/settings/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings/base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cajas/templates/webclient/chain_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/cajas/templates/webclient/chain_list.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,71 +44,57 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/chain_list.py">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_list.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1081">
+              <caret line="143" column="41" lean-forward="true" selection-start-line="143" selection-start-column="41" selection-end-line="143" selection-end-column="41" />
+              <folding>
+                <element signature="e#7623#8906#0#HTML" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="151">
+              <caret line="59" column="68" lean-forward="true" selection-start-line="59" selection-start-column="68" selection-end-line="59" selection-end-column="68" />
+              <folding>
+                <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0001_initial.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1144">
+              <caret line="96" column="20" selection-start-line="96" selection-start-column="20" selection-end-line="96" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="254" column="41" lean-forward="true" selection-start-line="254" selection-start-column="41" selection-end-line="254" selection-end-column="41" />
-              <folding>
-                <element signature="n#table#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" />
-                <element signature="e#6704#6751#0#DjangoTemplate" />
-                <element signature="n#div#2;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-                <element signature="n#style#0;n#select#0;n#div#0;n#div#3;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-                <element signature="n#div#4;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-                <element signature="n#div#5;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-                <element signature="n#div#2;n#!!top" />
-                <element signature="e#15830#17113#0#HTML" />
-                <element signature="e#17166#17238#0#HTML" />
-                <element signature="e#17336#17425#0#HTML" />
-                <element signature="e#17486#17772#0#HTML" />
-                <element signature="e#17827#20587#0#HTML" />
-                <element signature="e#20633#21178#0#HTML" />
-                <element signature="e#21225#22452#0#HTML" />
-                <element signature="e#22500#23593#0#HTML" />
-                <element signature="e#23644#23787#0#HTML" />
-                <element signature="e#23848#25123#0#HTML" />
-                <element signature="e#25121#25135#0#HTML" />
-                <element signature="e#25575#26048#0#HTML" />
-                <element signature="e#26103#27688#0#HTML" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0002_employee_observations.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/create_movement.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="65" column="17" lean-forward="true" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
-              <folding>
-                <element signature="e#1#34#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0001_initial.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/movement/models/movement_daily_square.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="860">
-              <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cajas/webclient/views/daily_square_box.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
-              <folding>
-                <element signature="e#1#28#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0002_auto_20190319_1359.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -186,10 +155,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/cajas/loans/services/loan_service.py" />
-        <option value="$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/accept_movement.py" />
-        <option value="$PROJECT_DIR$/cajas/webclient/views/home_view.py" />
-        <option value="$PROJECT_DIR$/cajas/office/api/office_item_delete.py" />
         <option value="$PROJECT_DIR$/cajas/office/api/office_item_detail.py" />
         <option value="$PROJECT_DIR$/cajas/users/api/views/employee_delete.py" />
         <option value="$PROJECT_DIR$/cajas/users/api/views/employee_update.py" />
@@ -207,7 +172,6 @@
         <option value="$PROJECT_DIR$/cajas/templates/webclient/employee_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/loan_list.html" />
-        <option value="$PROJECT_DIR$/cajas/templates/webclient/chain_list.html" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/chain_places_list.html" />
         <option value="$PROJECT_DIR$/cajas/units/api/serializers/unit_serializer.py" />
         <option value="$PROJECT_DIR$/.envs/.local/.django" />
@@ -224,7 +188,6 @@
         <option value="$PROJECT_DIR$/cajas/movement/api/serializers/movement_office_serializer.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/urls.py" />
         <option value="$PROJECT_DIR$/cajas/movement/urls.py" />
-        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
         <option value="$PROJECT_DIR$/cajas/templates/account/password_reset.html" />
         <option value="$PROJECT_DIR$/cajas/templates/account/password_reset_from_key_done.html" />
         <option value="$PROJECT_DIR$/cajas/templates/account/password_change.html" />
@@ -237,6 +200,12 @@
         <option value="$PROJECT_DIR$/cajas/movement/signals.py" />
         <option value="$PROJECT_DIR$/cajas/webclient/views/daily_square_box.py" />
         <option value="$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html" />
+        <option value="$PROJECT_DIR$/cajas/chains/services/chains_manager.py" />
+        <option value="$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py" />
+        <option value="$PROJECT_DIR$/cajas/templates/webclient/chain_list.html" />
+        <option value="$PROJECT_DIR$/cajas/chains/models/user_place_pay.py" />
+        <option value="$PROJECT_DIR$/cajas/templates/base.html" />
+        <option value="$PROJECT_DIR$/cajas/users/migrations/0001_initial.py" />
       </list>
     </option>
   </component>
@@ -270,20 +239,20 @@
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="concepts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="chains" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="concepts" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="services" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="office" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="movement" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="office" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="migrations" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -295,25 +264,26 @@
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="templates" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="webclient" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="views" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="users" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cajas" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="users" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="migrations" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="config" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="cajas" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="config" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="settings" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -483,7 +453,7 @@
       <workItem from="1552744475937" duration="6047000" />
       <workItem from="1552752149588" duration="1547000" />
       <workItem from="1553003847554" duration="17422000" />
-      <workItem from="1553089193472" duration="14086000" />
+      <workItem from="1553089193472" duration="17687000" />
     </task>
     <servers />
   </component>
@@ -496,7 +466,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="246735000" />
+    <option name="totallyTimeSpent" value="250336000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-2" width="1366" height="770" extended-state="6" />
@@ -556,7 +526,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="django-line">
           <url>file://$PROJECT_DIR$/cajas/templates/base.html</url>
-          <line>233</line>
+          <line>144</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -573,118 +543,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cajas/users/models/employee.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="86" column="23" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="23" />
-          <folding>
-            <element signature="e#1#47#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="132" column="16" lean-forward="true" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="16" />
-          <folding>
-            <element signature="n#for#0;n#!!top" />
-            <element signature="n#style#0;n#i#0;n#div#0;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#i#0;n#div#0;n#div#0;n#div#0;n#div#3;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_create.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="9" selection-start-line="9" selection-end-line="102" selection-end-column="14" />
-          <folding>
-            <element signature="n#ul#0;n#!!top" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/donjuanbox.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="70" column="48" selection-start-line="70" selection-start-column="48" selection-end-line="70" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/general_config/management/commands/get_all_permissions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/partner_list.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="25" column="34" lean-forward="true" selection-start-line="25" selection-start-column="34" selection-end-line="25" selection-end-column="34" />
-          <folding>
-            <element signature="e#1#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/office_items_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="150" column="42" selection-start-line="150" selection-start-column="42" selection-end-line="150" selection-end-column="42" />
-          <folding>
-            <element signature="n#div#1;n#!!top" />
-            <element signature="n#div#2;n#!!top" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/partners_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="280" column="2" selection-start-line="280" selection-start-column="2" selection-end-line="280" selection-end-column="2" />
-          <folding>
-            <element signature="n#ul#0;n#!!top" />
-            <element signature="n#div#1;n#!!top" />
-            <element signature="e#12607#13959#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/employee_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="154" column="38" selection-start-line="154" selection-start-column="38" selection-end-line="154" selection-end-column="38" />
-          <folding>
-            <element signature="n#ul#0;n#!!top" />
-            <element signature="n#div#1;n#!!top" />
-            <element signature="n#div#2;n#!!top" />
-            <element signature="n#div#3;n#!!top" />
-            <element signature="e#18657#19384#0#HTML" />
-            <element signature="e#19476#19627#0#HTML" />
-            <element signature="e#19735#20569#0#HTML" />
-            <element signature="e#20664#21607#0#HTML" />
-            <element signature="e#21677#24251#0#HTML" />
-            <element signature="e#24318#25434#0#HTML" />
-            <element signature="e#25471#26986#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="158" column="20" selection-start-line="158" selection-start-column="20" selection-end-line="158" selection-end-column="20" />
-          <folding>
-            <element signature="n#ul#0;n#!!top" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/loan_list.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
@@ -692,30 +550,6 @@
           <folding>
             <element signature="n#ul#0;n#!!top" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_places_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="537">
-          <caret line="160" column="39" selection-start-line="160" selection-start-column="39" selection-end-line="160" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="108" column="25" selection-start-line="108" selection-start-column="25" selection-end-line="108" selection-end-column="25" />
-          <folding>
-            <element signature="e#7138#8580#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/list_permissions.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="34" selection-start-line="34" selection-end-line="34" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -864,23 +698,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="19" column="9" lean-forward="true" selection-start-line="16" selection-start-column="8" selection-end-line="19" selection-end-column="9" />
-          <folding>
-            <element signature="e#1#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="435" column="16" lean-forward="true" selection-start-line="435" selection-start-column="16" selection-end-line="466" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/webclient/views/create_partner_movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -983,6 +800,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/movement/signals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/movement/api/views/movement_daily_square/create_movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="327">
@@ -990,13 +814,6 @@
           <folding>
             <element signature="e#1#34#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cajas/movement/signals.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
@@ -1010,44 +827,117 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/chain_places_list.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_places_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="160" column="39" selection-start-line="160" selection-start-column="39" selection-end-line="160" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/chains/models/chain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="36" column="14" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/webclient/views/chain_list.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/cajas/webclient/views/daily_square_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="28" column="38" lean-forward="true" selection-start-line="28" selection-start-column="38" selection-end-line="28" selection-end-column="38" />
-          <folding>
-            <element signature="e#1#28#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="351">
+          <caret line="35" column="32" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/chains/models/user_place_pay.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/list_permissions.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="248">
+          <caret line="33" column="21" lean-forward="true" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/daily_square_box.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="254" column="41" lean-forward="true" selection-start-line="254" selection-start-column="41" selection-end-line="254" selection-end-column="41" />
+        <state relative-caret-position="-39">
+          <caret line="255" column="83" lean-forward="true" selection-start-line="255" selection-start-column="83" selection-end-line="255" selection-end-column="83" />
           <folding>
-            <element signature="n#table#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#!!top" />
             <element signature="e#6704#6751#0#DjangoTemplate" />
-            <element signature="n#div#2;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-            <element signature="n#style#0;n#select#0;n#div#0;n#div#3;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" expanded="true" />
-            <element signature="n#div#4;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-            <element signature="n#div#5;n#form#0;n#div#1;n#div#0;n#div#0;n#div#1;n#!!top" />
-            <element signature="n#div#2;n#!!top" />
-            <element signature="e#15830#17113#0#HTML" />
-            <element signature="e#17166#17238#0#HTML" />
-            <element signature="e#17336#17425#0#HTML" />
-            <element signature="e#17486#17772#0#HTML" />
-            <element signature="e#17827#20587#0#HTML" />
-            <element signature="e#20633#21178#0#HTML" />
-            <element signature="e#21225#22452#0#HTML" />
-            <element signature="e#22500#23593#0#HTML" />
-            <element signature="e#23644#23787#0#HTML" />
-            <element signature="e#23848#25123#0#HTML" />
-            <element signature="e#25121#25135#0#HTML" />
-            <element signature="e#25575#26048#0#HTML" />
-            <element signature="e#26103#27688#0#HTML" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/chains/services/chains_manager.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="50" column="12" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/chains/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/chains/api/views/chain_pay.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="17" column="46" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+          <folding>
+            <element signature="e#1#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/webclient/chain_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1081">
+          <caret line="143" column="41" lean-forward="true" selection-start-line="143" selection-start-column="41" selection-end-line="143" selection-end-column="41" />
+          <folding>
+            <element signature="e#7623#8906#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/templates/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="59" column="68" lean-forward="true" selection-start-line="59" selection-start-column="68" selection-end-line="59" selection-end-column="68" />
+          <folding>
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0002_auto_20190319_1359.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/office/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0001_initial.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1144">
+          <caret line="96" column="20" selection-start-line="96" selection-start-column="20" selection-end-line="96" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cajas/users/migrations/0002_employee_observations.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>

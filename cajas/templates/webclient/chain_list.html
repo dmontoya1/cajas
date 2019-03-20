@@ -128,7 +128,7 @@
                       <td>{{ c.name }}</td>
                       <td>{{ c.places }}</td>
                       <td>$ {{ c.place_value|intcomma }}</td>
-                      <td>{% if c.external_chain %}Externa{% else %}Interna{% endif %}</td>
+                      <td>{{ c.get_chain_type_display }}</td>
                       <td>
                         {% if perms.chains.change_chainplace %}
                           <a href="{% url 'webclient:chain_places_list' office.slug c.pk %}">Ver socios</a>
@@ -138,7 +138,7 @@
                       </td>
                       <td>
                         {% if perms.chains.add_chain %}
-                          <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
+                          <button type="button" class="add-movement add-pay" data-id="{{ c.id }}" data-toggle="modal"
                                   data-target="#modalAddPayment">
                             <i class="fas fa-plus mr-1"></i>
                             Realizar pago
