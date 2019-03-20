@@ -1,8 +1,10 @@
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from cajas.users.models.charges import Charge
+from office.models.office import Office
 
 User = get_user_model()
 
@@ -30,7 +32,15 @@ class Employee(models.Model):
     user = models.OneToOneField(
         User,
         verbose_name='Usuario',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='employee'
+    )
+    office = models.ForeignKey(
+        Office,
+        verbose_name='Oficina',
+        on_delete=models.CASCADE,
+        related_name='related_employees',
+        null=True, blank=True
     )
     charge = models.ForeignKey(
         Charge,
@@ -60,6 +70,11 @@ class Employee(models.Model):
         'Es cuadre diario?',
         default=False
     )
+    observations = models.TextField(
+        'Motivo de despido',
+        help_text='Motivo para deshabilitar el empleado',
+        blank=True, null=True
+    )
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
@@ -68,6 +83,14 @@ class Employee(models.Model):
 
     def __str__(self):
         return '{}'.format(self.user.get_full_name())
+
+    def is_admin_charge(self):
+        charge_secretary = Charge.objects.get(name='Secretaria')
+        charge_admin_junior = Charge.objects.get(name='Administrador Junior')
+        charge_admin_senior = Charge.objects.get(name='Administrador Senior')
+        if self.charge == charge_admin_junior or self.charge == charge_secretary or self.charge == charge_admin_senior:
+            return True
+        return False
 
     class Meta:
         verbose_name = 'Empleado'

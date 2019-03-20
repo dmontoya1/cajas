@@ -6,14 +6,17 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
+from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Relationship
-from movement.api.views.CsrfExempt import CsrfExemptSessionAuthentication
+from movement.services.country_service import MovementCountryManager
+from movement.services.office_service import MovementOfficeManager
 from movement.views.movement_partner.create_movement_service_simple import CreateMovementSimpleService
-from movement.views.movement_country.create_movement import CreateMovementCountry
-from movement.views.movement_office.create_movement import CreateMovementOffice
 from webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
+
+movement_country_manager = MovementCountryManager()
+movement_office_manager = MovementOfficeManager()
 
 
 class AcceptMovement(APIView):
@@ -50,7 +53,7 @@ class AcceptMovement(APIView):
                 'responsible': request.user,
                 'ip': get_ip(request)
             }
-            office_movement = CreateMovementOffice(data).call()
+            office_movement = movement_office_manager.create_movement(data)
         elif relationship == Relationship.LOAN:
             pass
         elif relationship == Relationship.COUNTRY:
@@ -64,7 +67,7 @@ class AcceptMovement(APIView):
                 'responsible': request.user,
                 'ip': get_ip(request)
             }
-            country_movement = CreateMovementCountry(data).call()
+            country_movement = movement_country_manager.create_movement(data)
         elif relationship == Relationship.CHAIN:
             pass
 

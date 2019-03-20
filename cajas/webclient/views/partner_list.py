@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.users.models.partner import Partner
+from cajas.users.models.charges import Charge
 from office.models.office import Office
 
 
@@ -17,8 +18,15 @@ class PartnerList(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PartnerList, self).get_context_data(**kwargs)
-        office = get_object_or_404(Office, secretary=self.request.user.employee)
-        partners = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+        slug = self.kwargs['slug']
+        office = get_object_or_404(Office, slug=slug)
+        try:
+            if self.request.user.is_superuser or self.request.user.employee.is_admin_charge():
+                context['partners'] = Partner.objects.filter(
+                    office=office,
+                    user__is_active=True
+                ).exclude(partner_type='DJ')
+        except:
+            context['partner'] = self.request.user.partner.get()
         context['office'] = office
-        context['partners'] = partners
         return context

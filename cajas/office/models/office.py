@@ -3,8 +3,6 @@ from django.db import models
 from django.utils.text import slugify
 
 from general_config.models.country import Country
-from cajas.users.models.employee import Employee
-
 
 class Office(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
@@ -13,32 +11,12 @@ class Office(models.Model):
     country = models.ForeignKey(
         Country,
         verbose_name='Pais',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='related_offices'
     )
     number = models.IntegerField(
         'Número de la oficina',
         default=1
-    )
-    admin_senior = models.OneToOneField(
-        Employee,
-        verbose_name='Adminsitrador Senior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_senior_office'
-    )
-    admin_junior = models.OneToOneField(
-        Employee,
-        verbose_name='Adminsitrador Junior',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_junior_office'
-    )
-    secretary = models.OneToOneField(
-        Employee,
-        verbose_name='Secretaria',
-        on_delete=models.SET_NULL,
-        blank=True, null=True,
-        related_name='related_secretary_office'
     )
     phone_number = models.CharField(
         'Telefono',
@@ -60,6 +38,11 @@ class Office(models.Model):
         'Consecutivo Socios',
         default=1
     )
+    image = models.ImageField(
+        'Imágen',
+        upload_to='contries/',
+        blank=True, null=True
+    )
 
     def __str__(self):
         if self.country:
@@ -74,3 +57,4 @@ class Office(models.Model):
     class Meta:
         verbose_name = 'Oficina'
         verbose_name_plural = 'Oficinas'
+        ordering = ['number']

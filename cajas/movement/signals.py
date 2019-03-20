@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from .models.movement_daily_square import MovementDailySquare
 
+
 @receiver(post_save, sender=MovementDailySquare)
 def save_balance_daily_square(sender, **kwargs):
     if kwargs.get('created'):

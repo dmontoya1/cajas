@@ -22,7 +22,8 @@ class User(AbstractUser):
     document_id = models.CharField(
         "Número Documento",
         max_length=15,
-        unique=True
+        unique=False,
+        default='',
     )
     is_abstract = models.BooleanField(
         "Tiene acceso a la plataforma?",
@@ -31,6 +32,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return "{} ({})".format(self.get_full_name(), self.document_id)
-
-    def get_absolute_url(self):
-        return reverse("users:detail", kwargs={"username": self.username})

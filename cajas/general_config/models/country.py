@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from general_config.models.currency import Currency
+from .currency import Currency
 
 
 class Country(models.Model):
@@ -35,3 +35,4 @@ class Country(models.Model):
     class Meta:
         verbose_name = 'País'
         verbose_name_plural = 'Paises'
+        ordering = ['name']

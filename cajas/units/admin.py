@@ -1,5 +1,6 @@
 
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_text
 
@@ -19,7 +20,7 @@ class UnitInline(admin.StackedInline):
     model = Unit
     extra = 0
     fields = ["name", "partner", "collector", "supervisor", "get_edit_link", ]
-    readonly_fields = ["get_edit_link",]
+    readonly_fields = ["get_edit_link", ]
 
     def get_edit_link(self, obj=None):
         if obj.pk:  # if object has already been saved and has a primary key, show link to it
