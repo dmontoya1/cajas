@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <li class="menu-item-has-children dropdown">
-                            <a href="{% url 'webclient:office_items_list' office.slug %}">
+                            <a href="#">
                                 <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                                 Inventario Oficina
                             </a>
@@ -71,7 +71,7 @@
 
                         <li class="menu-title">Empleados</li><!-- /.menu-title -->
                         <li class="menu-item-has-children dropdown">
-                            <a href="{% url 'webclient:employee-list' office.slug %}">
+                            <a href="#">
                                 <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
                                 Lista de empleados
                             </a>
@@ -246,13 +246,14 @@
                     </div>
                     <!-- /Widgets -->
                 {% endblock %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+                {% for message in messages %}
+                  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
                 {% block content %}
                     
                 {% endblock %}
@@ -447,7 +448,7 @@
                     if (result.value) {
                       location.reload()
                     }
-                })
+                  })
                 .catch(function (error) {
                     // handle error
                   console.log(error)
@@ -462,10 +463,10 @@
                     if (result.value) {
                       location.reload()
                     }
+                    })
                   })
                 })
               })
-            })
           })
         </script>
 

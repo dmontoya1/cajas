@@ -1,33 +1,29 @@
 
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.views.generic import View
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
 from general_config.models.country import Country
-from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.office import Office
 from units.models.units import Unit
+from webclient.views.get_ip import get_ip
+from webclient.views.utils import get_object_or_none
 
-from .get_ip import get_ip
-from .utils import get_object_or_none
+from ....services.daily_square_service import MovementDailySquareManager
 
 daily_square_manager = MovementDailySquareManager()
 
 
-class CreateDailySquareMovement(View):
+class CreateDailySquareMovement(APIView):
     """
     """
 
-    def post(self, request, *args, **kwargs):
-        office_pk = request.session['office']
-        office_session = Office.objects.get(pk=office_pk)
-        user = User.objects.get(pk=request.POST['user_id'])
-        box_daily_square = BoxDailySquare.objects.get(user=user)
+    def post(self, request, format=None):
+        box_daily_square = BoxDailySquare.objects.get(user__pk=request.POST['user_id'])
         concept = Concept.objects.get(pk=request.POST['concept'])
         date = request.POST['date']
         movement_type = request.POST['movement_type']
@@ -57,17 +53,25 @@ class CreateDailySquareMovement(View):
             'office': office,
             'loan': loan,
             'chain': chain,
+            '_user': user,
         }
-
-        total_movements = daily_square_manager.get_user_value(data)
-        if StopManager.validate_stop(data) > total_movements['value__sum']:
-            movement = daily_square_manager.create_movement(data)
-            messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
+        if user:
+            total_movements = daily_square_manager.get_user_value(data)
+            stop = StopManager.validate_stop(data)
+            if stop == 0 or (stop >= (total_movements['value__sum'] + int(data['value']))):
+                movement = daily_square_manager.create_movement(data)
+                return Response(
+                    'Se ha creado el movimiento exitosamente',
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.',
+                    status=status.HTTP_204_NO_CONTENT
+                )
         else:
-            messages.add_message(
-                request,
-                messages.ERROR,
-                'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.'
+            movement = daily_square_manager.create_movement(data)
+            return Response(
+                'Se ha creado el movimiento exitosamente',
+                status=status.HTTP_201_CREATED
             )
-        return HttpResponseRedirect(reverse('webclient:daily_square_box',
-                                            kwargs={'slug': office_session.slug, 'pk': request.POST['user_id']}))

@@ -1,22 +1,24 @@
 
-from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.views.generic import View
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept, ConceptType
-from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
+from concepts.services.stop_service import StopManager
+from webclient.views.get_ip import get_ip
+from ....services.partner_service import MovementPartnerManager
 
-from .get_ip import get_ip
+StopManager = StopManager()
+MovementPartnerManager = MovementPartnerManager()
 
 
-class CreatePartnerMovement(View):
+class MovementPartnerCreate(APIView):
     """
     """
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, format=None):
         partner = Partner.objects.get(pk=request.POST['partner_id'])
         box_partner = BoxPartner.objects.get(partner=partner)
         concept = Concept.objects.get(pk=request.POST['concept'])
@@ -37,8 +39,18 @@ class CreatePartnerMovement(View):
                 'detail': detail,
                 'responsible': request.user,
                 'ip': ip,
+                '_user': partner.user,
             }
-            movement = MovementPartnerHandler.create_simple(data)
+            total_movements = MovementPartnerManager.get_user_value(data)
+            stop = StopManager.validate_stop(data)
+            if stop == 0 or(stop >= (total_movements['value__sum'] + int(data['value']))):
+                movement = MovementPartnerManager.create_simple(data)
+            else:
+                return Response(
+                    'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.',
+                    status=status.HTTP_204_NO_CONTENT
+                )
+
         elif concept.concept_type == ConceptType.DOUBLE:
             data = {
                 'partner': partner,
@@ -50,7 +62,7 @@ class CreatePartnerMovement(View):
                 'responsible': request.user,
                 'ip': ip,
             }
-            movement = MovementPartnerHandler.create_double(data)
+            movement = MovementPartnerManager.create_double(data)
         elif concept.concept_type == ConceptType.SIMPLEDOUBLE:
             data = {
                 'partner': partner,
@@ -62,12 +74,10 @@ class CreatePartnerMovement(View):
                 'responsible': request.user,
                 'ip': ip,
             }
-            movement = MovementPartnerHandler.create_simple_double_movement(data)
-        messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(
-            reverse(
-                'webclient:partner_box',
-                kwargs={
-                    'slug': partner.office.slug,
-                    'pk': partner.pk}
-            ))
+            movement = MovementPartnerManager.create_simple_double(data)
+
+        return Response(
+            'Se ha añadido el movimiento exitosamente.',
+            status=status.HTTP_201_CREATED
+        )
+

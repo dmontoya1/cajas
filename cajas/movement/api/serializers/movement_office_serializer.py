@@ -11,7 +11,3 @@ class MovementOfficeSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'movement_type', 'concept', 'value', 'detail', 'date', 'responsible', 'ip', 'balance', 'box_office'
         )
-
-    def create(self, validated_data):
-        obj = MovementOffice.objects.create(**validated_data)
-        return obj
