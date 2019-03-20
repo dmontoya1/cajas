@@ -1,12 +1,9 @@
 from django.urls import path
 
 from .api.views.charge_list import ChargeList
-from .api.views.collectors_list import CollectorList
 from .api.views.employee_create import EmployeeCreate
 from .api.views.employee_delete import EmployeeDelete
 from .api.views.employee_update import EmployeeUpdate
-from .api.views.partner_list import PartnerList
-from .api.views.supervisor_list import SupervisorList
 
 app_name = "users"
 urlpatterns = [
@@ -14,7 +11,4 @@ urlpatterns = [
     path("charge-list", ChargeList.as_view(), name='charge-list'),
     path("<int:pk>/employee-delete", EmployeeDelete.as_view(), name='employee_delete'),
     path("employee-create", EmployeeCreate.as_view(), name='employee_create'),
-    path("<int:pk>/partner-list", PartnerList.as_view(), name='partner_list'),
-    path("<int:pk>/collector-list", CollectorList.as_view(), name='collector_list'),
-    path("<int:pk>/supervisor-list", SupervisorList.as_view(), name='supervisor_list'),
 ]

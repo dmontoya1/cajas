@@ -383,7 +383,7 @@
             $("#edit_brand option[value='" + data.brand + "']").prop("selected", true);
             $("#edit_brand").trigger("click")
 
-            //create items
+            //update items
             $('.edit_item').on('submit', function(e){
                 e.preventDefault()
                 axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
