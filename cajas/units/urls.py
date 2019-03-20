@@ -2,9 +2,9 @@
 
 from django.urls import path
 
-from .api.sell_unit import UnitSell
-from .api.unit_detail import UnitDetail
-from .api.unit_list import UnitList
+from .api.views.sell_unit import UnitSell
+from .api.views.unit_detail import UnitDetail
+from .api.views.unit_list import UnitList
 
 app_name = 'units'
 urlpatterns = [

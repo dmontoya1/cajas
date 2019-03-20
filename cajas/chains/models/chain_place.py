@@ -15,6 +15,11 @@ class ChainPlace(models.Model):
         on_delete=models.CASCADE,
         related_name='related_places'
     )
+    name = models.CharField(
+        'Número de puesto',
+        max_length=255,
+        blank=True, null=True
+    )
     pay_date = models.DateField(
         'Fecha de pago del puesto',
         auto_now=False,
@@ -26,3 +31,4 @@ class ChainPlace(models.Model):
     class Meta:
         verbose_name = "Puesto de la cadena"
         verbose_name_plural = "Puestos de la cadena"
+        ordering = ['id']

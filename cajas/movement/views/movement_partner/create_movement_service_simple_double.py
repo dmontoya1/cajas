@@ -6,9 +6,10 @@ from boxes.models.box_partner import BoxPartner
 from concepts.models.concepts import Concept
 from cajas.users.models.partner import PartnerType
 
-from ...models.movement_partner import MovementPartner
-from ..movement_don_juan.movement_don_juan_handler import MovementDonJuanHandler
+from ...services.don_juan_service import DonJuanManager
 from .create_movement_service_simple import CreateMovementSimpleService
+
+donjuan_manager = DonJuanManager()
 
 
 class CreateMovementSimpleDoubleService(object):
@@ -51,7 +52,7 @@ class CreateMovementSimpleDoubleService(object):
                 'responsible': self._responsible,
                 'ip': self._ip
             }
-            movement2 = MovementDonJuanHandler.create(data2)
+            movement2 = donjuan_manager.create_movement(data2)
         elif self._partner.partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=self._partner.direct_partner)
             data2 = {

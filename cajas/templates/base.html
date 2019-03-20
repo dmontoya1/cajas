@@ -11,9 +11,10 @@
     <title>{% block title %}SAC Sistema de Administración de Cajas{% endblock %}</title>
     <meta name="description" content="SAC Sistema de Administración de Cajas">
     <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/png" href="{% static 'images/favicons/favicon.png' %}"/>
 
-    <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
-    <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png">
+    <link rel="apple-touch-icon" href="{% static 'images/favicons/favicon.png' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicons/favicon.png' %}">
     {% block css %}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
@@ -36,81 +37,6 @@
         <nav class="navbar navbar-expand-sm navbar-default">
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 {% block navbar %}
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficina</a>
-                        </li>
-                        <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#"> 
-                                <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Caja oficina
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#"> 
-                                <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Caja Don Juan
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Inventario Oficina
-                            </a>
-                        </li>
-
-                        <li class="menu-title">Socios</li><!-- /.menu-title -->
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Lista de socios
-                            </a>
-                        </li>
-
-                        <li class="menu-title">Empleados</li><!-- /.menu-title -->
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Lista de empleados
-                            </a>
-                        </li>
-
-
-                        <li class="menu-title">Secretaria</li><!-- /.menu-title -->
-
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Árbol de unidades
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Cuadres diarios
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Aprovisionamiento
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Préstamos
-                            </a>
-                        </li>
-                        <li class="menu-item-has-children dropdown">
-                            <a href="#">
-                                <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                                Cadenas
-                            </a>
-                        </li>
-
-                    </ul>
                 {% endblock %}
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -123,27 +49,13 @@
             <header id="header" class="header">
                 <div class="top-left">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="./"><img src="{% static 'images/logo.png' %}" alt="Logo"></a>
-                        <a class="navbar-brand hidden" href="./"><img src="{% static 'images/logo2.png' %}" alt="Logo"></a>
+                        <a class="navbar-brand" href="{% url 'webclient:home' %}"><img src="{% static 'images/logo.png' %}" alt="Logo" ></a>
+                        <a class="navbar-brand hidden" href="{% url 'webclient:home' %}"><img src="{% static 'images/favicons/favicon.png' %}" alt="Logo"></a>
                         <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                     </div>
                 </div>
                 <div class="top-right">
                     <div class="header-menu">
-                        <div class="header-left">
-
-                            <div class="dropdown for-notification">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-bell"></i>
-                                </button>
-                            </div>
-
-                            <div class="dropdown for-message">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="message" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-envelope"></i>
-                                </button>
-                            </div>
-                        </div>
 
                         <div class="user-area dropdown float-right">
                             <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -245,13 +157,14 @@
                     </div>
                     <!-- /Widgets -->
                 {% endblock %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-success" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
+                {% for message in messages %}
+                  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                  </div>
+                {% endfor %}
                 {% block content %}
                     
                 {% endblock %}
@@ -346,7 +259,7 @@
                         </div>
                       </div>
                     </div>
-
+                  </form>
                 </div>
                 <div class="modal-footer d-none">
                     <button type="button" class="btn btn-secondary" style="padding: 7px 40px;" data-dismiss="modal">Cancelar</button>
@@ -446,7 +359,7 @@
                     if (result.value) {
                       location.reload()
                     }
-                })
+                  })
                 .catch(function (error) {
                     // handle error
                   console.log(error)
@@ -461,10 +374,10 @@
                     if (result.value) {
                       location.reload()
                     }
+                    })
                   })
                 })
               })
-            })
           })
         </script>
 

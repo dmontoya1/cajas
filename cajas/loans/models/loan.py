@@ -1,4 +1,3 @@
-
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Sum
@@ -85,8 +84,11 @@ class Loan(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        loans = self.related_payments.all().aggregate(Sum('value'))
-        self.balance = self.value - loans['value__sum']
+        if self.pk:
+            loans = self.related_payments.all().aggregate(Sum('value'))
+            self.balance = self.value - loans['value__sum']
+        else:
+            self.balance = self.value
         super(Loan, self).save(*args, **kwargs)
 
     class Meta:

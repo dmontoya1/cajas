@@ -893,7 +893,7 @@ aside.left-panel {
 .right-panel .navbar-brand {
   line-height: 42px; }
   .right-panel .navbar-brand img {
-    max-width: 145px; }
+    max-width: 84%; }
   .right-panel .navbar-brand.hidden {
     display: none; }
 
@@ -2629,7 +2629,7 @@ button.add-movement {
   padding: 10px;
 }
 
-.accept-mv {
+.accept-mv, .edit-item{
   background-color: var(--aqua-box);
   color: #fff;
   border-radius: 10px;
@@ -2725,9 +2725,37 @@ ul.notify-list {
 }
 
 span.no-office-home {
-    display: block;
-    background: #eee;
-    font-size: 1.5em;
-    padding: 25px;
-    border: 1px solid #ddd;
+  display: block;
+  background: #eee;
+  font-size: 1.5em;
+  padding: 25px;
+  border: 1px solid #ddd;
 }
+.places-item {
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 5px;
+  webkit-box-shadow: 4px 4px 9px -1px rgba(163,163,163,1);
+  -moz-box-shadow: 4px 4px 9px -1px rgba(163,163,163,1);
+  box-shadow: 4px 4px 9px -1px rgba(163,163,163,1);
+}
+span.place-name {
+  display: block;
+  background: #ddd;
+  padding: 0px 10px;
+  margin: -10px -21px 10px -20px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  height: 30px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.places {
+    max-height: 70vh;
+    overflow-y: scroll;
+}
+.btn-dynamic {
+    background: #57c2a2;
+    color: #fff;
+}
+

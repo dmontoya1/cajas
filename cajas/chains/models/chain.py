@@ -5,8 +5,16 @@ from office.models.office import Office
 
 class Chain(models.Model):
     """
-
     """
+
+    INTERNA = 'IN'
+    EXTERNA = 'EX'
+
+    CHAIN_TYPE = (
+        (INTERNA, 'Interna'),
+        (EXTERNA, 'Externa'),
+    )
+
     office = models.ForeignKey(
         Office,
         verbose_name='Oficina',
@@ -26,9 +34,11 @@ class Chain(models.Model):
         'Precio por puesto',
         default=0
     )
-    external_chain = models.BooleanField(
-        'Es una cadena externa?',
-        default=False
+    chain_type = models.CharField(
+        'Tipo de cadena',
+        max_length=2,
+        choices=CHAIN_TYPE,
+        default=INTERNA
     )
 
     def __str__(self):

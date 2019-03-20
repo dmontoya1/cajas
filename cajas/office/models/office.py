@@ -57,3 +57,4 @@ class Office(models.Model):
     class Meta:
         verbose_name = 'Oficina'
         verbose_name_plural = 'Oficinas'
+        ordering = ['number']

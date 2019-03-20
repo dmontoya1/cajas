@@ -20,5 +20,11 @@ class Home(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
-        context['countries'] = Country.objects.all()
+        if not self.request.user.is_superuser:
+            try:
+                context['office'] = self.request.user.employee.office
+            except:
+                context['office'] = self.request.user.partner.get().office
+        else:
+            context['countries'] = Country.objects.all()
         return context
