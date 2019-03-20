@@ -61,7 +61,7 @@ cat << EOF > Dockerrun.aws.json
      "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest",
      "essential": true,
      "command": [
-        "/uwsgi.sh"
+        "/start"
       ],
      "memory": 768
     },
