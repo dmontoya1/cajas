@@ -209,3 +209,6 @@ RAVEN_CONFIG = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+INSTALLED_APPS += ['django_extensions']  # noqa F405
+
+API_KEY = env('API_KEY')
