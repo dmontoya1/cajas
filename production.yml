@@ -13,9 +13,6 @@ services:
     image: cajas_production_django
     depends_on:
       - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
     command: /start
 
   nginx:
@@ -27,8 +24,6 @@ services:
       - django
     volumes:
       - production_nginx:/root/.nginx
-    env_file:
-      - ./.envs/.production/.nginx
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
