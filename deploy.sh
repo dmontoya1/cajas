@@ -37,7 +37,6 @@ phases:
     commands:
      - echo Build completed on `date`
      - echo Pushing the Docker image...
-     - docker-compose -f production.yml push
      - docker push "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest"
      - docker push "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest"
      - echo printenv | tee -a log.txt
