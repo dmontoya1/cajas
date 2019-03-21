@@ -156,7 +156,7 @@
           </div>
         </div>
         {% if request.user.employee.charge.name == 'Secretaria' %}
-            <a href="" class="float" data-toggle="modal" data-target="#addUnit">
+            <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
             <i class="fa fa-plus my-float"></i>
             </a>
             <div class="label-container">
@@ -292,7 +292,7 @@
   <!--Modal Create-->
   <div class="modal fade" id="addUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
+      <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title text-center" id="exampleModalLongTitle">Crear Unidad</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -303,47 +303,49 @@
           <form method="POST" class="create_unit_form">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="concept">Nombre</label>
-                    <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
-                            required>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="partner">Socio</label>
-                  <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
-                    <option disabled value="" selected>Selecciona un socio</option>
-                    {% for p in partners %}
-                      <option value="{{p.user.pk}}">{{ p }} {{p.user.pk}} {{p.pk}}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="collector">Cobrador</label>
-                    <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;" required>
-                      <option disabled value="" selected>Selecciona un cobrador</option>
-                      {% for c in collectors %}
-                        <option value="{{c.user.pk}}">{{ c }}</option>
-                      {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="edit_supervisor">Supervisor</label>
-                  <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
-                    <option disabled value="" selected>Selecciona un supervisor</option>
-                    {% for s in supervisor %}
-                      <option value="{{s.user.pk}}">{{ s }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
+            <div class="scape">
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="concept">Nombre</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
+                              required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="partner">Socio</label>
+                      <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un socio</option>
+                        {% for p in partners %}
+                          <option value="{{p.user.pk}}">{{ p }} {{p.user.pk}} {{p.pk}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="collector">Cobrador</label>
+                        <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;" required>
+                          <option disabled value="" selected>Selecciona un cobrador</option>
+                          {% for c in collectors %}
+                            <option value="{{c.user.pk}}">{{ c }}</option>
+                          {% endfor %}
+                        </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="edit_supervisor">Supervisor</label>
+                      <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un supervisor</option>
+                        {% for s in supervisor %}
+                          <option value="{{s.user.pk}}">{{ s }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+              </div>
             </div>
             <hr>
             <h5 class="text-center">Inventario de unidad</h5>
             <br>
-              <!--Replication-->
-              <div id="dynamic_form">
+            <!--Replication-->
+              <div class="dynamic_controller" id="dynamic_form">
                 <div class="form-row">
                   <div class="form-group col-md-6">
                         <label for="inventory_name">Nombre</label>
@@ -352,47 +354,46 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="category">Categoría </label>
-                    <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;" required>
-                      <option disabled value="" selected>Selecciona una categoría</option>
-                      {% for category in categories %}
-                        <option value="{{ category.pk }}">{{ category }}</option>
-                      {% endfor %}
-                    </select>
+                    <div>
+                      <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una categoría</option>
+                        {% for category in categories %}
+                          <option value="{{ category.pk }}">{{ category }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                      <label for="brand">Marca </label>
-                      <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona una marca</option>
-                      </select>
+                        <label for="brand">Marca </label>
+                        <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
+                          <option disabled value="" selected>Selecciona una categoría</option>
+                        </select>
                     </div>
                     <div class="form-group col-md-6">
                       <label for="price">Precio</label>
                       <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                             required>
+                              required>
                     </div>
                 </div>
                 <div class="form-row justify-content-center">
-                    <div class="col-md-2 pt-1 text-center">
+                    <div class="col-md-3 pt-1 text-center">
                         <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
-                      </div>
-                    <div class="col-md-2 pt-1 text-center">
-                        <a href="#" class="btn btn-primary" id="plus5">Agregar socio</a>                      
+                    </div>
+                    <div class="col-md-3 pt-1 text-center">
+                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>                      
                     </div>
                 </div>
               </div>
-              <!--end Replication-->
-
-              <button type="submit" class="btn btn-submit">Crear</button>
-           </form>
-            </div>
-
-
+            <!--end Replication-->
+            <button type="submit" class="btn btn-submit">Crear</button>
+          </form>
         </div>
-        </div>
+      </div>
     </div>
   </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -540,7 +541,9 @@
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      data = $(this).serialize()
+      var count = $('.create_unit_form').children('.dynamic_controller').length
+      $(this).append('<input type="hidden" name="count" value="'+count+'" >')
+      data = $(this).serialize() 
       console.log(data)
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
@@ -565,8 +568,36 @@
         })
     })
     
+    //dynamic form fill select brand input depending category
+    $("#plus_button").on("click", function(){
+      $(document).on('change','.category_control',function(){
+        //fill brands depending $(this) select
+        if( $(this).hasClass("category_control")){
+          var select_category_id = $(this).attr('id');
+          axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
+            )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        }
+      });
+    })
+
     $(document).ready(function () {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var replication = 1;
 
       $('#table').DataTable({
         responsive: {
@@ -618,13 +649,12 @@
         $(this).closest('#dynamic_form').remove();
       });
 
-
       $('.edit_unit_form select').each(function () {
         $(this).select2({
           language: "es"
         });
       });
-      $('.create_unit_form select').each(function () {
+      $('.create_unit_form .scape select').each(function () {
         $(this).select2({
           language: "es"
         });
