@@ -114,38 +114,18 @@
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
                   <thead>
+                  <h3 class="mb-4">{{ loan }}</h3>
+                  <h4 class="mb-4">Lista de abonos</h4>
                   <tr>
-                    <th>Deudor</th>
-                    <th>Fondeador</th>
-                    <th>Tipo de préstamo</th>
-                    <th>Valor local</th>
-                    <th>% Interes</th>
-                    <th>Plazo</th>
-                    <th>Saldo</th>
-                    <th>Abonos</th>
-                    <th></th>
+                    <th>Fecha</th>
+                    <th>Valor del abono</th>
                   </tr>
                   </thead>
                   <tbody>
-                  {% for l in loans %}
+                  {% for p in loan.related_payments.all %}
                     <tr>
-                      <td>{{ l.lender }}</td>
-                      <td>{{ l.provider|default:"Oficina" }}</td>
-                      <td>{{ l.loan_type }}</td>
-                      <td>{{ l.value|intcomma }} {{ office.country.currency.abbr }}</td>
-                      <td>{{ l.interest }}%</td>
-                      <td>{{ l.time }}</td>
-                      <td>{{ l.balance }}</td>
-                      <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Abonos</a></td>
-                      <td>
-                        {% if perms.loans.add_loanpayment %}
-                          <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
-                                  data-target="#modalAddPayment">
-                            <i class="fas fa-plus mr-1"></i>
-                            Realizar abono
-                          </button>
-                        {% endif %}
-                      </td>
+                      <td>{{ p.date }}</td>
+                      <td>$ {{ p.value|intcomma }}</td>
                     </tr>
                   {% endfor %}
                   </tbody>

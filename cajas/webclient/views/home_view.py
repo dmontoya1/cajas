@@ -22,7 +22,7 @@ class Home(LoginRequiredMixin, TemplateView):
         context = super(Home, self).get_context_data(**kwargs)
         if not self.request.user.is_superuser:
             try:
-                context['office'] = self.request.user.employee.office
+                context['office'] = self.request.user.employee.get().office
             except:
                 context['office'] = self.request.user.partner.get().office
         else:

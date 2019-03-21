@@ -41,10 +41,8 @@ class LoanCreate(LoginRequiredMixin, View):
             data['lender'] = request.POST['lender']
             loan = loan_manager.create_partner_loan(data)
         elif loan_type == 'EMP':
-            lender = request.POST['lender_employee']
-            lender = lender.user
             box_from = request.POST['box_from']
-            data['lender'] = lender
+            data['lender'] = request.POST['lender_employee']
             data['box_from'] = box_from
             if box_from == 'partner':
                 data['provider'] = request.POST['provider']

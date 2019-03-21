@@ -13,6 +13,7 @@ from .views.employee_list import EmployeeList
 from .views.home_view import Home
 from .views.loan_create import LoanCreate
 from .views.loan_list import LoanList
+from .views.loan_payment_list import LoanPaymentList
 from .views.office_box import OfficeBox
 from .views.office_items_list import OfficeItemsList
 from .views.partner_box import PartnerBox
@@ -38,6 +39,7 @@ urlpatterns = [
     path("office/<slug:slug>/create-office-movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(), name='create_donjuan_movement'),
     path("office/<slug:slug>/loan-list/", LoanList.as_view(), name='loan_list'),
+    path("office/<slug:slug>/loan/<int:pk>/payments/", LoanPaymentList.as_view(), name='loan_payment_list'),
     path("office/<slug:slug>/loan-create/", LoanCreate.as_view(), name='loan_create'),
     path("office/<slug:slug>/chain-list/", ChainList.as_view(), name='chain_list'),
     path("office/<slug:slug>/chain-list/<int:pk>/", ChainPlacesList.as_view(), name='chain_places_list'),
