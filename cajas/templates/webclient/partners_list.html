@@ -133,13 +133,13 @@
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.get_partner_type_display }}</td>
                         <td>{{ p.user.email }}</td>
-                        <td><a href="#">Detalle</a></td>
+                        <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
                         <td>
                           <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
                           </button>
                           <a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box"><i
                             class="fas fa-eye"></i>Ver Caja</a>
-                          <a href="#" class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
                         </td>
                       </tr>
                     {% endfor %}
@@ -268,6 +268,65 @@
       </div>
     </div>
   </div>
+
+
+    <!-- Modal detail-->
+    <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Detalle</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="concept">Nombres</label>
+                <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
+                       placeholder="Nombres" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="concept">Apellidos</label>
+                <input readonly type="text" class="form-control" id="detail_last_name" name="last_name"
+                       placeholder="Apellidos" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="initial_value">Sueldo</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
+                  </div>
+                  <input readonly type="text" class="form-control" id="detail_salary" name="salary" required>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="daily_square">Cargo</label><br>
+                <input readonly type="text" class="form-control" id="detail_charge" name="charge" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="initial_value">Hoja de vida</label>
+                <div class="form-control">
+                  <a target="_blank" id="detail_cv" name="cv" href="">Ver hoja de vida</a>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="daily_square">Pasaporte</label><br>
+                <div class="form-control">
+                  <a target="_blank" id="detail_passport" name="passport" href="">Ver pasaporte</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -286,6 +345,14 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
+    $(".partner_detail").on("click", function() {
+      var unit_pk = $(this).data("id")
+      $('#modalDetail').on('shown.bs.modal', function () {
+        console.log("hello", unit_pk)
+      })
+
+    })
+
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {

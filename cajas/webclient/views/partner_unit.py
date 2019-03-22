@@ -10,19 +10,21 @@ from office.models.office import Office
 from cajas.users.models.partner import Partner
 
 
-class UnitsList(LoginRequiredMixin, TemplateView):
-    """Ver la caja de una oficina
+class PartnerUnitsList(LoginRequiredMixin, TemplateView):
+    """
     """
 
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
-    template_name = 'webclient/units_list.html'
+    template_name = 'webclient/partner_unit.html'
 
     def get_context_data(self, **kwargs):
-        context = super(UnitsList, self).get_context_data(**kwargs)
+        context = super(PartnerUnitsList, self).get_context_data(**kwargs)
+        pk = self.kwargs['pk']
         slug = self.kwargs['slug']
+        owner = get_object_or_404(Partner, pk=pk)
         office = get_object_or_404(Office, slug=slug)
-        units = Unit.objects.filter(partner__office=office)
+        units = Unit.objects.filter(partner=owner)
         supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
         collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
         partners = Partner.objects.filter(office__pk=office.pk, user__is_active=True).exclude(partner_type='DJ')
@@ -34,5 +36,6 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         context['collectors'] = collectors
         context['partners'] = partners
         context['categories'] = categories
+        context['owner'] = owner
 
         return context

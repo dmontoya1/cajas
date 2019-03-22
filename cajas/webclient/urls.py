@@ -19,6 +19,7 @@ from .views.office_items_list import OfficeItemsList
 from .views.partner_box import PartnerBox
 from .views.partner_create import PartnerCreate
 from .views.partner_list import PartnerList
+from .views.partner_unit import PartnerUnitsList
 from .views.units_list import UnitsList
 
 
@@ -45,4 +46,5 @@ urlpatterns = [
     path("office/<slug:slug>/chain-create/", ChainCreate.as_view(), name='chain_create'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
     path("units/<slug:slug>/units-list/", UnitsList.as_view(), name='units_list'),
+    path("units/<slug:slug>/<int:pk>/units-list/", PartnerUnitsList.as_view(), name='partner_units_list'),
 ]
