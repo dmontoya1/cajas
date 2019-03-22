@@ -9,5 +9,5 @@ class PartnerList(ListAPIView):
     serializer_class = PartnerSerializer
 
     def get_queryset(self, *args, **kwargs):
-        partner = Partner.objects.filter(office__pk=self.kwargs['pk'])
+        partner = Partner.objects.filter(pk=self.kwargs['pk'])
         return partner

@@ -284,25 +284,26 @@
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="concept">Nombres</label>
+                <label for="concept">Nombre</label>
                 <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
                        placeholder="Nombres" required>
               </div>
               <div class="form-group col-md-6">
-                <label for="concept">Apellidos</label>
-                <input readonly type="text" class="form-control" id="detail_last_name" name="last_name"
-                       placeholder="Apellidos" required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="initial_value">Sueldo</label>
+                <label for="detail_document">Número de documento</label>
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
+                    <div class="input-group-text" id="type_document"></div>
                   </div>
-                  <input readonly type="text" class="form-control" id="detail_salary" name="salary" required>
+                  <input readonly type="text" class="form-control" id="detail_document" name="detail_document">
                 </div>
+              </div>
+
+
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="detail_email">Correo electrónico</label>
+                <input readonly type="email" class="form-control" name="detail_email" id="detail_email">
               </div>
               <div class="form-group col-md-6">
                 <label for="daily_square">Cargo</label><br>
@@ -345,14 +346,29 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
+    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
     $(".partner_detail").on("click", function() {
-      var unit_pk = $(this).data("id")
+      var partner_pk = $(this).data("id")
+      console.log(partner_pk)
       $('#modalDetail').on('shown.bs.modal', function () {
-        console.log("hello", unit_pk)
+          axios.get(`/api/users/${partner_pk}/partner-list`)
+          .then(function (response) {
+            data = response.data[0]
+            console.log("data", data)
+            $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
+            $("#detail_document").val(data.user.document_id)
+            $("#detail_email").val(data.user.email)
+            $("#type_document").text(data.user.document_type)
+            
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
       })
-
     })
-
+    
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
