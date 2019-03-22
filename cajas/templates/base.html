@@ -283,8 +283,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
         <script src="{% static 'js/main.js' %}"></script>
         <script type="text/javascript">
-            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
             jQuery( document ).ready(function( $ ) {
+              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
               $('.sell-units select').each(function() {
                   $(this).select2({

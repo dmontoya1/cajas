@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.users.models.partner import Partner
-from cajas.users.models.charges import Charge
 from office.models.office import Office
 
 

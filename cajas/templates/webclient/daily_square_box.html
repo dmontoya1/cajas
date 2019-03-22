@@ -625,7 +625,6 @@
 
     $('.add-movement').on('submit', function (ev) {
       ev.preventDefault()
-      ev.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
@@ -657,10 +656,9 @@
                   showCloseButton: true
                 }).then((result) => {
                   if (result.value) {
-                    axios.post('{% url "api:movements:denied_daily_square_movement" %}', {
-                      movement_data: data_send,
-                      text: text,
-                    })
+                    data_stop = movement.serialize()
+                    data_stop += `&observation=${result.value}`
+                    axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
                       .then(function (response) {
                         Swal.fire({
                           title: 'Exitoso!',

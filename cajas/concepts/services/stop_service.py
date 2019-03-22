@@ -9,7 +9,6 @@ class StopManager(object):
         stop_user = self.get_user_stop(data)
         stop_charge = self.get_charge_stop(data)
         stop_value = self.get_stop_value(stop_user, stop_charge)
-        stop_value += int(data['value'])
         return stop_value
 
     def get_stop_value(self, stop_user, stop_charge):

@@ -4,24 +4,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from cajas.users.models.partner import Partner
+from chains.models.chain import Chain
 from office.models.office import Office
 
 User = get_user_model()
 
 
-class ChainCreate(LoginRequiredMixin, TemplateView):
+class ChainPayments(LoginRequiredMixin, TemplateView):
     """
     """
 
     login_url = '/accounts/login/'
     redirect_field_name = 'redirect_to'
-    template_name = 'webclient/chain_create.html'
+    template_name = 'webclient/chain_payments.html'
 
     def get_context_data(self, **kwargs):
-        context = super(ChainCreate, self).get_context_data(**kwargs)
+        context = super(ChainPayments, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
+        chain = get_object_or_404(Chain, pk=self.kwargs['pk'])
         context['office'] = office
-        context['all_partners'] = Partner.objects.all()
+        context['chain'] = chain
         return context

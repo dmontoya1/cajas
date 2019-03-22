@@ -38,12 +38,14 @@
                 Inicio
             </a>
         </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="#">
-                <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Buscar
+        {% if perms.movement.change_movementrequest %}
+          <li class="menu-item-has-children dropdown">
+            <a href="{% url 'webclient:movement_required' %}">
+              <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+              Requerimiento de movimientos
             </a>
-        </li>
+          </li>
+        {% endif %}
 
     </ul>
 {% endblock %}
