@@ -161,7 +161,7 @@
                             class="fas fa-eye"></i> Ver Caja</a>
                         {% endif %}
                         {% if perms.units.change_unit %}
-                          <a href="#" class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                       </td>
                     </tr>
@@ -306,7 +306,7 @@
                 <input readonly type="email" class="form-control" name="detail_email" id="detail_email">
               </div>
               <div class="form-group col-md-6">
-                <label for="code">Code</label><br>
+                <label for="code">Código</label><br>
                 <input readonly type="text" class="form-control" id="code" name="code" required>
               </div>
             </div>

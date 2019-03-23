@@ -15,7 +15,7 @@ class UserManager:
 
     def create_user(self, data):
         self.__validate_data(data)
-        if "password" in data:
+        if "password1" in data:
             try:
                 user = User.objects.create(
                     email=data['email'],
@@ -24,7 +24,7 @@ class UserManager:
                     last_name=data['last_name'],
                     document_type=data['document_type'],
                     document_id=data['document_id'],
-                    password=make_password(data['password']),
+                    password=make_password(data['password1']),
                     is_abstract=True,
                     is_active=True
                 )

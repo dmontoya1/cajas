@@ -148,7 +148,7 @@
         </div>
 
         {% if request.user.employee.charge.name == 'Secretaria' %}
-          <a href="" class="float" data-toggle="modal" data-target="#addEmployee">
+          <a href="" class="float" data-toggle="modal" data-target="#_submit">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -161,7 +161,7 @@
   </div>
 
   <!-- Modal add employee -->
-  <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="addEmployeeTitle" aria-hidden="true">
+  <div class="modal fade" id="_submit" role="dialog" aria-labelledby="_submitTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -171,12 +171,12 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-employee" enctype="multipart/form-data">
+          <form method="POST" class="add-employee">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.box.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="first_name">Nombres</label>
+                <label for="first_name">NombreS</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres"
                        required>
               </div>
@@ -203,7 +203,16 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
+                  <label for="charge">Cargo</label>
+                  <select class="form-control" id="charge" name="charge" required>
+                      <option selected disabled value="">Selecciona el cargo</option>
+                      {% for c in charges %}
+                        <option value="{{ c.pk }}">{{ c }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group col-md-6">
                 <label for="email">Correo electrónico</label>
                 <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com"
                        required>
@@ -228,16 +237,18 @@
                 </div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="cv">Hoja de vida</label>
-                <input type="file" class="form-control-file" id="cv" name="cv">
+            <!--
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="cv">Hoja de vida</label>
+                  <input type="file" class="form-control-file" id="cv" name="cv">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="passport">Pasaporte</label>
+                  <input type="file" class="form-control-file" id="passport" name="passport">
+                </div>
               </div>
-              <div class="form-group col-md-6">
-                <label for="passport">Pasaporte</label>
-                <input type="file" class="form-control-file" id="passport" name="passport">
-              </div>
-            </div>
+            -->
             <div class="form-row">
               <div class="form-group col-md-12">
                 <div class="form-check">
@@ -247,7 +258,7 @@
                   </label>
                 </div>
               </div>
-            </div>
+            </div> 
             <div class="form-row d-none" id="username_input">
               <div class="form-group col-md-12">
                 <label for="username">Nombre de Usuario</label>
@@ -266,7 +277,7 @@
                        placeholder="Password Again">
               </div>
             </div>
-            <button type="submit" class="btn btn-submit" id="addEmployee">Añadir</button>
+            <button type="submit" class="btn btn-submit" id="addEmployee_submit">Añadir</button>
           </form>
         </div>
       </div>
@@ -414,8 +425,6 @@
 
   <script type="text/javascript">
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-
-    //create an employee
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
