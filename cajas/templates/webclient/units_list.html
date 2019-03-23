@@ -168,12 +168,12 @@
     </div>
   </div>
 
-  <!-- Modal detail, waiting for news -->
+  <!-- Modal detail -->
   <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Ver inventario</h5>
+          <h5 class="modal-title text-center" id="exampleModalLongTitle"></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -182,44 +182,40 @@
           <input type="hidden" name="office" value="{{ office.pk }}">
           <div class="form-row">
             <div class="form-group col-md-6">
-              <label for="concept">Nombres</label>
-              <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
+              <label for="detail_first_name">Nombre</label>
+              <input readonly type="text" class="form-control" id="detail_first_name" name="detail_first_name"
                      placeholder="Nombres" required>
             </div>
             <div class="form-group col-md-6">
-              <label for="concept">Apellidos</label>
-              <input readonly type="text" class="form-control" id="detail_last_name" name="last_name"
-                     placeholder="Apellidos" required>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="initial_value">Sueldo</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <div class="input-group-text">$</div>
+                <label for="price_detail">Precio la unidad</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
+                  </div>
+                  <input readonly type="text" class="form-control" id="price_detail" name="price_detail">
                 </div>
-                <input readonly type="text" class="form-control" id="detail_salary" name="salary" required>
               </div>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="daily_square">Cargo</label><br>
-              <input readonly type="text" class="form-control" id="detail_charge" name="charge" required>
-            </div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="initial_value">Hoja de vida</label>
-              <div class="form-control">
-                <a target="_blank" id="detail_cv" name="cv" href="">Ver hoja de vida</a>
+              <div class="form-group col-md-12">
+                  <h5 class="text-center">Inventario de unidad</h5>              
               </div>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="daily_square">Pasaporte</label><br>
-              <div class="form-control">
-                <a target="_blank" id="detail_passport" name="passport" href="">Ver pasaporte</a>
+              <div class="form-group col-md-12">
+                  <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Marca</th>
+                            <th scope="col">Precio</th>
+                          </tr>
+                        </thead>
+                        <tbody id="related_items_table">
+                        </tbody>
+                    </table>
+                  </div>
               </div>
-            </div>
           </div>
         </div>
       </div>
@@ -412,18 +408,34 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
   <script type="text/javascript">
 
+
+
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
       $('#modalDetail').on('show.bs.modal', function (event) {
+
         var modal = $(this)
-        console.log("unit_pk", unit_pk)
 
         axios.get(`/api/units/${unit_pk}/detail`)
           .then(function (response) {
             data = response.data
-            console.log("data", data)
-
+            $("#detail_first_name").val(data.name)
+            $("#price_detail").val(data.unit_price)
+            $("#exampleModalLongTitle").text("Unidad de " + data.partner.user.first_name + " " + data.partner.user.last_name)
+            //fill table with related items
+            $(data.related_items).each( function(){
+              $("#related_items_table").append(
+                `\
+                  <tr>\
+                    <td>${$(this)[0].name}</td>\
+                    <td>${$(this)[0].brand.category.name}</td>\
+                    <td>${$(this)[0].brand.name}</td>\
+                    <td>$ ${$(this)[0].price}</td>\
+                  </tr>\
+                `
+              );
+            })
           })
           .catch(function (error) {
             // handle error
@@ -443,7 +455,6 @@
         axios.get(`/api/units/${unit_pk}/detail`)
         .then(function (response) {
           data = response.data
-          console.log("fill with data :D ",data)
           $("#edit_name").val(data.name)
           $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
           $('#total_price').val(data.unit_price)
@@ -467,7 +478,6 @@
             e.preventDefault()
             axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
             data = $(this).serialize()
-            console.log(data)
 
             axios.patch(`/api/units/${unit_pk}/detail`, data)
             .then(function (response) {
@@ -544,7 +554,6 @@
       var count = $('.create_unit_form').children('.dynamic_controller').length
       $(this).append('<input type="hidden" name="count" value="'+count+'" >')
       data = $(this).serialize() 
-      console.log(data)
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -597,7 +606,6 @@
 
     $(document).ready(function () {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      var replication = 1;
 
       $('#table').DataTable({
         responsive: {

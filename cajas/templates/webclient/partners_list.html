@@ -301,27 +301,23 @@
 
             </div>
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
                 <label for="detail_email">Correo electrónico</label>
                 <input readonly type="email" class="form-control" name="detail_email" id="detail_email">
               </div>
               <div class="form-group col-md-6">
-                <label for="daily_square">Cargo</label><br>
-                <input readonly type="text" class="form-control" id="detail_charge" name="charge" required>
+                <label for="code">Code</label><br>
+                <input readonly type="text" class="form-control" id="code" name="code" required>
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="initial_value">Hoja de vida</label>
-                <div class="form-control">
-                  <a target="_blank" id="detail_cv" name="cv" href="">Ver hoja de vida</a>
-                </div>
+              <div class="form-group col-md-6" id="partner_type_detail_form">
+                <label for="partner_type_detail">Tipo de socio</label>
+                <input readonly type="text" class="form-control" id="partner_type_detail" name="partner_type_detail" required>
               </div>
-              <div class="form-group col-md-6">
-                <label for="daily_square">Pasaporte</label><br>
-                <div class="form-control">
-                  <a target="_blank" id="detail_passport" name="passport" href="">Ver pasaporte</a>
-                </div>
+              <div class="form-group col-md-6 d-none" id="direct_partner_form">
+                <label for="direct_partner_detail">Socio directo</label>
+                <input readonly type="text" class="form-control" id="direct_partner_detail" name="direct_partner_detail" required>
               </div>
             </div>
           </div>
@@ -360,7 +356,14 @@
             $("#detail_document").val(data.user.document_id)
             $("#detail_email").val(data.user.email)
             $("#type_document").text(data.user.document_type)
-            
+            $("#code").val(data.code)
+            if (data.partner_type == "Indirecto"){
+              $("#partner_type_detail").val(data.partner_type)
+              $("#direct_partner_form").removeClass("d-none")
+              $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name )
+            } else {
+              $("#partner_type_detail_form").addClass("d-none")
+            }
           })
           .catch(function (error) {
             // handle error

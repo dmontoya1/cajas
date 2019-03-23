@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from cajas.users.models.partner import Partner
 from .user_serializer import UserSerializer
+from .directpartner_serializer import DirectPartnerSerializer
 
 
 class PartnerSerializer(serializers.ModelSerializer):
@@ -9,7 +10,7 @@ class PartnerSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(many=False, read_only=True)
     partner_type = serializers.SerializerMethodField()
-    direct_partner = serializers.StringRelatedField(many=True)
+    direct_partner = DirectPartnerSerializer()
 
     class Meta:
         model = Partner
