@@ -171,7 +171,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-employee">
+          <form method="POST" class="add-employee" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.box.pk }}">
             <div class="form-row">
@@ -237,7 +237,7 @@
                 </div>
               </div>
             </div>
-            <!--
+            
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="cv">Hoja de vida</label>
@@ -248,7 +248,7 @@
                   <input type="file" class="form-control-file" id="passport" name="passport">
                 </div>
               </div>
-            -->
+            
             <div class="form-row">
               <div class="form-group col-md-12">
                 <div class="form-check">
@@ -429,9 +429,26 @@
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var bodyFormData = new FormData();
+
       data = $(this).serialize()
-      console.log(data)
-      axios.post("{% url 'api:users:employee_create' %}", data)
+
+      bodyFormData.append("office", $(this).context.office.value)
+      bodyFormData.append("first_name", $(this).context.first_name.value)
+      bodyFormData.append("last_name", $(this).context.last_name.value)
+      bodyFormData.append("document_type", $(this).context.document_type.value)
+      bodyFormData.append("document_id", $(this).context.document_id.value)
+      bodyFormData.append("email", $(this).context.email.value)
+      bodyFormData.append("salary_type", $(this).context.salary_type.value)
+      bodyFormData.append("salary", $(this).context.salary.value)
+      bodyFormData.append("charge", $(this).context.charge.value)
+      bodyFormData.append("username", $(this).context.username.value)
+      bodyFormData.append("password1", $(this).context.password1.value)
+      bodyFormData.append("password2", $(this).context.password2.value)
+      bodyFormData.append("cv", $(this).context.cv.files[0])
+      bodyFormData.append("passport", $(this).context.passport.files[0])
+
+      axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
           data = response.data
           Swal.fire({

@@ -22,6 +22,8 @@ class EmployeeManager:
                 charge=data['charge'],
                 salary_type=data['salary_type'],
                 salary=data['salary'],
+                cv=data['cv'],
+                passport=data['passport'],
             )
         except:
             raise Exception('Ha ocurrido un error al crear el usuario')

@@ -1,5 +1,6 @@
 import copy
 
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
@@ -26,8 +27,6 @@ class EmployeeCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
-        print(request.data)
-        print(request.FILES)
         aux = copy.deepcopy(request.data)
         user = user_manager.create_user(request.data)
         office = Office.objects.get(pk=request.data["office"])

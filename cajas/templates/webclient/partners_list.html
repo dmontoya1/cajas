@@ -115,7 +115,7 @@
                        cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
-                    <th>Nombre</th>
+                    <th>NombrE</th>
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Tipo de Socio</th>
@@ -135,7 +135,7 @@
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
                         <td>
-                          <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
+                          <button type="button" class="add-movement" data-id="{{ p.id }}" id="addMovement" data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
                           </button>
                           <a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box"><i
                             class="fas fa-eye"></i>Ver Caja</a>
@@ -153,7 +153,7 @@
                       <td><a href="#">Detalle</a></td>
                       <td>
                         {% if perms.movements.movement.add_movementpartner %}
-                          <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
+                          <button type="button" class="add-movement" data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
                           </button>
                         {% endif %}
                         {% if perms.boxes.change_boxpartner %}
@@ -270,60 +270,116 @@
   </div>
 
 
-    <!-- Modal detail-->
-    <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">Detalle</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="office" value="{{ office.pk }}">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="concept">Nombre</label>
-                <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
-                       placeholder="Nombres" required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="detail_document">Número de documento</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text" id="type_document"></div>
-                  </div>
-                  <input readonly type="text" class="form-control" id="detail_document" name="detail_document">
+  <!-- Modal detail-->
+  <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Detalle</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="office" value="{{ office.pk }}">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="concept">Nombre</label>
+              <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
+                      placeholder="Nombres" required>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="detail_document">Número de documento</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text" id="type_document"></div>
                 </div>
-              </div>
-
-
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="detail_email">Correo electrónico</label>
-                <input readonly type="email" class="form-control" name="detail_email" id="detail_email">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="code">Código</label><br>
-                <input readonly type="text" class="form-control" id="code" name="code" required>
+                <input readonly type="text" class="form-control" id="detail_document" name="detail_document">
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6" id="partner_type_detail_form">
-                <label for="partner_type_detail">Tipo de socio</label>
-                <input readonly type="text" class="form-control" id="partner_type_detail" name="partner_type_detail" required>
-              </div>
-              <div class="form-group col-md-6 d-none" id="direct_partner_form">
-                <label for="direct_partner_detail">Socio directo</label>
-                <input readonly type="text" class="form-control" id="direct_partner_detail" name="direct_partner_detail" required>
-              </div>
+
+
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="detail_email">Correo electrónico</label>
+              <input readonly type="email" class="form-control" name="detail_email" id="detail_email">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="code">Código</label><br>
+              <input readonly type="text" class="form-control" id="code" name="code" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6" id="partner_type_detail_form">
+              <label for="partner_type_detail">Tipo de socio</label>
+              <input readonly type="text" class="form-control" id="partner_type_detail" name="partner_type_detail" required>
+            </div>
+            <div class="form-group col-md-6 d-none" id="direct_partner_form">
+              <label for="direct_partner_detail">Socio directo</label>
+              <input readonly type="text" class="form-control" id="direct_partner_detail" name="direct_partner_detail" required>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Modal add movement -->
+  <div class="modal fade" id="addMovementModal" role="dialog" aria-labelledby="addMovementModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir movimiento</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="add-movement-form"  action="{% url 'webclient:add_partner_movement' office.slug %}">
+            {% csrf_token %}
+
+            <input type="hidden" id="partner_id" name="partner_id">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="concept">Concepto</label>
+                <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
+                  <option disabled selected value="">Selecciona un concepto</option>
+                  {% for concept in concepts %}
+                    <option value="{{concept.pk}}">{{concept}}</option>
+                  {% endfor %}
+                </select>
+
+              </div>
+              <div class="form-group col-md-6">
+                <label for="date">Fecha</label>
+                <input type="date" class="form-control date-picker" id="date" name="date" placeholder="yyyy-mm-dd" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="movement_type">Entra / Sale</label>
+                <select class="form-control" id="movement_type" name="movement_type" required>
+                  <option selected disabled value="">Selecciona el tipo de movimiento</option>
+                  <option value="IN">Entra</option>
+                  <option value="OUT">Sale</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value">Valor</label>
+                <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="detail">Detalle</label>
+              <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-submit">Añadir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -344,6 +400,7 @@
   <script type="text/javascript">
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
+    //detail modal script
     $(".partner_detail").on("click", function() {
       var partner_pk = $(this).data("id")
       console.log(partner_pk)
@@ -372,6 +429,36 @@
       })
     })
     
+    $("#addMovement").on("click", function(){
+      pk = $(this).data('id')
+      slug = "{{ office.slug }}"
+      $('#addMovementModal').on('shown.bs.modal', function () {
+        $("#partner_id").val(pk)
+        /*$(".add-movement-form").on('submit', function (e) {
+          axios.post(`/office/${slug}/create-partner-movement/`)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data.name,
+            }).then(function () {
+              location.reload()
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            Swal.fire({
+              type: 'error',
+              title: 'Error',
+              text: error,
+            }).then(function () {
+              location.reload()
+            })
+          })
+        })*/
+      })
+    })
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
