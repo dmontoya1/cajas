@@ -130,12 +130,17 @@
                         <td>{{ e.user.last_name }}</td>
                         <td>{{ e.charge }}</td>
                         <td>{{ e.salary }}</td>
-                        <td><a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
+                        <td>
+                          <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
                         <td>
-                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
-                             data-target="#editEmployee">Editar</a>
-                          <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                          {% if perms.users.change_employee %}
+                            <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                               data-target="#editEmployee">Editar</a>
+                          {% endif %}
+                          {% if perms.users.delete_employee %}
+                            <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                          {% endif %}
                         </td>
                       </tr>
                     {% endif %}
@@ -146,16 +151,15 @@
             </div>
           </div>
         </div>
-
-        {% if request.user.employee.charge.name == 'Secretaria' %}
-          <a href="" class="float" data-toggle="modal" data-target="#_submit">
+        {% if perms.users.add_employee %}
+          <a href="" class="float" data-toggle="modal" data-target="#addEmployee">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
             <div class="label-text">Añadir empleado</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-        {% endif %}
+      {% endif %}
       </div>
     </div>
   </div>
@@ -410,7 +414,6 @@
 
 {% block extra_js %}
 
-
   <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
   <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
   <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
@@ -470,7 +473,6 @@
           })
         })
     })
-
 
     //changes icon depending salary type
     $("#salary_type").on("change", function () {

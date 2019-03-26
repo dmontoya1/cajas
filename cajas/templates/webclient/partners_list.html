@@ -135,11 +135,18 @@
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
                         <td>
-                          <button type="button" class="add-movement" data-id="{{ p.id }}" id="addMovement" data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
-                          </button>
-                          <a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box"><i
-                            class="fas fa-eye"></i>Ver Caja</a>
-                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
+                          {% if perms.movement.add_movementpartner %}
+                            <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
+                            </button>
+                          {% endif %}
+                          {% if perms.boxes.change_boxpartner %}
+                            <a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box">
+                              <i class="fas fa-eye"></i>Ver Caja
+                            </a>
+                          {% endif %}
+                        {% if perms.units.change_unit %}
+                          <a href="#" class="unit-tree">Árbol de unidades</a>
+                        {% endif %}
                         </td>
                       </tr>
                     {% endfor %}
@@ -383,7 +390,6 @@
 {% endblock %}
 
 {% block extra_js %}
-
 
   <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
   <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>

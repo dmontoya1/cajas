@@ -10,7 +10,7 @@
 {% block navbar %}
   <ul class="nav navbar-nav">
     <li class="active">
-      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{office}}</a>
+      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
     </li>
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
@@ -42,7 +42,7 @@
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:partners_list' office.slug  %}">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de socios
         </a>
@@ -69,7 +69,7 @@
     {% endif %}
     {% if perms.boxes.change_boxdailysquare %}
       <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:daily_square_list' office.slug  %}">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Cuadres diarios
         </a>
@@ -130,19 +130,21 @@
                   {% for l in loans %}
                     <tr>
                       <td>{{ l.lender }}</td>
-                      <td>{{ l.provider }}</td>
+                      <td>{{ l.provider|default:"Oficina" }}</td>
                       <td>{{ l.loan_type }}</td>
                       <td>{{ l.value|intcomma }} {{ office.country.currency.abbr }}</td>
                       <td>{{ l.interest }}%</td>
                       <td>{{ l.time }}</td>
                       <td>{{ l.balance }}</td>
-                      <td><a href="#">Abonos</a></td>
+                      <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Abonos</a></td>
                       <td>
-                        <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
-                                data-target="#modalAddPayment">
-                          <i class="fas fa-plus mr-1"></i>
-                          Realizar abono
-                        </button>
+                        {% if perms.loans.add_loanpayment %}
+                          <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
+                                  data-target="#modalAddPayment">
+                            <i class="fas fa-plus mr-1"></i>
+                            Realizar abono
+                          </button>
+                        {% endif %}
                       </td>
                     </tr>
                   {% endfor %}
@@ -152,14 +154,16 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" data-toggle="modal" data-target="#modalAddLoan">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Registrar préstamo</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
-      </div>
+        {% if perms.loans.add_loan %}
+          <a href="" class="float" data-toggle="modal" data-target="#modalAddLoan">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Registrar préstamo</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+          </div>
+        {% endif %}
     </div>
   </div>
 
@@ -317,6 +321,7 @@
     </div>
   </div>
 
+  <!-- Modal Abonos -->
   <div class="modal fade" id="modalAddPayment" role="dialog" aria-labelledby="modalAddPaymentTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -327,7 +332,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-loan-payment" action="{% url 'api:loans:loan_payment_create' %}">
+          <form method="POST" class="add-loan-payment">
             {% csrf_token %}
             <input type="hidden" name="loan" id="loan" value="">
             <div class="form-row">
@@ -436,6 +441,7 @@
       } else {
         $('.partner-select-row').addClass('d-none')
         $('.loan-fields').removeClass('d-none')
+        $('.lender_employee').removeClass('d-none')
       }
     })
 
@@ -456,7 +462,6 @@
 
     $('.add-loan-payment').on('submit', function (e) {
       e.preventDefault()
-      data = $(this).serialize()
       data = $(this).serialize()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:loans:loan_payment_create' %}', data)

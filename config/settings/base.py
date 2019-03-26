@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import environ
+from django.contrib.messages import constants as messages
 
 ROOT_DIR = environ.Path(__file__) - 3  # (cajas/config/settings/base.py - 3 = cajas/)
 APPS_DIR = ROOT_DIR.path('cajas')
@@ -74,6 +75,7 @@ LOCAL_APPS = [
     'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
     'cajas.chains.apps.ChainsConfig',
+    'cajas.core.apps.CoreConfig',
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
     'cajas.inventory.apps.InventoryConfig',
@@ -232,6 +234,14 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_USER = 'SAC Sistema Administración de Cajas <no-reply@sac.ilanalab.com>'
+EMAIL_HOST_USER = 'sac_ilana'
+EMAIL_HOST_PASSWORD = 'tbZk3tv9NSKzNwx'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+ADMIN_EMAIL = env('ADMIN_EMAIL')
+
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
@@ -308,3 +318,11 @@ JET_THEMES = [
 ]
 JET_DEFAULT_THEME = 'light-blue'
 JET_SIDE_MENU_COMPACT = True
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}

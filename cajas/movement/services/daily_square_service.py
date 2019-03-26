@@ -1,4 +1,8 @@
 
+from datetime import datetime
+
+from django.db.models import Sum
+
 from ..models.movement_daily_square import MovementDailySquare
 
 
@@ -28,3 +32,15 @@ class MovementDailySquareManager(object):
             office=data['office'],
         )
         return movement
+
+    def get_user_value(self, data):
+        month = datetime.now().month
+        total = MovementDailySquare.objects.filter(
+            box_daily_square=data['box'],
+            concept=data['concept'],
+            movement_type='OUT',
+            date__month=month,
+        ).aggregate(Sum('value'))
+        if total['value__sum'] is None:
+            total['value__sum'] = 0
+        return total
