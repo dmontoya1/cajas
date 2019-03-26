@@ -403,12 +403,10 @@
     //detail modal script
     $(".partner_detail").on("click", function() {
       var partner_pk = $(this).data("id")
-      console.log(partner_pk)
       $('#modalDetail').on('shown.bs.modal', function () {
           axios.get(`/api/users/${partner_pk}/partner-list`)
           .then(function (response) {
             data = response.data[0]
-            console.log("data", data)
             $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
             $("#detail_document").val(data.user.document_id)
             $("#detail_email").val(data.user.email)
@@ -434,29 +432,6 @@
       slug = "{{ office.slug }}"
       $('#addMovementModal').on('shown.bs.modal', function () {
         $("#partner_id").val(pk)
-        /*$(".add-movement-form").on('submit', function (e) {
-          axios.post(`/office/${slug}/create-partner-movement/`)
-          .then(function (response) {
-            data = response.data
-            Swal.fire({
-              type: 'success',
-              title: 'Exitoso',
-              text: data.name,
-            }).then(function () {
-              location.reload()
-            })
-          })
-          .catch(function (error) {
-            // handle error
-            Swal.fire({
-              type: 'error',
-              title: 'Error',
-              text: error,
-            }).then(function () {
-              location.reload()
-            })
-          })
-        })*/
       })
     })
     $(document).ready(function () {

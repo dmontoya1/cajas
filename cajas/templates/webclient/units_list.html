@@ -31,7 +31,7 @@
         </li>
       {% endif %}
       {% if perms.office.change_officeitems %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:office_items_list' office.slug %}">
             <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Inventario Oficina
@@ -60,8 +60,8 @@
 
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
-      <li class="menu-item-has-children dropdown">
-        <a href="#">
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:units_list'  office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
@@ -155,12 +155,12 @@
             </div>
           </div>
         </div>
-        {% if request.user.employee.charge.name == 'Secretaria' %}
+        {% if perms.units.add_unit %}
             <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
             <i class="fa fa-plus my-float"></i>
             </a>
             <div class="label-container">
-            <div class="label-text">Añadir empleado</div>
+            <div class="label-text">Añadir unidad</div>
             <i class="fa fa-play label-arrow"></i>
             </div>
         {% endif %}
@@ -459,7 +459,6 @@
           $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
           $('#total_price').val(data.unit_price)
           
-          console.log(data.collector)
           $("#edit_collector option").prop("selected", false);
           $("#edit_collector option[value='" + data.collector + "']").prop("selected", true);
           $("#edit_collector").trigger("change")

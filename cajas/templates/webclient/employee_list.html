@@ -176,7 +176,7 @@
             <input type="hidden" name="office" value="{{ office.box.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="first_name">NombreS</label>
+                <label for="first_name">Nombres</label>
                 <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres"
                        required>
               </div>
@@ -509,12 +509,10 @@
       var employee_pk = $(this).data("id")
       $('#modalDetail').on('show.bs.modal', function (event) {
         var modal = $(this)
-        console.log("employee_pk", employee_pk)
         //get employee data depending <a> data-id
         axios.get(`/api/users/${employee_pk}/employee-detail`)
           .then(function (response) {
             data = response.data
-            console.log("data", data)
             $("#detail_first_name").val(data.user.first_name)
             $("#detail_last_name").val(data.user.last_name)
             $("#detail_salary").val(data.salary)
@@ -543,7 +541,6 @@
 
             $('#edit_charge').empty()
             $.each(data, function (k, v) {
-              //console.log(v.name,v.id)
               $('#edit_charge').append(
                 `<option value=${v.id}>${v.name}</option>`
               )
@@ -557,12 +554,10 @@
             console.log(error);
           })
 
-        console.log("employee_pk", employee_pk)
         //get employee data
         axios.get(`/api/users/${employee_pk}/employee-detail`)
           .then(function (response) {
             data = response.data
-            console.log("data", data)
             $("#edit_first_name").val(data.user.first_name)
             $("#edit_last_name").val(data.user.last_name)
             $("#edit_salary").val(data.salary)

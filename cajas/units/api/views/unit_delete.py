@@ -12,7 +12,6 @@ class UnitDelete(generics.DestroyAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def destroy(self, request, *args, **kwargs):
-        print(request.data)
         unit = Unit.objects.get(pk=kwargs['pk'])
         unit.description = request.data['description']
         unit.is_active = False

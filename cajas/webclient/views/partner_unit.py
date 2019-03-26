@@ -27,14 +27,12 @@ class PartnerUnitsList(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(partner=owner)
         supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
         collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
-        partners = Partner.objects.filter(office__pk=office.pk, user__is_active=True).exclude(partner_type='DJ')
         categories = Category.objects.all()
 
         context['office'] = office
         context['units'] = units
         context['supervisor'] = supervisor
         context['collectors'] = collectors
-        context['partners'] = partners
         context['categories'] = categories
         context['owner'] = owner
 

@@ -13,7 +13,6 @@ class EmployeeManager:
             raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
     def create_employee(self, data):
-        print(data)
         self.__validate_data(data)
         try:
             employee = Employee.objects.create(
