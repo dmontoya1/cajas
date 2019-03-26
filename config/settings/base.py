@@ -75,6 +75,7 @@ LOCAL_APPS = [
     'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
     'cajas.chains.apps.ChainsConfig',
+    'cajas.core.apps.CoreConfig',
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
     'cajas.inventory.apps.InventoryConfig',
@@ -232,6 +233,14 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_USER = 'SAC Sistema Administración de Cajas <no-reply@sac.ilanalab.com>'
+EMAIL_HOST_USER = 'sac_ilana'
+EMAIL_HOST_PASSWORD = 'tbZk3tv9NSKzNwx'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+ADMIN_EMAIL = env('ADMIN_EMAIL')
 
 # ADMIN
 # ------------------------------------------------------------------------------

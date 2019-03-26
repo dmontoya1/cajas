@@ -54,6 +54,7 @@ class MovementPartnerCreate(APIView):
         elif concept.concept_type == ConceptType.DOUBLE:
             data = {
                 'partner': partner,
+                'box': partner.box,
                 'concept': concept,
                 'date': date,
                 'movement_type': movement_type,

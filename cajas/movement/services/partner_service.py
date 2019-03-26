@@ -23,7 +23,7 @@ class MovementPartnerManager(object):
             raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
     def create_simple(self, data):
-        self.__validate_data(data)
+        # self.__validate_data(data)
         movement = MovementPartner.objects.create(
             box_partner=data['box'],
             concept=data['concept'],
@@ -37,7 +37,9 @@ class MovementPartnerManager(object):
         return movement
 
     def create_double(self, data):
-        self.__validate_data(data)
+        # self.__validate_data(data)
+        print('Data crear doble')
+        print(data)
         data1 = {
             'box': data['box'],
             'concept': data['concept'],
@@ -82,7 +84,7 @@ class MovementPartnerManager(object):
         return movement1
 
     def create_simple_double(self, data):
-        self.__validate_data(data)
+        # self.__validate_data(data)
         data1 = {
             'box': data['partner'].box,
             'concept': data['concept'],

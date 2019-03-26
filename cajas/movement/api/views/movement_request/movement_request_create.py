@@ -9,17 +9,20 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
+from core.services.email_service import EmailManager
 from webclient.views.get_ip import get_ip
 
 from ....models.movement_request import MovementRequest
 
 User = get_user_model()
+email_manager = EmailManager()
 
 
 class MovementRequestCreate(APIView):
 
     def post(self, request, format=None):
         self.create_movement(request)
+        email_manager.sendStopEmail(request)
         return Response(
             'Se ha enviado la solicitud de aprobación exitosamente',
             status=status.HTTP_201_CREATED

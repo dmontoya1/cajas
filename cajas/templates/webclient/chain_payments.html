@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load month_place_pay %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -118,7 +119,9 @@
                     <th>Fecha de entrega</th>
                     <th># Puesto</th>
                     <th>Nombre</th>
-
+                    {% for place in chain.related_places.all %}
+                      <th>{{ place.pay_date|date:'F' }}</th>
+                    {% endfor %}
                   </tr>
                   </thead>
                   <tbody>
@@ -131,7 +134,9 @@
                           {{ u.user.get_full_name }} -
                         {% endfor %}
                       </td>
-
+                      {% for place_1 in chain.related_places.all %}
+                        <td>$ {% pay_per_month place.id place_1.pay_date.month %}</td>
+                      {% endfor %}
                     </tr>
                   {% endfor %}
                   </tbody>

@@ -58,9 +58,17 @@ class LoanManager(object):
             exchange=data['exchange'],
             balance=data['value']
         )
+        if old_loan:
+            data_1 = {
+                'lender': lender,
+                'request': data['request']
+            }
+            self.interest_load_payment(data_1)
+
         concept = get_object_or_404(Concept, name='Ingreso Préstamo Socio Directo')
         data = {
             'partner': lender_partner,
+            'box': lender_partner.box,
             'concept': concept,
             'movement_type': 'IN',
             'value': data['value'],
@@ -168,10 +176,12 @@ class LoanManager(object):
         total_balance = Loan.objects.filter(lender=lender).aggregate(Sum('balance'))
         last_loan = Loan.objects.filter(lender=lender).last()
         interest = last_loan.interest
-        total_interest = (total_balance * interest)/100
+        total_interest = (total_balance['balance__sum'] * interest)/100
         concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
-        data = {
-            'partner': lender.partner,
+        print(lender.partner.get().box)
+        data1 = {
+            'box': lender.partner.get().box,
+            'partner': lender.partner.get(),
             'concept': concept,
             'movement_type': 'OUT',
             'value': total_interest,
@@ -180,7 +190,7 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        movement = movement_parter_manager.create_double(data)
+        movement = movement_parter_manager.create_double(data1)
 
 
 loan_manager = LoanManager()
