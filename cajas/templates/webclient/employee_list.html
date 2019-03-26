@@ -101,7 +101,6 @@
     {% endif %}
   </ul>
 {% endblock %}
-
 {% block content %}
   <div class="row">
     <div class="col-lg-12">
@@ -166,7 +165,7 @@
   </div>
 
   <!-- Modal add employee -->
-  <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="addEmployeeTitle" aria-hidden="true">
+  <div class="modal fade" id="_submit" role="dialog" aria-labelledby="_submitTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -208,7 +207,16 @@
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
+                  <label for="charge">Cargo</label>
+                  <select class="form-control" id="charge" name="charge" required>
+                      <option selected disabled value="">Selecciona el cargo</option>
+                      {% for c in charges %}
+                        <option value="{{ c.pk }}">{{ c }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group col-md-6">
                 <label for="email">Correo electrónico</label>
                 <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com"
                        required>
@@ -233,16 +241,18 @@
                 </div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="cv">Hoja de vida</label>
-                <input type="file" class="form-control-file" id="cv" name="cv">
+            
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="cv">Hoja de vida</label>
+                  <input type="file" class="form-control-file" id="cv" name="cv">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="passport">Pasaporte</label>
+                  <input type="file" class="form-control-file" id="passport" name="passport">
+                </div>
               </div>
-              <div class="form-group col-md-6">
-                <label for="passport">Pasaporte</label>
-                <input type="file" class="form-control-file" id="passport" name="passport">
-              </div>
-            </div>
+            
             <div class="form-row">
               <div class="form-group col-md-12">
                 <div class="form-check">
@@ -252,7 +262,7 @@
                   </label>
                 </div>
               </div>
-            </div>
+            </div> 
             <div class="form-row d-none" id="username_input">
               <div class="form-group col-md-12">
                 <label for="username">Nombre de Usuario</label>
@@ -271,7 +281,7 @@
                        placeholder="Password Again">
               </div>
             </div>
-            <button type="submit" class="btn btn-submit" id="addEmployee">Añadir</button>
+            <button type="submit" class="btn btn-submit" id="addEmployee_submit">Añadir</button>
           </form>
         </div>
       </div>
@@ -419,14 +429,29 @@
   <script type="text/javascript">
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-    //create an employee
-
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var bodyFormData = new FormData();
+
       data = $(this).serialize()
-      console.log(data)
-      axios.post("{% url 'api:users:employee_create' %}", data)
+
+      bodyFormData.append("office", $(this).context.office.value)
+      bodyFormData.append("first_name", $(this).context.first_name.value)
+      bodyFormData.append("last_name", $(this).context.last_name.value)
+      bodyFormData.append("document_type", $(this).context.document_type.value)
+      bodyFormData.append("document_id", $(this).context.document_id.value)
+      bodyFormData.append("email", $(this).context.email.value)
+      bodyFormData.append("salary_type", $(this).context.salary_type.value)
+      bodyFormData.append("salary", $(this).context.salary.value)
+      bodyFormData.append("charge", $(this).context.charge.value)
+      bodyFormData.append("username", $(this).context.username.value)
+      bodyFormData.append("password1", $(this).context.password1.value)
+      bodyFormData.append("password2", $(this).context.password2.value)
+      bodyFormData.append("cv", $(this).context.cv.files[0])
+      bodyFormData.append("passport", $(this).context.passport.files[0])
+
+      axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
           data = response.data
           Swal.fire({
@@ -486,12 +511,10 @@
       var employee_pk = $(this).data("id")
       $('#modalDetail').on('show.bs.modal', function (event) {
         var modal = $(this)
-        console.log("employee_pk", employee_pk)
         //get employee data depending <a> data-id
         axios.get(`/api/users/${employee_pk}/employee-detail`)
           .then(function (response) {
             data = response.data
-            console.log("data", data)
             $("#detail_first_name").val(data.user.first_name)
             $("#detail_last_name").val(data.user.last_name)
             $("#detail_salary").val(data.salary)
@@ -520,7 +543,6 @@
 
             $('#edit_charge').empty()
             $.each(data, function (k, v) {
-              //console.log(v.name,v.id)
               $('#edit_charge').append(
                 `<option value=${v.id}>${v.name}</option>`
               )
@@ -534,12 +556,10 @@
             console.log(error);
           })
 
-        console.log("employee_pk", employee_pk)
         //get employee data
         axios.get(`/api/users/${employee_pk}/employee-detail`)
           .then(function (response) {
             data = response.data
-            console.log("data", data)
             $("#edit_first_name").val(data.user.first_name)
             $("#edit_last_name").val(data.user.last_name)
             $("#edit_salary").val(data.salary)
@@ -583,6 +603,9 @@
                 location.reload()
               })
             })
+        })
+        $('#modalDetail').on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
         })
 
 

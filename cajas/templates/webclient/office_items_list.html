@@ -319,7 +319,7 @@
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       data = $(this).serialize()
-      axios.post("{% url 'webclient:create_office_item' %}", data)
+      axios.post("{% url 'api:office:office_item_create' %}", data)
         .then(function (response) {
           data = response.data
           Swal.fire({
@@ -359,6 +359,7 @@
             $("#edit_description").val(data.description)
 
             $("#edit_category option").prop("selected", false);
+
             //fill brands and category select depending previously selected item
             axios.get(`/api/inventory/${data.brand}/brand`)
               .then(function (response) {
@@ -386,13 +387,12 @@
             $("#edit_brand option[value='" + data.brand + "']").prop("selected", true);
             $("#edit_brand").trigger("click")
 
-            //and then submit the form
-            $('.edit_item').on('submit', function (e) {
-              e.preventDefault()
-              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-              data = $(this).serialize()
-
-              axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
+            //update items
+            $('.edit_item').on('submit', function(e){
+                e.preventDefault()
+                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+                data = $(this).serialize()
+                axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
                 .then(function (response) {
                   data = response.data
                   Swal.fire({
@@ -414,16 +414,14 @@
                   })
                 })
             })
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+        })
+        $('#editOfficeItem').on('hidden.bs.modal', function () {
+          location.reload()
+        })
       })
     })
-    $('#editOfficeItem').on('hidden.bs.modal', function () {
-      location.reload()
-    })
+    
+
 
     //delete items
     $('.decline-mv').on('click', function () {

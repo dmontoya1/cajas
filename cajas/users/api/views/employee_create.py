@@ -1,43 +1,43 @@
+import copy
+
+from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
-from rest_framework import generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 
 from cajas.users.services.user_service import UserManager
+from cajas.users.services.employee_service import EmployeeManager
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from office.models.office import Office
+from cajas.users.models.charges import Charge
 
 User = get_user_model()
+user_manager = UserManager()
+employee_manager = EmployeeManager()
 
 
-class EmployeeCreate(generics.CreateAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
+class EmployeeCreate(APIView):
 
-    def post(self, request, *args, **kwargs):
-        request.data["username"] = request.data["email"]
-        user_service = UserManager()
-        user = user_service.create_user(request.data)
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
-        print(request.data) 
-        print(request.FILES)
+    def post(self, request, format=None):
+        aux = copy.deepcopy(request.data)
+        user = user_manager.create_user(request.data)
+        office = Office.objects.get(pk=request.data["office"])
+        charge = Charge.objects.get(pk=request.data["charge"])
 
-        if request.data["password1"] == '':
-            user.is_abstract = False
-            user.is_active = False
-        else:
-            user.is_active = True
-            user.is_abstract = True
-            password = make_password(request.data['password'])
-            user.password = password
-        # user.save()
-        employee = Employee()
-        employee.salary = request.data["salary"]
-        employee.salary_type = request.data["salary_type"]
-        employee.user = user
-        # employee.save()
+        aux['user'] = user
+        aux['charge'] = charge
+        aux['office'] = office
+
+        employee = employee_manager.create_employee(aux)
+
         return Response(
             'El empleado se ha creado correctamente',
             status=status.HTTP_201_CREATED
