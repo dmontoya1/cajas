@@ -69,7 +69,4 @@ urlpatterns = [
 
     path("office/<slug:slug>/chain-payments/<int:pk>/", ChainPayments.as_view(), name='chain_payments'),
 
-
-    path("create-office-item/", CreateOfficeItem.as_view(), name='create_office_item'),
-
 ]
