@@ -46,3 +46,6 @@ class ChainManager(object):
                 user=partner.user,
                 place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
             )
+
+    def internal_chain_pay(self, data):
+        pass

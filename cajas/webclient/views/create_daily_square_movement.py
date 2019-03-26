@@ -7,6 +7,7 @@ from django.views.generic import View
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from concepts.models.concepts import Concept
+from concepts.services.stop_service import StopManager
 from general_config.models.country import Country
 from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.office import Office
@@ -58,6 +59,15 @@ class CreateDailySquareMovement(View):
             'chain': chain,
         }
 
-        movement = daily_square_manager.create_movement(data)
-        messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect(reverse('webclient:daily_square_box', kwargs={'slug': office_session.slug, 'pk': request.POST['user_id']}))
+        total_movements = daily_square_manager.get_user_value(data)
+        if StopManager.validate_stop(data) > total_movements['value__sum']:
+            movement = daily_square_manager.create_movement(data)
+            messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
+        else:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.'
+            )
+        return HttpResponseRedirect(reverse('webclient:daily_square_box',
+                                            kwargs={'slug': office_session.slug, 'pk': request.POST['user_id']}))

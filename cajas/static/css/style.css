@@ -2757,5 +2757,7 @@ span.place-name {
 .btn-dynamic {
     background: #57c2a2;
     color: #fff;
+    border-radius: 10px;
+    padding: 4px 10px;
 }
 

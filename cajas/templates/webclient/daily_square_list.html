@@ -132,10 +132,14 @@
                       <td>{{ p.user.email }}</td>
                       <td><a href="#">Detalle</a></td>
                       <td>
-                        <button type="button" class="add-movement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                        </button>
-                        <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
-                          class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                        {% if perms.movement.add_movementdailysquare %}
+                          <button type="button" class="add-movement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                          </button>
+                        {% endif %}
+                        {% if perms.boxes.change_boxdailysquare %}
+                          <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
+                            class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                        {% endif %}
                       </td>
                     </tr>
                   {% endfor %}
@@ -145,104 +149,14 @@
             </div>
           </div>
         </div>
-        <!-- <a href="" class="float" data-toggle="modal" data-target="#modalPartner">
-            <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-            <div class="label-text">Añadir socio</div>
-            <i class="fa fa-play label-arrow"></i>
-        </div> -->
+
       </div>
     </div>
   </div>
 
-  <!-- Modal add partner -->
-  <div class="modal fade" id="modalPartner" role="dialog" aria-labelledby="modalPartnerTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Socio</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
-            {% csrf_token %}
-            <input type="hidden" name="office" value="{{ office.pk }}">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="concept">Nombres</label>
-                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres"
-                       required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="concept">Apellidos</label>
-                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Apellidos"
-                       required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="document_type">Tipo de Documento</label>
-                <select class="form-control" id="document_type" name="document_type" required>
-                  <option selected disabled value="">Selecciona el tipo de documento</option>
-                  <option value="CC">Cédula de Ciudadanía</option>
-                  <option value="CE">Cédula Extranjera</option>
-                  <option value="PA">Pasaporte</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="document_id">Número de documento</label>
-                <input type="number" class="form-control" id="document_id" name="document_id"
-                       placeholder="Número de documento" required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <label for="email">Correo electrónico</label>
-                <input type="email" class="form-control" name="email" id="email" required>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="partner_type">Tipo de Socio</label>
-                <select class="form-control" id="partner_type" name="partner_type" required>
-                  <option selected disabled value="">Selecciona el tipo de sociedad</option>
-                  <option value="DIR">Directa</option>
-                  <option value="INDIR">Indirecta</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="direct_partner">Socio Directo</label>
-                <select class="form-control" id="direct_partner" name="direct_partner">
-                  <option selected disabled value="">Selecciona el socio directo</option>
-                  {% for p in partners %}
-                    <option value="{{ p.pk }}">{{ p.user.get_full_name }} ({{ p.code }})</option>
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="initial_value">Inversión inicial</label>
-                <input type="text" class="form-control" id="initial_value" name="initial_value" value="0" required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="daily_square">Cuadre Diario</label>
-                <input type="checkbox" name="daily_square" id="daily_square">
-              </div>
-            </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock %}
 
 {% block extra_js %}
-
 
   <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
   <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>

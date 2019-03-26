@@ -10,13 +10,14 @@ from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Relationship
 from movement.services.country_service import MovementCountryManager
 from movement.services.office_service import MovementOfficeManager
-from movement.views.movement_partner.create_movement_service_simple import CreateMovementSimpleService
+from movement.services.partner_service import MovementPartnerManager
 from webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 
 movement_country_manager = MovementCountryManager()
 movement_office_manager = MovementOfficeManager()
+movement_partner_manager = MovementPartnerManager()
 
 
 class AcceptMovement(APIView):
@@ -39,7 +40,7 @@ class AcceptMovement(APIView):
                 'responsible': request.user,
                 'ip': get_ip(request)
             }
-            unit_movement = CreateMovementSimpleService(data).call()
+            unit_movement = movement_partner_manager.create_simple(data)
         elif relationship == Relationship.PERSON:
             pass
         elif relationship == Relationship.OFFICE:

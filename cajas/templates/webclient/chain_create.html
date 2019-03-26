@@ -246,7 +246,7 @@
                           <label for="partner">Socio</label>
                           <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
                             <option value="" selected disabled>Selecciona un socio</option>
-                            {% for p in partners %}
+                            {% for p in all_partners %}
                               <option value="{{p.pk}}">{{p}}</option>
                             {% endfor %}
                           </select>
