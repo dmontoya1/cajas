@@ -8,6 +8,7 @@ from cajas.users.models.partner import Partner
 from boxes.models.box_office import BoxOffice
 from boxes.models.box_don_juan import BoxDonJuan
 from office.models.office import Office
+from boxes.models.box_provisioning import BoxProvisioning
 
 
 @receiver(post_save, sender=Office)
@@ -24,3 +25,7 @@ def create_office_box(sender, **kwargs):
             office=instance
         )
         box_don_juan.save()
+        box_provisioning = BoxProvisioning(
+            office=instance,
+        )
+        box_provisioning.save()

@@ -413,6 +413,8 @@
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
       $('#modalDetail').on('show.bs.modal', function (event) {
 
         var modal = $(this)
