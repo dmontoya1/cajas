@@ -103,6 +103,23 @@
 {% endblock %}
 
 {% block content %}
+  <div class="row mb-3 mr-3 justify-content-end"> 
+    <div class="col-3 align-middle" style="border-right: 1px solid;">
+
+        <div class="text-center">
+          <p>Meta mensual <b>$ 0000000000</b></p>
+        </div>
+
+    </div>
+    <div class="col-2">
+
+        <div class="text-right">
+          <p>Caja <b>$ 0000000000</b></p>
+        </div>
+
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -129,12 +146,14 @@
                   {% if request.user.is_superuser or request.user.employee.is_admin_charge %}
                     {% for p in provisioning %}
                       <tr>
-                        <td>{{p.responsible.first_name}}</td>
+                        <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>
                         <td>{{p.date}}</td>
                         <td>{{p.concept.name}}</td>
                         <td>{{p.detail}}</td>
-                        <td>{{p.movement_type}}</td>
-                        <td></td>
+                        <td>{% if p.movement_type == 'IN' %}${{ p.value|intcomma }}
+                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                          <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
+                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                         <td>{{p.value}}</td>
                         <td>
                           <a data-id="{{p.id}}"  data-toggle="modal" data-target="#editProvisioning" class="see-box edit_provisioning"><i
@@ -253,7 +272,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="value">Valor</label>
-                <input type="number" class="form-control" id="add_value" name="value" placeholder="Precio del item"
+                <input type="number" class="form-control" id="edit_value" name="value" placeholder="Precio del item"
                        required>
               </div>
             </div>
@@ -318,11 +337,85 @@
 
     //edit provisioning
     $('.edit_provisioning').on('click', function () {
-        var employee_pk = $(this).data("id")
-        $('#editUnit').on('show.bs.modal', function (event) {
-            
+        var provisioning_pk = $(this).data("id")
+        $('#editProvisioning').on('show.bs.modal', function (event) {
+          
+          axios.get(`/api/boxes/${provisioning_pk}/privisioning-detail`)
+          .then(function (response) {
+            data = response.data
+            console.log(response.data)
+            console.log(data.movement_type)
+            $("#edit_date").val(data.date)
+            $("#edit_value").val(data.value)
+            $("#edit_detail").val(data.detail)
+            $("#edit_movement_type").prop("selected", false);
+            $("#edit_movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+            $("#edit_movement_type").trigger('change');
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+
+          //and then update unit
+          $('.edit-provisioning').on('submit', function(e){
+              e.preventDefault()
+              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+              data = $(this).serialize()
+
+              axios.patch(`/api/boxes/${provisioning_pk}/privisioning-detail`, data)
+              .then(function (response) {
+                data = response.data
+                Swal.fire({
+                  type: 'success',
+                  title: 'Exitoso',
+                  text: data,
+                }).then(function () {
+                  location.reload()
+                })
+              })
+              .catch(function (error) {
+                // handle error
+                Swal.fire({
+                  type: 'error',
+                  title: 'Error',
+                  text: error,
+                }).then(function () {
+                  location.reload()
+                })
+              })
+          })
+
         })
     })
+
+    //detail modal script
+    /*$("._detail").on("click", function() {
+      var partner_pk = $(this).data("id")
+      $('#modalDetail').on('shown.bs.modal', function () {
+          axios.get(`/api/users/${partner_pk}/partner-list`)
+          .then(function (response) {
+            data = response.data[0]
+            $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
+            $("#detail_document").val(data.user.document_id)
+            $("#detail_email").val(data.user.email)
+            $("#type_document").text(data.user.document_type)
+            $("#code").val(data.code)
+            if (data.partner_type == "Indirecto"){
+              $("#partner_type_detail").val(data.partner_type)
+              $("#direct_partner_form").removeClass("d-none")
+              $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name )
+            } else {
+              $("#partner_type_detail_form").addClass("d-none")
+            }
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      })
+    })*/
+
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {

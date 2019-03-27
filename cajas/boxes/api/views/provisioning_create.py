@@ -7,8 +7,6 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 
 from boxes.models.box_provisioning import BoxProvisioning
-from movement.models.movement_provisioning import MovementProvisioning
-from boxes.api.serializers.provisioning_serializer import ProvisioningSerializer
 
 from movement.services.provisioning_service import MovemenProvisioningManager
 from webclient.views.get_ip import get_ip
@@ -20,7 +18,6 @@ movement_provisioning_manager = MovemenProvisioningManager()
 class ProvisioningCreate(APIView):
 
     def post(self, request, format=None):
-        print(request.data)
         aux = copy.deepcopy(request.data)
 
         aux["box"] = get_object_or_404(BoxProvisioning, office__pk=request.data["office"])

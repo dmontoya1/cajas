@@ -174,7 +174,7 @@
         <div class="modal-body">
           <form method="POST" class="create-item">
             {% csrf_token %}
-            <input type="hidden" name="office" value="{{ office.box.pk }}">
+            <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="name">Nombre </label>
@@ -230,7 +230,7 @@
         <div class="modal-body">
           <form method="POST" class="edit_item">
             {% csrf_token %}
-            <input type="hidden" name="office" value="{{ office.box.pk }}">
+            <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="name">Nombre </label>
@@ -305,7 +305,7 @@
             )
           })
           $('#brand').prepend(
-            '<option value="" disabled>Selecciona una marca</option>'
+            '<option value="" selected disabled>Selecciona una marca</option>'
           )
         })
         .catch(function (error) {

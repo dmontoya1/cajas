@@ -136,7 +136,7 @@
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
                         <td>
                           {% if perms.movement.add_movementpartner %}
-                            <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
+                            <button type="button" class="add-movement"  data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
                             </button>
                           {% endif %}
                           {% if perms.boxes.change_boxpartner %}
@@ -145,7 +145,7 @@
                             </a>
                           {% endif %}
                         {% if perms.units.change_unit %}
-                          <a href="#" class="unit-tree">Árbol de unidades</a>
+                          <a  href="{% url 'webclient:partner_units_list' office.slug p.pk %}"  class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                         </td>
                       </tr>
@@ -343,7 +343,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-movement-form"  action="{% url 'webclient:add_partner_movement' office.slug %}">
+          <form method="POST" class="add-movement-form"  action="{% url 'api:movements:movement_partner_create' %}">
             {% csrf_token %}
 
             <input type="hidden" id="partner_id" name="partner_id">
