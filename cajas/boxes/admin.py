@@ -70,7 +70,7 @@ class BoxPartnerAdmin(admin.ModelAdmin):
     """
 
     list_display = ('partner', 'balance', 'is_active')
-    list_filter = ('partner__office', 'partner__office__country' )
+    list_filter = ('partner__office', 'partner__office__country')
     inlines = [MovementPartnerInline, ]
     search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
                      'partner__user__document_id')

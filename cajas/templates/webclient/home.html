@@ -38,12 +38,20 @@
                 Inicio
             </a>
         </li>
-        <li class="menu-item-has-children dropdown">
-            <a href="#">
-                <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Buscar
+        {% if perms.movement.change_movementrequest %}
+          <li class="menu-item-has-children dropdown">
+            <a href="{% url 'webclient:movement_required' %}">
+              <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+              Requerimiento de movimientos
             </a>
-        </li>
+          </li>
+          <li class="menu-item-has-children dropdown">
+            <a href="{% url 'webclient:movement_withdraw_required' %}">
+              <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+              Requerimiento de retiro de socio
+            </a>
+          </li>
+        {% endif %}
 
     </ul>
 {% endblock %}
@@ -52,6 +60,8 @@
 {% endblock %}
 
 {% block content %}
+
+  {% if request.user.is_superuser %}
 
     {% for country in countries %}
       <div class="row country-row">
@@ -67,10 +77,10 @@
           <div class="col-lg-4 col-xlg-4 col-md-6">
             <div class="card blog-widget">
               <div class="card-body">
-                <div class="blog-image">
-                  <img src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}" alt="img" class="img-responsive">
-                </div>
                 <a href="{% url 'webclient:office' office.slug %}">
+                  <div class="blog-image">
+                    <img src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}" alt="img" class="img-responsive">
+                  </div>
                   <span class="office-name">{{ office }}</span>
                 </a><br>
                 <label class="label label-rounded label-success">Notificaciones </label> <i class="fas fa-bell" style="color: #60d3b0"></i>
@@ -96,8 +106,43 @@
         {% endfor %}
       </div>
     {% endfor %}
+  {% else %}
+    <div class="row country-row">
+        <div class="col-12">
+          <div class="country-name">
+            <span>{{ office.country|upper }}</span>
+          </div>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-lg-4 col-xlg-4 col-md-6">
+        <div class="card blog-widget">
+          <div class="card-body">
+            <a href="{% url 'webclient:office' office.slug %}">
+              <div class="blog-image">
+                <img src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}" alt="img" class="img-responsive">
+              </div>
 
-
+              <span class="office-name">{{ office }}</span>
+            </a><br>
+            <label class="label label-rounded label-success">Notificaciones </label> <i class="fas fa-bell" style="color: #60d3b0"></i>
+            <ul class="notify-list">
+              <li>Lorem ipsum dolor sit amet </li>
+              <li>Lorem ipsum dolor sit amet </li>
+              <li>Lorem ipsum dolor sit amet </li>
+              <li>Lorem ipsum dolor sit amet </li>
+            </ul>
+            <div class="d-flex">
+              <div class="read"><a href="#" class="link font-medium">Ver más</a></div>
+              <div class="ml-auto">
+                <a href="#" class="link m-r-10 " data-toggle="tooltip" title="" data-original-title="Like"><i class="mdi mdi-heart-outline"></i></a> <a href="javascript:void(0)" class="link" data-toggle="tooltip" title="" data-original-title="Share"><i class="mdi mdi-share-variant"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 
 {% endblock %}
 

@@ -15,14 +15,14 @@
                 <span class="login100-form-avatar mb-3">
                     <img src="{% static 'icons/ICONOS-27.png' %}" alt="AVATAR">
                 </span>
-                {% if messages  %}
-                    {% for message in messages %}
-                    <div class="alert alert-info">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {{message}}
-                    </div>
-                    {% endfor %}
-                {% endif %}
+              {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                  {{ message }}
+                </div>
+              {% endfor %}
                 {% if form.non_field_errors %}
                     <div class="alert alert-block alert-danger">
                         {% if form_error_title %}<h4 class="alert-heading">{{ form_error_title }}</h4>{% endif %}

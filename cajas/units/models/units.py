@@ -39,6 +39,11 @@ class Unit(models.Model):
         'Unidad Activa',
         default=True
     )
+    observations = models.TextField(
+        'Observaciones',
+        help_text='Por que se elimino el item?',
+        blank=True, null=True
+    )
 
     def __str__(self):
         if self.partner:

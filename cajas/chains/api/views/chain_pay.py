@@ -13,8 +13,8 @@ class ChainPay(APIView):
     """
 
     def post(self, request, format=None):
-        chain_manager.chain_manager(request.data)
+        chain_manager.internal_chain_pay(request.data)
         return Response(
-            'Se ha creado la cadena exitosamente.',
+            'Se ha creado el pago exitosamente',
             status=status.HTTP_201_CREATED
         )

@@ -12,18 +12,13 @@
 --------------------------------------------------------- */
 /* 
 
-
 Googel Fonts  */
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
-/* Googel Fonts End  
-
-*/
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
 
 :root {
-  --green-box: #3CC1A2;
-  --aqua-box: #34D2AF;
-  --blue: #218cda;
+  --green-box: #76C1A0;
+  --aqua-box: #7DD1AF;
+  --blue: #5C6BC0;
 }
 
 .bg-flat-color-1 {
@@ -2629,7 +2624,7 @@ button.add-movement {
   padding: 10px;
 }
 
-.accept-mv {
+.accept-mv, .edit-item{
   background-color: var(--aqua-box);
   color: #fff;
   border-radius: 10px;
@@ -2757,5 +2752,19 @@ span.place-name {
 .btn-dynamic {
     background: #57c2a2;
     color: #fff;
+    border-radius: 10px;
+    padding: 4px 10px;
+}
+a.arqueo {
+    background: var(--blue);
+    color: #fff;
+    padding: 0px 30px;
+    font-weight: 600;
+    border-radius: 10px;
+    height: 30px;
+    margin-top: 10px;
+}
+tr.deficit {
+    background: #f9a34e !important;
 }
 

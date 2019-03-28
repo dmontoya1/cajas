@@ -9,12 +9,13 @@ from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import partner_manager
-from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
+from movement.services.partner_service import MovementPartnerManager
 from office.models.office import Office
 
 from .get_ip import get_ip
 
 user_manager = UserManager()
+movement_partner_manager = MovementPartnerManager()
 
 
 class PartnerCreate(LoginRequiredMixin, View):
@@ -28,9 +29,9 @@ class PartnerCreate(LoginRequiredMixin, View):
         document_type = request.POST['document_type']
         document_id = request.POST['document_id']
         partner_type = request.POST['partner_type']
-        try:
+        if request.POST.get('direct_partner', None):
             direct_partner = Partner.objects.get(pk=request.POST['direct_partner'])
-        except:
+        else:
             direct_partner = None
         try:
             request.POST['daily_square']
@@ -66,6 +67,6 @@ class PartnerCreate(LoginRequiredMixin, View):
                 'responsible': request.user,
                 'ip': ip,
             }
-            movement = MovementPartnerHandler.create_partner_movements(data)
+            movement = movement_partner_manager.create_partner_movements(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el socio exitosamente')
         return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
