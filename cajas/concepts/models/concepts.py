@@ -32,6 +32,7 @@ class Relationship(Enum):
     LOAN = 'PREST'
     CHAIN = 'CHAIN'
     OFFICE = 'OF'
+    BETWEEN_OFFICE = 'BTWN'
 
     class Labels:
         UNIT = 'Unidad'
@@ -40,6 +41,7 @@ class Relationship(Enum):
         LOAN = 'Préstamo'
         CHAIN = 'Cadena'
         OFFICE = 'Oficina'
+        BETWEEN_OFFICE = 'Entre oficinas'
 
 
 class Concept(models.Model):
