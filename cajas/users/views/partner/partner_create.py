@@ -12,7 +12,6 @@ class PartnerCreate(object):
             self._office = data['office']
             self._partner_type = data['partner_type']
             self._direct_partner = data['direct_partner']
-            self._is_daily_square = data['is_daily_square']
         except:
             raise ValidationError('Todos los datos son obligatorios')
 
@@ -22,6 +21,5 @@ class PartnerCreate(object):
             office=self._office,
             partner_type=self._partner_type,
             direct_partner=self._direct_partner,
-            is_daily_square=self._is_daily_square,
         )
         return partner

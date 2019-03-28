@@ -7,16 +7,9 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from cajas.users.models.user import User
-from chains.models.chain import Chain
+from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
-from concepts.services.stop_service import StopManager
-from general_config.models.country import Country
-from loans.models.loan import Loan
-from office.models.office import Office
-from units.models.units import Unit
 from webclient.views.get_ip import get_ip
-from webclient.views.utils import get_object_or_none
 
 from ....services.daily_square_service import MovementDailySquareManager
 
@@ -36,22 +29,19 @@ class CreateWithdrawMovement(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
         concept = Concept.objects.get(name='Retiro de Socio')
-        value = request.POST['value']
-        detail = request.POST['detail']
-
-        ip = get_ip(request)
+        partner = get_object_or_404(Partner, pk=request.POST['partner'])
 
         data = {
             'box': box_daily_square,
             'concept': concept,
             'date': datetime.now(),
             'movement_type': 'OUT',
-            'value': value,
-            'detail': detail,
+            'value': request.POST['value'],
+            'detail': 'Retiro Socio {}'.format(partner),
             'responsible': request.user,
-            'ip': ip,
+            'ip': get_ip(request),
             'unit': None,
-            'user': None,
+            'user': partner.user,
             'country': None,
             'office': None,
             'loan': None,

@@ -145,7 +145,7 @@
                             </a>
                           {% endif %}
                         {% if perms.units.change_unit %}
-                          <a href="#" class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                         </td>
                       </tr>
@@ -168,7 +168,7 @@
                             class="fas fa-eye"></i> Ver Caja</a>
                         {% endif %}
                         {% if perms.units.change_unit %}
-                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug partner.pk %}" class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                       </td>
                     </tr>

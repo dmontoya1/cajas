@@ -4,7 +4,7 @@ from ..models.partner import Partner
 
 class PartnerManager(object):
 
-    PROPERTIES = ['user', 'office', 'partner_type', 'direct_partner', 'is_daily_square']
+    PROPERTIES = ['user', 'office', 'partner_type', 'direct_partner', ]
 
     def __validate_data(self, data):
         if not all(property in data for property in self.PROPERTIES):
@@ -17,7 +17,6 @@ class PartnerManager(object):
             office=data['office'],
             partner_type=data['partner_type'],
             direct_partner=data['direct_partner'],
-            is_daily_square=data['is_daily_square'],
         )
         return partner
 

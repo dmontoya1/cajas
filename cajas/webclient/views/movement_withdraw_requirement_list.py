@@ -1,9 +1,8 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from movement.models.movement_request import MovementRequest
+from movement.models.movement_withdraw import MovementWithdraw
 
 
 class MovementWithdrawRequireList(LoginRequiredMixin, TemplateView):
@@ -16,6 +15,6 @@ class MovementWithdrawRequireList(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MovementWithdrawRequireList, self).get_context_data(**kwargs)
-        movements = MovementRequest.objects.filter(concept__name='Retiro Socio Directo')
+        movements = MovementWithdraw.objects.all()
         context['movements'] = movements
         return context

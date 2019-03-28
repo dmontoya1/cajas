@@ -25,6 +25,10 @@ class User(AbstractUser):
         unique=False,
         default='',
     )
+    is_daily_square = models.BooleanField(
+        'Es cuadre diario?',
+        default=False
+    )
     is_abstract = models.BooleanField(
         "Tiene acceso a la plataforma?",
         default=True

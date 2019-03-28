@@ -46,7 +46,8 @@ class PartnerCreate(LoginRequiredMixin, View):
             'first_name': first_name,
             'last_name': last_name,
             'document_type': document_type,
-            'document_id': document_id
+            'document_id': document_id,
+            'is_daily_square': daily_square
         }
         user = user_manager.create_user(data_user)
         data_partner = {
@@ -54,7 +55,6 @@ class PartnerCreate(LoginRequiredMixin, View):
             'office': office,
             'partner_type': partner_type,
             'direct_partner': direct_partner,
-            'is_daily_square': daily_square
         }
         partner = partner_manager.create_partner(data_partner)
         if daily_square:

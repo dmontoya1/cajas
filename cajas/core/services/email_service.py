@@ -8,10 +8,10 @@ class EmailManager(object):
     template = 'email/email.html'
     email_to = settings.ADMIN_EMAIL
 
-    def send_email(self, url, ctx, subject):
+    def send_email(self, url, ctx, subject, email_to):
         body = get_template(self.template).render(ctx)
         message = EmailMessage(subject, body, settings.EMAIL_USER,
-                               [self.email_to])
+                               [email_to])
         message.content_subtype = 'html'
         message.send()
 
@@ -27,7 +27,7 @@ class EmailManager(object):
             "action": "Ver solicitud"
         }
         subject = "Nueva solicitud de aprobación de movimiento"
-        self.send_email(url, ctx, subject)
+        self.send_email(url, ctx, subject, self.email_to)
 
     def send_withdraw_email(self, request):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:movement_withdraw_required'))
@@ -40,4 +40,17 @@ class EmailManager(object):
             "action": "Ver solicitud"
         }
         subject = "Nueva solicitud de retiro de socio"
-        self.send_email(url, ctx, subject)
+        self.send_email(url, ctx, subject, self.email_to)
+
+    def send_withdraw_accept_email(self, request, email_to):
+        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+        ctx = {
+            "title": "Solicitud de retiro aprobada",
+            "content": "Se ha aprobado la solicitud de retiro de socio. Se ha creado el movimiento en tu caja. "
+                       "Entra a la plataforma para que lo revises"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Nueva solicitud de retiro de socio"
+        self.send_email(url, ctx, subject, email_to)
