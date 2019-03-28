@@ -59,7 +59,7 @@
                     <th>Socio</th>
                     <th>Detalle</th>
                     <th>Valor</th>
-                    <th>Obervación</th>
+                    <th>Observación</th>
                     <th>Motivo solicitud</th>
                     <th></th>
                     <!-- <th></th> -->
@@ -164,7 +164,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
-          axios.post('{% url "api:movements:accept_request" %}', {
+          axios.post('{% url "api:movements:accept_withdraw_request" %}', {
             movement_id: id,
           })
             .then(function (response) {

@@ -8,6 +8,7 @@ from .models.movement_don_juan import MovementDonJuan
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
 from .models.movement_request import MovementRequest
+from .models.movement_withdraw import MovementWithdraw
 
 
 class MovementCountryInline(admin.TabularInline):
@@ -74,4 +75,12 @@ class MovementRequestAdmin(admin.ModelAdmin):
 
     list_display = ('box_partner', 'date', 'concept', )
     readonly_fields = ('box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
+    exclude = ('balance', )\
+
+
+@admin.register(MovementWithdraw)
+class MovementWithdraw(admin.ModelAdmin):
+
+    list_display = ('box_daily_square', 'box_partner', 'date', 'concept', )
+    readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
     exclude = ('balance', )

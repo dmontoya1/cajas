@@ -124,12 +124,32 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for p in partners %}
+                  {% if request.user.is_superuser or request.user.employee.is_admin_charge %}
+                    {% for p in partners %}
+                      <tr>
+                        <td>{{ p.user.first_name }}</td>
+                        <td>{{ p.user.last_name }}</td>
+                        <td>{{ p.code|default:"Sin Codigo" }}</td>
+                        <td>{{ p.user.email }}</td>
+                        <td><a href="#">Detalle</a></td>
+                        <td>
+                          {% if perms.movement.add_movementdailysquare %}
+                            <button type="button" class="add-movement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                            </button>
+                          {% endif %}
+                          {% if perms.boxes.change_boxdailysquare %}
+                            <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  {% else %}
                     <tr>
-                      <td>{{ p.user.first_name }}</td>
-                      <td>{{ p.user.last_name }}</td>
-                      <td>{{ p.code|default:"Sin Codigo" }}</td>
-                      <td>{{ p.user.email }}</td>
+                      <td>{{ partner.user.first_name }}</td>
+                      <td>{{ partner.user.last_name }}</td>
+                      <td>{{ partner.code|default:"Sin Codigo" }}</td>
+                      <td>{{ partner.user.email }}</td>
                       <td><a href="#">Detalle</a></td>
                       <td>
                         {% if perms.movement.add_movementdailysquare %}
@@ -137,12 +157,12 @@
                           </button>
                         {% endif %}
                         {% if perms.boxes.change_boxdailysquare %}
-                          <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
+                          <a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}" class="see-box"><i
                             class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
                         {% endif %}
                       </td>
                     </tr>
-                  {% endfor %}
+                  {% endif %}
                   </tbody>
                 </table>
               </div>

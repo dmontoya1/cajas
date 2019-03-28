@@ -82,7 +82,8 @@ class Concept(models.Model):
     movement_type = models.BooleanField(
         'El concepto genera movimiento en la caja?',
         default=True,
-        help_text='Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. Éste no génera movimiento en la caja'
+        help_text='Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. '
+                  'Éste no génera movimiento en la caja'
     )
     is_active = models.BooleanField(
         'Concepto activo?',
