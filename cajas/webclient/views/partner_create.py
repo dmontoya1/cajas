@@ -29,7 +29,10 @@ class PartnerCreate(LoginRequiredMixin, View):
         document_type = request.POST['document_type']
         document_id = request.POST['document_id']
         partner_type = request.POST['partner_type']
-        direct_partner = Partner.objects.get(pk=request.POST.get('direct_partner', None))
+        if request.POST.get('direct_partner', None):
+            direct_partner = Partner.objects.get(pk=request.POST['direct_partner'])
+        else:
+            direct_partner = None
         try:
             request.POST['daily_square']
             daily_square = True

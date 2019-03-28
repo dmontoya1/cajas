@@ -115,7 +115,7 @@
                        cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
-                    <th>NombrE</th>
+                    <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Tipo de Socio</th>
@@ -252,7 +252,7 @@
               <div class="form-group col-md-6 d-none direct-partner">
                 <label for="direct_partner">Socio Directo</label>
                 <select class="form-control" id="direct_partner" name="direct_partner">
-                  <option selected disabled value="">Selecciona el socio directo</option>
+                  <option selected disabled value="None">Selecciona el socio directo</option>
                   {% for p in partners %}
                     <option value="{{ p.pk }}">{{ p.user.get_full_name }} ({{ p.code }})</option>
                   {% endfor %}
@@ -343,7 +343,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-movement-form"  action="{% url 'webclient:add_partner_movement' office.slug %}">
+          <form method="POST" class="add-movement-form"  action="{% url 'api:movements:movement_partner_create' %}">
             {% csrf_token %}
 
             <input type="hidden" id="partner_id" name="partner_id">

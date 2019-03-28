@@ -1,18 +1,13 @@
 import copy
 
-from django.core.files.storage import FileSystemStorage
 from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser
 
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.employee_service import EmployeeManager
-from cajas.users.models.employee import Employee
-from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from office.models.office import Office
 from cajas.users.models.charges import Charge

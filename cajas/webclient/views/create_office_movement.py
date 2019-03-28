@@ -2,6 +2,7 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import View
 
 from concepts.models.concepts import Concept
@@ -36,4 +37,4 @@ class CreateOfficeMovement(View):
             ip=ip,
         )
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse('webclient:office', kwargs={'slug': office.slug}))

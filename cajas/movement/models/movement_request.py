@@ -20,6 +20,10 @@ class MovementRequest(MovementMixin):
         'Observación',
         help_text='Observación por la cual se debería de aceptar el movimiento que sobrepasó el tope'
     )
+    withdraw_reason = models.TextField(
+        'Razón de solicitud de permiso retiro de socio',
+        blank=True, null=True
+    )
 
     def __str__(self):
         return "Solicitud de movimiento del {}".format(self.box_partner.partner)

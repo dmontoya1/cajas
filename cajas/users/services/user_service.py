@@ -40,7 +40,7 @@ class UserManager:
                     document_type=data['document_type'],
                     document_id=data['document_id'],
                     is_abstract=False,
-                    is_active=False
+                    is_active=True
                 )
             except:
                 raise Exception('Ha ocurrido un error al crear el usuario')

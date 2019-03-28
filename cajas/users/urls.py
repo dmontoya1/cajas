@@ -5,6 +5,8 @@ from .api.views.employee_create import EmployeeCreate
 from .api.views.employee_delete import EmployeeDelete
 from .api.views.employee_update import EmployeeUpdate
 from .api.views.partner_list import PartnerList
+from .api.views.validate_partner_withdraw import ValidatePartnerWithdraw
+
 
 app_name = "users"
 urlpatterns = [
@@ -13,4 +15,5 @@ urlpatterns = [
     path("<int:pk>/employee-delete", EmployeeDelete.as_view(), name='employee_delete'),
     path("employee-create", EmployeeCreate.as_view(), name='employee_create'),
     path("<int:pk>/partner-list", PartnerList.as_view(), name='partner_list'),
+    path("validate-withdraw", ValidatePartnerWithdraw.as_view(), name='validate_withdraw'),
 ]
