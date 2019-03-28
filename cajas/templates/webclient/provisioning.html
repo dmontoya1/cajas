@@ -105,18 +105,14 @@
 {% block content %}
   <div class="row mb-3 mr-3 justify-content-end"> 
     <div class="col-3 align-middle" style="border-right: 1px solid;">
-
         <div class="text-center">
-          <p>Meta mensual <b>$ 0000000000</b></p>
+          <p>Meta mensual<b>$ 0000000000</b></p>
         </div>
-
     </div>
     <div class="col-2">
-
         <div class="text-right">
-          <p>Caja <b>$ 0000000000</b></p>
+          <p>Caja<b>$ {{ office.box.balance }}</b></p>
         </div>
-
     </div>
   </div>
 
@@ -152,9 +148,9 @@
                         <td>{{p.detail}}</td>
                         <td>{% if p.movement_type == 'IN' %}${{ p.value|intcomma }}
                             {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                          <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
+                        <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
                             {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                        <td>{{p.value}}</td>
+                        <td>${{ p.balance|intcomma }}{{ office.country.currency.abbr }}</td>
                         <td>
                           <a data-id="{{p.id}}"  data-toggle="modal" data-target="#editProvisioning" class="see-box edit_provisioning"><i
                             class="fas fa-pen"></i>Editar</a>
