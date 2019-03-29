@@ -7,6 +7,7 @@ from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
+from .models.movement_provisioning import MovementProvisioning
 from .models.movement_request import MovementRequest
 from .models.movement_withdraw import MovementWithdraw
 
@@ -63,6 +64,18 @@ class MovementPartnerInline(admin.TabularInline):
     """
 
     model = MovementPartner
+    extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
+    }
+
+
+class MovementProvisioningInline(admin.TabularInline):
+    """Inline para los movimientos de la caja de una oficina
+    """
+
+    model = MovementProvisioning
     extra = 0
 
     formfield_overrides = {

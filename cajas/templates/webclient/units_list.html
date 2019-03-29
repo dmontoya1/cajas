@@ -413,6 +413,8 @@
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
       $('#modalDetail').on('show.bs.modal', function (event) {
 
         var modal = $(this)
@@ -549,9 +551,14 @@
     //create items
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
+      var elemts = []
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      var count = $('.create_unit_form').children('.dynamic_controller').length
-      $(this).append('<input type="hidden" name="count" value="'+count+'" >')
+      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function(){
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
       data = $(this).serialize() 
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
@@ -661,11 +668,13 @@
           language: "es"
         });
       });
+
       $('.create_unit_form .scape select').each(function () {
         $(this).select2({
           language: "es"
         });
       });
+      
     }) //end document ready
 
   </script>

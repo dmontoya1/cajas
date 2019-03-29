@@ -21,22 +21,22 @@ class UnitCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
+        print(request.data)
+        values = request.data["elemts"].split(",")
         unit = Unit()
         unit.name = request.data["name"]
         unit.partner = get_object_or_404(Partner, user__pk=request.data["partner"])
         unit.collector = get_object_or_404(User, pk=request.data["collector"])
         unit.supervisor = get_object_or_404(User, pk=request.data["supervisor"])
         unit.save()
-        for i in range(int(request.data['count'])):
-            try:
-                UnitItems.objects.create(
-                    unit=unit,
-                    name=request.data["form[form]["+str(i)+"][name]"],
-                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+str(i)+"][brand]"]),
-                    price=request.data["form[form]["+str(i)+"][price]"]
-                )
-            except:
-                pass
+        for value in values:
+            UnitItems.objects.create(
+                unit=unit,
+                name=request.data["form[form]["+value+"][name]"],
+                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                price=request.data["form[form]["+value+"][price]"]
+            )
+
         return Response(
             'Se ha creado la cadena exitosamente.',
             status=status.HTTP_201_CREATED

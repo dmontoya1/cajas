@@ -24,6 +24,7 @@ from .views.partner_box import PartnerBox
 from .views.partner_create import PartnerCreate
 from .views.partner_list import PartnerList
 from .views.partner_unit import PartnerUnitsList
+from .views.provisioning import Provisioning
 from .views.units_list import UnitsList
 
 
@@ -39,7 +40,8 @@ urlpatterns = [
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),
     path("office/<slug:slug>/items/", OfficeItemsList.as_view(), name='office_items_list'),
     path("office/<slug:slug>/create-office-movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
-
+    path("provisioning/<slug:slug>/", Provisioning.as_view(), name='provisioning'),
+    
     # DonJuan
     path("office/<slug:slug>/donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
     path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(),
@@ -69,9 +71,10 @@ urlpatterns = [
     path("office/<slug:slug>/chain-create/", ChainCreate.as_view(), name='chain_create'),
 
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
+    path("office/<slug:slug>/chain-payments/<int:pk>/", ChainPayments.as_view(), name='chain_payments'),
+
+    # Units
     path("units/<slug:slug>/units-list/", UnitsList.as_view(), name='units_list'),
     path("units/<slug:slug>/<int:pk>/units-list/", PartnerUnitsList.as_view(), name='partner_units_list'),
-
-    path("office/<slug:slug>/chain-payments/<int:pk>/", ChainPayments.as_view(), name='chain_payments'),
 
 ]
