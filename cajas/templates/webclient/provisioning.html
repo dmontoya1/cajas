@@ -51,7 +51,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -385,7 +385,7 @@
         })
     })
 
-    //detail modal script
+    //detail modal script, datalle?
     /*$("._detail").on("click", function() {
       var partner_pk = $(this).data("id")
       $('#modalDetail').on('shown.bs.modal', function () {

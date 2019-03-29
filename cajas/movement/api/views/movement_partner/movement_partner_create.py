@@ -32,8 +32,16 @@ class MovementPartnerCreate(APIView):
 
         ip = get_ip(request)'''
         print(request.data)
-        if request.data["elemts"] != '':
-            print("create units")
+        '''values = request.data["elemts"].split(",")
+        if request.data["form[form]["+str(values[0])+"][name]"] != '':
+            # select a unit
+            for value in values:
+                UnitItems.objects.create(
+                    unit=unit,
+                    name=request.data["form[form]["+value+"][name]"],
+                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                    price=request.data["form[form]["+value+"][price]"]
+                )'''
 
         '''if concept.concept_type == ConceptType.SIMPLE:
             data = {
