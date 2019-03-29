@@ -387,12 +387,15 @@
             </div>
             <!-- Appears if concept equals to Compra de Unidades-->
                 <div class="scape" id="unit_select">
+                  <hr>
                   <div class="form-row">
                     <div class="form-group col-md-12">
                       <label for="unity">Unidad</label>
                       <select class="form-control category_control" id="unity" name="unity" style="width: 100%;" required>
                         <option disabled value="" selected>Selecciona una unidad</option>
-                          <option value="1">Unidad 1</option>
+                        {% for unit in units %}
+                          <option value="{{ unit.pk }}">{{ unit }}</option>
+                        {% endfor %}
                       </select>
                     </div>
                   </div>
@@ -525,11 +528,9 @@
         })
       }
     })
-    
+
     //dynamic form fill select brand input depending category
     $('#addMovementModal').on('shown.bs.modal', function () {
-      $("#dynamic_form").addClass("d-none")
-      $("#unit_select").addClass("d-none")
       $(document).on('change','.category_control',function(){
         //fill brands depending $(this) select
         if( $(this).hasClass("category_control")){
@@ -654,6 +655,9 @@
         }
         $(this).closest('#dynamic_form').remove();
       });
+
+      $("#dynamic_form").addClass("d-none")
+      $("#unit_select").addClass("d-none")
 
       $('.add-movement-form .scape select').each(function () {
         // console.log($(this))
