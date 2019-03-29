@@ -47,6 +47,7 @@ class LoanPaymentManager(object):
             concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
             data = {
                 'partner': loan.lender.partner.get(),
+                'box': loan.lender.partner.get().box,
                 'concept': concept,
                 'movement_type': 'OUT',
                 'value': request.data['value'],
