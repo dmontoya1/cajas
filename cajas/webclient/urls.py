@@ -36,7 +36,7 @@ urlpatterns = [
     path("office/<slug:slug>/items/", OfficeItemsList.as_view(), name='office_items_list'),
     path("office/<slug:slug>/create-office-movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("office/<slug:slug>/provisioning", Provisioning.as_view(), name='provisioning'),
-    
+
     # DonJuan
     path("office/<slug:slug>/donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
     path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(),

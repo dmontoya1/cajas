@@ -41,7 +41,7 @@
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
-      <li class="menu-item-has-children dropdown active">
+      <li class="menu-item-has-children dropdown">
         <a href="{% url 'webclient:partners_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de socios
@@ -61,7 +61,7 @@
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:units_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
@@ -76,8 +76,8 @@
       </li>
     {% endif %}
     {% if perms.office.change_officecommitments %}
-      <li class="menu-item-has-children dropdown">
-        <a href="#">
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
         </a>
@@ -103,19 +103,6 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row mb-3 mr-3 justify-content-end"> 
-    <div class="col-3 align-middle" style="border-right: 1px solid;">
-        <div class="text-center">
-          <p>Meta mensual<b>$ 0000000000</b></p>
-        </div>
-    </div>
-    <div class="col-2">
-        <div class="text-right">
-          <p>Caja<b>$ {{ office.box.balance }}</b></p>
-        </div>
-    </div>
-  </div>
-
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
@@ -297,6 +284,7 @@
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
