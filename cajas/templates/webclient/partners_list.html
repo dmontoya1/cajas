@@ -121,6 +121,7 @@
                     <th>Tipo de Socio</th>
                     <th>Email</th>
                     <th>Detalle</th>
+                    <th>Saldo de la Caja</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -134,6 +135,7 @@
                         <td>{{ p.get_partner_type_display }}</td>
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
+                        <td>$ {{ p.box.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementpartner %}
                             <button type="button" data-id="{{ p.id }}" class="add-movement"  data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento

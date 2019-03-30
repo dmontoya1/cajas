@@ -72,7 +72,7 @@ class LoanManager(object):
             'concept': concept,
             'movement_type': 'IN',
             'value': data['value'],
-            'detail': 'Préstamo personal a socio {}'.format(lender_partner),
+            'detail': 'Préstamo sociedad a socio {}'.format(lender_partner),
             'date': datetime.now(),
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
@@ -86,7 +86,7 @@ class LoanManager(object):
         lender = lender_employee.user
         old_loan = get_object_or_none(Loan, lender=lender)
         office = get_object_or_404(Office, pk=data['office'])
-        concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
+        concept = get_object_or_404(Concept, name='Préstamo empleados')
 
         data_mov = {
             'concept': concept,
@@ -117,6 +117,22 @@ class LoanManager(object):
             )
             data_mov['box_partner'] = provider.box
             movement = movement_parter_manager.create_simple(data_mov)
+        elif data['box_from'] == 'donjuan':
+            provider = get_object_or_404(Partner, code='DONJUAN')
+            loan = Loan.objects.create(
+                lender=lender,
+                provider=provider,
+                office=office,
+                loan_type=data['loan_type'],
+                value=data['value'],
+                value_cop=data['value_cop'],
+                interest=data['interest'],
+                time=time,
+                exchange=data['exchange'],
+                balance=data['value']
+            )
+            data_mov['box'] = BoxDonJuan.objects.get(office=office)
+            movement = donjuan_manager.create_movement(data_mov)
         else:
             loan = Loan.objects.create(
                 lender=lender,

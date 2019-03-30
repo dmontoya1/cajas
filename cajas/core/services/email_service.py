@@ -54,3 +54,15 @@ class EmailManager(object):
         }
         subject = "Nueva solicitud de retiro de socio"
         self.send_email(url, ctx, subject, email_to)
+
+    def send_office_mail(self, request, email_to):
+        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+        ctx = {
+            "title": "Has recibido una transferencia de otra oficina",
+            "content": "Has recibido una transferencia desde otra oficina. Para revisarlo ve a la caja de tu oficina"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Has recibido una transferencia de otra oficina"
+        self.send_email(url, ctx, subject, email_to)

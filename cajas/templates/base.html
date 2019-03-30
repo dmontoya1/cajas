@@ -58,7 +58,7 @@
       <div class="top-right">
         <div class="header-menu">
           {% if request.session.office %}
-            <a href="{% url 'webclient:arc_request' %} " type="button" class="arqueo">Solicitar Arquero</a>
+            <a href="{% url 'webclient:arc_request' %} " type="button" class="arqueo">Solicitar Arqueo</a>
             <div class="user-area dropdown float-right">
               <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
                  aria-expanded="false">
@@ -428,7 +428,6 @@
 
     $('#partner').on('change', function () {
       $('.unit-fields').addClass('d-none')
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.get(`/api/units/${$(this).val()}/list`)
         .then(function (response) {
           data = response.data

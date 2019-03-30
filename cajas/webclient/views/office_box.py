@@ -19,7 +19,6 @@ class OfficeBox(LoginRequiredMixin, TemplateView):
     def get(self, request, slug):
         office = Office.objects.get(slug=slug)
         request.session['office'] = office.pk
-        print(request.session['office'])
         return super(OfficeBox, self).get(request)
 
     def get_context_data(self, **kwargs):
@@ -28,4 +27,5 @@ class OfficeBox(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(Office, slug=slug)
         context['office'] = office
         context['categories'] = Category.objects.all()
+        context['offices'] = Office.objects.all()
         return context

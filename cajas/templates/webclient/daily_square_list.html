@@ -120,6 +120,7 @@
                     <th>Código</th>
                     <th>Email</th>
                     <th>Detalle</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -132,6 +133,7 @@
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.user.email }}</td>
                         <td><a href="#">Detalle</a></td>
+                        <td>$ {{ p.user.related_daily_box.get.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}
                             <button type="button" class="add-movement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento

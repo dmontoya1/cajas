@@ -17,5 +17,5 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = (
             'id', 'user', 'office', 'charge', 'salary_type', 'salary',
-            'passport', 'cv', 'is_daily_square', 'observations'
+            'passport', 'cv', 'observations'
         )
