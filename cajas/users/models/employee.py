@@ -1,6 +1,5 @@
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db import models
 
 from cajas.users.models.charges import Charge
@@ -65,10 +64,6 @@ class Employee(models.Model):
     cv = models.FileField(
         'Hoja de vida',
         upload_to=user_cv_path
-    )
-    is_daily_square = models.BooleanField(
-        'Es cuadre diario?',
-        default=False
     )
     observations = models.TextField(
         'Motivo de despido',

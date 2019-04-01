@@ -1,0 +1,681 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+    </li>
+    {% if perms.office %}
+      <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+      {% if perms.office.change_office %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.boxes.change_boxdonjuan %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_don_juan' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Don Juan
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_officeitems %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office_items_list' office.slug %}">
+            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inventario Oficina
+          </a>
+        </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_partner %}
+      <li class="menu-title">Socios</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de socios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.users.change_employee %}
+      <li class="menu-title">Empleados</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de empleados
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+    {% if perms.units.change_unit %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:units_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Árbol de unidades
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.boxes.change_boxdailysquare %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cuadres diarios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.office.change_officecommitments %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
+          <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Aprovisionamiento
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.loans.change_loan %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:loan_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Préstamos
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.chains.change_chain %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:chain_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cadenas
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
+                       cellspacing="0" style="width:100%">
+                  <thead>
+                  <tr>
+                    <th>Unidad</th>
+                    <th>Socio</th>
+                    <th>Cobrador</th>
+                    <th>Supervisor</th>
+                    <th>Estado</th>
+                    <th>Detalle</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for u in units %}
+                    
+                      <tr>
+                        <td>{{ u.name }}</td>
+                        <td>{{ u.partner }}</td>
+                        <td>{{ u.collector }}</td>
+                        <td>{{ u.supervisor }}</td>
+                        
+                        {% if u.is_active %}
+                            <td style="color: #66bb6a">Activo</td>
+                        {% else %}
+                            <td style="color: #868e96">Inactivo</td>
+                        {% endif %}
+                        
+                        <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
+                               data-target="#modalDetail">Ver detalle</a></td>
+                        <td>
+                          <a href="#" class="edit-item" data-id="{{ u.id }}" data-toggle="modal"
+                             data-target="#editUnit">Editar</a>
+                          <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
+                        </td>
+                      </tr>
+                   
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% if perms.units.add_unit %}
+            <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
+            <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+            <div class="label-text">Añadir unidad</div>
+            <i class="fa fa-play label-arrow"></i>
+            </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal detail -->
+  <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="office" value="{{ office.pk }}">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="detail_first_name">Nombre</label>
+              <input readonly type="text" class="form-control" id="detail_first_name" name="detail_first_name"
+                     placeholder="Nombres" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="price_detail">Precio la unidad</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
+                  </div>
+                  <input readonly type="text" class="form-control" id="price_detail" name="price_detail">
+                </div>
+              </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-12">
+                  <h5 class="text-center">Inventario de unidad</h5>              
+              </div>
+              <div class="form-group col-md-12">
+                  <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Marca</th>
+                            <th scope="col">Precio</th>
+                          </tr>
+                        </thead>
+                        <tbody id="related_items_table">
+                        </tbody>
+                    </table>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Edit -->
+  <div class="modal fade" id="editUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar unidad</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" class="edit_unit_form">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="concept">Nombre</label>
+                    <input type="text" class="form-control" id="edit_name" name="name" placeholder="Nombre de la unidad"
+                            required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="partner">Socio</label>
+                    <input readonly class="form-control" type="text"  id="edit_partner" name="partner">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="collector">Cobrador</label>
+                    <select class="form-control" id="edit_collector" name="collector" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un cobrador</option>
+                        {% for c in collectors %}
+                          <option value="{{c.user.pk}}">{{ c }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="edit_supervisor">Supervisor</label>
+                    <select class="form-control" id="edit_supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
+                      <option disabled value="" selected>Selecciona un supervisor</option>
+                      {% for s in supervisor %}
+                        <option value="{{ s.user.pk }}">{{ s }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="price">Precio</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">$</div>
+                    </div>
+                    <input readonly type="text" class="form-control" id="total_price" name="price" required>
+                  </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-submit">Editar</button>
+            </form>
+        </div>
+        </div>
+    </div>
+  </div>
+
+  <!--Modal Create-->
+  <div class="modal fade" id="addUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Crear Unidad</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="create_unit_form">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="scape">
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="concept">Nombre</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
+                              required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="partner">Socio</label>
+                      <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un socio</option>
+                        {% for p in partners %}
+                          <option value="{{p.user.pk}}">{{ p }} {{p.user.pk}} {{p.pk}}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="collector">Cobrador</label>
+                        <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;" required>
+                          <option disabled value="" selected>Selecciona un cobrador</option>
+                          {% for c in collectors %}
+                            <option value="{{c.user.pk}}">{{ c }}</option>
+                          {% endfor %}
+                        </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="edit_supervisor">Supervisor</label>
+                      <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un supervisor</option>
+                        {% for s in supervisor %}
+                          <option value="{{s.user.pk}}">{{ s }}</option>
+                        {% endfor %}
+                      </select>
+                  </div>
+              </div>
+            </div>
+            <hr>
+            <h5 class="text-center">Inventario de unidad</h5>
+            <br>
+            <!--Replication-->
+              <div class="dynamic_controller" id="dynamic_form">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                        <label for="inventory_name">Nombre</label>
+                        <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
+                                required>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="category">Categoría </label>
+                    <div>
+                      <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una categoría</option>
+                        {% for category in categories %}
+                          <option value="{{ category.pk }}">{{ category }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="brand">Marca </label>
+                        <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
+                          <option disabled value="" selected>Selecciona una categoría</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="price">Precio</label>
+                      <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
+                              required>
+                    </div>
+                </div>
+                <div class="form-row justify-content-center">
+                    <div class="col-md-3 pt-1 text-center">
+                        <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
+                    </div>
+                    <div class="col-md-3 pt-1 text-center">
+                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>                      
+                    </div>
+                </div>
+              </div>
+            <!--end Replication-->
+            <button type="submit" class="btn btn-submit">Crear</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+
+  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <script type="text/javascript">
+
+
+
+    //units_inventory modal script
+    $('.units_inventory').on('click', function () {
+      var unit_pk = $(this).data("id")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+      $('#modalDetail').on('show.bs.modal', function (event) {
+
+        var modal = $(this)
+
+        axios.get(`/api/units/${unit_pk}/detail`)
+          .then(function (response) {
+            data = response.data
+            $("#detail_first_name").val(data.name)
+            $("#price_detail").val(data.unit_price)
+            $("#exampleModalLongTitle").text("Unidad de " + data.partner.user.first_name + " " + data.partner.user.last_name)
+            //fill table with related items
+            $(data.related_items).each( function(){
+              $("#related_items_table").append(
+                `\
+                  <tr>\
+                    <td>${$(this)[0].name}</td>\
+                    <td>${$(this)[0].brand.category.name}</td>\
+                    <td>${$(this)[0].brand.name}</td>\
+                    <td>$ ${$(this)[0].price}</td>\
+                  </tr>\
+                `
+              );
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      })
+    })
+
+    //edit units script
+    $('.edit-item').on('click', function () {
+      var unit_pk = $(this).data("id")
+      var office_pk = "{{ office.pk }}"
+      $('#editUnit').on('show.bs.modal', function (event) {
+        var modal = $(this)
+
+        //get unit data and fill inputs with it
+        axios.get(`/api/units/${unit_pk}/detail`)
+        .then(function (response) {
+          data = response.data
+          $("#edit_name").val(data.name)
+          $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
+          $('#total_price').val(data.unit_price)
+          
+          $("#edit_collector option").prop("selected", false);
+          $("#edit_collector option[value='" + data.collector + "']").prop("selected", true);
+          $("#edit_collector").trigger("change")
+
+          $("#edit_supervisor option").prop("selected", false);
+          $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
+          $("#edit_supervisor").trigger("change")
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+
+        //and then update unit
+        $('.edit_unit_form').on('submit', function(e){
+            e.preventDefault()
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            data = $(this).serialize()
+
+            axios.patch(`/api/units/${unit_pk}/detail`, data)
+            .then(function (response) {
+              data = response.data
+              Swal.fire({
+                type: 'success',
+                title: 'Exitoso',
+                text: data,
+              }).then(function () {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              Swal.fire({
+                type: 'error',
+                title: 'Error',
+                text: error,
+              }).then(function () {
+                location.reload()
+              })
+            })
+        })
+
+        $('#modalDetail').on('hidden.bs.modal', function () {
+            $(this).data('bs.modal', null);
+        })
+
+
+      })
+    })
+
+    //delete items
+    $('.decline-mv').on('click', function () {
+      pk = $(this).data('id')
+      const {value: text} = Swal.fire({
+        title: 'Escribe el motivo de eliminación del item',
+        input: 'textarea',
+        inputPlaceholder: 'Se elimina el item porque ...',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return !value && 'Debes escribir el motivo del eliminación'
+        },
+        allowOutsideClick: false,
+        showCloseButton: true
+      }).then((result) => {
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.delete(`/api/units/${pk}/delete`,
+          {data: {description: result.value}}
+        )
+          .then(function (response) {
+            Swal.fire({
+              title: 'Exitoso!',
+              text: response.data,
+              type: 'success',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            console.log(error);
+            console.log(error.response)
+          });
+      })
+    })
+
+    //create items
+    $('.create_unit_form').on('submit', function (e) {
+      e.preventDefault()
+      var elemts = []
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function(){
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
+      data = $(this).serialize() 
+      axios.post("{% url 'api:units:unit_create' %}", data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data.name,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
+    })
+    
+    //dynamic form fill select brand input depending category
+    $("#plus_button").on("click", function(){
+      $(document).on('change','.category_control',function(){
+        //fill brands depending $(this) select
+        if( $(this).hasClass("category_control")){
+          var select_category_id = $(this).attr('id');
+          axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
+            )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        }
+      });
+    })
+
+    $(document).ready(function () {
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+      $('#table').DataTable({
+        responsive: {
+          details: true
+        },
+        dom: 'lBfrtip',
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        buttons: [
+          'excel', 'print'
+        ],
+        "order": [[1, "asc"]],
+        language: {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+        }
+      });
+      
+      var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
+        limit: 15,
+        formPrefix: "form",
+        normalizeFullForm: true,
+      });
+
+      $("#dynamic_form #minus5").on('click', function () {
+        var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
+        if (initDynamicId === 2) {
+          $(this).closest('#dynamic_form').next().find('#minus5').hide();
+        }
+        $(this).closest('#dynamic_form').remove();
+      });
+
+      $('.edit_unit_form select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+
+      $('.create_unit_form .scape select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+      
+    }) //end document ready
+
+  </script>
+{% endblock %}

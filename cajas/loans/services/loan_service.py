@@ -11,7 +11,8 @@ from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
 from office.models.office import Office
 from movement.services.don_juan_service import DonJuanManager
-from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
+from movement.services.office_service import MovementOfficeManager
+from movement.services.partner_service import MovementPartnerManager
 from webclient.views.get_ip import get_ip
 from webclient.views.utils import get_object_or_none
 
@@ -19,6 +20,8 @@ from ..models.loan import Loan
 
 User = get_user_model()
 donjuan_manager = DonJuanManager()
+movement_parter_manager = MovementPartnerManager()
+movement_office_manager = MovementOfficeManager()
 
 
 class LoanManager(object):
@@ -55,24 +58,26 @@ class LoanManager(object):
             exchange=data['exchange'],
             balance=data['value']
         )
-        # if old_loan:
-        #     data_1 = {
-        #         'lender': lender,
-        #         'request': data['request']
-        #     }
-        #     self.interest_load_payment(data_1)
+        if old_loan:
+            data_1 = {
+                'lender': lender,
+                'request': data['request']
+            }
+            self.interest_load_payment(data_1)
+
         concept = get_object_or_404(Concept, name='Ingreso Préstamo Socio Directo')
         data = {
             'partner': lender_partner,
+            'box': lender_partner.box,
             'concept': concept,
             'movement_type': 'IN',
             'value': data['value'],
-            'detail': 'Préstamo personal a socio {}'.format(lender_partner),
+            'detail': 'Préstamo sociedad a socio {}'.format(lender_partner),
             'date': datetime.now(),
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        movement = MovementPartnerHandler.create_double(data)
+        movement = movement_parter_manager.create_double(data)
         return loan
 
     def create_employee_loan(self, data):
@@ -81,6 +86,67 @@ class LoanManager(object):
         lender = lender_employee.user
         old_loan = get_object_or_none(Loan, lender=lender)
         office = get_object_or_404(Office, pk=data['office'])
+        concept = get_object_or_404(Concept, name='Préstamo empleados')
+
+        data_mov = {
+            'concept': concept,
+            'movement_type': 'OUT',
+            'value': data['value'],
+            'detail': 'Préstamo a empleado {}'.format(lender_employee),
+            'date': datetime.now(),
+            'responsible': data['request'].user,
+            'ip': get_ip(data['request'])
+        }
+        if data['time'] == '':
+            time = 0
+        else:
+            time = data['time']
+        if data['box_from'] == 'partner':
+            provider = get_object_or_404(Partner, pk=data['provider'])
+            loan = Loan.objects.create(
+                lender=lender,
+                provider=provider,
+                office=office,
+                loan_type=data['loan_type'],
+                value=data['value'],
+                value_cop=data['value_cop'],
+                interest=data['interest'],
+                time=time,
+                exchange=data['exchange'],
+                balance=data['value']
+            )
+            data_mov['box_partner'] = provider.box
+            movement = movement_parter_manager.create_simple(data_mov)
+        elif data['box_from'] == 'donjuan':
+            provider = get_object_or_404(Partner, code='DONJUAN')
+            loan = Loan.objects.create(
+                lender=lender,
+                provider=provider,
+                office=office,
+                loan_type=data['loan_type'],
+                value=data['value'],
+                value_cop=data['value_cop'],
+                interest=data['interest'],
+                time=time,
+                exchange=data['exchange'],
+                balance=data['value']
+            )
+            data_mov['box'] = BoxDonJuan.objects.get(office=office)
+            movement = donjuan_manager.create_movement(data_mov)
+        else:
+            loan = Loan.objects.create(
+                lender=lender,
+                office=office,
+                loan_type=data['loan_type'],
+                value=data['value'],
+                value_cop=data['value_cop'],
+                interest=data['interest'],
+                time=time,
+                exchange=data['exchange'],
+                balance=data['value']
+            )
+            data_mov['box'] = office.box
+            movement = movement_office_manager.create_movement(data_mov)
 
     def create_third_loan(self, data):
         self.__validate_data(data)
@@ -126,10 +192,12 @@ class LoanManager(object):
         total_balance = Loan.objects.filter(lender=lender).aggregate(Sum('balance'))
         last_loan = Loan.objects.filter(lender=lender).last()
         interest = last_loan.interest
-        total_interest = (total_balance * interest)/100
+        total_interest = (total_balance['balance__sum'] * interest)/100
         concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
-        data = {
-            'partner': lender.partner,
+        print(lender.partner.get().box)
+        data1 = {
+            'box': lender.partner.get().box,
+            'partner': lender.partner.get(),
             'concept': concept,
             'movement_type': 'OUT',
             'value': total_interest,
@@ -138,7 +206,7 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        movement = MovementPartnerHandler.create_double(data)
+        movement = movement_parter_manager.create_double(data1)
 
 
 loan_manager = LoanManager()

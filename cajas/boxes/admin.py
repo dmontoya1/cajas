@@ -5,7 +5,8 @@ from movement.admin import (
     MovementDailySquareInline,
     MovementDonJuanInline,
     MovementOfficeInline,
-    MovementPartnerInline
+    MovementPartnerInline,
+    MovementProvisioningInline
 )
 
 from .models.box_country import BoxCountry
@@ -13,6 +14,7 @@ from .models.box_daily_square import BoxDailySquare
 from .models.box_don_juan import BoxDonJuan
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
+from .models.box_provisioning import BoxProvisioning
 
 
 @admin.register(BoxCountry)
@@ -70,8 +72,20 @@ class BoxPartnerAdmin(admin.ModelAdmin):
     """
 
     list_display = ('partner', 'balance', 'is_active')
-    list_filter = ('partner__office', 'partner__office__country' )
+    list_filter = ('partner__office', 'partner__office__country')
     inlines = [MovementPartnerInline, ]
     search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
                      'partner__user__document_id')
+    exclude = ('last_movement_id', )
+
+
+@admin.register(BoxProvisioning)
+class BoxProvisioningAdmin(admin.ModelAdmin):
+    """Administrador de las cajas de una oficina
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'balance', 'is_active')
+    inlines = [MovementProvisioningInline, ]
+    search_fields = ('office__name', )
     exclude = ('last_movement_id', )

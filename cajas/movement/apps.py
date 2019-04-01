@@ -3,7 +3,7 @@ from django.apps import AppConfig
 
 class MovementConfig(AppConfig):
     name = 'movement'
-    verbose_name = 'Movements'
+    verbose_name = 'Movimientos'
 
     def ready(self):
         try:

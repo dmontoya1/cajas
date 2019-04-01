@@ -61,10 +61,6 @@ class Partner(models.Model):
         on_delete=models.CASCADE,
         blank=True, null=True
     )
-    is_daily_square = models.BooleanField(
-        'Es cuadre diario?',
-        default=False
-    )
     consecutive = models.IntegerField(
         'Consecutivo Mini-Socios',
         default=1

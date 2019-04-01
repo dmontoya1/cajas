@@ -28,6 +28,11 @@ class ChainPlace(models.Model):
     def __str__(self):
         return "Puesto de la cadena {}".format(self.chain)
 
+    def get_month_payment(self, month):
+        users = self.related_users.all()
+
+        pass
+
     class Meta:
         verbose_name = "Puesto de la cadena"
         verbose_name_plural = "Puestos de la cadena"

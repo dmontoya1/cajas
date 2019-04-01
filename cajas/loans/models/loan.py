@@ -77,8 +77,13 @@ class Loan(models.Model):
     )
 
     def __str__(self):
-        return "Pŕestamo de {} a {} por valor de {}".format(
-            self.provider.get_full_name(),
+        if self.provider:
+            return "Préstamo de {} a {} por valor de {}".format(
+                self.provider.get_full_name(),
+                self.lender.get_full_name(),
+                self.value
+            )
+        return "Préstamo de la oficina a {} por valor de {}".format(
             self.lender.get_full_name(),
             self.value
         )

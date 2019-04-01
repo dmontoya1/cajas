@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 
 from ..models.user import User
 
@@ -6,7 +7,7 @@ class UserManager:
     """
     """
 
-    PROPERTIES = ['email', 'username', 'first_name', 'last_name', 'document_type', 'document_id']
+    PROPERTIES = ['email', 'first_name', 'last_name', 'document_type', 'document_id', 'is_daily_square']
 
     def __validate_data(self, data):
         if not all(property in data for property in self.PROPERTIES):
@@ -14,16 +15,17 @@ class UserManager:
 
     def create_user(self, data):
         self.__validate_data(data)
-        if "password" in data:
+        if "password1" in data:
             try:
                 user = User.objects.create(
                     email=data['email'],
-                    username=data['username'],
+                    username=data['email'],
                     first_name=data['first_name'],
                     last_name=data['last_name'],
                     document_type=data['document_type'],
                     document_id=data['document_id'],
-                    password=data['password'],
+                    password=make_password(data['password1']),
+                    is_daily_square=data['is_daily_square'],
                     is_abstract=True,
                     is_active=True
                 )
@@ -39,7 +41,8 @@ class UserManager:
                     document_type=data['document_type'],
                     document_id=data['document_id'],
                     is_abstract=False,
-                    is_active=False
+                    is_active=True,
+                    is_daily_square=data['is_daily_square'],
                 )
             except:
                 raise Exception('Ha ocurrido un error al crear el usuario')

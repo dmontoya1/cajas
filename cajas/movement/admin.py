@@ -7,6 +7,9 @@ from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
+from .models.movement_provisioning import MovementProvisioning
+from .models.movement_request import MovementRequest
+from .models.movement_withdraw import MovementWithdraw
 
 
 class MovementCountryInline(admin.TabularInline):
@@ -66,3 +69,31 @@ class MovementPartnerInline(admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
+
+
+class MovementProvisioningInline(admin.TabularInline):
+    """Inline para los movimientos de la caja de una oficina
+    """
+
+    model = MovementProvisioning
+    extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
+    }
+
+
+@admin.register(MovementRequest)
+class MovementRequestAdmin(admin.ModelAdmin):
+
+    list_display = ('box_partner', 'date', 'concept', )
+    readonly_fields = ('box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
+    exclude = ('balance', )\
+
+
+@admin.register(MovementWithdraw)
+class MovementWithdraw(admin.ModelAdmin):
+
+    list_display = ('box_daily_square', 'box_partner', 'date', 'concept', )
+    readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
+    exclude = ('balance', )

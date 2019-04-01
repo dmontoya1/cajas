@@ -277,11 +277,4 @@ cajas/media/
 .envs/*
 !.envs/.local/
 
-Dockerrun.aws.json
-buildspec.yml
-sac.zip
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
-!.elasticbeanstalk/*.cfg.yml
-!.elasticbeanstalk/*.global.yml
+\.idea/

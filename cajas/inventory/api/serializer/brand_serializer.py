@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from inventory.models.brand import Brand
+from ...models.brand import Brand
 from .category_serializer import CategorySerializer
 
 

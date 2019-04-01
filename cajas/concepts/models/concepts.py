@@ -32,6 +32,7 @@ class Relationship(Enum):
     LOAN = 'PREST'
     CHAIN = 'CHAIN'
     OFFICE = 'OF'
+    BETWEEN_OFFICE = 'BTWN'
 
     class Labels:
         UNIT = 'Unidad'
@@ -40,6 +41,7 @@ class Relationship(Enum):
         LOAN = 'Préstamo'
         CHAIN = 'Cadena'
         OFFICE = 'Oficina'
+        BETWEEN_OFFICE = 'Entre oficinas'
 
 
 class Concept(models.Model):
@@ -80,7 +82,8 @@ class Concept(models.Model):
     movement_type = models.BooleanField(
         'El concepto genera movimiento en la caja?',
         default=True,
-        help_text='Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. Éste no génera movimiento en la caja'
+        help_text='Indicar si el movimiento genera o no un movimiento en las cajas. Como el caso de ENTREGA DE DINERO. '
+                  'Éste no génera movimiento en la caja'
     )
     is_active = models.BooleanField(
         'Concepto activo?',
