@@ -115,12 +115,13 @@
                        cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
-                    <th>NombrE</th>
+                    <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Tipo de Socio</th>
                     <th>Email</th>
                     <th>Detalle</th>
+                    <th>Saldo de la Caja</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -134,6 +135,7 @@
                         <td>{{ p.get_partner_type_display }}</td>
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
+                        <td>$ {{ p.box.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementpartner %}
                             <button type="button" data-id="{{ p.id }}" class="add-movement"  data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
@@ -145,7 +147,7 @@
                             </a>
                           {% endif %}
                         {% if perms.units.change_unit %}
-                          <a  href="{% url 'webclient:partner_units_list' office.slug p.pk %}"  class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                         </td>
                       </tr>
@@ -168,7 +170,7 @@
                             class="fas fa-eye"></i> Ver Caja</a>
                         {% endif %}
                         {% if perms.units.change_unit %}
-                          <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol de unidades</a>
+                          <a href="{% url 'webclient:partner_units_list' office.slug partner.pk %}" class="unit-tree">Árbol de unidades</a>
                         {% endif %}
                       </td>
                     </tr>
@@ -252,7 +254,7 @@
               <div class="form-group col-md-6 d-none direct-partner">
                 <label for="direct_partner">Socio Directo</label>
                 <select class="form-control" id="direct_partner" name="direct_partner">
-                  <option selected disabled value="">Selecciona el socio directo</option>
+                  <option selected disabled value="None">Selecciona el socio directo</option>
                   {% for p in partners %}
                     <option value="{{ p.pk }}">{{ p.user.get_full_name }} ({{ p.code }})</option>
                   {% endfor %}
@@ -343,8 +345,7 @@
           </button>
         </div>
         <div class="modal-body">
-
-          <form method="POST" class="add-movement-form">
+          <form method="POST" class="add-movement-form"  action="{% url 'api:movements:movement_partner_create' %}">
             {% csrf_token %}
             <input type="hidden" id="partner_id" name="partner_id">
             <div class="scape">

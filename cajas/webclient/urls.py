@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .views.arc_request import ArcRequest
 from .views.box_don_juan_office import BoxDonJuanOffice
 from .views.calendar import Calendar
 from .views.chain_create import ChainCreate
@@ -17,6 +18,7 @@ from .views.loan_create import LoanCreate
 from .views.loan_list import LoanList
 from .views.loan_payment_list import LoanPaymentList
 from .views.movement_requirement_list import MovementRequireList
+from .views.movement_withdraw_requirement_list import MovementWithdrawRequireList
 from .views.office_box import OfficeBox
 from .views.office_items_list import OfficeItemsList
 from .views.partner_box import PartnerBox
@@ -31,7 +33,10 @@ app_name = 'webclient'
 
 urlpatterns = [
     path("", Home.as_view(), name='home'),
+    path("arqueo/", ArcRequest.as_view(), name='arc_request'),
     path("movement-require/", MovementRequireList.as_view(), name='movement_required'),
+    path("movement-withdraw-require/", MovementWithdrawRequireList.as_view(), name='movement_withdraw_required'),
+
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),
     path("office/<slug:slug>/items/", OfficeItemsList.as_view(), name='office_items_list'),

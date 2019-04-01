@@ -5,9 +5,11 @@ from rest_framework.response import Response
 
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
+from chains.models.chain import Chain
 from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
 from general_config.models.country import Country
+from loans.models.loan import Loan
 from office.models.office import Office
 from units.models.units import Unit
 from webclient.views.get_ip import get_ip
@@ -35,8 +37,8 @@ class CreateDailySquareMovement(APIView):
         user = get_object_or_none(User, pk=request.POST.get('user', None))
         country = get_object_or_none(Country, pk=request.POST.get('country', None))
         office = get_object_or_none(Office, pk=request.POST.get('office', None))
-        loan = request.POST.get('loan', None)
-        chain = request.POST.get('chain', None)
+        loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
+        chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
         data = {
             'box': box_daily_square,

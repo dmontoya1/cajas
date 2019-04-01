@@ -12,7 +12,8 @@ class BoxDailySquare(models.Model):
         User,
         verbose_name='Usuario',
         on_delete=models.SET_NULL,
-        blank=True, null=True
+        blank=True, null=True,
+        related_name='related_daily_box'
     )
     office = models.ForeignKey(
         Office,

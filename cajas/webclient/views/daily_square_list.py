@@ -19,11 +19,15 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         context = super(DailySquareList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
-        partners = Partner.objects.filter(
-            office=office,
-            user__is_active=True,
-            is_daily_square=True
-        ).exclude(partner_type='DJ')
         context['office'] = office
-        context['partners'] = partners
+        try:
+            if self.request.user.is_superuser or self.request.user.employee.is_admin_charge():
+                context['partners'] = Partner.objects.filter(
+                    office=office,
+                    user__is_active=True,
+                    user__is_daily_square=True
+                ).exclude(partner_type='DJ')
+        except:
+            context['partner'] = self.request.user.partner.get()
+
         return context

@@ -27,4 +27,5 @@ class OfficeBox(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(Office, slug=slug)
         context['office'] = office
         context['categories'] = Category.objects.all()
+        context['offices'] = Office.objects.all()
         return context

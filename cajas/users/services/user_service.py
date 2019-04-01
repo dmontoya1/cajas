@@ -7,7 +7,7 @@ class UserManager:
     """
     """
 
-    PROPERTIES = ['email', 'first_name', 'last_name', 'document_type', 'document_id']
+    PROPERTIES = ['email', 'first_name', 'last_name', 'document_type', 'document_id', 'is_daily_square']
 
     def __validate_data(self, data):
         if not all(property in data for property in self.PROPERTIES):
@@ -25,6 +25,7 @@ class UserManager:
                     document_type=data['document_type'],
                     document_id=data['document_id'],
                     password=make_password(data['password1']),
+                    is_daily_square=data['is_daily_square'],
                     is_abstract=True,
                     is_active=True
                 )
@@ -40,7 +41,8 @@ class UserManager:
                     document_type=data['document_type'],
                     document_id=data['document_id'],
                     is_abstract=False,
-                    is_active=False
+                    is_active=True,
+                    is_daily_square=data['is_daily_square'],
                 )
             except:
                 raise Exception('Ha ocurrido un error al crear el usuario')

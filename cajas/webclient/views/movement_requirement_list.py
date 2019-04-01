@@ -16,6 +16,6 @@ class MovementRequireList(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(MovementRequireList, self).get_context_data(**kwargs)
-        movements = MovementRequest.objects.all()
+        movements = MovementRequest.objects.all().exclude(concept__name='Retiro Socio Directo')
         context['movements'] = movements
         return context

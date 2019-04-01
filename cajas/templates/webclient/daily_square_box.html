@@ -113,6 +113,8 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
+                <h3 class="mb-4">Cuadre Diario de {{ box_user }}</h3>
+                <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -121,7 +123,6 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
-                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -136,7 +137,6 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      <td>${{ m.balance|intcomma }}{{ office.country.currency.abbr }}</td>
                       <td>
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
@@ -243,7 +243,10 @@
               <div class="form-group col-md-6 unit-select d-none">
                 <label for="unit">Unidad</label>
                 <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;">
-                  <option value="" selected disabled>Selecciona primero un socio</option>
+                  <option value="" selected disabled>Selecciona la unidad</option>
+                  {% for unit in units %}
+                    <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})</option>
+                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -423,7 +426,7 @@
           break;
         case 'Unidad':
           $('.unit-select').removeClass('d-none')
-          $('.partner-select').removeClass('d-none')
+          $('.partner-select').addClass('d-none')
           $('.user-select').addClass('d-none')
           $('.country-select').addClass('d-none')
           $('.loan-select').addClass('d-none')
@@ -530,7 +533,7 @@
             .catch(function (error) {
               Swal.fire({
                 title: 'Error!',
-                text: rerror.response,
+                text: error.response,
                 type: 'error',
                 allowOutsideClick: false
               })

@@ -113,7 +113,8 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                  <h3 class="mb-4">{{ box }}</h3>
+                  <h3 class="mb-4">{{ box }} (Código {{ box.partner.code }})</h3>
+                  <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -122,8 +123,6 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
-                    <th>Saldo</th>
-                    <!-- <th></th> -->
                   </tr>
                   </thead>
                   <tbody>
@@ -137,8 +136,6 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      <td>${{ m.balance|intcomma }}{{ office.country.currency.abbr }}</td>
-                      <!-- <td>Actions</td> -->
                     </tr>
                   {% endfor %}
                   </tbody>

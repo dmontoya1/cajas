@@ -65,10 +65,6 @@ class Employee(models.Model):
         'Hoja de vida',
         upload_to=user_cv_path
     )
-    is_daily_square = models.BooleanField(
-        'Es cuadre diario?',
-        default=False
-    )
     observations = models.TextField(
         'Motivo de despido',
         help_text='Motivo para deshabilitar el empleado',

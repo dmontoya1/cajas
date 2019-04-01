@@ -319,6 +319,7 @@
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       data = $(this).serialize()
+      console.log(data)
       axios.post("{% url 'api:office:office_item_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -332,6 +333,7 @@
         })
         .catch(function (error) {
           // handle error
+          console.log(error.response)
           Swal.fire({
             type: 'error',
             title: 'Error',
@@ -420,8 +422,6 @@
         })
       })
     })
-    
-
 
     //delete items
     $('.decline-mv').on('click', function () {

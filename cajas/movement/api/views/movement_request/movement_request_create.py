@@ -22,7 +22,7 @@ class MovementRequestCreate(APIView):
 
     def post(self, request, format=None):
         self.create_movement(request)
-        email_manager.sendStopEmail(request)
+        email_manager.send_stop_email(request)
         return Response(
             'Se ha enviado la solicitud de aprobación exitosamente',
             status=status.HTTP_201_CREATED
