@@ -231,6 +231,46 @@ class MovementPartnerManager(object):
             movement2 = self.create_simple(data2)
         return movement1
 
+    def create_withdraw_movement_full(self, data):
+        concept = Concept.objects.get(name='Retiro de Socio', concept_type=ConceptType.SIMPLEDOUBLE)
+        data1 = {
+            'box': data['box'],
+            'concept': concept,
+            'movement_type': 'OUT',
+            'value': data['value'] * 3,
+            'detail': data['detail'],
+            'date': data['date'],
+            'responsible': data['responsible'],
+            'ip': data['ip']
+        }
+        movement1 = self.create_simple(data1)
+        if data['partner'].partner_type == PartnerType.DIRECTO:
+            box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
+            data2 = {
+                'box': box_don_juan,
+                'concept': concept.counterpart,
+                'movement_type': 'IN',
+                'value': data['value'] * 3,
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
+            }
+            movement2 = donjuan_manager.create_movement(data2)
+        elif data['partner'].partner_type == PartnerType.INDIRECTO:
+            box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
+            data2 = {
+                'box': box_direct_partner,
+                'concept': concept.counterpart,
+                'movement_type': 'IN',
+                'value': data['value'] * 3,
+                'detail': data['detail'],
+                'date': data['date'],
+                'responsible': data['responsible'],
+                'ip': data['ip']
+            }
+            movement2 = self.create_simple(data2)
+        return movement1
 
     def get_user_value(self, data):
         month = datetime.now().month
