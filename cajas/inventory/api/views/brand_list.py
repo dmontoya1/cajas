@@ -1,5 +1,7 @@
 from rest_framework.generics import ListAPIView
 
+from ...models.brand import Brand
+from ..serializer.brand_serializer import BrandSerializer
 from inventory.models.brand import Brand
 from inventory.api.serializer.brand_serializer import BrandSerializer
 
