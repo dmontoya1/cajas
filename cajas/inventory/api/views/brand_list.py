@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView
 
 from inventory.models.brand import Brand
-from inventory.serializer.brand_serializer import BrandSerializer
+from inventory.api.serializer.brand_serializer import BrandSerializer
 
 
 class BrandList(ListAPIView):

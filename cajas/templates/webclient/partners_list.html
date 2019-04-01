@@ -51,7 +51,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -61,7 +61,7 @@
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:units_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
@@ -77,7 +77,7 @@
     {% endif %}
     {% if perms.office.change_officecommitments %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
         </a>
@@ -387,17 +387,31 @@
               </div>
             </div>
             <!-- Appears if concept equals to Compra de Unidades-->
+                <div class="scape" id="unit_select">
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="unity">Unidad</label>
+                      <select class="form-control category_control" id="unity" name="unity" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una unidad</option>
+                        {% for unit in units %}
+                          <option value="{{ unit.pk }}">{{ unit }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
                 <!--Replication-->
-                <div class="dynamic_controller d-none" id="dynamic_form">
+                <div class="dynamic_controller" id="dynamic_form">
                     <div class="form-row">
                       <div class="form-group col-md-6">
                             <label for="inventory_name">Nombre</label>
-                            <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item">
+                            <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item" required>
                       </div>
                       <div class="form-group col-md-6">
                         <label for="category">Categoría </label>
                         <div>
-                          <select class="form-control category_control" id="category" name="category" style="width: 100%;" >
+                          <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
                             <option disabled value="" selected>Selecciona una categoría</option>
                             {% for category in categories %}
                               <option value="{{ category.pk }}">{{ category }}</option>
@@ -409,14 +423,13 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="brand">Marca </label>
-                            <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" >
+                            <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
                               <option disabled value="" selected>Selecciona una categoría</option>
                             </select>
                         </div>
                         <div class="form-group col-md-6">
                           <label for="price">Precio</label>
-                          <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                                  >
+                          <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item" required>
                         </div>
                     </div>
                     <div class="form-row justify-content-center">
@@ -486,23 +499,37 @@
     //Displays unit_form if concept equals to Compra de Unidades
    $("#concept").on("change", function(){
       if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
-        $("#dynamic_form").removeClass("d-none");
-        $("#inventory_name").prop('required', true);
-        console.log( $("#inventory_name").prop('required'))
+        $(".dynamic_controller").removeClass("d-none")
+        $("#unit_select").removeClass("d-none")
+        $("#unity").prop("required",true)
 
-        $("#category").prop('required', true);
-        $("#brand").prop('required', true);
-        $("#price").prop('required', true);
+        // when dynamic form appears its necesary to make inputs required
+        $('.add-movement-form .dynamic_controller *').filter(':input').each(function(){
+          $(this).prop("required",true)
+        })
       }
       else {
-        $("#dynamic_form").addClass("d-none");
-        $("#inventory_name").prop('required', false);
-        $("#category").prop('required', false);
-        $("#brand").prop('required', false);
-        $("#price").prop('required', false);
+        $(".dynamic_controller").addClass("d-none")
+        $("#unit_select").addClass("d-none")
+        $("#unity").val("")
+        $("#unity").prop("required",false)
+
+        // deactivate required prop and clean inputs beacause these are going to be hidden
+        $('.add-movement-form .dynamic_controller *').filter(':input').each(function(){
+          $(this).prop("required",false)
+          $(this).val("")
+        })
+        /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
+        *  in this way we grant if user don't want to create unit items we send one empty form
+        */
+        $(".add-movement-form .dynamic_controller").find("#minus5").each( function(){
+          if($(this).css("display") != "none") {
+            $(this).trigger("click")
+          }
+        })
       }
     })
-    
+
     //dynamic form fill select brand input depending category
     $('#addMovementModal').on('shown.bs.modal', function () {
       $(document).on('change','.category_control',function(){
@@ -542,7 +569,9 @@
       $('.add-movement-form').on('submit', function (e) {
         e.preventDefault()
         var elemts = []
-
+        /* we get dynamic identifiers and send it to backend, because is easeiest way to create objects 
+        *  there: obtaining directly data from python dictionary using these identifiers
+        */ 
         $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function(){
             id_form = $(this).attr("id")
             id_form = id_form[id_form.length - 1]
@@ -627,6 +656,9 @@
         }
         $(this).closest('#dynamic_form').remove();
       });
+
+      $("#dynamic_form").addClass("d-none")
+      $("#unit_select").addClass("d-none")
 
       $('.add-movement-form .scape select').each(function () {
         // console.log($(this))
