@@ -188,7 +188,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="date" name="date" id="date" class="form-control datepicker" placeholder="AAAA-MM-DD" required>
+                <input class="form-control datetimepicker" name="date" id="date" type="text" placeholder="yyyy-mm-dd" style="width: 100%;" required>
               </div>
             </div>
             <div class="form-row">
@@ -241,7 +241,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="edit_date">Fecha</label>
-                <input type="date" id="edit_date" name="date" class="form-control datepicker" placeholder="AAAA-MM-DD" required>
+                <input type="text" id="edit_date" name="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;" required>
               </div>
             </div>
             <div class="form-row">
@@ -284,7 +284,7 @@
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
@@ -373,34 +373,9 @@
         })
     })
 
-    //detail modal script, datalle?
-    /*$("._detail").on("click", function() {
-      var partner_pk = $(this).data("id")
-      $('#modalDetail').on('shown.bs.modal', function () {
-          axios.get(`/api/users/${partner_pk}/partner-list`)
-          .then(function (response) {
-            data = response.data[0]
-            $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
-            $("#detail_document").val(data.user.document_id)
-            $("#detail_email").val(data.user.email)
-            $("#type_document").text(data.user.document_type)
-            $("#code").val(data.code)
-            if (data.partner_type == "Indirecto"){
-              $("#partner_type_detail").val(data.partner_type)
-              $("#direct_partner_form").removeClass("d-none")
-              $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name )
-            } else {
-              $("#partner_type_detail_form").addClass("d-none")
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
-    })*/
-
     $(document).ready(function () {
+
+
       $('#table').DataTable({
         responsive: {
           details: true

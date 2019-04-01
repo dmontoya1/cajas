@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views.box_don_juan_office import BoxDonJuanOffice
+from .views.calendar import Calendar
 from .views.chain_create import ChainCreate
 from .views.chain_list import ChainList
 from .views.chain_payments import ChainPayments
@@ -36,6 +37,7 @@ urlpatterns = [
     path("office/<slug:slug>/items/", OfficeItemsList.as_view(), name='office_items_list'),
     path("office/<slug:slug>/create-office-movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("office/<slug:slug>/provisioning", Provisioning.as_view(), name='provisioning'),
+    path("office/<slug:slug>/calendar", Calendar.as_view(), name='calendar'),
 
     # DonJuan
     path("office/<slug:slug>/donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
