@@ -24,4 +24,5 @@ class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
         context['office'] = office
         context['box'] = box
         context['concepts'] = concepts
+        context['offices'] = Office.objects.all()
         return context

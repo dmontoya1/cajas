@@ -6,17 +6,20 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
+from boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.employee import Employee
 from concepts.models.concepts import Concept
-from cajas.core.services.email_service import EmailManager
+from core.services.email_service import EmailManager
 from inventory.models.category import Category
 from inventory.models.brand import Brand
 from movement.models.movement_office import MovementOffice
+from movement.services.don_juan_service import DonJuanManager
 from office.models.office import Office
 from office.services.office_item_create import OfficeItemsManager
 
 from .get_ip import get_ip
 
+donjuan_manager = DonJuanManager()
 email_manager = EmailManager()
 office_items_manager = OfficeItemsManager()
 
@@ -51,17 +54,19 @@ class CreateOfficeMovement(View):
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            movement1 = MovementOffice.objects.create(
-                box_office=destine_office.box,
-                concept=concept.counterpart,
-                date=date,
-                movement_type=contrapart,
-                value=value,
-                detail=detail,
-                responsible=request.user,
-                ip=ip,
-            )
-            secretary = Employee.objects.filter(office=office, charge__name='Secretaria').first()
+            box_don_juan = get_object_or_404(BoxDonJuan, office=destine_office)
+            data = {
+                'box': box_don_juan,
+                'concept': concept.counterpart,
+                'date': date,
+                'movement_type': contrapart,
+                'value': value,
+                'detail': detail,
+                'responsible': request.user,
+                'ip': ip,
+            }
+            movement1 = donjuan_manager.create_movement(data)
+            secretary = Employee.objects.filter(office=destine_office, charge__name='Secretaria').first()
             email_manager.send_office_mail(request, secretary.user.email)
 
         if "brand" in request.POST:
