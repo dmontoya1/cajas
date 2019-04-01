@@ -5,7 +5,7 @@ from django.utils.text import slugify
 from general_config.models.country import Country
 
 class Office(models.Model):
-    """Guarda los paises en donde el negocio tiene funcionamiento
+    """Guarda las oficinas en donde el negocio tiene funcionamiento
     """
 
     country = models.ForeignKey(

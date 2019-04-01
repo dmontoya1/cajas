@@ -3,12 +3,17 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from inventory.models.brand import Brand
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
+from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Concept, ConceptType
 from concepts.services.stop_service import StopManager
 from webclient.views.get_ip import get_ip
 from ....services.partner_service import MovementPartnerManager
+from units.models.units import Unit
+from units.models.unitItems import UnitItems
+from django.shortcuts import get_object_or_404
 
 StopManager = StopManager()
 MovementPartnerManager = MovementPartnerManager()
@@ -17,6 +22,8 @@ MovementPartnerManager = MovementPartnerManager()
 class MovementPartnerCreate(APIView):
     """
     """
+
+    authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
         partner = Partner.objects.get(pk=request.POST['partner_id'])
@@ -28,6 +35,16 @@ class MovementPartnerCreate(APIView):
         detail = request.POST['detail']
 
         ip = get_ip(request)
+        values = request.data["elemts"].split(",")
+        if request.data["form[form]["+str(values[0])+"][name]"] != '':
+            unit = Unit.objects.get(pk=request.data["unity"])
+            for value in values:
+                UnitItems.objects.create(
+                    unit=unit,
+                    name=request.data["form[form]["+value+"][name]"],
+                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                    price=request.data["form[form]["+value+"][price]"]
+                )
 
         if concept.concept_type == ConceptType.SIMPLE:
             data = {

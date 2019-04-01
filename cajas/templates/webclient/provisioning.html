@@ -31,7 +31,7 @@
         </li>
       {% endif %}
       {% if perms.office.change_officeitems %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:office_items_list' office.slug %}">
             <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Inventario Oficina
@@ -76,7 +76,7 @@
       </li>
     {% endif %}
     {% if perms.office.change_officecommitments %}
-      <li class="menu-item-has-children dropdown">
+      <li class="menu-item-has-children dropdown active">
         <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
@@ -115,45 +115,48 @@
                        cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
+                    <th>Responsable</th>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th>Detalle</th>
+                    <th>Entra</th>
+                    <th>Sale</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
                   <tbody>
-                  {% for i in items %}
-                    {% if not i.is_deleted %}
+                  {% if request.user.is_superuser or request.user.employee.is_admin_charge %}
+                    {% for p in provisioning %}
                       <tr>
-                        <td>{{ i.name }}</td>
-                        <td>{{ i.brand }}</td>
-                        <td>{{ i.price }}</td>
-                        <td>{{ i.description }}</td>
+                        <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>
+                        <td>{{p.date}}</td>
+                        <td>{{p.concept.name}}</td>
+                        <td>{{p.detail}}</td>
+                        <td>{% if p.movement_type == 'IN' %}${{ p.value|intcomma }}
+                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
+                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        <td>${{ p.balance|intcomma }}{{ office.country.currency.abbr }}</td>
                         <td>
-                          {% if perms.office.change_officeitems %}
-                            <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
-                               data-target="#editOfficeItem">Editar</a>
-                          {% endif %}
-                          {% if perms.office.delete_officeitems %}
-                            <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
-                          {% endif %}
+                          <a data-id="{{p.id}}"  data-toggle="modal" data-target="#editProvisioning" class="see-box edit_provisioning"><i
+                            class="fas fa-pen"></i>Editar</a>
                         </td>
                       </tr>
-                    {% endif %}
-                  {% endfor %}
+                    {% endfor %}
+                  {% endif %}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
-        {% if perms.office.add_officeitems %}
-          <a href="" class="float" data-toggle="modal" data-target="#addOfficeItem">
+        {% if perms.users.add_partner %}
+          <a href="" class="float" data-toggle="modal" data-target="#addProvisioning">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
-            <div class="label-text">Añadir inventario</div>
+            <div class="label-text">Añadir Aprovisionamiento</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
         {% endif %}
@@ -161,54 +164,51 @@
     </div>
   </div>
 
-  <!-- Modal add office item -->
-  <div class="modal fade" id="addOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
+
+  <!-- Modal add provisioning -->
+  <div class="modal fade" id="addProvisioning" role="dialog" aria-labelledby="addProvisioningTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Aprovisionamiento</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="create-item">
+          <form method="POST" class="add-provisioning">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="name">Nombre </label>
-                <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item" required>
+                <label for="concept">Concepto</label>
+                <select class="form-control" id="concept" name="concept"  style="width: 100%; height: 20px;" required>
+                    <option value="{{ concept.pk }}">{{ concept.name }}</option>
+                </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="category">Categoría </label>
-                <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;" required>
-                  <option disabled value="" selected>Selecciona una categoría</option>
-                  {% for category in categories %}
-                    <option value="{{ category.pk }}">{{ category }}</option>
-                  {% endfor %}
-                </select>
+                <label for="date">Fecha</label>
+                <input type="date" name="date" id="date" class="form-control datepicker" placeholder="AAAA-MM-DD" required>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="brand">Marca </label>
-                <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;" required>
-                  <option disabled value="" selected>Selecciona una marca</option>
+                <label for="movement_type">Entra/Sale</label>
+                <select class="form-control" id="movement_type" name="movement_type"  style="width: 100%; height: 20px;" required>
+                  <option selected disabled value="">Selecciona una opción</option>
+                  <option value="IN">Entra</option>
+                  <option value="OUT">Sale<option>
                 </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="price">Precio</label>
-                <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
+                <label for="value">Valor</label>
+                <input type="number" class="form-control" id="add_value" name="value" placeholder="Precio del item"
                        required>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <label for="description">Descripción</label>
-                <textarea rows="2" style="resize: none;" class="form-control" id="description" name="description"
-                          placeholder="Ingresa una descripción" required></textarea>
-              </div>
+            <div class="form-group">
+                <label for="detail">Detalle</label>
+                <textarea class="form-control" id="detail" rows="4" name="detail" placeholder="Ingresa el detalle" required></textarea>
             </div>
             <button type="submit" class="btn btn-submit">Añadir</button>
           </form>
@@ -217,56 +217,51 @@
     </div>
   </div>
 
-  <!-- Modal edit office item -->
-  <div class="modal fade" id="editOfficeItem" role="dialog" aria-labelledby="addOfficeItemTitle" aria-hidden="true">
+
+  <!-- Modal edit provisioning -->
+  <div class="modal fade" id="editProvisioning" role="dialog" aria-labelledby="editProvisioningTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar Aprovisionamiento</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="edit_item">
+          <form method="POST" class="edit-provisioning">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="name">Nombre </label>
-                <input type="text" id="edit_name" name="name" class="form-control" placeholder="Nombre del item"
-                       required>
+                <label for="edit_concept">Concepto</label>
+                <select class="form-control" id="edit_concept" name="concept"  style="width: 100%; height: 20px;" required>
+                    <option value="{{ concept.pk }}">{{ concept.name }}</option>
+                </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="category">Categoría </label>
-                <select class="form-control" id="edit_category" name="category" style="width: 100%; height: 20px;"
-                        required>
-                  <option disabled value="" selected>Selecciona una categoría</option>
-                  {% for category in categories %}
-                    <option value="{{ category.pk }}">{{ category }}</option>
-                  {% endfor %}
-                </select>
+                <label for="edit_date">Fecha</label>
+                <input type="date" id="edit_date" name="date" class="form-control datepicker" placeholder="AAAA-MM-DD" required>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="brand">Marca </label>
-                <select class="form-control" id="edit_brand" name="brand" style="width: 100%; height: 20px;" required>
-                  <option disabled value="" selected>Selecciona una marca</option>
+                <label for="edit_movement_type">Entra/Sale</label>
+                <select class="form-control" id="edit_movement_type" name="movement_type" style="width: 100%; height: 20px;" required>
+                  <option selected disabled value="">Selecciona una opción</option>
+                  <option value="IN">Entra</option>
+                  <option value="OUT">Sale<option>
                 </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="price">Precio</label>
-                <input type="number" class="form-control" id="edit_price" name="price" placeholder="Precio del item"
+                <label for="value">Valor</label>
+                <input type="number" class="form-control" id="edit_value" name="value" placeholder="Precio del item"
                        required>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-12">
-                <label for="description">Descripción</label>
-                <textarea rows="2" style="resize: none;" class="form-control" id="edit_description" name="description"
-                          placeholder="Ingresa una descripción" required></textarea>
-              </div>
+            <div class="form-group">
+                <label for="edit_detail">Detalle</label>
+                <textarea class="form-control"  rows="4" id="edit_detail" name="detail" placeholder="Ingresa el detalle" required></textarea>
             </div>
             <button type="submit" class="btn btn-submit">Editar</button>
           </form>
@@ -288,39 +283,20 @@
   <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
   <script type="text/javascript">
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-    $('#category').on('change', function () {
-      axios.get(`/api/inventory/${$(this).val()}/brand`)
-        .then(function (response) {
-          data = response.data
-
-          $('#brand').empty()
-          $.each(data, function (k, v) {
-            $('#brand').append(
-              `<option value=${v.id}>${v.name}</option>`
-            )
-          })
-          $('#brand').prepend(
-            '<option value="" selected disabled>Selecciona una marca</option>'
-          )
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
-
-    //create items
-    $('.create-item').on('submit', function (e) {
+    //create provisioning
+    $('.add-provisioning').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      data = $(this).serialize()
-      console.log(data)
-      axios.post("{% url 'api:office:office_item_create' %}", data)
+
+      data = $(this).serialize() 
+      axios.post("{% url 'api:boxes:provisioning_create' %}", data)
         .then(function (response) {
           data = response.data
           Swal.fire({
@@ -333,7 +309,6 @@
         })
         .catch(function (error) {
           // handle error
-          console.log(error.response)
           Swal.fire({
             type: 'error',
             title: 'Error',
@@ -344,122 +319,86 @@
         })
     })
 
-    //edit items
-    $('.edit-item').on('click', function () {
-      var office_item_pk = $(this).data("id")
-      //when modal open
-      $('#editOfficeItem').on('show.bs.modal', function (event) {
-        var modal = $(this)
-        modal.find('.modal-title').text('Editar Inventario')
-        //get info of office item
-        axios.get(`/api/office/${office_item_pk}/office-item-detail`)
+    //edit provisioning
+    $('.edit_provisioning').on('click', function () {
+        var provisioning_pk = $(this).data("id")
+        $('#editProvisioning').on('show.bs.modal', function (event) {
+          
+          axios.get(`/api/boxes/${provisioning_pk}/privisioning-detail`)
           .then(function (response) {
             data = response.data
+            console.log(response.data)
+            console.log(data.movement_type)
+            $("#edit_date").val(data.date)
+            $("#edit_value").val(data.value)
+            $("#edit_detail").val(data.detail)
+            $("#edit_movement_type").prop("selected", false);
+            $("#edit_movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+            $("#edit_movement_type").trigger('change');
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
 
-            $("#edit_name").val(data.name)
-            $("#edit_price").val(data.price)
-            $("#edit_description").val(data.description)
+          //and then update unit
+          $('.edit-provisioning').on('submit', function(e){
+              e.preventDefault()
+              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+              data = $(this).serialize()
 
-            $("#edit_category option").prop("selected", false);
-
-            //fill brands and category select depending previously selected item
-            axios.get(`/api/inventory/${data.brand}/brand`)
+              axios.patch(`/api/boxes/${provisioning_pk}/privisioning-detail`, data)
               .then(function (response) {
                 data = response.data
-
-                $("#edit_category option[value='" + data[0].category.id + "']").prop("selected", true);
-                $("#edit_category").trigger('change');
-
-                $('#edit_brand').empty()
-                $.each(data, function (k, v) {
-                  $('#edit_brand').append(
-                    `<option value=${v.id}>${v.name}</option>`
-                  )
+                Swal.fire({
+                  type: 'success',
+                  title: 'Exitoso',
+                  text: data,
+                }).then(function () {
+                  location.reload()
                 })
-                $('#edit_brand').prepend(
-                  '<option value="" disabled>Selecciona una marca</option>'
-                )
               })
               .catch(function (error) {
                 // handle error
-                console.log(error);
+                Swal.fire({
+                  type: 'error',
+                  title: 'Error',
+                  text: error,
+                }).then(function () {
+                  location.reload()
+                })
               })
+          })
 
-            $("#edit_brand option").prop("selected", false);
-            $("#edit_brand option[value='" + data.brand + "']").prop("selected", true);
-            $("#edit_brand").trigger("click")
-
-            //update items
-            $('.edit_item').on('submit', function(e){
-                e.preventDefault()
-                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                data = $(this).serialize()
-                axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
-                .then(function (response) {
-                  data = response.data
-                  Swal.fire({
-                    type: 'success',
-                    title: 'Exitoso',
-                    text: data,
-                  }).then(function () {
-                    location.reload()
-                  })
-                })
-                .catch(function (error) {
-                  // handle error
-                  Swal.fire({
-                    type: 'error',
-                    title: 'Error',
-                    text: error,
-                  }).then(function () {
-                    location.reload()
-                  })
-                })
-            })
         })
-        $('#editOfficeItem').on('hidden.bs.modal', function () {
-          location.reload()
-        })
-      })
     })
 
-    //delete items
-    $('.decline-mv').on('click', function () {
-      pk = $(this).data('id')
-      const {value: text} = Swal.fire({
-        title: 'Escribe el motivo de eliminación del item',
-        input: 'textarea',
-        inputPlaceholder: 'Se elimina el item porque ...',
-        showCancelButton: true,
-        inputValidator: (value) => {
-          return !value && 'Debes escribir el motivo del eliminación'
-        },
-        allowOutsideClick: false,
-        showCloseButton: true
-      }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/office/${pk}/office-item-delete`,
-          {data: {description: result.value}}
-        )
+    //detail modal script, datalle?
+    /*$("._detail").on("click", function() {
+      var partner_pk = $(this).data("id")
+      $('#modalDetail').on('shown.bs.modal', function () {
+          axios.get(`/api/users/${partner_pk}/partner-list`)
           .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
-            })
+            data = response.data[0]
+            $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
+            $("#detail_document").val(data.user.document_id)
+            $("#detail_email").val(data.user.email)
+            $("#type_document").text(data.user.document_type)
+            $("#code").val(data.code)
+            if (data.partner_type == "Indirecto"){
+              $("#partner_type_detail").val(data.partner_type)
+              $("#direct_partner_form").removeClass("d-none")
+              $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name )
+            } else {
+              $("#partner_type_detail_form").addClass("d-none")
+            }
           })
           .catch(function (error) {
+            // handle error
             console.log(error);
-            console.log(error.response)
-          });
+          })
       })
-    })
-
+    })*/
 
     $(document).ready(function () {
       $('#table').DataTable({
@@ -498,17 +437,17 @@
         }
       });
 
-      $('.create-item select').each(function () {
+      $('.add-provisioning select').each(function () {
         $(this).select2({
           language: "es"
         });
       });
-      $('.edit_item select').each(function () {
+      $('.edit-provisioning select').each(function () {
         $(this).select2({
           language: "es"
         });
       });
-    }) //end document ready
+    });
 
   </script>
 {% endblock %}

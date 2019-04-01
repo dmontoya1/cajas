@@ -23,23 +23,33 @@ class PartnerCreate(LoginRequiredMixin, View):
     """
 
     def post(self, request, *args, **kwargs):
+        office = Office.objects.get(pk=request.POST['office'])
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
         document_type = request.POST['document_type']
         document_id = request.POST['document_id']
         partner_type = request.POST['partner_type']
+
         if request.POST.get('direct_partner', None):
             direct_partner = Partner.objects.get(pk=request.POST['direct_partner'])
         else:
             direct_partner = None
+
+        if partner_type == 'INDIR' and not direct_partner:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'Has seleccionado socio indirecto pero no seleccionaste el socio directo. Ingresa el socio directo.'
+            )
+            return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
         try:
             request.POST['daily_square']
             daily_square = True
         except:
             daily_square = False
         initial_value = request.POST['initial_value']
-        office = Office.objects.get(pk=request.POST['office'])
+
         data_user = {
             'email': email,
             'username': email,

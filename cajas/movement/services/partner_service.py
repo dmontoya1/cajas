@@ -37,7 +37,6 @@ class MovementPartnerManager(object):
         return movement
 
     def create_double(self, data):
-        self.__validate_data(data)
         data1 = {
             'box': data['box'],
             'concept': data['concept'],
@@ -82,7 +81,6 @@ class MovementPartnerManager(object):
         return movement1
 
     def create_simple_double(self, data):
-        self.__validate_data(data)
         data1 = {
             'box': data['partner'].box,
             'concept': data['concept'],

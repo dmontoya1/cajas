@@ -61,7 +61,7 @@
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
       <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:units_list'  office.slug %}">
+        <a href="{% url 'webclient:units_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
@@ -77,7 +77,7 @@
     {% endif %}
     {% if perms.office.change_officecommitments %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
         </a>
@@ -413,6 +413,8 @@
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
       $('#modalDetail').on('show.bs.modal', function (event) {
 
         var modal = $(this)
@@ -549,9 +551,14 @@
     //create items
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
+      var elemts = []
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      var count = $('.create_unit_form').children('.dynamic_controller').length
-      $(this).append('<input type="hidden" name="count" value="'+count+'" >')
+      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function(){
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
       data = $(this).serialize() 
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
@@ -661,11 +668,13 @@
           language: "es"
         });
       });
+
       $('.create_unit_form .scape select').each(function () {
         $(this).select2({
           language: "es"
         });
       });
+      
     }) //end document ready
 
   </script>

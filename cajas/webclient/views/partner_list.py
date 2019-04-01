@@ -3,8 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from inventory.models.category import Category
 from cajas.users.models.partner import Partner
 from office.models.office import Office
+from units.models.units import Unit
 
 
 class PartnerList(LoginRequiredMixin, TemplateView):
@@ -19,6 +21,8 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context = super(PartnerList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
+        units = Unit.objects.filter(partner__office=office)
+
         try:
             if self.request.user.is_superuser or self.request.user.employee.is_admin_charge():
                 context['partners'] = Partner.objects.filter(
@@ -27,5 +31,8 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 ).exclude(partner_type='DJ')
         except:
             context['partner'] = self.request.user.partner.get()
+
+        context['categories'] = Category.objects.all()
         context['office'] = office
+        context['units'] = units
         return context

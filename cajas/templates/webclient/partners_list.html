@@ -51,7 +51,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -61,7 +61,7 @@
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:units_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
@@ -77,7 +77,7 @@
     {% endif %}
     {% if perms.office.change_officecommitments %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
         </a>
@@ -121,6 +121,7 @@
                     <th>Tipo de Socio</th>
                     <th>Email</th>
                     <th>Detalle</th>
+                    <th>Saldo de la Caja</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -134,9 +135,10 @@
                         <td>{{ p.get_partner_type_display }}</td>
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal" data-target="#modalDetail">Detalle</a></td>
+                        <td>$ {{ p.box.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementpartner %}
-                            <button type="button" class="add-movement"><i class="fas fa-plus"></i>Añadir Movimiento
+                            <button type="button" data-id="{{ p.id }}" class="add-movement"  data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
                             </button>
                           {% endif %}
                           {% if perms.boxes.change_boxpartner %}
@@ -160,7 +162,7 @@
                       <td><a href="#">Detalle</a></td>
                       <td>
                         {% if perms.movements.movement.add_movementpartner %}
-                          <button type="button" class="add-movement" data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
+                          <button type="button" class="add-movement" data-id="{{ p.id }}" data-toggle="modal" data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
                           </button>
                         {% endif %}
                         {% if perms.boxes.change_boxpartner %}
@@ -345,44 +347,104 @@
         <div class="modal-body">
           <form method="POST" class="add-movement-form"  action="{% url 'api:movements:movement_partner_create' %}">
             {% csrf_token %}
-
             <input type="hidden" id="partner_id" name="partner_id">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="concept">Concepto</label>
-                <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
-                  <option disabled selected value="">Selecciona un concepto</option>
-                  {% for concept in concepts %}
-                    <option value="{{concept.pk}}">{{concept}}</option>
-                  {% endfor %}
-                </select>
+            <div class="scape">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="concept">Concepto</label>
+                  <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
+                    <option disabled selected value="">Selecciona un concepto</option>
+                    {% for concept in concepts %}
+                      <option value="{{concept.pk}}">{{concept}}</option>
+                    {% endfor %}
+                  </select>
 
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="date">Fecha</label>
+                  <input type="date" class="form-control date-picker" id="date" name="date" placeholder="yyyy-mm-dd" required>
+                </div>
               </div>
-              <div class="form-group col-md-6">
-                <label for="date">Fecha</label>
-                <input type="date" class="form-control date-picker" id="date" name="date" placeholder="yyyy-mm-dd" required>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="movement_type">Entra / Sale</label>
+                  <select class="form-control" id="movement_type" name="movement_type" style="width: 100%; height: 20px;" required>
+                    <option selected disabled value="">Selecciona el tipo de movimiento</option>
+                    <option value="IN">Entra</option>
+                    <option value="OUT">Sale</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="value">Valor</label>
+                  <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento" required>
+                </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-12">
+                      <label for="detail">Detalle</label>
+                      <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle" required></textarea>
+                    </div>
               </div>
             </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="movement_type">Entra / Sale</label>
-                <select class="form-control" id="movement_type" name="movement_type" required>
-                  <option selected disabled value="">Selecciona el tipo de movimiento</option>
-                  <option value="IN">Entra</option>
-                  <option value="OUT">Sale</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="value">Valor</label>
-                <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento" required>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="detail">Detalle</label>
-              <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle" required></textarea>
-            </div>
+            <!-- Appears if concept equals to Compra de Unidades-->
+                <div class="scape" id="unit_select">
+                  <hr>
+                  <div class="form-row">
+                    <div class="form-group col-md-12">
+                      <label for="unity">Unidad</label>
+                      <select class="form-control category_control" id="unity" name="unity" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una unidad</option>
+                        {% for unit in units %}
+                          <option value="{{ unit.pk }}">{{ unit }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!--Replication-->
+                <div class="dynamic_controller" id="dynamic_form">
+                    <div class="form-row">
+                      <div class="form-group col-md-6">
+                            <label for="inventory_name">Nombre</label>
+                            <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item" required>
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="category">Categoría </label>
+                        <div>
+                          <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
+                            <option disabled value="" selected>Selecciona una categoría</option>
+                            {% for category in categories %}
+                              <option value="{{ category.pk }}">{{ category }}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="brand">Marca </label>
+                            <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
+                              <option disabled value="" selected>Selecciona una categoría</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="price">Precio</label>
+                          <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item" required>
+                        </div>
+                    </div>
+                    <div class="form-row justify-content-center">
+                        <div class="col-md-3 pt-1 text-center">
+                            <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
+                        </div>
+                        <div class="col-md-3 pt-1 text-center">
+                            <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>                      
+                        </div>
+                    </div>
+                </div>
+                <!--end Replication-->
             <button type="submit" class="btn btn-submit">Añadir</button>
           </form>
+
         </div>
       </div>
     </div>
@@ -391,19 +453,20 @@
 
 {% block extra_js %}
 
-  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
-  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+<script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+<script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+<script type="text/javascript">
 
-  <script type="text/javascript">
+
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
     //detail modal script
@@ -433,13 +496,116 @@
       })
     })
     
-    $("#addMovement").on("click", function(){
+    //Displays unit_form if concept equals to Compra de Unidades
+   $("#concept").on("change", function(){
+      if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+        $(".dynamic_controller").removeClass("d-none")
+        $("#unit_select").removeClass("d-none")
+        $("#unity").prop("required",true)
+
+        // when dynamic form appears its necesary to make inputs required
+        $('.add-movement-form .dynamic_controller *').filter(':input').each(function(){
+          $(this).prop("required",true)
+        })
+      }
+      else {
+        $(".dynamic_controller").addClass("d-none")
+        $("#unit_select").addClass("d-none")
+        $("#unity").val("")
+        $("#unity").prop("required",false)
+
+        // deactivate required prop and clean inputs beacause these are going to be hidden
+        $('.add-movement-form .dynamic_controller *').filter(':input').each(function(){
+          $(this).prop("required",false)
+          $(this).val("")
+        })
+        /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
+        *  in this way we grant if user don't want to create unit items we send one empty form
+        */
+        $(".add-movement-form .dynamic_controller").find("#minus5").each( function(){
+          if($(this).css("display") != "none") {
+            $(this).trigger("click")
+          }
+        })
+      }
+    })
+
+    //dynamic form fill select brand input depending category
+    $('#addMovementModal').on('shown.bs.modal', function () {
+      $(document).on('change','.category_control',function(){
+        //fill brands depending $(this) select
+        if( $(this).hasClass("category_control")){
+          var select_category_id = $(this).attr('id');
+          axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
+            )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        }
+      });
+    })
+
+
+    // Add movement script
+    $(".add-movement").on("click", function(){
       pk = $(this).data('id')
       slug = "{{ office.slug }}"
-      $('#addMovementModal').on('shown.bs.modal', function () {
-        $("#partner_id").val(pk)
+      $("#partner_id").val(pk)
+
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+      $('.add-movement-form').on('submit', function (e) {
+        e.preventDefault()
+        var elemts = []
+        /* we get dynamic identifiers and send it to backend, because is easeiest way to create objects 
+        *  there: obtaining directly data from python dictionary using these identifiers
+        */ 
+        $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function(){
+            id_form = $(this).attr("id")
+            id_form = id_form[id_form.length - 1]
+            elemts.push(id_form)
+        });
+        $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
+        data = $(this).serialize() 
+
+        console.log(data)
+        axios.post("{% url 'api:movements:movement_partner_create' %}", data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data.name,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        
       })
     })
+
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
@@ -476,10 +642,35 @@
           }
         }
       });
+      
+      var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
+        limit: 15,
+        formPrefix: "form",
+        normalizeFullForm: true,
+      });
+      
+      $("#dynamic_form #minus5").on('click', function () {
+        var initDynamicId = $(this).closest('#dynamic_form').parent().find("[id^='dynamic_form']").length;
+        if (initDynamicId === 2) {
+          $(this).closest('#dynamic_form').next().find('#minus5').hide();
+        }
+        $(this).closest('#dynamic_form').remove();
+      });
 
+      $("#dynamic_form").addClass("d-none")
+      $("#unit_select").addClass("d-none")
+
+      $('.add-movement-form .scape select').each(function () {
+        // console.log($(this))
+        $(this).select2({
+          language: "es"
+        });
+      });
+      
       $('#concept').select2({
         language: "es"
       });
+
     });
 
     $('#partner_type').on('change', function () {
@@ -489,5 +680,6 @@
         $('.direct-partner').removeClass('d-none')
       }
     })
+    
   </script>
 {% endblock %}
