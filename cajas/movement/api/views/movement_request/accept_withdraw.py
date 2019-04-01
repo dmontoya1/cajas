@@ -25,7 +25,6 @@ class AcceptWithDrawRequestMovement(APIView):
     def post(self, request, format=None):
         movement = get_object_or_404(MovementWithdraw, pk=request.data['movement_id'])
         data = {
-            'box': movement.box_daily_square,
             'concept': movement.concept,
             'date': movement.date,
             'movement_type': movement.movement_type,
@@ -40,8 +39,12 @@ class AcceptWithDrawRequestMovement(APIView):
             'loan': None,
             'chain': None,
         }
-        movement_daily_manager.create_movement(data)
-        email_manager.send_withdraw_accept_email(request, movement.box_daily_square.user.email)
+        if movement.box_daily_square:
+            data['box'] = movement.box_daily_square
+            movement_daily_manager.create_movement(data)
+            email_manager.send_withdraw_accept_email(request, movement.box_daily_square.user.email)
+        else:
+            data['box'] = movement.box_partner
         movement.delete()
 
         return Response(
