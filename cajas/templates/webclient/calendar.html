@@ -5,6 +5,9 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+  <link href='{% static "css/fullcalendar.css" %}' rel='stylesheet' />
+
 {% endblock %}
 
 {% block navbar %}
@@ -103,289 +106,56 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="row">
+<div id="calendar"></div>
 
-          <div class="col-md-12">
-            <div class="card">
-              <div class="card-body">
-                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
-                       cellspacing="0" style="width:100%">
-                  <thead>
-                  <tr>
-                    <th>Unidad</th>
-                    <th>Socio</th>
-                    <th>Cobrador</th>
-                    <th>Supervisor</th>
-                    <th>Estado</th>
-                    <th>Detalle</th>
-                    <th></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for u in units %}
-                    
-                      <tr>
-                        <td>{{ u.name }}</td>
-                        <td>{{ u.partner }}</td>
-                        <td>{{ u.collector }}</td>
-                        <td>{{ u.supervisor }}</td>
-                        
-                        {% if u.is_active %}
-                            <td style="color: #66bb6a">Activo</td>
-                        {% else %}
-                            <td style="color: #868e96">Inactivo</td>
-                        {% endif %}
-                        
-                        <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
-                               data-target="#modalDetail">Ver detalle</a></td>
-                        <td>
-                          <a href="#" class="edit-item" data-id="{{ u.id }}" data-toggle="modal"
-                             data-target="#editUnit">Editar</a>
-                          <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
-                        </td>
-                      </tr>
-                   
-                  {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% if request.user.employee.charge.name == 'Secretaria' %}
-            <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
-            <i class="fa fa-plus my-float"></i>
-            </a>
-            <div class="label-container">
-            <div class="label-text">Añadir empleado</div>
-            <i class="fa fa-play label-arrow"></i>
-            </div>
-        {% endif %}
-      </div>
-    </div>
-  </div>
+<div>
+    <a href="" style="z-index: 999;" class="float" data-toggle="modal" data-target="#supervisorCalendar">
+        <i class="fa fa-plus my-float"></i>
+    </a>
+    <i class="fa fa-play label-arrow"></i>
+</div>
 
-  <!-- Modal detail -->
-  <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Detalle de unidad</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" name="office" value="{{ office.pk }}">
-          <div class="form-row">
-            <div class="form-group col-md-6">
-              <label for="concept">Nombre</label>
-              <input readonly type="text" class="form-control" id="detail_first_name" name="first_name"
-                     placeholder="Nombres" required>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="price_detail">Precio la unidad</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                  </div>
-                  <input readonly type="text" class="form-control" id="price_detail" name="price_detail">
-                </div>
-              </div>
-          </div>
-          <div class="form-row">
-              <div class="form-group col-md-12">
-                  <h5 class="text-center">Inventario de unidad</h5>              
-              </div>
-              <div class="form-group col-md-12">
-                  <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col">Marca</th>
-                            <th scope="col">Precio</th>
-                          </tr>
-                        </thead>
-                        <tbody id="related_items_table">
-                        </tbody>
-                    </table>
-                  </div>
-              </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Modal Edit -->
-  <div class="modal fade" id="editUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
+<!-- Modal -->
+<div class="modal fade" id="supervisorCalendar" role="dialog" aria-labelledby="supervisorCalendarTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar unidad</h5>
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Calendario Supervisor</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            <form method="POST" class="edit_unit_form">
+            <form method="POST" class="supervisor_calendar">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
                 <div class="form-group col-md-12">
-                    <label for="concept">Nombre</label>
-                    <input type="text" class="form-control" id="edit_name" name="name" placeholder="Nombre de la unidad"
-                            required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="partner">Socio</label>
-                    <input readonly class="form-control" type="text"  id="edit_partner" name="partner">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="collector">Cobrador</label>
-                    <select class="form-control" id="edit_collector" name="collector" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona un cobrador</option>
-                        {% for c in collectors %}
-                          <option value="{{c.user.pk}}">{{ c }}</option>
+                    <label for="supervisor">Supervisor</label>
+                    <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un supervisor</option>
+                        {% for s in supervisors %}
+                            <option value="{{ s.user.pk }}">{{ s }}</option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="edit_supervisor">Supervisor</label>
-                    <select class="form-control" id="edit_supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
-                      <option disabled value="" selected>Selecciona un supervisor</option>
-                      {% for s in supervisor %}
-                        <option value="{{ s.user.pk }}">{{ s }}</option>
-                      {% endfor %}
+                <div class="form-group col-md-12">
+                    <label for="unit">Unidad</label>
+                    <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona una unidad</option>
                     </select>
                 </div>
-                <div class="form-group col-md-6">
-                  <label for="price">Precio</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">$</div>
-                    </div>
-                    <input readonly type="text" class="form-control" id="total_price" name="price" required>
-                  </div>
-                </div>
             </div>
-            <button type="submit" class="btn btn-submit">Editar</button>
+            <button type="submit" class="btn btn-submit">Añadir</button>
             </form>
         </div>
         </div>
     </div>
-  </div>
-
-  <!--Modal Create-->
-  <div class="modal fade" id="addUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">Crear Unidad</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-          <form method="POST" class="create_unit_form">
-            {% csrf_token %}
-            <input type="hidden" name="office" value="{{ office.pk }}">
-            <div class="scape">
-              <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="concept">Nombre</label>
-                      <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
-                              required>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="partner">Socio</label>
-                    <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
-                        <option value="{{ owner.pk }}" selected>{{ owner }}</option>
-                    </select>
-                  </div>
-              </div>
-              <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="collector">Cobrador</label>
-                        <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;" required>
-                          <option disabled value="" selected>Selecciona un cobrador</option>
-                          {% for c in collectors %}
-                            <option value="{{c.user.pk}}">{{ c }}</option>
-                          {% endfor %}
-                        </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="edit_supervisor">Supervisor</label>
-                      <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona un supervisor</option>
-                        {% for s in supervisor %}
-                          <option value="{{s.user.pk}}">{{ s }}</option>
-                        {% endfor %}
-                      </select>
-                  </div>
-              </div>
-            </div>
-            <hr>
-            <h5 class="text-center">Inventario de unidad</h5>
-            <br>
-            <!--Replication-->
-              <div class="dynamic_controller" id="dynamic_form">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                        <label for="inventory_name">Nombre</label>
-                        <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
-                                required>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="category">Categoría </label>
-                    <div>
-                      <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
-                        <option disabled value="" selected>Selecciona una categoría</option>
-                        {% for category in categories %}
-                          <option value="{{ category.pk }}">{{ category }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="brand">Marca </label>
-                        <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
-                          <option disabled value="" selected>Selecciona una categoría</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="price">Precio</label>
-                      <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                              required>
-                    </div>
-                </div>
-                <div class="form-row justify-content-center">
-                    <div class="col-md-3 pt-1 text-center">
-                        <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
-                    </div>
-                    <div class="col-md-3 pt-1 text-center">
-                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>                      
-                    </div>
-                </div>
-              </div>
-            <!--end Replication-->
-            <button type="submit" class="btn btn-submit">Crear</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
+    
 
 {% endblock %}
 
@@ -403,50 +173,108 @@
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <!-- Calendario -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/locale/es.js"></script>
   <script type="text/javascript">
 
+    $('#supervisor').on('change', function () {
+        super_id = $(this).val()
+        axios.get(`/api/units/${super_id}/list`)
+        .then(function (response) {
+            data = response.data
+            console.log(data)
+            $('#unit').empty()
+            $.each(data, function (k, v) {
+                $('#unit').append(
+                `<option value=${v.id}>${v.name}</option>`
+                )
+            })
+            $('#unit').prepend(
+                '<option value="" selected disabled>Selecciona una unidad</option>'
+            )
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })            
+    })
+
+    $('#supervisorCalendar').on('show.bs.modal', function (event) {
+
+        //create items
+        $('.supervisor_calendar').on('submit', function (e) {
+            e.preventDefault()
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            data = $(this).serialize()
+            console.log("data", data)
+
+            axios.post("{% url 'api:office:supervisor_calendar_create' %}", data)
+            .then(function (response) {
+                data = response.data
+                console.log(data)
+                Swal.fire({
+                    type: 'success',
+                    title: 'Exitoso',
+                    text: data.name,
+                }).then(function () {
+                    location.reload()
+                })
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error.response)
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: error,
+                }).then(function () {
+                    location.reload()
+                })
+            })
+        })
+
+    })
 
     $(document).ready(function () {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var replication = 1;
 
-      $('#table').DataTable({
-        responsive: {
-          details: true
-        },
-        dom: 'lBfrtip',
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        buttons: [
-          'excel', 'print'
-        ],
-        "order": [[1, "asc"]],
-        language: {
-          "sProcessing": "Procesando...",
-          "sLengthMenu": "Mostrar _MENU_ registros",
-          "sZeroRecords": "No se encontraron resultados",
-          "sEmptyTable": "Ningún dato disponible en esta tabla",
-          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-          "sInfoPostFix": "",
-          "sSearch": "Buscar:",
-          "sUrl": "",
-          "sInfoThousands": ",",
-          "sLoadingRecords": "Cargando...",
-          "oPaginate": {
-            "sFirst": "Primero",
-            "sLast": "Último",
-            "sNext": "Siguiente",
-            "sPrevious": "Anterior"
-          },
-          "oAria": {
-            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-          }
-        }
+      $('.supervisor_calendar select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
       });
-
     }) //end document ready
+
+    $("#calendar").fullCalendar({
+        plugins: [ 'interaction', 'dayGrid' ],
+        defaultView: 'agendaDay',
+        views: {
+            basic: {
+                timeFormat: 'h(:mm)t',
+                slotLabelFormat: 'h(:mm)a'
+            },
+            agenda: {
+                timeFormat: 'h(:mm)t',
+                slotLabelFormat: 'h(:mm)a'
+            },
+            week: {
+                timeFormat: 'h(:mm)t',
+                slotLabelFormat: 'h(:mm)a'
+            },
+            day: {
+                timeFormat: 'h(:mm)t',
+                slotLabelFormat: 'h(:mm)a'
+            }
+        },
+        header: {
+            left: 'prev,next, today, ResumenButton',
+            center: 'title',
+            right: 'agendaDay,listWeek',
+        },
+    })
 
   </script>
 {% endblock %}
