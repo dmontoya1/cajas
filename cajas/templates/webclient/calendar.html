@@ -7,7 +7,9 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
   <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
   <link href='{% static "css/fullcalendar.css" %}' rel='stylesheet' />
-
+  <style>
+  tr.fc-list-item:hover{background:lightblue !important;cursor: pointer; }
+  </style>
 {% endblock %}
 
 {% block navbar %}
@@ -40,11 +42,19 @@
             Inventario Oficina
           </a>
         </li>
+
+        <li class="menu-item-has-children dropdown active">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario
+          </a>
+        </li>
+
       {% endif %}
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
-      <li class="menu-item-has-children dropdown active">
+      <li class="menu-item-has-children dropdown">
         <a href="{% url 'webclient:partners_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de socios
@@ -198,7 +208,7 @@
         .catch(function (error) {
             // handle error
             console.log(error);
-        })            
+        })
     })
 
     $('#supervisorCalendar').on('show.bs.modal', function (event) {
@@ -207,6 +217,7 @@
         $('.supervisor_calendar').on('submit', function (e) {
             e.preventDefault()
             axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
             data = $(this).serialize()
             console.log("data", data)
 
@@ -246,35 +257,61 @@
           language: "es"
         });
       });
+      $.ajaxSetup({
+          headers: { 'Api-Key': '{{API_KEY}}' }
+      });
+
+      sources = [      
+        {
+            url: "{% url 'api:office:supervisor_calendar_list'%}?office={{office.slug}}",
+            editable: false,
+            currentTimezone: 'America/Bogota',
+            className: "font-weight: bold",
+        }
+      ]
+
+      $("#calendar").fullCalendar({
+          plugins: [ 'interaction', 'dayGrid' ],
+          defaultView: 'agendaDay',
+          eventSources: sources,
+          allDayDefault: true,
+          eventBackgroundColor: "#7DD1AF",
+          eventBorderColor: "#7DD1AF",
+          eventTextColor: "#FFFFFF",
+          views: {
+              basic: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              },
+              agenda: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              },
+              day: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              }
+          },
+          header: {
+              left: 'prev,next, today, ResumenButton',
+              center: 'title',
+              right: 'agendaDay,listWeek',
+          },
+          eventRender: function(event, element, view) {
+                element.css('padding-top', "10px");
+                element.css('padding-left', "20px");
+                element.css('padding-bottom', "10px");
+          },
+      })
+
+      $('.fc-agendaDay-button').click(function(){
+        $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display","none")
+      });
+      $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display","none")
+      
     }) //end document ready
 
-    $("#calendar").fullCalendar({
-        plugins: [ 'interaction', 'dayGrid' ],
-        defaultView: 'agendaDay',
-        views: {
-            basic: {
-                timeFormat: 'h(:mm)t',
-                slotLabelFormat: 'h(:mm)a'
-            },
-            agenda: {
-                timeFormat: 'h(:mm)t',
-                slotLabelFormat: 'h(:mm)a'
-            },
-            week: {
-                timeFormat: 'h(:mm)t',
-                slotLabelFormat: 'h(:mm)a'
-            },
-            day: {
-                timeFormat: 'h(:mm)t',
-                slotLabelFormat: 'h(:mm)a'
-            }
-        },
-        header: {
-            left: 'prev,next, today, ResumenButton',
-            center: 'title',
-            right: 'agendaDay,listWeek',
-        },
-    })
+
 
   </script>
 {% endblock %}
