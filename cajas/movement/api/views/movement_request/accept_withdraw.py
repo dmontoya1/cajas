@@ -8,12 +8,14 @@ from django.shortcuts import get_object_or_404
 
 from api.CsrfExempt import CsrfExemptSessionAuthentication
 from core.services.email_service import EmailManager
-from movement.services.daily_square_service import MovementDailySquareManager
+from ....services.daily_square_service import MovementDailySquareManager
+from ....services.partner_service import MovementPartnerManager
 
 from ....models.movement_withdraw import MovementWithdraw
 
 email_manager = EmailManager()
 movement_daily_manager = MovementDailySquareManager()
+movement_partner_manager = MovementPartnerManager()
 
 
 class AcceptWithDrawRequestMovement(APIView):
@@ -45,6 +47,8 @@ class AcceptWithDrawRequestMovement(APIView):
             email_manager.send_withdraw_accept_email(request, movement.box_daily_square.user.email)
         else:
             data['box'] = movement.box_partner
+            data['partner'] = movement.box_partner.partner
+            movement_partner_manager.create_withdraw_movement_full(data)
         movement.delete()
 
         return Response(
