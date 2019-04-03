@@ -105,12 +105,15 @@ movement.delete_movementrequest
 office.add_office
 office.add_officecommitments
 office.add_officeitems
+office.add_supervisorcalendar
 office.change_office
 office.change_officecommitments
 office.change_officeitems
+office.change_supervisorcalendar
 office.delete_office
 office.delete_officecommitments
 office.delete_officeitems
+office.delete_supervisorcalendar
 sessions.add_session
 sessions.change_session
 sessions.delete_session
