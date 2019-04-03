@@ -33,18 +33,19 @@ class MovementPartnerCreate(APIView):
         movement_type = request.POST['movement_type']
         value = request.POST['value']
         detail = request.POST['detail']
-
         ip = get_ip(request)
-        values = request.data["elemts"].split(",")
-        if request.data["form[form]["+str(values[0])+"][name]"] != '':
-            unit = Unit.objects.get(pk=request.data["unity"])
-            for value in values:
-                UnitItems.objects.create(
-                    unit=unit,
-                    name=request.data["form[form]["+value+"][name]"],
-                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                    price=request.data["form[form]["+value+"][price]"]
-                )
+
+        if concept.name == "Compra de Unidad":
+            values = request.data["elemts"].split(",")
+            if request.data["form[form]["+str(values[0])+"][name]"] != '':
+                unit = Unit.objects.get(pk=request.data["unity"])
+                for value in values:
+                    UnitItems.objects.create(
+                        unit=unit,
+                        name=request.data["form[form]["+value+"][name]"],
+                        brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                        price=request.data["form[form]["+value+"][price]"]
+                    )
 
         if concept.concept_type == ConceptType.SIMPLE:
             data = {

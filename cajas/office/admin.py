@@ -3,6 +3,7 @@ from django.contrib import admin
 from office.models.office import Office
 from office.models.officeItems import OfficeItems
 from office.models.officeCommitments import OfficeCommitments
+from office.models.supervisorCalendar import SupervisorCalendar
 
 
 class OfficeItemsAdmin(admin.StackedInline):
@@ -30,3 +31,12 @@ class OfficeAdmin(admin.ModelAdmin):
     search_fields = ('number', 'country__name')
     readonly_fields = ('slug', 'consecutive')
     inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
+
+
+@admin.register(SupervisorCalendar)
+class SupervisorCalendarAdmin(admin.ModelAdmin):
+    """
+    """
+
+    model = SupervisorCalendar
+    extra = 0

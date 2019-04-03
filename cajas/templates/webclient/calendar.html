@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+  <link href='{% static "css/fullcalendar.css" %}' rel='stylesheet' />
+  <style>
+  tr.fc-list-item:hover{background:lightblue !important;cursor: pointer; }
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+    </li>
+    {% if perms.office %}
+      <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+      {% if perms.office.change_office %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.boxes.change_boxdonjuan %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_don_juan' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Don Juan
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_officeitems %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office_items_list' office.slug %}">
+            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inventario Oficina
+          </a>
+        </li>
+
+        <li class="menu-item-has-children dropdown active">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario
+          </a>
+        </li>
+
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_partner %}
+      <li class="menu-title">Socios</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de socios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.users.change_employee %}
+      <li class="menu-title">Empleados</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:employee-list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de empleados
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+    {% if perms.units.change_unit %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:units_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Árbol de unidades
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.boxes.change_boxdailysquare %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cuadres diarios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.office.change_officecommitments %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
+          <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Aprovisionamiento
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.loans.change_loan %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:loan_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Préstamos
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.chains.change_chain %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:chain_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cadenas
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+{% endblock %}
+
+{% block content %}
+<div id="calendar"></div>
+
+<div>
+    <a href="" style="z-index: 999;" class="float" data-toggle="modal" data-target="#supervisorCalendar">
+        <i class="fa fa-plus my-float"></i>
+    </a>
+    <i class="fa fa-play label-arrow"></i>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="supervisorCalendar" role="dialog" aria-labelledby="supervisorCalendarTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Calendario Supervisor</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" class="supervisor_calendar">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="supervisor">Supervisor</label>
+                    <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona un supervisor</option>
+                        {% for s in supervisors %}
+                            <option value="{{ s.user.pk }}">{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label for="unit">Unidad</label>
+                    <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;" required>
+                        <option disabled value="" selected>Selecciona una unidad</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-submit">Añadir</button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+    
+
+{% endblock %}
+
+{% block extra_js %}
+
+
+  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <!-- Calendario -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/locale/es.js"></script>
+  <script type="text/javascript">
+
+    $('#supervisor').on('change', function () {
+        super_id = $(this).val()
+        axios.get(`/api/units/${super_id}/list`)
+        .then(function (response) {
+            data = response.data
+            console.log(data)
+            $('#unit').empty()
+            $.each(data, function (k, v) {
+                $('#unit').append(
+                `<option value=${v.id}>${v.name}</option>`
+                )
+            })
+            $('#unit').prepend(
+                '<option value="" selected disabled>Selecciona una unidad</option>'
+            )
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+    })
+
+    $('#supervisorCalendar').on('show.bs.modal', function (event) {
+
+        //create items
+        $('.supervisor_calendar').on('submit', function (e) {
+            e.preventDefault()
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+            data = $(this).serialize()
+            console.log("data", data)
+
+            axios.post("{% url 'api:office:supervisor_calendar_create' %}", data)
+            .then(function (response) {
+                data = response.data
+                console.log(data)
+                Swal.fire({
+                    type: 'success',
+                    title: 'Exitoso',
+                    text: data.name,
+                }).then(function () {
+                    location.reload()
+                })
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error.response)
+                Swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: error,
+                }).then(function () {
+                    location.reload()
+                })
+            })
+        })
+
+    })
+
+    $(document).ready(function () {
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var replication = 1;
+
+      $('.supervisor_calendar select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+      $.ajaxSetup({
+          headers: { 'Api-Key': '{{API_KEY}}' }
+      });
+
+      sources = [      
+        {
+            url: "{% url 'api:office:supervisor_calendar_list'%}?office={{office.slug}}",
+            editable: false,
+            currentTimezone: 'America/Bogota',
+            className: "font-weight: bold",
+        }
+      ]
+
+      $("#calendar").fullCalendar({
+          plugins: [ 'interaction', 'dayGrid' ],
+          defaultView: 'agendaDay',
+          eventSources: sources,
+          allDayDefault: true,
+          eventBackgroundColor: "#7DD1AF",
+          eventBorderColor: "#7DD1AF",
+          eventTextColor: "#FFFFFF",
+          views: {
+              basic: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              },
+              agenda: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              },
+              day: {
+                  timeFormat: 'h(:mm)t',
+                  slotLabelFormat: 'h(:mm)a'
+              }
+          },
+          header: {
+              left: 'prev,next, today, ResumenButton',
+              center: 'title',
+              right: 'agendaDay,listWeek',
+          },
+          eventRender: function(event, element, view) {
+                element.css('padding-top', "10px");
+                element.css('padding-left', "20px");
+                element.css('padding-bottom', "10px");
+          },
+      })
+
+      $('.fc-agendaDay-button').click(function(){
+        $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display","none")
+      });
+      $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display","none")
+      
+    }) //end document ready
+
+
+
+  </script>
+{% endblock %}

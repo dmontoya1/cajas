@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView
 
-from ...models.brand import Brand
+from ...models import Brand
 from ..serializer.brand_serializer import BrandSerializer
 
 

@@ -19,7 +19,6 @@ class ProvisioningCreate(APIView):
 
     def post(self, request, format=None):
         aux = copy.deepcopy(request.data)
-
         aux["box"] = get_object_or_404(BoxProvisioning, office__pk=request.data["office"])
         aux["responsible"] = request.user
         aux["ip"] = get_ip(request)
