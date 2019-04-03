@@ -39,7 +39,7 @@
         </li>
       {% endif %}
       {% if perms.office.change_supervisorcalendar %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:calendar' office.slug %}">
             <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Calendario Supervisor
@@ -210,7 +210,7 @@
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
                 <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
-                style="width: 100%;" required>
+                style="width: 100%;" required autocomplete="off">
               </div>
             </div>
             <div class="form-row">

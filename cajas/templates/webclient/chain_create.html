@@ -39,7 +39,7 @@
         </li>
       {% endif %}
       {% if perms.office.change_supervisorcalendar %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:calendar' office.slug %}">
             <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Calendario Supervisor
@@ -184,7 +184,6 @@
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
@@ -246,7 +245,7 @@
                     <div class="form-row">
                       <div class="form-group col-md-6">
                         <label for="pay_date_${i}">Fecha de pago del puesto</label>
-                        <input type="text" class="form-control datetimepicker" id="pay_date_${i}" name="pay_date_${i}" placeholder="yyyy-mm-dd" style="width: 100%;" required>
+                        <input type="date" class="form-control" id="pay_date_${i}" name="pay_date_${i}" placeholder="yyyy-mm-dd" style="width: 100%;" required>
                       </div>
                     </div>
                     <div class="form-group" id="dynamic_form_${i}">
