@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown active">
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">

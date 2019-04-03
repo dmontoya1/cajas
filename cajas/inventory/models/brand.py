@@ -1,6 +1,6 @@
 from django.db import models
 
-from inventory.models.category import Category
+from .category import Category
 
 
 class Brand(models.Model):
