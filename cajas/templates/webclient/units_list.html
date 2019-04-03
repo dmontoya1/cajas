@@ -533,26 +533,28 @@
         allowOutsideClick: false,
         showCloseButton: true
       }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/units/${pk}/delete`,
-          {data: {description: result.value}}
-        )
-          .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
+        if (result.value) {
+          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+          axios.delete(`/api/units/${pk}/delete`,
+            {data: {description: result.value}}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
             })
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log(error.response)
-          });
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
       })
     })
 

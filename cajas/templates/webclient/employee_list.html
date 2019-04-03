@@ -433,7 +433,6 @@
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
@@ -637,26 +636,28 @@
         allowOutsideClick: false,
         showCloseButton: true
       }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/users/${pk}/employee-delete`,
-          {data: {description: result.value}}
-        )
-          .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
+        if (result.value) {
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            axios.delete(`/api/users/${pk}/employee-delete`,
+              {data: {description: result.value}}
+            )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
             })
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log(error.response)
-          });
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+          }
       })
     })
 

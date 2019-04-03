@@ -524,10 +524,11 @@
         allowOutsideClick: false,
         showCloseButton: true
       }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/units/${pk}/delete`,
-          {data: {description: result.value}}
-        )
+        if (result.value) {
+          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+          axios.delete(`/api/units/${pk}/delete`,
+            {data: {description: result.value}}
+          )
           .then(function (response) {
             Swal.fire({
               title: 'Exitoso!',
@@ -544,6 +545,7 @@
             console.log(error);
             console.log(error.response)
           });
+        }
       })
     })
 
