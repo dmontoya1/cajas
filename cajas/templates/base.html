@@ -200,7 +200,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method="POST" class="sell-units">
+            <form method="POST" id="sell-units">
               {% csrf_token %}
               <div class="form-row">
                 <div class="form-group col-md-6 partner-select ">
@@ -272,7 +272,6 @@
                   </div>
                 </div>
               </div>
-            </form>
           </div>
           <div class="modal-footer d-none">
             <button type="button" class="btn btn-secondary" style="padding: 7px 40px;" data-dismiss="modal">Cancelar
@@ -475,12 +474,10 @@
       });
 
       $('#partner').on('change', function () {
-        console.log('Change')
         $('.unit-fields').addClass('d-none')
         axios.get(`/api/units/${$(this).val()}/list`)
           .then(function (response) {
             data = response.data
-            console.log(data)
             $('#unit').empty()
             $.each(data, function (k, v) {
               $('#unit').append(
@@ -502,7 +499,7 @@
         axios.get(`/api/units/${$(this).val()}/detail`)
           .then(function (response) {
             data = response.data
-            $('#name').val(data.name)
+            $('.unit-fields #name').val(data.name)
             $('#price_items').val(data.unit_price)
             $('.unit-fields').removeClass('d-none')
             $('.modal-footer').removeClass('d-none')
@@ -526,7 +523,7 @@
         $('#total_price').val(items + venda)
       })
 
-      $('.sell-units').on('submit', function (e) {
+      $('#sell-units').on('submit', function (e) {
         e.preventDefault()
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
@@ -545,7 +542,6 @@
             })
               .catch(function (error) {
                 // handle error
-                console.log(error)
                 Swal.fire({
                   title: 'Ha ocurrido un error',
                   text: error,

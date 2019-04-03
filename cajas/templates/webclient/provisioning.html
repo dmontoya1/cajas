@@ -335,8 +335,6 @@
           axios.get(`/api/boxes/${provisioning_pk}/privisioning-detail`)
           .then(function (response) {
             data = response.data
-            console.log(response.data)
-            console.log(data.movement_type)
             $("#edit_date").val(data.date)
             $("#edit_value").val(data.value)
             $("#edit_detail").val(data.detail)

@@ -303,7 +303,6 @@
         values[field.name] = field.value;
       });
       values['counters'] = counters
-      console.log(values)
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       axios.post("{% url 'api:chains:chain_create' %}", values)
