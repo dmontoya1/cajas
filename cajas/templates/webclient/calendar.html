@@ -191,7 +191,7 @@
 
     $('#supervisor').on('change', function () {
         super_id = $(this).val()
-        axios.get(`/api/units/${super_id}/list`)
+        axios.get(`/api/units/${super_id}/supervisor-list`)
         .then(function (response) {
             data = response.data
             $('#unit').empty()
