@@ -10,6 +10,7 @@ class UnitSerializer(serializers.ModelSerializer):
     """
     """
 
+    collector = serializers.StringRelatedField(many=False, read_only=True)
     partner = PartnerSerializer(many=False, read_only=True)
     related_items = UnitItemSerializer(many=True, read_only=True)
     unit_price = serializers.SerializerMethodField()
