@@ -22,7 +22,9 @@
           href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.css"/> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+          integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static 'css/cs-skin-elastic.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -125,7 +127,7 @@
           <div class="col-lg-3 col-md-6">
             <div class="card">
               <div class="card-body">
-                <a href="#">
+                <a href="#" data-toggle="modal" data-target="#investments">
                   <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-3">
                       <img src="{% static 'icons/ICONOS-23.png' %}" alt="icon-23" height="70" width="70">
@@ -205,9 +207,9 @@
                   <label for="partner">Socio</label>
                   <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
                     <option value="" selected disabled>Selecciona un socio</option>
-                    {% for p in partners %}
-                      <option value="{{ p.pk }}">{{ p }}</option>
-                    {% endfor %}
+                      {% for p in partners %}
+                        <option value="{{ p.pk }}">{{ p }}</option>
+                      {% endfor %}
                   </select>
                 </div>
                 <div class="form-group col-md-6 unit-select ">
@@ -299,7 +301,8 @@
               <div class="form-row">
                 <div class="form-group col-md-6 ">
                   <label for="partner-withdraw">Socio</label>
-                  <select class="form-control" id="partner-withdraw" name="partner" style="width: 100%; height: 20px;" required>
+                  <select class="form-control" id="partner-withdraw" name="partner" style="width: 100%; height: 20px;"
+                          required>
                     <option value="" selected disabled>Selecciona un socio</option>
                     {% for p in partners %}
                       <option value="{{ p.pk }}">{{ p }}</option>
@@ -344,7 +347,8 @@
               <div class="form-row">
                 <div class="form-group col-md-6 ">
                   <label for="partner-closeout">Socio</label>
-                  <select class="form-control" id="partner-closeout" name="partner" style="width: 100%; height: 20px;" required>
+                  <select class="form-control" id="partner-closeout" name="partner" style="width: 100%; height: 20px;"
+                          required>
                     <option value="" selected disabled>Selecciona un socio</option>
                     {% for p in partners %}
                       <option value="{{ p.pk }}">{{ p }}</option>
@@ -356,6 +360,42 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button type="submit" class="btn btn-primary">Validar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Registro inversiones a Negocios -->
+    <div class="modal fade" id="investments" tabindex="-1" role="dialog" aria-labelledby="investmentsLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title text-center" id="partner-investments">Inversión a negocios</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" class="partner-investments">
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="form-group col-md-6 ">
+                  <label for="partner-closeout">Socio</label>
+                  <select class="form-control" id="partner-closeout" name="partner" style="width: 100%; height: 20px;"
+                          required>
+                    <option value="" selected disabled>Selecciona un socio</option>
+                    {% for p in partners %}
+                      <option value="{{ p.pk }}">{{ p }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Crear</button>
             </form>
           </div>
         </div>
@@ -376,9 +416,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
+          integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
   {% comment %}<script src="{% static 'js/main.js' %}"></script>{% endcomment %}
-<script>
+  <script>
     $('#menuToggle').on('click', function (event) {
       var windowWidth = $(window).width();
       if (windowWidth < 1010) {
@@ -404,14 +445,14 @@
       }
 
     });
-      
-      $('.datetimepicker').datetimepicker({
-        format: 'Y-m-d',
-        minDate:'-1970/01/03',//yesterday is minimum date(for today use 0 or -1970/01/01)
-        maxDate:'0',//tomorrow is maximum date calendar
-        timepicker:false,
-      });
-      
+
+    $('.datetimepicker').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/03',//yesterday is minimum date(for today use 0 or -1970/01/01)
+      maxDate: '0',//tomorrow is maximum date calendar
+      timepicker: false,
+    });
+
     $(document).ready(function (e) {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
@@ -432,128 +473,186 @@
           language: "es"
         });
       });
-    })
 
-    $('#partner').on('change', function () {
-      $('.unit-fields').addClass('d-none')
-      axios.get(`/api/units/${$(this).val()}/list`)
-        .then(function (response) {
-          data = response.data
-          $('#unit').empty()
-          $.each(data, function (k, v) {
-            $('#unit').append(
-              `<option value=${v.id}>${v.name}</option>`
+      $('#partner').on('change', function () {
+        console.log('Change')
+        $('.unit-fields').addClass('d-none')
+        axios.get(`/api/units/${$(this).val()}/list`)
+          .then(function (response) {
+            data = response.data
+            console.log(data)
+            $('#unit').empty()
+            $.each(data, function (k, v) {
+              $('#unit').append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $('#unit').prepend(
+              '<option value="" selected disabled>Selecciona una unidad</option>'
             )
           })
-          $('#unit').prepend(
-            '<option value="" selected disabled>Selecciona una unidad</option>'
-          )
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
-
-    $('#unit').on('change', function (e) {
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.get(`/api/units/${$(this).val()}/detail`)
-        .then(function (response) {
-          data = response.data
-          $('#name').val(data.name)
-          $('#price_items').val(data.unit_price)
-          $('.unit-fields').removeClass('d-none')
-          $('.modal-footer').removeClass('d-none')
-          $('#total_price').val(data.unit_price)
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
-
-    $('#price_items').keyup(function () {
-      items = parseInt($(this).val())
-      venda = parseInt($('#unit_price').val())
-      $('#total_price').val(items + venda)
-    })
-
-    $('#unit_price').keyup(function () {
-      items = parseInt($(this).val())
-      venda = parseInt($('#price_items').val())
-      $('#total_price').val(items + venda)
-    })
-
-    $('.sell-units').on('submit', function (e) {
-      e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-      data = $(this).serialize()
-      axios.post('{% url 'api:units:unit_sell' %}', data)
-        .then(function (response) {
-          data = response.data
-          Swal.fire({
-            type: 'success',
-            title: 'Exitoso',
-            text: data,
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
-            }
+          .catch(function (error) {
+            // handle error
+            console.log(error);
           })
-            .catch(function (error) {
-              // handle error
-              console.log(error)
-              Swal.fire({
-                title: 'Ha ocurrido un error',
-                text: error,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-              }).then((result) => {
-                if (result.value) {
-                  location.reload()
-                }
-              })
-            })
-        })
-    })
+      })
 
-    $('.partner-withdraw').on('submit', function (e) {
-      e.preventDefault()
-      withdraw = $(this)
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-      data_send = withdraw.serialize()
-      axios.post('{% url 'api:users:validate_withdraw' %}', data_send)
-        .then(function (response) {
-          msg = response.data
-          if (response.status === 202) {
+      $('#unit').on('change', function (e) {
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.get(`/api/units/${$(this).val()}/detail`)
+          .then(function (response) {
+            data = response.data
+            $('#name').val(data.name)
+            $('#price_items').val(data.unit_price)
+            $('.unit-fields').removeClass('d-none')
+            $('.modal-footer').removeClass('d-none')
+            $('#total_price').val(data.unit_price)
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      })
+
+      $('#price_items').keyup(function () {
+        items = parseInt($(this).val())
+        venda = parseInt($('#unit_price').val())
+        $('#total_price').val(items + venda)
+      })
+
+      $('#unit_price').keyup(function () {
+        items = parseInt($(this).val())
+        venda = parseInt($('#price_items').val())
+        $('#total_price').val(items + venda)
+      })
+
+      $('.sell-units').on('submit', function (e) {
+        e.preventDefault()
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+        data = $(this).serialize()
+        axios.post('{% url 'api:units:unit_sell' %}', data)
+          .then(function (response) {
+            data = response.data
             Swal.fire({
-              title: 'Oops! No puedes hacer el retiro',
-              text: msg + " Deseas pedir autorización para realizar el retiro?",
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#60d3b0',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Si, pedir autorización',
-              cancelButtonText: "No, Cancelar",
-              allowOutsideClick: false,
+              type: 'success',
+              title: 'Exitoso',
+              text: data,
             }).then((result) => {
               if (result.value) {
-                const {value: text} = Swal.fire({
-                  title: 'Escribe el motivo para pedir la autorización',
-                  input: 'textarea',
-                  inputPlaceholder: 'Se debe autorizar el retiro de socio porque ...',
-                  showCancelButton: true,
-                  allowOutsideClick: false,
-                  showCloseButton: true
+                location.reload()
+              }
+            })
+              .catch(function (error) {
+                // handle error
+                console.log(error)
+                Swal.fire({
+                  title: 'Ha ocurrido un error',
+                  text: error,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
                 }).then((result) => {
-                  //if (result.value) {
+                  if (result.value) {
+                    location.reload()
+                  }
+                })
+              })
+          })
+      })
+
+      $('.partner-withdraw').on('submit', function (e) {
+        e.preventDefault()
+        withdraw = $(this)
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+        data_send = withdraw.serialize()
+        axios.post('{% url 'api:users:validate_withdraw' %}', data_send)
+          .then(function (response) {
+            msg = response.data
+            if (response.status === 202) {
+              Swal.fire({
+                title: 'Oops! No puedes hacer el retiro',
+                text: msg + " Deseas pedir autorización para realizar el retiro?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#60d3b0',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, pedir autorización',
+                cancelButtonText: "No, Cancelar",
+                allowOutsideClick: false,
+              }).then((result) => {
+                if (result.value) {
+                  const {value: text} = Swal.fire({
+                    title: 'Escribe el motivo para pedir la autorización',
+                    input: 'textarea',
+                    inputPlaceholder: 'Se debe autorizar el retiro de socio porque ...',
+                    showCancelButton: true,
+                    allowOutsideClick: false,
+                    showCloseButton: true
+                  }).then((result) => {
+                    //if (result.value) {
+                    data_withdraw = withdraw.serialize()
+                    data_withdraw += `&observation=Testtt&message=${msg}`
+                    axios.post('{% url "api:movements:movement_withdraw_request_create" %}', data_withdraw)
+                      .then(function (response) {
+                        Swal.fire({
+                          title: 'Exitoso!',
+                          text: response.data,
+                          type: 'success',
+                          allowOutsideClick: false
+                        }).then((result) => {
+                          if (result.value) {
+                            location.reload()
+                          }
+                        })
+                      })
+                      .catch(function (error) {
+                        // handle error
+                        console.log(error)
+                        console.log(error.response)
+                        Swal.fire({
+                          title: 'Ha ocurrido un error',
+                          text: error.response.data,
+                          type: 'error',
+                          showCancelButton: false,
+                          confirmButtonColor: '#3085d6',
+                          confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                          if (result.value) {
+                            location.reload()
+                          }
+                        })
+                      });
+                    //}
+                  })
+                } else {
+                  Swal.fire(
+                    'Cancelado',
+                    'El movimiento se ha cancelado',
+                    'info'
+                  ).then((result) => {
+                    location.reload()
+                  })
+                }
+              })
+            } else {
+              Swal.fire({
+                title: 'Validación exitosa!!',
+                text: msg + " Deseas continuar?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#60d3b0',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, continuar',
+                cancelButtonText: "No, Cancelar",
+                allowOutsideClick: false,
+                reverseButtons: true,
+              }).then((result) => {
+                if (result.value) {
                   data_withdraw = withdraw.serialize()
-                  data_withdraw += `&observation=Testtt&message=${msg}`
-                  axios.post('{% url "api:movements:movement_withdraw_request_create" %}', data_withdraw)
+                  axios.post('{% url "api:movements:withdraw_movement_create" %}', data_withdraw)
                     .then(function (response) {
                       Swal.fire({
                         title: 'Exitoso!',
@@ -569,10 +668,9 @@
                     .catch(function (error) {
                       // handle error
                       console.log(error)
-                      console.log(error.response)
                       Swal.fire({
                         title: 'Ha ocurrido un error',
-                        text: error.response.data,
+                        text: error.response,
                         type: 'error',
                         showCancelButton: false,
                         confirmButtonColor: '#3085d6',
@@ -583,93 +681,37 @@
                         }
                       })
                     });
-                  //}
-                })
-              } else {
-                Swal.fire(
-                  'Cancelado',
-                  'El movimiento se ha cancelado',
-                  'info'
-                ).then((result) => {
-                  location.reload()
-                })
-              }
-            })
-          } else {
-            Swal.fire({
-              title: 'Validación exitosa!!',
-              text: msg + " Deseas continuar?",
-              type: 'info',
-              showCancelButton: true,
-              confirmButtonColor: '#60d3b0',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Si, continuar',
-              cancelButtonText: "No, Cancelar",
-              allowOutsideClick: false,
-              reverseButtons: true,
-            }).then((result) => {
-              if (result.value) {
-                data_withdraw = withdraw.serialize()
-                axios.post('{% url "api:movements:withdraw_movement_create" %}', data_withdraw)
-                  .then(function (response) {
-                    Swal.fire({
-                      title: 'Exitoso!',
-                      text: response.data,
-                      type: 'success',
-                      allowOutsideClick: false
-                    }).then((result) => {
-                      if (result.value) {
-                        location.reload()
-                      }
-                    })
+                } else {
+                  Swal.fire(
+                    'Cancelado',
+                    'El movimiento se ha cancelado',
+                    'info'
+                  ).then((result) => {
+                    location.reload()
                   })
-                  .catch(function (error) {
-                    // handle error
-                    console.log(error)
-                    Swal.fire({
-                      title: 'Ha ocurrido un error',
-                      text: error.response,
-                      type: 'error',
-                      showCancelButton: false,
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: 'Aceptar'
-                    }).then((result) => {
-                      if (result.value) {
-                        location.reload()
-                      }
-                    })
-                  });
-              } else {
-                Swal.fire(
-                  'Cancelado',
-                  'El movimiento se ha cancelado',
-                  'info'
-                ).then((result) => {
-                  location.reload()
-                })
-              }
-            })
-          }
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error)
-          Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: error,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
+                }
+              })
             }
           })
-        })
-    })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+      })
 
-    $('.partner-closeout').on('submit', function (e) {
+      $('.partner-closeout').on('submit', function (e) {
       e.preventDefault()
       withdraw = $(this)
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
@@ -817,6 +859,8 @@
             }
           })
         }){% endcomment %}
+    })
+
     })
 
   </script>

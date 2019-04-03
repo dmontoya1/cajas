@@ -14,5 +14,5 @@ class StopAdmin(admin.StackedInline):
 class ConceptAdmin(admin.ModelAdmin):
 
     list_display = ['name', 'concept_type', 'counterpart']
-    search_fields = ['name', 'counterpart__name, relationship']
+    search_fields = ['name', 'counterpart__name']
     inlines = [StopAdmin, ]

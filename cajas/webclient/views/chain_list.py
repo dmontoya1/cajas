@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from cajas.users.models.partner import Partner
 from chains.models.chain import Chain
 from office.models.office import Office
 
@@ -22,7 +23,17 @@ class ChainList(LoginRequiredMixin, TemplateView):
         context = super(ChainList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(Office, slug=slug)
-        chains = Chain.objects.filter(office=office)
+        chains_list = []
+        partners = Partner.objects.filter(office=office)
+        chains = Chain.objects.all()
+        for p in partners:
+            for c in chains:
+                for cp in c.related_places.all():
+                    for cu in cp.related_users.all():
+                        if cu.user == p.user:
+                            if c not in chains_list:
+                                chains_list.append(c)
+
         context['office'] = office
-        context['chains'] = chains
+        context['chains'] = chains_list
         return context

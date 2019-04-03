@@ -79,6 +79,7 @@ LOCAL_APPS = [
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
     'cajas.inventory.apps.InventoryConfig',
+    'cajas.investments.apps.InvestmentsConfig',
     'cajas.loans.apps.LoansConfig',
     'cajas.movement.apps.MovementConfig',
     'cajas.office.apps.OfficeConfig',
