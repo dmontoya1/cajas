@@ -69,6 +69,12 @@ inventory.change_brand
 inventory.change_category
 inventory.delete_brand
 inventory.delete_category
+investments.add_investment
+investments.add_investmentpay
+investments.change_investment
+investments.change_investmentpay
+investments.delete_investment
+investments.delete_investmentpay
 jet.add_bookmark
 jet.add_pinnedapplication
 jet.change_bookmark

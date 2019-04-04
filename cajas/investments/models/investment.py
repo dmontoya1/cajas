@@ -32,12 +32,22 @@ class Investment(models.Model):
     )
     balance = models.IntegerField(
         'Saldo a la fecha',
+        default=0
     )
     conditions = models.TextField(
         'Condiciones de la negociación'
     )
     initial_value = models.IntegerField(
         'Cuota inicial',
+    )
+    monthly_pay = models.IntegerField(
+        'Valor pago mensual',
+        default=0
+    )
+    time = models.IntegerField(
+        'Plazo (en meses)',
+        blank=True,
+        null=True
     )
     investment_type = models.CharField(
         'Tipo de inversión',
@@ -46,7 +56,7 @@ class Investment(models.Model):
     )
 
     def __str__(self):
-        return "Inversión {}",format(self.partner)
+        return "Inversión {}".format(self.partner)
 
     class Meta:
         verbose_name = 'Inversión Negocios'

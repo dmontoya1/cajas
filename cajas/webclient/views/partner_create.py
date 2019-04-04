@@ -63,10 +63,10 @@ class PartnerCreate(LoginRequiredMixin, View):
                 'Has seleccionado socio indirecto pero no seleccionaste el socio directo. Ingresa el socio directo.'
             )
             return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
-        try:
+        if 'daily_square' in request.POST:
             request.POST['daily_square']
             daily_square = True
-        except:
+        else:
             daily_square = False
         initial_value = request.POST['initial_value']
 

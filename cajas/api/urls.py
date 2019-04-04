@@ -6,6 +6,7 @@ urlpatterns = [
     path('chains/', include('chains.urls', namespace='chains'), name='chains'),
     path('concepts/', include('concepts.urls', namespace='concepts'), name='concepts'),
     path('inventory/', include('inventory.urls', namespace='inventory'), name='inventory'),
+    path('investments/', include('investments.urls', namespace='investments'), name='investments'),
     path('loans/', include('loans.urls', namespace='loans'), name='loans'),
     path('movements/', include('movement.urls', namespace='movements'), name='movements'),
     path('office/', include('office.urls', namespace='office'), name='office'),
