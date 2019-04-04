@@ -941,7 +941,7 @@
               text: data,
             }).then((result) => {
               if (result.value) {
-                location.href = "{% url 'webclient:investment_list' office.slug %}"
+                location.reload()"
               }
             })
               .catch(function (error) {
