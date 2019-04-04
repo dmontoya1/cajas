@@ -15,35 +15,22 @@ class UserManager:
 
     def create_user(self, data):
         self.__validate_data(data)
+        user = User.objects.create(
+            email=data['email'],
+            username=data['email'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            document_type=data['document_type'],
+            document_id=data['document_id'],
+            is_active=True,
+        )
         if "password1" in data:
-            try:
-                user = User.objects.create(
-                    email=data['email'],
-                    username=data['email'],
-                    first_name=data['first_name'],
-                    last_name=data['last_name'],
-                    document_type=data['document_type'],
-                    document_id=data['document_id'],
-                    password=make_password(data['password1']),
-                    is_daily_square=data['is_daily_square'],
-                    is_abstract=True,
-                    is_active=True
-                )
-            except:
-                raise Exception('Ha ocurrido un error al crear el usuario')
+            user.password = make_password(data['password1'])
+            user.is_abstract = True
         else:
-            try:
-                user = User.objects.create(
-                    email=data['email'],
-                    username=data['email'],
-                    first_name=data['first_name'],
-                    last_name=data['last_name'],
-                    document_type=data['document_type'],
-                    document_id=data['document_id'],
-                    is_abstract=False,
-                    is_active=True,
-                    is_daily_square=data['is_daily_square'],
-                )
-            except:
-                raise Exception('Ha ocurrido un error al crear el usuario')
+            user.is_abstract = False
+        if "is_daily_square" in data:
+            user.is_daily_square = True
+
+        user.save()
         return user

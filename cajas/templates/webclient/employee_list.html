@@ -263,13 +263,17 @@
               </div>
             
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
                   <label class="form-check-label" for="is_abstract">
                     ¿Tiene acceso a la plataforma?
                   </label>
                 </div>
+              </div>
+              <div class="form-group col-md-6 form-check">
+                <input type="checkbox" class="form-check-input" id="is_daily_square" name="is_daily_square">
+                <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
               </div>
             </div> 
             <div class="form-row d-none" id="username_input">
@@ -443,8 +447,6 @@
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var bodyFormData = new FormData();
 
-      data = $(this).serialize()
-
       bodyFormData.append("office", $(this).context.office.value)
       bodyFormData.append("first_name", $(this).context.first_name.value)
       bodyFormData.append("last_name", $(this).context.last_name.value)
@@ -459,6 +461,9 @@
       bodyFormData.append("password2", $(this).context.password2.value)
       bodyFormData.append("cv", $(this).context.cv.files[0])
       bodyFormData.append("passport", $(this).context.passport.files[0])
+      if($("#is_daily_square").is(":checked")){
+        bodyFormData.append("is_daily_square", true) 
+      }
 
       axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
