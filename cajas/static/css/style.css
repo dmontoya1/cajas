@@ -2767,4 +2767,18 @@ a.arqueo {
 tr.deficit {
     background: #f9a34e !important;
 }
-
+span.investment-element {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  border: 1px solid #999;
+  padding: 15px;
+  border-radius: 10px;
+  color: #5c6bc0;
+  font-weight: bold;
+}
+span.investment-element span {
+  display: block;
+  color: #000000;
+  font-weight: normal;
+}

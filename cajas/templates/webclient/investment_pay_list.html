@@ -127,13 +127,22 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h3 class="mb-4">{{ investment }}</h3>
+                    </div>
+                    <div class="col-md-6">
+                      <h3 class="float-right">SALDO POR PAGAR: $ {{ investment.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
+                    </div>
+                  </div>
+                  <span class="investment-element">ELEMENTO QUE SE NEGOCIA: <span>{{ investment.element }}</span></span>
+                  <span class="investment-element">CONDICIONES DEL NEGOCIO: <span>{{ investment.conditions }}</span></span>
                   <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Valor</th>
-                    <th>Detalle</th>
-                    <th></th>
-                  </tr>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Valor</th>
+                      <th>Detalle</th>
+                    </tr>
                   </thead>
                   <tbody>
                   {% for i in investment.related_pays.all %}
@@ -141,15 +150,6 @@
                       <td>{{ i.date }}</td>
                       <td>$ {{ i.value|intcomma }}</td>
                       <td>{{ i.detail }}</td>
-                      <td>
-                        {% if perms.investments.add_investmentpay %}
-                          <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
-                                  data-target="#modalAddPayment">
-                            <i class="fas fa-plus mr-1"></i>
-                            Realizar pago
-                          </button>
-                        {% endif %}
-                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -159,7 +159,7 @@
           </div>
         </div>
         {% if perms.loans.add_loan %}
-          <a href="" class="float" data-toggle="modal" data-target="#modalAddLoan">
+          <a href="" class="float" data-toggle="modal" data-target="#modalAddPayment">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -172,7 +172,7 @@
   </div>
 
 
-  <!-- Modal Abonos -->
+<!-- Modal Pago -->
   <div class="modal fade" id="modalAddPayment" role="dialog" aria-labelledby="modalAddPaymentTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -185,16 +185,20 @@
         <div class="modal-body">
           <form method="POST" class="add-loan-payment">
             {% csrf_token %}
-            <input type="hidden" name="loan" id="loan" value="">
+            <input type="hidden" name="investment" id="investment" value="{{ investment.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="value">Valor del abono</label>
                 <input class="form-control" type="number" name="value" id="value" value=""
-                       placeholder="Ingresa el valor a abonar" placeholder="$">
+                       placeholder="Ingresa el valor a abonar" placeholder="$" required>
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del abono</label>
-                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;">
+                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;" autocomplete="off" required>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="detail">Detalle del abono</label>
+                <textarea class="form-control" name="detail" id="detail" rows="3" cols="5" required></textarea>
               </div>
             </div>
             <hr>
