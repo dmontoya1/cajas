@@ -127,25 +127,18 @@
                     <th>Socio</th>
                     <th>Cobrador</th>
                     <th>Supervisor</th>
-                    <th>Estado</th>
                     <th>Detalle</th>
                     <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for u in units %}
-                    
+                    {% if u.is_active %}
                       <tr>
                         <td>{{ u.name }}</td>
                         <td>{{ u.partner }}</td>
                         <td>{{ u.collector }}</td>
                         <td>{{ u.supervisor }}</td>
-                        
-                        {% if u.is_active %}
-                            <td style="color: #66bb6a">Activo</td>
-                        {% else %}
-                            <td style="color: #868e96">Inactivo</td>
-                        {% endif %}
                         
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
@@ -155,7 +148,7 @@
                           <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
                         </td>
                       </tr>
-                   
+                    {% endif %}
                   {% endfor %}
                   </tbody>
                 </table>
@@ -168,11 +161,11 @@
             <i class="fa fa-plus my-float"></i>
             </a>
             <div class="label-container">
-            <div class="label-text">Añadir empleado</div>
+            <div class="label-text">Añadir unidad</div>
             <i class="fa fa-play label-arrow"></i>
             </div>
-        {% endif %}
-      </div>
+            {% endif %}
+          </div>
     </div>
   </div>
 
@@ -553,17 +546,24 @@
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var elemts = []
       var count = $('.create_unit_form').children('.dynamic_controller').length
       $(this).append('<input type="hidden" name="count" value="'+count+'" >')
-      data = $(this).serialize() 
-      console.log(data)
+      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function(){
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
+      data = $(this).serialize()
+
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
           data = response.data
           Swal.fire({
             type: 'success',
             title: 'Exitoso',
-            text: data.name,
+            text: data,
           }).then(function () {
             location.reload()
           })
