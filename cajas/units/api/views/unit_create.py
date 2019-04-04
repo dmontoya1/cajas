@@ -21,7 +21,6 @@ class UnitCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
-        print(request.data)
         values = request.data["elemts"].split(",")
         unit = Unit()
         unit.name = request.data["name"]

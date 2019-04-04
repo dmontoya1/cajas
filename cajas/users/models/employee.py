@@ -28,7 +28,7 @@ class Employee(models.Model):
         (PERCENTAGE, 'Porcentaje de comisión')
     )
 
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE,
