@@ -8,9 +8,9 @@ PRODUCTION_DOTENVS_DIR_PATH = os.path.join(ROOT_DIR_PATH, ".envs", ".production"
 PRODUCTION_DOTENV_FILE_PATHS = [
     os.path.join(PRODUCTION_DOTENVS_DIR_PATH, ".django"),
     os.path.join(PRODUCTION_DOTENVS_DIR_PATH, ".postgres"),
-    os.path.join(PRODUCTION_DOTENVS_DIR_PATH, ".caddy"),
+    os.path.join(PRODUCTION_DOTENVS_DIR_PATH, ".nginx"),
 ]
-DOTENV_FILE_PATH = os.path.join(ROOT_DIR_PATH, ".env")
+DOTENV_FILE_PATH = os.path.join(ROOT_DIR_PATH, ".env1")
 
 
 def merge(

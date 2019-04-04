@@ -310,7 +310,6 @@
       axios.post('{% url 'api:chains:user_place_pay' %}', data)
       .then(function (response) {
         data = response.data
-        console.log(data)
         Swal.fire({
           type: 'success',
           title: 'Exitoso',

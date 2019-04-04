@@ -14,7 +14,6 @@ from movement.services.don_juan_service import DonJuanManager
 from movement.services.office_service import MovementOfficeManager
 from movement.services.partner_service import MovementPartnerManager
 from webclient.views.get_ip import get_ip
-from webclient.views.utils import get_object_or_none
 
 from ..models.loan import Loan
 
@@ -36,7 +35,7 @@ class LoanManager(object):
         self.__validate_data(data)
         lender_partner = get_object_or_404(Partner, pk=data['lender'])
         lender = lender_partner.user
-        old_loan = get_object_or_none(Loan, lender=lender)
+        old_loan = Loan.objects.filter(lender=lender).last()
         office = get_object_or_404(Office, pk=data['office'])
         if lender_partner.direct_partner:
             provider = lender_partner.direct_partner.user
@@ -84,7 +83,7 @@ class LoanManager(object):
         self.__validate_data(data)
         lender_employee = get_object_or_404(Employee, pk=data['lender'])
         lender = lender_employee.user
-        old_loan = get_object_or_none(Loan, lender=lender)
+        old_loan = Loan.objects.filter(lender=lender).last()
         office = get_object_or_404(Office, pk=data['office'])
         concept = get_object_or_404(Concept, name='Préstamo empleados')
 
@@ -105,7 +104,7 @@ class LoanManager(object):
             provider = get_object_or_404(Partner, pk=data['provider'])
             loan = Loan.objects.create(
                 lender=lender,
-                provider=provider,
+                provider=provider.user,
                 office=office,
                 loan_type=data['loan_type'],
                 value=data['value'],
@@ -115,13 +114,14 @@ class LoanManager(object):
                 exchange=data['exchange'],
                 balance=data['value']
             )
-            data_mov['box_partner'] = provider.box
+            data_mov['box'] = provider.box
+            data_mov['partner'] = provider
             movement = movement_parter_manager.create_simple(data_mov)
         elif data['box_from'] == 'donjuan':
             provider = get_object_or_404(Partner, code='DONJUAN')
             loan = Loan.objects.create(
                 lender=lender,
-                provider=provider,
+                provider=provider.user,
                 office=office,
                 loan_type=data['loan_type'],
                 value=data['value'],
@@ -194,7 +194,6 @@ class LoanManager(object):
         interest = last_loan.interest
         total_interest = (total_balance['balance__sum'] * interest)/100
         concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
-        print(lender.partner.get().box)
         data1 = {
             'box': lender.partner.get().box,
             'partner': lender.partner.get(),

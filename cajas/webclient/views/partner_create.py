@@ -5,17 +5,22 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquareHandler
+from boxes.services.box_daily_square_manager import BoxDailySquareManager
+from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import partner_manager
 from movement.services.partner_service import MovementPartnerManager
+from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.office import Office
+from webclient.views.utils import get_object_or_none
 
 from .get_ip import get_ip
 
-user_manager = UserManager()
+box_daily_square_manager = BoxDailySquareManager()
+daily_square_manager = MovementDailySquareManager()
 movement_partner_manager = MovementPartnerManager()
+user_manager = UserManager()
 
 
 class PartnerCreate(LoginRequiredMixin, View):
@@ -24,6 +29,21 @@ class PartnerCreate(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         office = Office.objects.get(pk=request.POST['office'])
+        admin_senior = get_object_or_none(Employee, office=office, charge__name='Administrador Senior')
+        if not admin_senior:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'No hay ningún Administrador Senior en la oficina. Para continuar Agrega uno.'
+            )
+            return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
+        if not admin_senior.user.is_daily_square:
+            messages.add_message(
+                request,
+                messages.ERROR,
+                'El administrador Senior no tiene un cuadre diario asociado'
+            )
+            return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
@@ -68,7 +88,11 @@ class PartnerCreate(LoginRequiredMixin, View):
         }
         partner = partner_manager.create_partner(data_partner)
         if daily_square:
-            box_daily_square = BoxDailySquareHandler.box_daily_square_create(user, office)
+            data = {
+                'user': user,
+                'office': office
+            }
+            box_daily_square = box_daily_square_manager.create_box(data)
         if int(initial_value) > 0:
             ip = get_ip(request)
             data = {
@@ -78,5 +102,7 @@ class PartnerCreate(LoginRequiredMixin, View):
                 'ip': ip,
             }
             movement = movement_partner_manager.create_partner_movements(data)
+            data['box'] = admin_senior.user.related_daily_box.get()
+            movement1 = daily_square_manager.create_new_partner_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el socio exitosamente')
         return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))

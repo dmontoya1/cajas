@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from inventory.models.category import Category
-from inventory.models.brand import Brand
+from .models.category import Category
+from .models.brand import Brand
 
 
 class BrandAdmin(admin.StackedInline):

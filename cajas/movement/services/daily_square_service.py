@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.db.models import Sum
 
+from concepts.models.concepts import Concept
 from ..models.movement_daily_square import MovementDailySquare
 
 
@@ -30,6 +31,19 @@ class MovementDailySquareManager(object):
             user=data['user'],
             country=data['country'],
             office=data['office'],
+        )
+        return movement
+
+    def create_new_partner_movement(self, data):
+        movement = MovementDailySquare.objects.create(
+            box_daily_square=data['box'],
+            concept=Concept.objects.get(name='Aporte personal socio'),
+            movement_type='IN',
+            value=data['value'],
+            detail='Aporte personal {}'.format(data['partner']),
+            date=datetime.now(),
+            responsible=data['responsible'],
+            ip=data['ip'],
         )
         return movement
 

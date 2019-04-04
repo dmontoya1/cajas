@@ -12,7 +12,6 @@ def webclient_processor(request):
         partners = None
     all_partners = Partner.objects.all()
     concepts = Concept.objects.filter(is_active=True)
-
     context = {
         'API_KEY': settings.API_KEY,
         'concepts': concepts,

@@ -33,7 +33,7 @@ class LoanPaymentManager(object):
             if loan.provider:
                 concept = get_object_or_404(Concept, name='Pago Abono préstamo empleado')
                 data = {
-                    'box': loan.office.get().box,
+                    'box': loan.office.box,
                     'concept': concept,
                     'movement_type': 'IN',
                     'value': request.data['value'],

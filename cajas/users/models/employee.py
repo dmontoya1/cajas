@@ -59,11 +59,15 @@ class Employee(models.Model):
     )
     passport = models.FileField(
         'Pasaporte',
-        upload_to=user_passport_path
+        upload_to=user_passport_path,
+        blank=True,
+        null=True
     )
     cv = models.FileField(
         'Hoja de vida',
-        upload_to=user_cv_path
+        upload_to=user_cv_path,
+        blank=True,
+        null=True
     )
     observations = models.TextField(
         'Motivo de despido',

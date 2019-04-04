@@ -14,6 +14,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "stage.apptitud.com.co",
     "192.168.0.16",
+    "192.168.0.21",
 ]
 
 # CACHES

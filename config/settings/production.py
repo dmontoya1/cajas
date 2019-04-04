@@ -139,10 +139,6 @@ ANYMAIL = {
     'MAILGUN_SENDER_DOMAIN': env('MAILGUN_DOMAIN')
 }
 
-# Gunicorn
-# ------------------------------------------------------------------------------
-INSTALLED_APPS += ['gunicorn']  # noqa F405
-
 # Collectfast
 # ------------------------------------------------------------------------------
 # https://github.com/antonagestam/collectfast#installation
@@ -213,3 +209,6 @@ RAVEN_CONFIG = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+INSTALLED_APPS += ['django_extensions']  # noqa F405
+
+API_KEY = env('API_KEY')
