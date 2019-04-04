@@ -516,7 +516,9 @@
 
     $(document).ready(function (e) {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-
+      $('.datetimepicker').keypress(function(e) {
+          return false
+      });
       $('#sell-unit select').each(function () {
         $(this).select2({
           language: "es"

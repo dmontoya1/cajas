@@ -269,13 +269,17 @@
               </div>
             
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
                   <label class="form-check-label" for="is_abstract">
                     ¿Tiene acceso a la plataforma?
                   </label>
                 </div>
+              </div>
+              <div class="form-group col-md-6 form-check">
+                <input type="checkbox" class="form-check-input" id="is_daily_square" name="is_daily_square">
+                <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
               </div>
             </div> 
             <div class="form-row d-none" id="username_input">
@@ -439,7 +443,6 @@
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
@@ -449,8 +452,6 @@
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var bodyFormData = new FormData();
-
-      data = $(this).serialize()
 
       bodyFormData.append("office", $(this).context.office.value)
       bodyFormData.append("first_name", $(this).context.first_name.value)
@@ -466,6 +467,9 @@
       bodyFormData.append("password2", $(this).context.password2.value)
       bodyFormData.append("cv", $(this).context.cv.files[0])
       bodyFormData.append("passport", $(this).context.passport.files[0])
+      if($("#is_daily_square").is(":checked")){
+        bodyFormData.append("is_daily_square", true) 
+      }
 
       axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
@@ -643,26 +647,28 @@
         allowOutsideClick: false,
         showCloseButton: true
       }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/users/${pk}/employee-delete`,
-          {data: {description: result.value}}
-        )
-          .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
+        if (result.value) {
+            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+            axios.delete(`/api/users/${pk}/employee-delete`,
+              {data: {description: result.value}}
+            )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
             })
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log(error.response)
-          });
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+          }
       })
     })
 
