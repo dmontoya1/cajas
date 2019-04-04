@@ -6,16 +6,17 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from boxes.views.box_daily_square.box_daily_square_handler import BoxDailySquareHandler
+from boxes.services.box_daily_square_manager import BoxDailySquareManager
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.employee_service import EmployeeManager
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from office.models.office import Office
 from cajas.users.models.charges import Charge
 
+box_daily_square_manager = BoxDailySquareManager()
+employee_manager = EmployeeManager()
 User = get_user_model()
 user_manager = UserManager()
-employee_manager = EmployeeManager()
 
 
 class EmployeeCreate(APIView):
@@ -35,7 +36,7 @@ class EmployeeCreate(APIView):
         employee = employee_manager.create_employee(aux)
 
         if request.data["is_daily_square"] == "true":
-            box_daily_square = BoxDailySquareHandler.box_daily_square_create(user, office)
+            box_daily_square = box_daily_square_manager.create_box(aux)
 
         return Response(
             'El empleado se ha creado correctamente',
