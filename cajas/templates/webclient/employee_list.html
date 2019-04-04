@@ -276,12 +276,6 @@
                 <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
               </div>
             </div> 
-            <div class="form-row d-none" id="username_input">
-              <div class="form-group col-md-12">
-                <label for="username">Nombre de Usuario</label>
-                <input type="text" class="form-control d-none" id="username" name="username" placeholder="Username">
-              </div>
-            </div>
             <div class="form-row d-none" id="password_inputs">
               <div class="form-group col-md-6">
                 <label for="password1">Contraseña</label>
@@ -456,7 +450,6 @@
       bodyFormData.append("salary_type", $(this).context.salary_type.value)
       bodyFormData.append("salary", $(this).context.salary.value)
       bodyFormData.append("charge", $(this).context.charge.value)
-      bodyFormData.append("username", $(this).context.username.value)
       bodyFormData.append("password1", $(this).context.password1.value)
       bodyFormData.append("password2", $(this).context.password2.value)
       bodyFormData.append("cv", $(this).context.cv.files[0])
@@ -499,21 +492,17 @@
     $('#is_abstract').click(function () {
       if ($(this).is(':checked')) {
         $("#password_inputs").removeClass("d-none");
-        $("#username_input").removeClass("d-none");
         $("#password1").prop('required', true);
         $("#password2").prop('required', true);
         $("#password1").removeClass("d-none");
         $("#password2").removeClass("d-none");
-        $("#username").removeClass("d-none");
         $('#is_abstract').prop('checked', true);
       } else {
         $("#password_inputs").addClass("d-none");
-        $("#username_input").addClass("d-none");
         $("#password1").prop('required', false);
         $("#password2").prop('required', false);
         $("#password2").addClass("d-none");
         $("#password1").addClass("d-none");
-        $("#username").addClass("d-none");
         $('#is_abstract').prop('checked', false);
       }
     });

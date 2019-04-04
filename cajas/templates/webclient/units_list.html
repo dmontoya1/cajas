@@ -127,26 +127,19 @@
                     <th>Socio</th>
                     <th>Cobrador</th>
                     <th>Supervisor</th>
-                    <th>Estado</th>
                     <th>Detalle</th>
                     <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for u in units %}
-                    
+                    {% if u.is_active %}
                       <tr>
                         <td>{{ u.name }}</td>
                         <td>{{ u.partner }}</td>
                         <td>{{ u.collector }}</td>
                         <td>{{ u.supervisor }}</td>
-                        
-                        {% if u.is_active %}
-                            <td style="color: #66bb6a">Activo</td>
-                        {% else %}
-                            <td style="color: #868e96">Inactivo</td>
-                        {% endif %}
-                        
+
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
                         <td>
@@ -155,7 +148,7 @@
                           <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
                         </td>
                       </tr>
-                   
+                    {% endif %}
                   {% endfor %}
                   </tbody>
                 </table>
@@ -319,7 +312,7 @@
                       <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
                         <option disabled value="" selected>Selecciona un socio</option>
                         {% for p in partners %}
-                          <option value="{{p.user.pk}}">{{ p }} {{p.user.pk}} {{p.pk}}</option>
+                          <option value="{{p.user.pk}}">{{ p }}</option>
                         {% endfor %}
                       </select>
                   </div>
@@ -523,7 +516,7 @@
     $('.decline-mv').on('click', function () {
       pk = $(this).data('id')
       const {value: text} = Swal.fire({
-        title: 'Escribe el motivo de eliminación del item',
+        title: 'Escribe el motivo de eliminación de la unidad',
         input: 'textarea',
         inputPlaceholder: 'Se elimina el item porque ...',
         showCancelButton: true,
@@ -576,7 +569,7 @@
           Swal.fire({
             type: 'success',
             title: 'Exitoso',
-            text: data.name,
+            text: data,
           }).then(function () {
             location.reload()
           })

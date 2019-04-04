@@ -363,7 +363,6 @@
         axios.get(`/api/office/${office_item_pk}/office-item-detail`)
           .then(function (response) {
             data = response.data
-
             $("#edit_name").val(data.name)
             $("#edit_price").val(data.price)
             $("#edit_description").val(data.description)
@@ -373,13 +372,13 @@
             //fill brands and category select depending previously selected item
             axios.get(`/api/inventory/${data.brand}/brand`)
               .then(function (response) {
-                data = response.data
+                data_brand = response.data
 
-                $("#edit_category option[value='" + data[0].category.id + "']").prop("selected", true);
+                $("#edit_category option[value='" + data_brand[0].category.id + "']").prop("selected", true);
                 $("#edit_category").trigger('change');
 
                 $('#edit_brand').empty()
-                $.each(data, function (k, v) {
+                $.each(data_brand, function (k, v) {
                   $('#edit_brand').append(
                     `<option value=${v.id}>${v.name}</option>`
                   )

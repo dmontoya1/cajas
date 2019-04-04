@@ -219,7 +219,7 @@
                           required></textarea>
               </div>
             </div>
-            <!-- Appears if concept equals to Compra de Unidades-->
+            <!-- Appears if concept equals to Compra de Inventario Unidades-->
             <div class="scape" id="unit_select">
               <hr>
               <div class="form-row">
@@ -299,9 +299,9 @@
 
   <script type="text/javascript">
 
-     //Displays unit_form if concept equals to Compra de Unidades
+     //Displays unit_form if concept equals to Compra de Inventario Unidades
      $("#concept").on("change", function(){
-      if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+      if( $("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
         $(".dynamic_controller").removeClass("d-none")
         $("#unit_select").removeClass("d-none")
         $("#unity").prop("required",true)
@@ -369,7 +369,7 @@
 
       //get partner units 
       $("#concept").on("change", function(){
-        if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+        if( $("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
           axios.get(`/api/units/${partner_id}/list`)
           .then(function (response) {
             data = response.data
@@ -391,7 +391,7 @@
       })
 
       $('.add-movement-form').on('submit', function (e) {
-        if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+        if( $("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
           e.preventDefault()
           console.log("Compra de unidad")
           var elemts = []
@@ -413,7 +413,7 @@
             Swal.fire({
               type: 'success',
               title: 'Exitoso',
-              text: data.name,
+              text: data,
             }).then(function () {
               location.reload()
             })
@@ -502,7 +502,7 @@
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = movement.serialize()
-        if( $("#concept option:selected").text() != "Compra de Unidad de tipo Simple"){
+        if( $("#concept option:selected").text() != "Compra de Inventario Unidad de tipo Simple"){
           axios.post('{% url 'api:movements:movement_partner_create' %}', data_send)
             .then(function (response) {
               msg = response.data
