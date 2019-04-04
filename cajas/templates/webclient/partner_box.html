@@ -179,7 +179,7 @@
         <div class="modal-body">
           <form method="POST" class="add-movement-form" >
             {% csrf_token %}
-            <input type="hidden" name="partner_id" value="{{ box.partner.pk }}">
+            <input type="hidden" name="partner_id" id="partner_id" value="{{ box.partner.pk }}">
             <div class="scape">
               <div class="form-row">
                 <div class="form-group col-md-6">
@@ -201,7 +201,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="movement_type">Entra / Sale</label>
-                  <select class="form-control" id="movement_type" name="movement_type" required>
+                  <select class="form-control" id="movement_type" name="movement_type" required style="width: 100%; height: 20px;">
                     <option selected disabled value="">Selecciona el tipo de movimiento</option>
                     <option value="IN">Entra</option>
                     <option value="OUT">Sale</option>
@@ -362,16 +362,15 @@
 
   // Add movement script
   $(".add-movement").on("click", function(){
-      pk = $(this).data('id')
       slug = "{{ office.slug }}"
-      $("#partner_id").val(pk)
+      partner_id = $("#partner_id").val()
 
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       //get partner units 
       $("#concept").on("change", function(){
         if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
-          axios.get(`/api/units/${pk}/list`)
+          axios.get(`/api/units/${partner_id}/list`)
           .then(function (response) {
             data = response.data
             $('#unity').empty()
@@ -392,42 +391,44 @@
       })
 
       $('.add-movement-form').on('submit', function (e) {
-        e.preventDefault()
-        var elemts = []
-        /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
-        *  there: obtaining directly data from python dictionary using these identifiers
-        */ 
-        $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function(){
-            id_form = $(this).attr("id")
-            id_form = id_form[id_form.length - 1]
-            elemts.push(id_form)
-        });
-        $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
-        data = $(this).serialize() 
+        if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+          e.preventDefault()
+          console.log("Compra de unidad")
+          var elemts = []
+          /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
+          *  there: obtaining directly data from python dictionary using these identifiers
+          */ 
+          $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function(){
+              id_form = $(this).attr("id")
+              id_form = id_form[id_form.length - 1]
+              elemts.push(id_form)
+          });
+          $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
+          data = $(this).serialize() 
 
-        console.log(data)
-        axios.post("{% url 'api:movements:movement_partner_create' %}", data)
-        .then(function (response) {
-          data = response.data
-          Swal.fire({
-            type: 'success',
-            title: 'Exitoso',
-            text: data.name,
-          }).then(function () {
-            location.reload()
+          console.log(data)
+          axios.post("{% url 'api:movements:movement_partner_create' %}", data)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data.name,
+            }).then(function () {
+              location.reload()
+            })
           })
-        })
-        .catch(function (error) {
-          // handle error
-          Swal.fire({
-            type: 'error',
-            title: 'Error',
-            text: error,
-          }).then(function () {
-            location.reload()
+          .catch(function (error) {
+            // handle error
+            Swal.fire({
+              type: 'error',
+              title: 'Error',
+              text: error,
+            }).then(function () {
+              location.reload()
+            })
           })
-        })
-        
+        }
       })
     })
 
@@ -486,7 +487,6 @@
       $("#unit_select").addClass("d-none")
 
       $('.add-movement-form .scape select').each(function () {
-        // console.log($(this))
         $(this).select2({
           language: "es"
         });
@@ -496,99 +496,101 @@
         language: "es"
       });
 
-      $('.add-movement').on('submit', function (e) {
+      $('.add-movement-form').on('submit', function (e) {
         e.preventDefault()
         movement = $(this)
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = movement.serialize()
-        axios.post('{% url 'api:movements:movement_partner_create' %}', data_send)
-          .then(function (response) {
-            msg = response.data
-            if (response.status === 204) {
-              Swal.fire({
-                title: 'Oops! Has llegado al tope',
-                text: msg + " Deseas pedir autorización para generar este movimiento?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#60d3b0',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, pedir autorización',
-                cancelButtonText: "No, Cancelar",
-                allowOutsideClick: false,
-              }).then((result) => {
-                if (result.value) {
-                  const {value: text} = Swal.fire({
-                    title: 'Escribe el motivo para pedir la autorización',
-                    input: 'textarea',
-                    inputPlaceholder: 'Se debe autorizar el movimiento porque ...',
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                      return !value && 'Debes escribir el motivo para pedir la autorización'
-                    },
-                    allowOutsideClick: false,
-                    showCloseButton: true
-                  }).then((result) => {
-                    if (result.value) {
-                      data_stop = movement.serialize()
-                      data_stop += `&observation=${result.value}`
-                      axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
-                        .then(function (response) {
-                          Swal.fire({
-                            title: 'Exitoso!',
-                            text: response.data,
-                            type: 'success',
-                            allowOutsideClick: false
-                          }).then((result) => {
-                            if (result.value) {
-                              location.reload()
-                            }
+        if( $("#concept option:selected").text() != "Compra de Unidad de tipo Simple"){
+          axios.post('{% url 'api:movements:movement_partner_create' %}', data_send)
+            .then(function (response) {
+              msg = response.data
+              if (response.status === 204) {
+                Swal.fire({
+                  title: 'Oops! Has llegado al tope',
+                  text: msg + " Deseas pedir autorización para generar este movimiento?",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#60d3b0',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Si, pedir autorización',
+                  cancelButtonText: "No, Cancelar",
+                  allowOutsideClick: false,
+                }).then((result) => {
+                  if (result.value) {
+                    const {value: text} = Swal.fire({
+                      title: 'Escribe el motivo para pedir la autorización',
+                      input: 'textarea',
+                      inputPlaceholder: 'Se debe autorizar el movimiento porque ...',
+                      showCancelButton: true,
+                      inputValidator: (value) => {
+                        return !value && 'Debes escribir el motivo para pedir la autorización'
+                      },
+                      allowOutsideClick: false,
+                      showCloseButton: true
+                    }).then((result) => {
+                      if (result.value) {
+                        data_stop = movement.serialize()
+                        data_stop += `&observation=${result.value}`
+                        axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
+                          .then(function (response) {
+                            Swal.fire({
+                              title: 'Exitoso!',
+                              text: response.data,
+                              type: 'success',
+                              allowOutsideClick: false
+                            }).then((result) => {
+                              if (result.value) {
+                                location.reload()
+                              }
+                            })
                           })
-                        })
-                        .catch(function (error) {
-                          console.log(error);
-                          console.log(error.response)
-                        });
-                    }
-                  })
-                } else {
-                  Swal.fire(
-                    'Cancelado',
-                    'El movimiento se ha cancelado',
-                    'info'
-                  ).then((result) => {
+                          .catch(function (error) {
+                            console.log(error);
+                            console.log(error.response)
+                          });
+                      }
+                    })
+                  } else {
+                    Swal.fire(
+                      'Cancelado',
+                      'El movimiento se ha cancelado',
+                      'info'
+                    ).then((result) => {
+                      location.reload()
+                    })
+                  }
+                })
+              } else {
+                Swal.fire({
+                  type: 'success',
+                  title: 'Exitoso',
+                  text: msg,
+                }).then((result) => {
+                  if (result.value) {
                     location.reload()
-                  })
-                }
-              })
-            } else {
+                  }
+                })
+              }
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error)
               Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: msg,
+                title: 'Ha ocurrido un error',
+                text: error,
+                type: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Aceptar'
               }).then((result) => {
                 if (result.value) {
                   location.reload()
                 }
               })
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error)
-            Swal.fire({
-              title: 'Ha ocurrido un error',
-              text: error,
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Aceptar'
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
             })
-          })
+          }
       })
     });
   </script>

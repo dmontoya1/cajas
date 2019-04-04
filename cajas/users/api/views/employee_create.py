@@ -34,7 +34,7 @@ class EmployeeCreate(APIView):
 
         employee = employee_manager.create_employee(aux)
 
-        if "is_daily_square" in request.data:
+        if request.data["is_daily_square"] == "true":
             box_daily_square = BoxDailySquareHandler.box_daily_square_create(user, office)
 
         return Response(

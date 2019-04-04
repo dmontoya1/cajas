@@ -133,7 +133,7 @@
                   </thead>
                   <tbody>
                   {% for e in employees %}
-                    {% if e.user.is_active and e.user.is_abstract %}
+                    {% if e.user.is_active %}
                       <tr>
                         <td>{{ e.user.first_name }}</td>
                         <td>{{ e.user.last_name }}</td>
@@ -461,9 +461,7 @@
       bodyFormData.append("password2", $(this).context.password2.value)
       bodyFormData.append("cv", $(this).context.cv.files[0])
       bodyFormData.append("passport", $(this).context.passport.files[0])
-      if($("#is_daily_square").is(":checked")){
-        bodyFormData.append("is_daily_square", true) 
-      }
+      bodyFormData.append("is_daily_square", $("#is_daily_square").is(":checked") ? true : false)
 
       axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {

@@ -15,22 +15,25 @@ class UserManager:
 
     def create_user(self, data):
         self.__validate_data(data)
-        user = User.objects.create(
-            email=data['email'],
-            username=data['email'],
-            first_name=data['first_name'],
-            last_name=data['last_name'],
-            document_type=data['document_type'],
-            document_id=data['document_id'],
-            is_active=True,
-        )
-        if "password1" in data:
-            user.password = make_password(data['password1'])
-            user.is_abstract = True
-        else:
-            user.is_abstract = False
-        if "is_daily_square" in data:
-            user.is_daily_square = True
+        try:
+            user = User.objects.get(username=data['email'])
+        except:
+            user = User.objects.create(
+                email=data['email'],
+                username=data['email'],
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                document_type=data['document_type'],
+                document_id=data['document_id'],
+                is_active=True,
+            )
+            if data["password1"] != "":
+                user.password = make_password(data['password1'])
+                user.is_abstract = True
+            else:
+                user.is_abstract = False
+            if data["is_daily_square"] == "true":
+                user.is_daily_square = True
 
-        user.save()
+            user.save()
         return user
