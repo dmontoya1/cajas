@@ -140,7 +140,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.employee.is_admin_charge %}
+                  {% if request.user.is_superuser or request.user.related_user.employee.get.is_admin_charge %}
                     {% for p in provisioning %}
                       <tr>
                         <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>

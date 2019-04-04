@@ -169,12 +169,12 @@
             </div>
           </div>
         </div>
-        {% if request.user.employee.charge.name == 'Secretaria' %}
+        {% if perms.units.add_unit %}
             <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
             <i class="fa fa-plus my-float"></i>
             </a>
             <div class="label-container">
-            <div class="label-text">Añadir empleado</div>
+            <div class="label-text">Añadir unidad</div>
             <i class="fa fa-play label-arrow"></i>
             </div>
         {% endif %}

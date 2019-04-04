@@ -153,7 +153,7 @@
                       <td><a href="{% url 'webclient:investment_pay_list' office.slug i.pk %}">Pagos</a></td>
                       <td>
                         {% if perms.investments.add_investmentpay %}
-                          <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
+                          <button type="button" class="add-movement add-pay" data-id="{{ i.pk }}" data-toggle="modal"
                                   data-target="#modalAddPayment">
                             <i class="fas fa-plus mr-1"></i>
                             Realizar pago
@@ -194,16 +194,20 @@
         <div class="modal-body">
           <form method="POST" class="add-loan-payment">
             {% csrf_token %}
-            <input type="hidden" name="loan" id="loan" value="">
+            <input type="hidden" name="investment" id="investment" value="">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="value">Valor del abono</label>
                 <input class="form-control" type="number" name="value" id="value" value=""
-                       placeholder="Ingresa el valor a abonar" placeholder="$">
+                       placeholder="Ingresa el valor a abonar" placeholder="$" required>
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del abono</label>
-                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;">
+                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;" autocomplete="off" required>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="detail">Detalle del abono</label>
+                <textarea class="form-control" name="detail" id="detail" rows="3" cols="5" required></textarea>
               </div>
             </div>
             <hr>
@@ -277,14 +281,16 @@
     });
 
     $('.add-pay').on('click', function () {
-      $('#loan').val($(this).data('id'))
+      console.log('Click')
+      console.log($(this).data('id'))
+      $('#investment').val($(this).data('id'))
     })
 
     $('.add-loan-payment').on('submit', function (e) {
       e.preventDefault()
       data = $(this).serialize()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.post('{% url 'api:loans:loan_payment_create' %}', data)
+      axios.post('{% url 'api:investments:pay_create' %}', data)
         .then(function (response) {
           data = response.data
           Swal.fire({

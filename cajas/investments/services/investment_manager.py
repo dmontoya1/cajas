@@ -21,11 +21,4 @@ class InvestmentManager(object):
             initial_value=data['initial_value'],
             investment_type=data['investment_type']
         )
-        if investment.initial_value > 0:
-            data1 = {
-                'investment': investment,
-                'date': investment.date,
-                'value': investment.initial_value
-            }
-            pay_manager.add_payment(data1)
         return investment

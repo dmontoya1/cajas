@@ -21,14 +21,14 @@ class InvestmentPayManager(object):
         investment.balance -= int(request.data['value'])
         investment.save()
 
-        concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
+        concept = get_object_or_404(Concept, name='Inversión Negocios')
         data = {
-            'partner': investment.partner.get(),
-            'box': investment.partner.get().box,
+            'partner': investment.partner,
+            'box': investment.partner.box,
             'concept': concept,
             'movement_type': 'OUT',
             'value': request.data['value'],
-            'detail': 'Pago abono {}'.format(investment),
+            'detail': request.data['detail'],
             'date': request.data['date'],
             'responsible': request.user,
             'ip': get_ip(request)
@@ -41,5 +41,6 @@ class InvestmentPayManager(object):
         investment_pay = InvestmentPay.objects.create(
             investment=investment,
             value=request.data['value'],
-            date=request.data['date']
+            date=request.data['date'],
+            detail=request.data['detail']
         )

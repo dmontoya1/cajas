@@ -129,28 +129,18 @@
                        cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
-                    <th>Socio</th>
-                    <th>Tipo de inversión</th>
-                    <th>Elemento que se negocia</th>
-                    <th>Valor total</th>
-                    <th>Inversión Inicial</th>
                     <th>Fecha</th>
-                    <th>Saldo</th>
-
+                    <th>Valor</th>
+                    <th>Detalle</th>
                     <th></th>
                   </tr>
                   </thead>
                   <tbody>
-                  {% for i in investments %}
+                  {% for i in investment.related_pays.all %}
                     <tr>
-                      <td>{{ i.partner }}</td>
-                      <td>{{ i.get_investment_type_display }}</td>
-                      <td>{{ i.element }}</td>
-                      <td>$ {{ i.total_value|intcomma }}</td>
-                      <td>$ {{ i.initial_value|intcomma }}</td>
                       <td>{{ i.date }}</td>
-                      <td>{{ i.balance }}</td>
-                      <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Pagos</a></td>
+                      <td>$ {{ i.value|intcomma }}</td>
+                      <td>{{ i.detail }}</td>
                       <td>
                         {% if perms.investments.add_investmentpay %}
                           <button type="button" class="add-movement add-pay" data-id="{{ l.id }}" data-toggle="modal"
