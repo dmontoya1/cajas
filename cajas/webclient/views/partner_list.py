@@ -24,12 +24,12 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(partner__office=office)
 
         try:
-            if self.request.user.is_superuser or self.request.user.employee.is_admin_charge():
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     user__is_active=True
                 ).exclude(partner_type='DJ')
-        except:
+        except Exception as e:
             context['partner'] = self.request.user.partner.get()
 
         context['categories'] = Category.objects.all()

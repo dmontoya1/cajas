@@ -12,7 +12,7 @@ class SupervisorCalendarList(APIView):
 
     def get(self, request, format=None):
         calendar = []
-        if(request.user.employee.is_admin_charge()):
+        if request.user.related_employee.get().is_admin_charge():
             super_calendar = SupervisorCalendar.objects.filter(
                 office__slug=self.request.GET.get("office"),
                 assigned_date__range=[

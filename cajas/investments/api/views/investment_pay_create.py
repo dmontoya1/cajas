@@ -3,19 +3,20 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ..serializers.loan_payments import LoanPaymentSerializer
-from ..services.loan_payment_service import loan_payment_manager
+from ..serializers.investment_pay_serializer import InvestmentPaySerializer
+from ...services.investment_pay_manager import InvestmentPayManager
+
+investment_pay_manager = InvestmentPayManager()
 
 
-class LoanPaymentCreate(APIView):
+class InvestmentPayCreate(APIView):
     """
     """
 
     def post(self, request, format=None):
-        serializer = LoanPaymentSerializer(data=request.data)
+        serializer = InvestmentPaySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        loan = loan_payment_manager.add_payment(request)
-
+        pay = investment_pay_manager.add_payment(request)
         return Response(
             'Se ha añadido el abono exitosamente',
             status=status.HTTP_201_CREATED

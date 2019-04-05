@@ -55,6 +55,12 @@
           Lista de socios
         </a>
       </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:investment_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de inversiones
+        </a>
+      </li>
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
@@ -134,8 +140,8 @@
                   </tr>
                   </thead>
                   <tbody>
-                    {% if request.user.is_superuser or request.user.employee.is_admin_charge %}
-                      {% for p in provisioning %}
+                  {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                    {% for p in provisioning %}
                       <tr>
                           <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>
                           <td>{{p.date}}</td>

@@ -14,6 +14,8 @@ from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
 from .views.employee_list import EmployeeList
 from .views.home_view import Home
+from .views.investment_list import InvestmentList
+from .views.investment_pay_list import InvestmentPaymentList
 from .views.loan_create import LoanCreate
 from .views.loan_list import LoanList
 from .views.loan_payment_list import LoanPaymentList
@@ -79,4 +81,7 @@ urlpatterns = [
     path("office/<slug:slug>/units-list/", UnitsList.as_view(), name='units_list'),
     path("units/<slug:slug>/<int:pk>/units-list/", PartnerUnitsList.as_view(), name='partner_units_list'),
 
+    # Investment
+    path("office/<slug:slug>/investments-list/", InvestmentList.as_view(), name='investment_list'),
+    path("office/<slug:slug>/investment/<int:pk>/payments/", InvestmentPaymentList.as_view(), name='investment_pay_list'),
 ]

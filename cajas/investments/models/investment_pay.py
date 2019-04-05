@@ -15,6 +15,10 @@ class InvestmentPay(models.Model):
     value = models.IntegerField(
         'Valor del pago'
     )
+    detail = models.TextField(
+        'Detalle del pago',
+        default=''
+    )
     date = models.DateField(
         'Fecha del pago',
         auto_now_add=False

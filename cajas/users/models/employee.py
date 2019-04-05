@@ -32,7 +32,7 @@ class Employee(models.Model):
         User,
         verbose_name='Usuario',
         on_delete=models.CASCADE,
-        related_name='employee'
+        related_name='related_employee'
     )
     office = models.ForeignKey(
         Office,

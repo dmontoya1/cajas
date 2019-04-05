@@ -21,7 +21,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(Office, slug=slug)
         context['office'] = office
         try:
-            if self.request.user.is_superuser or self.request.user.employee.is_admin_charge():
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     user__is_active=True,

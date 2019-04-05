@@ -20,7 +20,6 @@ class CreateSupervisorCalendar(CreateAPIView):
     serializer_class = SupervisorCalendarSerializer
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         SupervisorCalendar.objects.create(
             office=get_object_or_404(Office, pk=request.data["office"]),
             supervisor=get_object_or_404(User, pk=request.data["supervisor"]),
