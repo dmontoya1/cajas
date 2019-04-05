@@ -16,7 +16,6 @@ class ProvisioningDetail(generics.RetrieveUpdateAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         item = MovementProvisioning.objects.get(pk=kwargs['pk'])
         item.date = request.data["date"]
         item.movement_type = request.data["movement_type"]
