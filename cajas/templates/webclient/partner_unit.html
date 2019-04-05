@@ -461,7 +461,7 @@
           $('#total_price').val(data.unit_price)
           
           $("#edit_collector option").prop("selected", false);
-          $("#edit_collector option[value='" + data.collector + "']").prop("selected", true);
+          $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
           $("#edit_collector").trigger("change")
 
           $("#edit_supervisor option").prop("selected", false);

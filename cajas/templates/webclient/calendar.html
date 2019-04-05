@@ -203,7 +203,7 @@
             $('#unit').empty()
             $.each(data, function (k, v) {
                 $('#unit').append(
-                `<option value=${v.id}>${v.name} - ${v.collector}</option>`
+                `<option value=${v.id}>${v.name} - ${v.collector.first_name} ${v.collector.last_name}</option>`
                 )
             })
             $('#unit').prepend(
