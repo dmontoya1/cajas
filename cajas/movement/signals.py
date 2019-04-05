@@ -32,7 +32,7 @@ def save_balance_daily_square(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=MovementDailySquare)
-def delete_movement_don_juan(sender, **kwargs):
+def delete_movement_daily_square(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_daily_square
     if instance.movement_type == MovementDailySquare.IN:
@@ -54,7 +54,7 @@ def delete_movement_don_juan(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=MovementOffice)
-def delete_movement_don_juan(sender, **kwargs):
+def delete_movement_office(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_office
     if instance.movement_type == MovementOffice.IN:
@@ -65,7 +65,7 @@ def delete_movement_don_juan(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=MovementPartner)
-def delete_movement_don_juan(sender, **kwargs):
+def delete_movement_partner(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_partner
     if instance.movement_type == MovementPartner.IN:
@@ -76,7 +76,7 @@ def delete_movement_don_juan(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=MovementCountry)
-def delete_movement_don_juan(sender, **kwargs):
+def delete_movement_country(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_country
     if instance.movement_type == MovementCountry.IN:
@@ -87,7 +87,7 @@ def delete_movement_don_juan(sender, **kwargs):
 
 
 @receiver(pre_delete, sender=MovementProvisioning)
-def delete_movement_don_juan(sender, **kwargs):
+def delete_movement_provisioning(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_provisioning
     if instance.movement_type == MovementProvisioning.IN:
