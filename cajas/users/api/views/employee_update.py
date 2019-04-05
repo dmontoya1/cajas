@@ -29,6 +29,6 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         item.charge = charge
         item.save()
         return Response(
-            'El item se ha actualizado correctamente',
+            'El empleado se ha actualizado correctamente',
             status=status.HTTP_200_OK
         )
