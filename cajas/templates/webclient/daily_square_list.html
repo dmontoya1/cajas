@@ -150,7 +150,7 @@
                         <td>$ {{ p.user.related_daily_box.get.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}
-                            <button type="button" class="add-movement" data-id="{{ p.pk }}" data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                            <button type="button" class="add-movement-button" data-id="{{ p.user.pk }}" data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
@@ -169,7 +169,7 @@
                       <td><a href="#">Detalle</a></td>
                       <td>
                         {% if perms.movement.add_movementdailysquare %}
-                          <button type="button" class="add-movement" data-id="{{ partner.pk }}" data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                          <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}" data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                           </button>
                         {% endif %}
                         {% if perms.boxes.change_boxdailysquare %}
@@ -322,6 +322,7 @@
   <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
   <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
   <script type="text/javascript">
@@ -475,13 +476,15 @@
         })
     })
 
-    $('.add-movement').on('submit', function (ev) {
+    $(".add-movement-button").on("click", function(){
+      partner_pk = $(this).data("id")
+      $('.add-movement').on('submit', function (ev) {
       ev.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-      
-      $(this).append('<input type="hidden" name="user_id" value="'+elemts+'" >')
+      $(this).append('<input type="hidden" name="user_id" value="'+partner_pk+'" >')
       data_send = $(this).serialize()
+      console.log("data_send",data_send)
       axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
         .then(function (response) {
           msg = response.data
@@ -569,6 +572,8 @@
             }
           })
         })
+    })
+
     })
   </script>
 {% endblock %}
