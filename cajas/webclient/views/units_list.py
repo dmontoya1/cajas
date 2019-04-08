@@ -23,9 +23,9 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner__office=office)
-        supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
-        collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
-        partners = Partner.objects.filter(office__pk=office.pk, user__is_active=True).exclude(partner_type='DJ')
+        supervisor = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
+        collectors = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
+        partners = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
         categories = Category.objects.all()
 
         context['office'] = office

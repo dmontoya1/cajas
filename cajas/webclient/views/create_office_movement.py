@@ -30,7 +30,7 @@ class CreateOfficeMovement(View):
 
     def post(self, request, *args, **kwargs):
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         concept = Concept.objects.get(pk=request.POST['concept'])
         date = request.POST['date']
         movement_type = request.POST['movement_type']
@@ -75,7 +75,7 @@ class CreateOfficeMovement(View):
             brand = get_object_or_404(Brand, pk=request.POST["brand"])
             category = get_object_or_404(Category, pk=request.POST["category"])
 
-            aux["office"] = office
+            aux["office"] = office.office
             aux["brand"] = brand
             aux["category"] = category
             office_item = office_items_manager.create_office_item(aux)
