@@ -20,7 +20,7 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
         context = super(EmployeeList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        employees = Employee.objects.filter(office__slug=slug)
+        employees = Employee.objects.filter(office_country__slug=slug)
         charges = Charge.objects.all().exclude(name="Presidente")
 
         context['office'] = office

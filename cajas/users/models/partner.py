@@ -94,4 +94,3 @@ class Partner(models.Model):
         return '{}'.format(self.user.get_full_name())
 
     get_full_name.short_description = 'Nombres'
-
