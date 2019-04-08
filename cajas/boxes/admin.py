@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from movement.admin import (
-    MovementCountryInline,
+    MovementDonJuanUSDInline,
     MovementDailySquareInline,
     MovementDonJuanInline,
     MovementOfficeInline,
@@ -9,24 +9,12 @@ from movement.admin import (
     MovementProvisioningInline
 )
 
-from .models.box_country import BoxCountry
 from .models.box_daily_square import BoxDailySquare
 from .models.box_don_juan import BoxDonJuan
+from .models.box_don_juan_usd import BoxDonJuanUSD
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
 from .models.box_provisioning import BoxProvisioning
-
-
-@admin.register(BoxCountry)
-class BoxCountryAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de un país
-        Se agrega INLINE con los movimientos
-    """
-
-    list_display = ('country', 'balance', 'currency', 'is_active')
-    inlines = [MovementCountryInline, ]
-    search_fields = ('country__name', 'currency__name', 'currency__abbr' )
-    exclude = ('last_movement_id', )
 
 
 @admin.register(BoxDailySquare)
@@ -53,6 +41,18 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
     exclude = ('last_movement_id', )
 
 
+@admin.register(BoxDonJuanUSD)
+class BoxDonJuanUSDAdmin(admin.ModelAdmin):
+    """Administrador de las cajas de don Juan por oficina
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'balance', 'is_active')
+    inlines = [MovementDonJuanUSDInline, ]
+    search_fields = ('office__country__abbr', 'office__number', )
+    exclude = ('last_movement_id', )
+
+
 @admin.register(BoxOffice)
 class BoxOfficeAdmin(admin.ModelAdmin):
     """Administrador de las cajas de una oficina
@@ -72,7 +72,7 @@ class BoxPartnerAdmin(admin.ModelAdmin):
     """
 
     list_display = ('partner', 'balance', 'is_active')
-    list_filter = ('partner__office', 'partner__office__country')
+    list_filter = ('partner__office', )
     inlines = [MovementPartnerInline, ]
     search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
                      'partner__user__document_id')

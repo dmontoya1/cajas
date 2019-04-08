@@ -10,7 +10,7 @@ from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
 from general_config.models.country import Country
 from movement.services.daily_square_service import MovementDailySquareManager
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 
 from .get_ip import get_ip
@@ -25,7 +25,7 @@ class CreateDailySquareMovement(View):
 
     def post(self, request, *args, **kwargs):
         office_pk = request.session['office']
-        office_session = Office.objects.get(pk=office_pk)
+        office_session = OfficeCountry.objects.get(pk=office_pk)
         user = User.objects.get(pk=request.POST['user_id'])
         box_daily_square = BoxDailySquare.objects.get(user=user)
         concept = Concept.objects.get(pk=request.POST['concept'])
@@ -38,7 +38,7 @@ class CreateDailySquareMovement(View):
         unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
         user = get_object_or_none(User, pk=request.POST.get('user', None))
         country = get_object_or_none(Country, pk=request.POST.get('country', None))
-        office = get_object_or_none(Office, pk=request.POST.get('office', None))
+        office = get_object_or_none(OfficeCountry, pk=request.POST.get('office', None))
         loan = request.POST.get('loan', None)
         chain = request.POST.get('chain', None)
 

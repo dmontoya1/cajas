@@ -26,7 +26,9 @@ class MovementRequest(MovementMixin):
     )
 
     def __str__(self):
-        return "Solicitud de movimiento del {}".format(self.box_partner.partner)
+        if self.box_partner:
+            return "Solicitud de movimiento del {}".format(self.box_partner.partner)
+        return "Solicitud"
 
     class Meta:
         verbose_name = 'Requerimiento de Movimiento'

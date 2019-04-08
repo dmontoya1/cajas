@@ -12,7 +12,7 @@ from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import partner_manager
 from movement.services.partner_service import MovementPartnerManager
 from movement.services.daily_square_service import MovementDailySquareManager
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from webclient.views.utils import get_object_or_none
 
 from .get_ip import get_ip
@@ -28,7 +28,7 @@ class PartnerCreate(LoginRequiredMixin, View):
     """
 
     def post(self, request, *args, **kwargs):
-        office = Office.objects.get(pk=request.POST['office'])
+        office = OfficeCountry.objects.get(pk=request.POST['office'])
         admin_senior = get_object_or_none(Employee, office=office, charge__name='Administrador Senior')
         if not admin_senior:
             messages.add_message(

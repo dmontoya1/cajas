@@ -8,14 +8,12 @@ from django.shortcuts import get_object_or_404
 
 from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Concept, Relationship
-from movement.services.country_service import MovementCountryManager
 from movement.services.office_service import MovementOfficeManager
 from movement.services.partner_service import MovementPartnerManager
 from webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 
-movement_country_manager = MovementCountryManager()
 movement_office_manager = MovementOfficeManager()
 movement_partner_manager = MovementPartnerManager()
 
@@ -70,18 +68,6 @@ class AcceptMovement(APIView):
                 office_movement = movement_office_manager.create_movement(data)
             elif relationship == Relationship.LOAN:
                 pass
-            elif relationship == Relationship.COUNTRY:
-                data = {
-                    'box': movement.country.box,
-                    'concept': movement.concept,
-                    'movement_type': movement.movement_type,
-                    'value': movement.value,
-                    'detail': movement.detail,
-                    'date': movement.date,
-                    'responsible': request.user,
-                    'ip': get_ip(request)
-                }
-                country_movement = movement_country_manager.create_movement(data)
             elif relationship == Relationship.CHAIN:
                 pass
 

@@ -7,11 +7,11 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 
-from cajas.users.models.employee import Employee
-from loans.services.loan_service import loan_manager
-from office.models.office import Office
+from loans.services.loan_service import LoanManager
+from office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
+loan_manager = LoanManager()
 
 
 class LoanCreate(LoginRequiredMixin, View):
@@ -25,7 +25,7 @@ class LoanCreate(LoginRequiredMixin, View):
         time = request.POST.get('time', None)
         exchange = request.POST['exchange']
         office = request.POST['office']
-        office_obj = get_object_or_404(Office, pk=office)
+        office_obj = get_object_or_404(OfficeCountry, pk=office)
         loan_type = request.POST['loan_type']
         data = {
             'value': value,

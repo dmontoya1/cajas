@@ -10,7 +10,7 @@ from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from general_config.models.exchange import Exchange
 from loans.models.loan import Loan
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from webclient.views.utils import get_object_or_none
 
 User = get_user_model()
@@ -27,7 +27,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         loans = Loan.objects.filter(office=office)
         partners = Partner.objects.filter(office=office)
         employees = Employee.objects.filter(office=office)

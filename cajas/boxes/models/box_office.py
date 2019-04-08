@@ -1,6 +1,6 @@
 from django.db import models
 
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class BoxOffice(models.Model):
@@ -8,8 +8,8 @@ class BoxOffice(models.Model):
     """
 
     office = models.OneToOneField(
-        Office,
-        verbose_name='Oficina',
+        OfficeCountry,
+        verbose_name='Oficina del País',
         on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='box'

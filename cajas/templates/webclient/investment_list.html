@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -125,8 +131,7 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
-                       cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered display responsive display nowrap" style="width:100%">
                   <thead>
                   <tr>
                     <th>Socio</th>
@@ -192,7 +197,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-loan-payment">
+          <form method="POST" class="add-investment-pay">
             {% csrf_token %}
             <input type="hidden" name="investment" id="investment" value="">
             <div class="form-row">
@@ -284,7 +289,7 @@
       $('#investment').val($(this).data('id'))
     })
 
-    $('.add-loan-payment').on('submit', function (e) {
+    $('.add-investment-pay').on('submit', function (e) {
       e.preventDefault()
       data = $(this).serialize()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'

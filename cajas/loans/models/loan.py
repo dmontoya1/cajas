@@ -5,7 +5,7 @@ from django.db.models import Sum
 from enumfields import EnumField
 from enumfields import Enum
 
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 
@@ -39,7 +39,7 @@ class Loan(models.Model):
         related_name='related_lender_user'
     )
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         on_delete=models.SET_NULL,
         null=True

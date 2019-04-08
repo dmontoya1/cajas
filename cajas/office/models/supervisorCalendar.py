@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
 
 from django.db import models
-from django.utils.text import slugify
 
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 
 User = get_user_model()
@@ -14,7 +13,7 @@ class SupervisorCalendar(models.Model):
     """
 
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         related_name='related_supervisor_calendar',
         blank=True, null=True,
