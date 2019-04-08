@@ -7,5 +7,5 @@ IPYTHONDIR=/app/.ipython
 # ------------------------------------------------------------------------------
 REDIS_URL=redis://redis:6379/0
 
-API_KEY=151408403fb21d6145680a4c9f202cb27dd78948
+API_KEY=12096503e48626ccdaa679c118927e6ef9f52ffe
 ADMIN_EMAIL=dmontoya@apptitud.com.co

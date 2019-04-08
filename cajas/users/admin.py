@@ -25,6 +25,11 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'salary_type', 'salary']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
 
+    class Media:
+        js = (
+            'js/admin/employee_admin.js',
+        )
+
 
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
