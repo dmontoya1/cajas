@@ -33,4 +33,6 @@ class ApiKeyAdmin(admin.ModelAdmin):
             obj.key = generate_key()
             messages.add_message(request, messages.WARNING, ('The API Key for %s is %s.' % (obj.name, obj.key)))
         obj.save()
+
+
 admin.site.register(APIKey, ApiKeyAdmin)
