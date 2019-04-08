@@ -1,5 +1,4 @@
 
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -20,11 +19,17 @@ class Home(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
+        user = self.request.user
         if not self.request.user.is_superuser:
             try:
-                context['office'] = self.request.user.related_employee.get().office
-            except:
-                context['office'] = self.request.user.partner.get().office
+                if user.related_employee.get().is_admin_charge:
+                    print(user.related_employee.get().office.all())
+                    context['offices'] = user.related_employee.get().office.all()
+                else:
+                    context['offices'] = user.related_employee.get().office_country.all()
+            except Exception as e:
+                print(e)
+                pass
         else:
             context['offices'] = Office.objects.all()
         return context

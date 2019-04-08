@@ -33,6 +33,7 @@ class EmployeeCreate(APIView):
         aux['charge'] = charge
         aux['office'] = office
 
+        print(office)
         employee = employee_manager.create_employee(aux)
 
         if request.data["is_daily_square"] == "true":

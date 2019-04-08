@@ -19,7 +19,7 @@ class Calendar(LoginRequiredMixin, TemplateView):
         context = super(Calendar, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
+        supervisor = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
         context['office'] = office
         context['supervisors'] = supervisor
 

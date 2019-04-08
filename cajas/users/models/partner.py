@@ -37,11 +37,12 @@ class Partner(models.Model):
         on_delete=models.CASCADE,
         related_name='partner'
     )
-    office = models.ManyToManyField(
+    office = models.ForeignKey(
         OfficeCountry,
         verbose_name='Oficina por País',
         related_name='partners',
-        blank=True
+        on_delete=models.SET_NULL,
+        blank=True, null=True
     )
     code = models.CharField(
         'Código',
@@ -92,4 +93,3 @@ class Partner(models.Model):
         return '{}'.format(self.user.get_full_name())
 
     get_full_name.short_description = 'Nombres'
-

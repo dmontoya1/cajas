@@ -17,13 +17,17 @@ class EmployeeManager:
         try:
             employee = Employee.objects.create(
                 user=data['user'],
-                office=data['office'],
                 charge=data['charge'],
                 salary_type=data['salary_type'],
                 salary=data['salary'],
                 cv=data['cv'],
                 passport=data['passport'],
             )
+            employee.save()
+            if data['user'].related_employee.get().is_admin_charge():
+                employee.office.add(data['office'].office)
+            else:
+                employee.office_country.add(data['office'])
         except:
             raise Exception('Ha ocurrido un error al crear el usuario')
         return employee
