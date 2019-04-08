@@ -5,7 +5,7 @@ from django.db import models
 from enumfields import EnumField
 from enumfields import Enum
 
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 
@@ -38,8 +38,8 @@ class Partner(models.Model):
         related_name='partner'
     )
     office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
+        OfficeCountry,
+        verbose_name='Oficina por País',
         on_delete=models.SET_NULL,
         blank=True,
         null=True

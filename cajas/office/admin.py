@@ -1,9 +1,10 @@
 from django.contrib import admin
 
-from office.models.office import Office
-from office.models.officeItems import OfficeItems
-from office.models.officeCommitments import OfficeCommitments
-from office.models.supervisorCalendar import SupervisorCalendar
+from .models.office import Office
+from .models.officeItems import OfficeItems
+from .models.officeCommitments import OfficeCommitments
+from .models.officeCountry import OfficeCountry
+from .models.supervisorCalendar import SupervisorCalendar
 
 
 class OfficeItemsAdmin(admin.StackedInline):
@@ -22,15 +23,24 @@ class OfficeCommitmentsAdmin(admin.StackedInline):
     extra = 1
 
 
+class OfficeCountryInline(admin.StackedInline):
+    """
+    """
+
+    model = OfficeCountry
+    extra = 0
+    readonly_fields = ('slug', )
+
+
 @admin.register(Office)
 class OfficeAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ('country', 'number', )
-    search_fields = ('number', 'country__name')
-    readonly_fields = ('slug', 'consecutive')
-    inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
+    list_display = ('number', )
+    search_fields = ('number', )
+    readonly_fields = ('consecutive', )
+    inlines = [OfficeCountryInline, OfficeItemsAdmin, OfficeCommitmentsAdmin]
 
 
 @admin.register(SupervisorCalendar)

@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -183,14 +189,14 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-loan-payment">
+          <form method="POST" class="add-investment-pay">
             {% csrf_token %}
             <input type="hidden" name="investment" id="investment" value="{{ investment.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="value">Valor del abono</label>
                 <input class="form-control" type="number" name="value" id="value" value=""
-                       placeholder="Ingresa el valor a abonar" placeholder="$" required>
+                       placeholder="Ingresa el valor a abonar" placeholder="$" required autocomplete="off">
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del abono</label>
@@ -269,6 +275,39 @@
           language: "es"
         });
       });
+
+      $('.add-investment-pay').on('submit', function (e) {
+        e.preventDefault()
+        data = $(this).serialize()
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.post('{% url 'api:investments:pay_create' %}', data)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data,
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+              .catch(function (error) {
+                Swal.fire({
+                  title: 'Ha ocurrido un error',
+                  text: error,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                  if (result.value) {
+                    location.reload()
+                  }
+                })
+              })
+          })
+      })
     });
 
   </script>

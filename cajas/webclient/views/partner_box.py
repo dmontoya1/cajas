@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
 from inventory.models.category import Category
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class PartnerBox(LoginRequiredMixin, TemplateView):
@@ -23,7 +23,7 @@ class PartnerBox(LoginRequiredMixin, TemplateView):
         partner = Partner.objects.get(pk=partner_pk)
         box_partner = get_object_or_404(BoxPartner, partner=partner)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['box'] = box_partner

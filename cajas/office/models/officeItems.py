@@ -44,7 +44,7 @@ class OfficeItems(models.Model):
     )
 
     def __str__(self):
-        return '{} de la oficina {}{}'.format(self.name, self.office.country.abbr, self.office.number)
+        return 'Item de la oficina'
 
     class Meta:
         verbose_name = 'Inventario oficina'

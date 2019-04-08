@@ -1,7 +1,7 @@
 from django.db import models
 
 from cajas.users.models.user import User
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class BoxDailySquare(models.Model):
@@ -16,7 +16,7 @@ class BoxDailySquare(models.Model):
         related_name='related_daily_box'
     )
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         related_name='related_daily_square_boxes',
         blank=True, null=True,

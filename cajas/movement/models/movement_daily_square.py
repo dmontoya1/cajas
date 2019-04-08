@@ -3,7 +3,7 @@ from django.db import models
 
 from boxes.models.box_daily_square import BoxDailySquare
 from general_config.models.country import Country
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 from .movement_mixin import MovementMixin
 
@@ -51,7 +51,7 @@ class MovementDailySquare(MovementMixin):
         blank=True, null=True
     )
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         on_delete=models.SET_NULL,
         blank=True, null=True

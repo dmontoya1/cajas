@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from inventory.models import Category
 from cajas.users.models.employee import Employee
 from units.models.units import Unit
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from cajas.users.models.partner import Partner
 
 
@@ -23,7 +23,7 @@ class PartnerUnitsList(LoginRequiredMixin, TemplateView):
         pk = self.kwargs['pk']
         slug = self.kwargs['slug']
         owner = get_object_or_404(Partner, pk=pk)
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner=owner)
         supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
         collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)

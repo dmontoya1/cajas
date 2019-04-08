@@ -1,19 +1,11 @@
 
 from django.db import models
-from django.utils.text import slugify
 
-from general_config.models.country import Country
 
 class Office(models.Model):
     """Guarda las oficinas en donde el negocio tiene funcionamiento
     """
 
-    country = models.ForeignKey(
-        Country,
-        verbose_name='Pais',
-        on_delete=models.CASCADE,
-        related_name='related_offices'
-    )
     number = models.IntegerField(
         'Número de la oficina',
         default=1
@@ -28,12 +20,6 @@ class Office(models.Model):
         max_length=255,
         blank=True, null=True
     )
-    slug = models.SlugField(
-        'slug',
-        unique=True,
-        null=True,
-        blank=True,
-    )
     consecutive = models.IntegerField(
         'Consecutivo Socios',
         default=1
@@ -45,14 +31,7 @@ class Office(models.Model):
     )
 
     def __str__(self):
-        if self.country:
-            return '{}{} - {}'.format(self.country.abbr, self.number, self.country.name)
-        return "Oficina"
-
-    def save(self, *args, **kwargs):
-        text = '{}{}'.format(self.country.abbr, self.number)
-        self.slug = slugify(text)
-        super(Office, self).save(*args, **kwargs)
+        return "Oficina {}".format(str(self.number))
 
     class Meta:
         verbose_name = 'Oficina'

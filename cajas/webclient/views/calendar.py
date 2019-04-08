@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.users.models.employee import Employee
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class Calendar(LoginRequiredMixin, TemplateView):
@@ -18,7 +18,7 @@ class Calendar(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Calendar, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
         context['office'] = office
         context['supervisors'] = supervisor

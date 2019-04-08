@@ -8,7 +8,6 @@ from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
-from .models.movement_country import MovementCountry
 from .models.movement_provisioning import MovementProvisioning
 
 
@@ -69,17 +68,6 @@ def delete_movement_partner(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_partner
     if instance.movement_type == MovementPartner.IN:
-        box.balance -= instance.value
-    else:
-        box.balance += instance.value
-    box.save()
-
-
-@receiver(pre_delete, sender=MovementCountry)
-def delete_movement_country(sender, **kwargs):
-    instance = kwargs.get('instance')
-    box = instance.box_country
-    if instance.movement_type == MovementCountry.IN:
         box.balance -= instance.value
     else:
         box.balance += instance.value

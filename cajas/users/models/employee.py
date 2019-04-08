@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from cajas.users.models.charges import Charge
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 
@@ -35,8 +35,8 @@ class Employee(models.Model):
         related_name='related_employee'
     )
     office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
+        OfficeCountry,
+        verbose_name='Oficina por País',
         on_delete=models.CASCADE,
         related_name='related_employees',
         null=True, blank=True

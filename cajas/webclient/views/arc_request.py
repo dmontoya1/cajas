@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from boxes.models.box_partner import BoxPartner
 from boxes.models.box_daily_square import BoxDailySquare
 from boxes.models.box_don_juan import BoxDonJuan
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class ArcRequest(LoginRequiredMixin, TemplateView):
@@ -20,7 +20,7 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ArcRequest, self).get_context_data(**kwargs)
-        office = get_object_or_404(Office, pk=self.request.session['office'])
+        office = get_object_or_404(OfficeCountry, pk=self.request.session['office'])
         box_office = office.box
         box_donjuan = BoxDonJuan.objects.get(office=office)
         box_partners = BoxPartner.objects.filter(partner__office=office)

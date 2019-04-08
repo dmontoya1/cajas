@@ -7,7 +7,7 @@ from rest_framework import status
 from ..models.supervisorCalendar import SupervisorCalendar
 from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 
 from django.shortcuts import get_object_or_404
@@ -21,7 +21,7 @@ class CreateSupervisorCalendar(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         SupervisorCalendar.objects.create(
-            office=get_object_or_404(Office, pk=request.data["office"]),
+            office=get_object_or_404(OfficeCountry, pk=request.data["office"]),
             supervisor=get_object_or_404(User, pk=request.data["supervisor"]),
             unit=get_object_or_404(Unit, pk=request.data["unit"])
         )

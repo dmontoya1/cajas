@@ -2,12 +2,13 @@ from django.db.models import Q
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView
 
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 from office.models.office import Office
 from units.models.units import Unit
+from office.models.officeCountry import OfficeCountry
 
 
 class DailySquareList(LoginRequiredMixin, TemplateView):
@@ -21,7 +22,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DailySquareList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         offices = Office.objects.all()
         units = Unit.objects.filter(partner__office=office)

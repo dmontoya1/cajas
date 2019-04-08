@@ -14,7 +14,7 @@ from inventory.models.category import Category
 from inventory.models.brand import Brand
 from movement.models.movement_office import MovementOffice
 from movement.services.don_juan_service import DonJuanManager
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from office.services.office_item_create import OfficeItemsManager
 
 from .get_ip import get_ip
@@ -49,7 +49,7 @@ class CreateOfficeMovement(View):
             ip=ip,
         )
         if "destine_office" in request.POST:
-            destine_office = Office.objects.get(pk=request.POST['destine_office'])
+            destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
             if movement_type == 'OUT':
                 contrapart = 'IN'
             else:
@@ -71,7 +71,7 @@ class CreateOfficeMovement(View):
 
         if "brand" in request.POST:
             aux = copy.deepcopy(request.POST)
-            office = get_object_or_404(Office, slug=self.kwargs['slug'])
+            office = get_object_or_404(OfficeCountry, slug=self.kwargs['slug'])
             brand = get_object_or_404(Brand, pk=request.POST["brand"])
             category = get_object_or_404(Category, pk=request.POST["category"])
 

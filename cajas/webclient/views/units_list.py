@@ -3,11 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from inventory.models import Category
 from cajas.users.models.employee import Employee
-from units.models.units import Unit
-from office.models.office import Office
 from cajas.users.models.partner import Partner
+from inventory.models import Category
+from office.models.officeCountry import OfficeCountry
+from units.models.units import Unit
 
 
 class UnitsList(LoginRequiredMixin, TemplateView):
@@ -21,8 +21,8 @@ class UnitsList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UnitsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
-        units = Unit.objects.filter(partner__office=office, is_active=True)
+        office = get_object_or_404(OfficeCountry, slug=slug)
+        units = Unit.objects.filter(partner__office=office)
         supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
         collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
         partners = Partner.objects.filter(office__pk=office.pk, user__is_active=True).exclude(partner_type='DJ')
