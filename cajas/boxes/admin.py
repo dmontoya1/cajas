@@ -23,7 +23,7 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('user', 'balance', 'is_active')
+    list_display = ('user', 'office', 'balance', 'is_active')
     inlines = [MovementDailySquareInline, ]
     search_fields = ('user__first_name', 'user__last_name', 'user__document_id' )
     exclude = ('last_movement_id', )

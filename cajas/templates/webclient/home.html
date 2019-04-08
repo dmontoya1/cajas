@@ -27,33 +27,33 @@
 
 
 {% block navbar %}
-    <ul class="nav navbar-nav">
-        <li class="active">
-            <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
-        </li>
-        <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
-        <li class="menu-item-has-children dropdown active">
-            <a href="{% url 'webclient:home' %}">
-                <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-                Inicio
-            </a>
-        </li>
-        {% if perms.movement.change_movementrequest %}
-          <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:movement_required' %}">
-              <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-              Requerimiento de movimientos
-            </a>
-          </li>
-          <li class="menu-item-has-children dropdown">
-            <a href="{% url 'webclient:movement_withdraw_required' %}">
-              <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-              Requerimiento de retiro de socio
-            </a>
-          </li>
-        {% endif %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+        <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
+    </li>
+    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+    <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:home' %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inicio
+        </a>
+    </li>
+    {% if perms.movement.change_movementrequest %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:movement_required' %}">
+          <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Requerimiento de movimientos
+        </a>
+      </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:movement_withdraw_required' %}">
+          <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Requerimiento de retiro de socio
+        </a>
+      </li>
+    {% endif %}
 
-    </ul>
+  </ul>
 {% endblock %}
 
 {% block index_actions %}
