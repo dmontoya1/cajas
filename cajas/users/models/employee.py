@@ -39,11 +39,13 @@ class Employee(models.Model):
         Office,
         verbose_name='Oficina',
         related_name='related_employees',
+        blank=True
     )
     office_country = models.ManyToManyField(
         OfficeCountry,
         verbose_name='Oficina por País',
         related_name='related_employees',
+        blank=True
     )
     charge = models.ForeignKey(
         Charge,
