@@ -40,7 +40,8 @@ class Partner(models.Model):
     office = models.ManyToManyField(
         OfficeCountry,
         verbose_name='Oficina por País',
-        related_name='partners'
+        related_name='partners',
+        blank=True
     )
     code = models.CharField(
         'Código',
