@@ -27,14 +27,20 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
         box_partners_total = box_partners.aggregate(Sum('balance'))
         box_daily = BoxDailySquare.objects.filter(Q(user__partner__office=office) or Q(user_employee__office=office))
         box_daily_total = box_daily.aggregate(Sum('balance'))
-        partner_total = box_partners_total['balance__sum'] + box_office.balance + box_donjuan.balance
-        deficit = box_daily_total['balance__sum'] - partner_total
+        dq_total = 0
+        partner_sum = 0
+        if box_daily_total['balance__sum'] is not None:
+            dq_total = box_daily_total['balance__sum']
+        if box_partners_total['balance__sum'] is not None:
+            partner_sum = box_partners_total['balance__sum']
+        partner_total = partner_sum + box_office.balance + box_donjuan.balance
+        deficit = dq_total - partner_total
         context['office'] = office
         context['box_donjuan'] = box_donjuan
         context['box_office'] = box_office
         context['box_partners'] = box_partners
         context['box_daily'] = box_daily
-        context['box_daily_total'] = box_daily_total['balance__sum']
+        context['box_daily_total'] = dq_total
         context['partner_total'] = partner_total
         context['deficit'] = deficit
         return context
