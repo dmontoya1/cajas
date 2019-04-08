@@ -79,8 +79,8 @@ class Partner(models.Model):
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
                 if self.partner_type == PartnerType.DIRECTO:
-                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
-                    self.office.consecutive += 1
+                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.office.number, self.office.office.consecutive)
+                    self.office.office.consecutive += 1
                     self.office.save()
                 else:
                     self.code = '{}-{}'.format(self.direct_partner.code, self.direct_partner.consecutive)
