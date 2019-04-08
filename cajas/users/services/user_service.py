@@ -27,7 +27,7 @@ class UserManager:
                 document_id=data['document_id'],
                 is_active=True,
             )
-            if data["password1"] != "":
+            if "password1" in data:
                 user.password = make_password(data['password1'])
                 user.is_abstract = True
             else:

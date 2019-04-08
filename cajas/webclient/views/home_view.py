@@ -3,7 +3,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from general_config.models.country import Country
+from office.models.office import Office
 
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -26,5 +26,5 @@ class Home(LoginRequiredMixin, TemplateView):
             except:
                 context['office'] = self.request.user.partner.get().office
         else:
-            context['countries'] = Country.objects.all()
+            context['offices'] = Office.objects.all()
         return context

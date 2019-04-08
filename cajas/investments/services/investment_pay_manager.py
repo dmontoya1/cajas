@@ -2,7 +2,7 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from concepts.models.concepts import Concept
+from concepts.models.concepts import Concept, ConceptType
 from movement.services.partner_service import MovementPartnerManager
 from webclient.views.get_ip import get_ip
 
@@ -21,7 +21,7 @@ class InvestmentPayManager(object):
         investment.balance -= int(request.data['value'])
         investment.save()
 
-        concept = get_object_or_404(Concept, name='Inversión Negocios')
+        concept = get_object_or_404(Concept, name='Inversión Negocios', concept_type=ConceptType.DOUBLE)
         data = {
             'partner': investment.partner,
             'box': investment.partner.box,

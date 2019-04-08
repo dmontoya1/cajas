@@ -26,6 +26,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -203,7 +209,7 @@
             $('#unit').empty()
             $.each(data, function (k, v) {
                 $('#unit').append(
-                `<option value=${v.id}>${v.name} - ${v.collector}</option>`
+                `<option value=${v.id}>${v.name} - ${v.collector.first_name} ${v.collector.last_name}</option>`
                 )
             })
             $('#unit').prepend(
@@ -230,7 +236,7 @@
                 Swal.fire({
                     type: 'success',
                     title: 'Exitoso',
-                    text: data.name,
+                    text: data,
                 }).then(function () {
                     location.reload()
                 })

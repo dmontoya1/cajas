@@ -636,7 +636,7 @@ aside.left-panel {
           color: #fff;
           float: left;
           margin-top: 8px;
-          width: 55px;
+          width: 35px;
           text-align: left;
           z-index: 9; }
         .navbar .navbar-nav li > a .menu-title-text {
@@ -2603,7 +2603,7 @@ button.btn.btn-submit {
   padding-top: 4px !important;
 }
 
-button.add-movement {
+button.add-movement, button.add-movement-button{
   background-color: var(--blue);
   color: #fff;
   border-radius: 10px;

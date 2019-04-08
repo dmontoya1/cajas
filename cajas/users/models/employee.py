@@ -4,6 +4,7 @@ from django.db import models
 
 from cajas.users.models.charges import Charge
 from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 
@@ -34,18 +35,23 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         related_name='related_employee'
     )
-    office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
-        on_delete=models.CASCADE,
-        related_name='related_employees',
-        null=True, blank=True
-    )
     charge = models.ForeignKey(
         Charge,
         verbose_name='Cargo de empleado',
         on_delete=models.SET_NULL,
         blank=True, null=True
+    )
+    office = models.ManyToManyField(
+        Office,
+        verbose_name='Oficina',
+        related_name='related_employees',
+        blank=True
+    )
+    office_country = models.ManyToManyField(
+        OfficeCountry,
+        verbose_name='Oficina por País',
+        related_name='related_employees',
+        blank=True
     )
     salary_type = models.CharField(
         'Tipo de salario',
@@ -75,13 +81,17 @@ class Employee(models.Model):
         blank=True, null=True
     )
 
+    class Meta:
+        verbose_name = 'Empleado'
+        verbose_name_plural = 'Empleados'
+
+    def __str__(self):
+        return '{}'.format(self.user.get_full_name())
+
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
 
     get_full_name.short_description = 'Nombres'
-
-    def __str__(self):
-        return '{}'.format(self.user.get_full_name())
 
     def is_admin_charge(self):
         charge_secretary = Charge.objects.get(name='Secretaria')
@@ -90,7 +100,3 @@ class Employee(models.Model):
         if self.charge == charge_admin_junior or self.charge == charge_secretary or self.charge == charge_admin_senior:
             return True
         return False
-
-    class Meta:
-        verbose_name = 'Empleado'
-        verbose_name_plural = 'Empleados'

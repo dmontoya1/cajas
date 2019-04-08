@@ -22,7 +22,7 @@
           </a>
         </li>
         <li class="menu-item-has-children dropdown">
-          <a href="{% url 'webclient:office' office.slug %}">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
             <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja oficina Dólares
           </a>
@@ -330,9 +330,8 @@
           // handle error
           console.log(error);
         })
-
-
     })
+
     $('#category').on('change', function () {
       axios.get(`/api/inventory/${$(this).val()}/brand`)
         .then(function (response) {

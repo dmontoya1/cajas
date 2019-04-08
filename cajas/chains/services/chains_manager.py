@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from cajas.users.models.partner import Partner
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
 from ..models.user_place import UserPlace
@@ -18,7 +18,7 @@ class ChainManager(object):
         self.create_chain_places(data, chain)
 
     def create_chain(self, data):
-        office = get_object_or_404(Office, pk=int(data['office']))
+        office = get_object_or_404(OfficeCountry, pk=int(data['office']))
         return Chain.objects.create(
             office=office,
             name=data['name'],

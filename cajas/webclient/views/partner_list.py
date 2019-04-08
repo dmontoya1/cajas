@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 from inventory.models.category import Category
 from cajas.users.models.partner import Partner
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 
 
@@ -20,7 +20,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(PartnerList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner__office=office)
 
         try:

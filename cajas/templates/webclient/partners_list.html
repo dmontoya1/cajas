@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -253,7 +259,7 @@
             <div class="form-row">
               <div class="form-group col-md-12">
                 <label for="email">Correo electrónico</label>
-                <input type="email" class="form-control" name="email" id="email" required>
+                <input type="email" class="form-control" name="email" id="email" placeholder="email@mail.com" required>
               </div>
             </div>
             <div class="form-row">
@@ -579,7 +585,7 @@
 
       //get partner units 
       $("#concept").on("change", function(){
-        if( $("#concept option:selected").text() == "Compra de Unidad de tipo Simple"){
+        if( $("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
           axios.get(`/api/units/${pk}/list`)
           .then(function (response) {
             data = response.data

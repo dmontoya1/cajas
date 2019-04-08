@@ -10,7 +10,7 @@ from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
 from general_config.models.country import Country
 from loans.models.loan import Loan
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 from webclient.views.get_ip import get_ip
 from webclient.views.utils import get_object_or_none
@@ -36,7 +36,7 @@ class CreateDailySquareMovement(APIView):
         unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
         user = get_object_or_none(User, pk=request.POST.get('user', None))
         country = get_object_or_none(Country, pk=request.POST.get('country', None))
-        office = get_object_or_none(Office, pk=request.POST.get('office', None))
+        office = get_object_or_none(OfficeCountry, pk=request.POST.get('office', None))
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 

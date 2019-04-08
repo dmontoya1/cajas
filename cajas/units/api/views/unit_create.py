@@ -21,10 +21,11 @@ class UnitCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
+        print(request.data)
         values = request.data["elemts"].split(",")
         unit = Unit()
         unit.name = request.data["name"]
-        unit.partner = get_object_or_404(Partner, user__pk=request.data["partner"])
+        unit.partner = get_object_or_404(Partner, pk=request.data["partner"])
         unit.collector = get_object_or_404(User, pk=request.data["collector"])
         unit.supervisor = get_object_or_404(User, pk=request.data["supervisor"])
         unit.save()
@@ -37,6 +38,6 @@ class UnitCreate(APIView):
             )
 
         return Response(
-            'Se ha creado la cadena exitosamente.',
+            'La unidad se ha creado exitosamente.',
             status=status.HTTP_201_CREATED
         )

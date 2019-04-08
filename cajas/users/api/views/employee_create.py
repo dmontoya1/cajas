@@ -10,7 +10,7 @@ from boxes.services.box_daily_square_manager import BoxDailySquareManager
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.employee_service import EmployeeManager
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from cajas.users.models.charges import Charge
 
 box_daily_square_manager = BoxDailySquareManager()
@@ -26,7 +26,7 @@ class EmployeeCreate(APIView):
     def post(self, request, format=None):
         aux = copy.deepcopy(request.data)
         user = user_manager.create_user(request.data)
-        office = Office.objects.get(pk=request.data["office"])
+        office = OfficeCountry.objects.get(pk=request.data["office"])
         charge = Charge.objects.get(pk=request.data["charge"])
 
         aux['user'] = user

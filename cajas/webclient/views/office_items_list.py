@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from inventory.models import Category
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from office.models.officeItems import OfficeItems
 
 
@@ -19,8 +19,8 @@ class OfficeItemsList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(OfficeItemsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
-        items = OfficeItems.objects.filter(office__slug=slug)
+        office = get_object_or_404(OfficeCountry, slug=slug)
+        items = OfficeItems.objects.filter(office=office.office)
         categories = Category.objects.all()
         context['office'] = office
         context['items'] = items

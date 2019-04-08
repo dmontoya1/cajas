@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -236,7 +242,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir inventario</h5>
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar inventario</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -308,25 +314,27 @@
     axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
     $('#category').on('change', function () {
-      axios.get(`/api/inventory/${$(this).val()}/brand`)
-        .then(function (response) {
-          data = response.data
-
-          $('#brand').empty()
-          $.each(data, function (k, v) {
-            $('#brand').append(
-              `<option value=${v.id}>${v.name}</option>`
+        axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $('#brand').empty()
+            $("#brand option[value='" + data.id + "']").prop("selected", true);
+            $("#brand").trigger("click")
+            $("#brand").trigger('change');
+            $.each(data, function (k, v) {
+              $('#brand').append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $('#brand').prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
             )
           })
-          $('#brand').prepend(
-            '<option value="" selected disabled>Selecciona una marca</option>'
-          )
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      })
 
     //create items
     $('.create-item').on('submit', function (e) {
@@ -364,44 +372,63 @@
       //when modal open
       $('#editOfficeItem').on('show.bs.modal', function (event) {
         var modal = $(this)
-        modal.find('.modal-title').text('Editar Inventario')
         //get info of office item
-        axios.get(`/api/office/${office_item_pk}/office-item-detail`)
+          axios.get(`/api/office/${office_item_pk}/office-item-detail`)
           .then(function (response) {
-            data = response.data
+            data_office = response.data
+            console.log("office", data_office)
 
-            $("#edit_name").val(data.name)
-            $("#edit_price").val(data.price)
-            $("#edit_description").val(data.description)
+            $("#edit_name").val(data_office.name)
+            $("#edit_price").val(data_office.price)
+            $("#edit_description").val(data_office.description)
 
             $("#edit_category option").prop("selected", false);
+            $("#edit_category option[value='" + data_office.brand.category.id + "']").prop("selected", true)
+            $("#edit_category").trigger('change');
 
-            //fill brands and category select depending previously selected item
-            axios.get(`/api/inventory/${data.brand}/brand`)
-              .then(function (response) {
-                data = response.data
-
-                $("#edit_category option[value='" + data[0].category.id + "']").prop("selected", true);
-                $("#edit_category").trigger('change');
-
-                $('#edit_brand').empty()
-                $.each(data, function (k, v) {
-                  $('#edit_brand').append(
-                    `<option value=${v.id}>${v.name}</option>`
-                  )
-                })
-                $('#edit_brand').prepend(
-                  '<option value="" disabled>Selecciona una marca</option>'
+            axios.get(`/api/inventory/${data_office.brand.category.id}/brand`)
+            .then(function (response) {
+              data = response.data
+              console.log("brand",data)
+              $('#edit_brand').empty()
+              $.each(data, function (k, v) {
+                $('#edit_brand').append(
+                  `<option value=${v.id}>${v.name}</option>`
                 )
               })
-              .catch(function (error) {
-                // handle error
-                console.log(error);
-              })
+              $('#edit_brand').prepend(
+                '<option value="" disabled>Selecciona una marca</option>'
+              )
+              $("#edit_brand option").prop("selected", false);
+              $("#edit_brand option[value='" + data_office.brand.id + "']").prop("selected", true);
+              $("#edit_brand").trigger("click")
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
 
-            $("#edit_brand option").prop("selected", false);
-            $("#edit_brand option[value='" + data.brand + "']").prop("selected", true);
-            $("#edit_brand").trigger("click")
+            $('#edit_category').on('change', function () {
+              axios.get(`/api/inventory/${$(this).val()}/brand`)
+                .then(function (response) {
+                  data = response.data
+
+                  $('#edit_brand').empty()
+                  $.each(data, function (k, v) {
+                    $('#edit_brand').append(
+                      `<option value=${v.id}>${v.name}</option>`
+                    )
+                  })
+                  $('#edit_brand').prepend(
+                    '<option value="" selected disabled>Selecciona una marca</option>'
+                  )
+                })
+                .catch(function (error) {
+                  // handle error
+                  console.log(error);
+                })
+            })
+
 
             //update items
             $('.edit_item').on('submit', function(e){
@@ -430,9 +457,6 @@
                   })
                 })
             })
-        })
-        $('#editOfficeItem').on('hidden.bs.modal', function () {
-          location.reload()
         })
       })
     })

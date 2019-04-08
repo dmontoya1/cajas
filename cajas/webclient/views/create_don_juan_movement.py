@@ -10,7 +10,7 @@ from cajas.users.models.employee import Employee
 from concepts.models.concepts import Concept
 from core.services.email_service import EmailManager
 from movement.services.don_juan_service import DonJuanManager
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 from .get_ip import get_ip
 
@@ -23,7 +23,7 @@ class CreateDonJuanMovement(View):
     """
 
     def post(self, request, *args, **kwargs):
-        office = get_object_or_404(Office, slug=self.kwargs['slug'])
+        office = get_object_or_404(OfficeCountry, slug=self.kwargs['slug'])
         box = get_object_or_404(BoxDonJuan, office=office)
         ip = get_ip(request)
         concept = get_object_or_404(Concept, pk=request.POST['concept'])
@@ -39,7 +39,7 @@ class CreateDonJuanMovement(View):
         }
         movement = donjuan_manager.create_movement(data)
         if "destine_office" in request.POST:
-            destine_office = Office.objects.get(pk=request.POST['destine_office'])
+            destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
             if request.POST['movement_type'] == 'OUT':
                 contrapart = 'IN'
             else:

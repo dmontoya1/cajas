@@ -21,6 +21,12 @@
             Caja oficina
           </a>
         </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
         <li class="menu-item-has-children dropdown">
@@ -140,25 +146,25 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.related_user.employee.get.is_admin_charge %}
+                  {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
                     {% for p in provisioning %}
                       <tr>
-                        <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>
-                        <td>{{p.date}}</td>
-                        <td>{{p.concept.name}}</td>
-                        <td>{{p.detail}}</td>
-                        <td>{% if p.movement_type == 'IN' %}${{ p.value|intcomma }}
-                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                        <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
-                            {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                        <td>${{ p.balance|intcomma }}{{ office.country.currency.abbr }}</td>
-                        <td>
-                          <a data-id="{{p.id}}"  data-toggle="modal" data-target="#editProvisioning" class="see-box edit_provisioning"><i
-                            class="fas fa-pen"></i>Editar</a>
-                        </td>
-                      </tr>
-                    {% endfor %}
-                  {% endif %}
+                          <td>{{p.responsible.first_name}} {{p.responsible.last_name}}</td>
+                          <td>{{p.date}}</td>
+                          <td>{{p.concept.name}}</td>
+                          <td>{{p.detail}}</td>
+                          <td>{% if p.movement_type == 'IN' %}${{ p.value|intcomma }}
+                              {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                          <td>{% if p.movement_type == 'OUT' %}${{ p.value|intcomma }}
+                              {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                          <td>${{ p.balance|intcomma }}{{ office.country.currency.abbr }}</td>
+                          <td>
+                            <a data-id="{{p.id}}"  data-toggle="modal" data-target="#editProvisioning" class="see-box edit_provisioning"><i
+                              class="fas fa-pen"></i>Editar</a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% endif %}
                   </tbody>
                 </table>
               </div>
@@ -316,7 +322,7 @@
           Swal.fire({
             type: 'success',
             title: 'Exitoso',
-            text: data.name,
+            text: data,
           }).then(function () {
             location.reload()
           })

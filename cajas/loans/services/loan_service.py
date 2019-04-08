@@ -9,7 +9,7 @@ from boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from concepts.models.concepts import Concept
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 from movement.services.don_juan_service import DonJuanManager
 from movement.services.office_service import MovementOfficeManager
 from movement.services.partner_service import MovementPartnerManager
@@ -36,7 +36,7 @@ class LoanManager(object):
         lender_partner = get_object_or_404(Partner, pk=data['lender'])
         lender = lender_partner.user
         old_loan = Loan.objects.filter(lender=lender).last()
-        office = get_object_or_404(Office, pk=data['office'])
+        office = get_object_or_404(OfficeCountry, pk=data['office'])
         if lender_partner.direct_partner:
             provider = lender_partner.direct_partner.user
         else:
@@ -84,7 +84,7 @@ class LoanManager(object):
         lender_employee = get_object_or_404(Employee, pk=data['lender'])
         lender = lender_employee.user
         old_loan = Loan.objects.filter(lender=lender).last()
-        office = get_object_or_404(Office, pk=data['office'])
+        office = get_object_or_404(OfficeCountry, pk=data['office'])
         concept = get_object_or_404(Concept, name='Préstamo empleados')
 
         data_mov = {
@@ -152,7 +152,7 @@ class LoanManager(object):
         self.__validate_data(data)
         lender = get_object_or_404(User, username='donjuan')
         donjuan = get_object_or_404(Partner, user=lender)
-        office = get_object_or_404(Office, pk=data['office'])
+        office = get_object_or_404(OfficeCountry, pk=data['office'])
         box_don_juan = BoxDonJuan.objects.get(partner=donjuan, office=office)
         concept = get_object_or_404(Concept, name='Ingreso Préstamo Terceros')
         provider, created = User.objects.get_or_create(
@@ -207,5 +207,3 @@ class LoanManager(object):
         }
         movement = movement_parter_manager.create_double(data1)
 
-
-loan_manager = LoanManager()

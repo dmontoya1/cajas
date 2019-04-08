@@ -1,7 +1,7 @@
 from django.db import models
 
 from cajas.users.models.partner import Partner
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class BoxDonJuan(models.Model):
@@ -15,8 +15,8 @@ class BoxDonJuan(models.Model):
         blank=True, null=True
     )
     office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
+        OfficeCountry,
+        verbose_name='Oficina por país',
         on_delete=models.SET_NULL,
         blank=True, null=True
     )

@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
 
-from .models.movement_country import MovementCountry
 from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
+from .models.movement_don_juan_usd import MovementDonJuanUsd
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
 from .models.movement_provisioning import MovementProvisioning
@@ -12,11 +12,11 @@ from .models.movement_request import MovementRequest
 from .models.movement_withdraw import MovementWithdraw
 
 
-class MovementCountryInline(admin.TabularInline):
+class MovementDonJuanUSDInline(admin.TabularInline):
     """Inline para los movimientos de la caja de un país
     """
 
-    model = MovementCountry
+    model = MovementDonJuanUsd
     extra = 0
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
