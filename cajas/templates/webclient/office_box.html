@@ -330,9 +330,8 @@
           // handle error
           console.log(error);
         })
-
-
     })
+
     $('#category').on('change', function () {
       axios.get(`/api/inventory/${$(this).val()}/brand`)
         .then(function (response) {

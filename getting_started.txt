@@ -1,0 +1,31 @@
+1 crear superusuario
+2 crear los siguientes cargos respetando mayúsculas etc
+    Tarjetero
+    Cobrador
+    Supervisor
+    Secretaria
+    Administrador Junior
+    Administrador Senior
+    Asistente administrativo
+    Subgerente
+    Presidente
+3 crear un usario con los siguientes datos
+    3.1 username: donjuan
+    3.2 nombres y apellidos don juan
+    3.3 correo: donjuan@mail.com
+    3.4 datos personales cualquier cédula y documento
+    3.5 crear un objeto empleado 
+4 crear el objeto empleado
+    4.1 oficina vacía
+    4.2 cargo del empleado: Presidente
+    4.3 tipo de salario 
+    4.4 pasaporte y hoja de vida
+5 en la pestaña de socios crear un socio con los siguientes datos 
+    5.1 usuario: el usuario creado en el paso 3
+    5.2 oficinas blanco
+    5.3 tipo de socio: Don Juan
+6 Crear todos los conceptos
+7 Crear países 
+8 Crear divisas
+9 crear oficinas
+

@@ -35,7 +35,7 @@ class MovementPartnerCreate(APIView):
         detail = request.POST['detail']
         ip = get_ip(request)
 
-        if concept.name == "Compra de Unidad":
+        if concept.name == "Compra de Inventario Unidad":
             values = request.data["elemts"].split(",")
             if request.data["form[form]["+str(values[0])+"][name]"] != '':
                 unit = Unit.objects.get(pk=request.data["unity"])

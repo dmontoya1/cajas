@@ -7,9 +7,7 @@ from office.models.officeItems import OfficeItems
 from inventory.api.serializer.brand_serializer import BrandSerializer
 
 
-class OfficeItemSerializer(serializers.ModelSerializer):
-
-    brand = BrandSerializer(read_only=True)
+class OfficeItemCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OfficeItems

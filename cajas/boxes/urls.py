@@ -1,7 +1,7 @@
 from django.urls import path
 
-from boxes.api.views.provisioning_create import ProvisioningCreate
-from boxes.api.views.provisioning_detail import ProvisioningDetail
+from .api.views.provisioning_create import ProvisioningCreate
+from .api.views.provisioning_detail import ProvisioningDetail
 
 app_name = 'boxes'
 urlpatterns = [

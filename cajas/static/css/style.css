@@ -2603,7 +2603,7 @@ button.btn.btn-submit {
   padding-top: 4px !important;
 }
 
-button.add-movement {
+button.add-movement, button.add-movement-button{
   background-color: var(--blue);
   color: #fff;
   border-radius: 10px;

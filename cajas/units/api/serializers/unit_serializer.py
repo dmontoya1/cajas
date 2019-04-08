@@ -1,16 +1,17 @@
 
 from rest_framework import serializers
 
+from cajas.users.api.serializers.partner_serializer import PartnerSerializer
 from ...models.units import Unit
 from .unit_items_serializer import UnitItemSerializer
-from cajas.users.api.serializers.partner_serializer import PartnerSerializer
+from cajas.users.api.serializers.user_serializer import UserSerializer
 
 
 class UnitSerializer(serializers.ModelSerializer):
     """
     """
 
-    collector = serializers.StringRelatedField(many=False, read_only=True)
+    collector = UserSerializer(many=False, read_only=True)
     partner = PartnerSerializer(many=False, read_only=True)
     related_items = UnitItemSerializer(many=True, read_only=True)
     unit_price = serializers.SerializerMethodField()
