@@ -37,11 +37,12 @@ class Partner(models.Model):
         on_delete=models.CASCADE,
         related_name='partner'
     )
-    office = models.ManyToManyField(
+    office = models.ForeignKey(
         OfficeCountry,
         verbose_name='Oficina por País',
         related_name='partners',
-        blank=True
+        on_delete=models.SET_NULL,
+        blank=True, null=True
     )
     code = models.CharField(
         'Código',
@@ -74,6 +75,7 @@ class Partner(models.Model):
 
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
+        super(Partner, self).save(*args, **kwargs)
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
                 if self.partner_type == PartnerType.DIRECTO:
