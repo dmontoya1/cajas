@@ -35,6 +35,12 @@ class Employee(models.Model):
         on_delete=models.CASCADE,
         related_name='related_employee'
     )
+    charge = models.ForeignKey(
+        Charge,
+        verbose_name='Cargo de empleado',
+        on_delete=models.SET_NULL,
+        blank=True, null=True
+    )
     office = models.ManyToManyField(
         Office,
         verbose_name='Oficina',
@@ -46,12 +52,6 @@ class Employee(models.Model):
         verbose_name='Oficina por País',
         related_name='related_employees',
         blank=True
-    )
-    charge = models.ForeignKey(
-        Charge,
-        verbose_name='Cargo de empleado',
-        on_delete=models.SET_NULL,
-        blank=True, null=True
     )
     salary_type = models.CharField(
         'Tipo de salario',

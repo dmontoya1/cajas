@@ -1,14 +1,15 @@
 1 crear superusuario
 2 crear los siguientes cargos respetando mayúsculas etc
-    Tarjetero
-    Cobrador
-    Supervisor
-    Secretaria
-    Administrador Junior
-    Administrador Senior
-    Asistente administrativo
-    Subgerente
     Presidente
+    Subgerente
+    Asistente administrativo
+    Administrador Senior
+    Administrador Junior
+    Secretaria
+    Supervisor
+    Cobrador
+    Tarjetero
+
 3 crear un usario con los siguientes datos
     3.1 username: donjuan
     3.2 nombres y apellidos don juan
