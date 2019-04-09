@@ -30,7 +30,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         loans = Loan.objects.filter(office=office)
         partners = Partner.objects.filter(office=office)
-        employees = Employee.objects.filter(office=office)
+        employees = Employee.objects.filter(office_country=office, office=office.office)
         now = datetime.now()
         exchange = get_object_or_none(
             Exchange,

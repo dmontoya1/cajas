@@ -206,9 +206,9 @@
                   <label for="partner">Socio</label>
                   <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
                     <option value="" selected disabled>Selecciona un socio</option>
-                      {% for p in partners %}
-                        <option value="{{ p.pk }}">{{ p }}</option>
-                      {% endfor %}
+                    {% for p in partners %}
+                      <option value="{{ p.pk }}">{{ p }}</option>
+                    {% endfor %}
                   </select>
                 </div>
                 <div class="form-group col-md-6 unit-select ">
@@ -376,7 +376,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method="POST" id="form-investment" >
+            <form method="POST" id="form-investment">
               {% csrf_token %}
               <div class="form-row">
                 <div class="form-group col-md-12">
@@ -443,12 +443,13 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label for="investment_type">Tipo de inversión</label>
-                    <select class="form-control" id="investment_type" name="investment_type" style="width: 100%; height: 20px;"
-                            required>
-                      <option value="" selected disabled>Selecciona el tipo de inversión</option>
-                      <option value="PE">Personal</option>
-                      <option value="BS">De Negocio</option>
-                    </select>
+                  <select class="form-control" id="investment_type" name="investment_type"
+                          style="width: 100%; height: 20px;"
+                          required>
+                    <option value="" selected disabled>Selecciona el tipo de inversión</option>
+                    <option value="PE">Personal</option>
+                    <option value="BS">De Negocio</option>
+                  </select>
                 </div>
               </div>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -473,50 +474,28 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8.8.1/dist/sweetalert2.all.min.js" integrity="sha256-4C6NKWU/KCrmNNJY93CKZxCbjC37rNavGUM9IDc8OOY=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
           integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
-  {% comment %}<script src="{% static 'js/main.js' %}"></script>{% endcomment %}
+
   <script>
-    $('#menuToggle').on('click', function (event) {
-      var windowWidth = $(window).width();
-      if (windowWidth < 1010) {
-        $('body').removeClass('open');
-        if (windowWidth < 760) {
-          $('#left-panel').slideToggle();
-        } else {
-          $('#left-panel').toggleClass('open-menu');
-        }
-      } else {
-        $('body').toggleClass('open');
-        $('#left-panel').removeClass('open-menu');
-      }
-
-    });
-
-    $(window).on("load resize", function (event) {
-      var windowWidth = $(window).width();
-      if (windowWidth < 1010) {
-        $('body').addClass('small-device');
-      } else {
-        $('body').removeClass('small-device');
-      }
-
-    });
-
-    $('.datetimepicker').datetimepicker({
-      format: 'Y-m-d',
-      minDate: '-1970/01/03',//yesterday is minimum date(for today use 0 or -1970/01/01)
-      maxDate: '0',//tomorrow is maximum date calendar
-      timepicker: false,
-    });
-
     $(document).ready(function (e) {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      $('.datetimepicker').keypress(function(e) {
-          return false
+      $('.datetimepicker').keypress(function (e) {
+        return false
       });
       $('#sell-unit select').each(function () {
         $(this).select2({
@@ -641,6 +620,7 @@
                 title: 'Oops! No puedes hacer el retiro',
                 text: msg + " Deseas pedir autorización para realizar el retiro?",
                 type: 'warning',
+                input: 'textarea',
                 showCancelButton: true,
                 confirmButtonColor: '#60d3b0',
                 cancelButtonColor: '#d33',
@@ -657,40 +637,40 @@
                     allowOutsideClick: false,
                     showCloseButton: true
                   }).then((result) => {
-                    //if (result.value) {
-                    data_withdraw = withdraw.serialize()
-                    data_withdraw += `&observation=Testtt&message=${msg}`
-                    axios.post('{% url "api:movements:movement_withdraw_request_create" %}', data_withdraw)
-                      .then(function (response) {
-                        Swal.fire({
-                          title: 'Exitoso!',
-                          text: response.data,
-                          type: 'success',
-                          allowOutsideClick: false
-                        }).then((result) => {
-                          if (result.value) {
-                            location.reload()
-                          }
+                    if (result.value) {
+                      data_withdraw = withdraw.serialize()
+                      data_withdraw += `&observation=Testtt&message=${msg}`
+                      axios.post('{% url "api:movements:movement_withdraw_request_create" %}', data_withdraw)
+                        .then(function (response) {
+                          Swal.fire({
+                            title: 'Exitoso!',
+                            text: response.data,
+                            type: 'success',
+                            allowOutsideClick: false
+                          }).then((result) => {
+                            if (result.value) {
+                              location.reload()
+                            }
+                          })
                         })
-                      })
-                      .catch(function (error) {
-                        // handle error
-                        console.log(error)
-                        console.log(error.response)
-                        Swal.fire({
-                          title: 'Ha ocurrido un error',
-                          text: error.response.data,
-                          type: 'error',
-                          showCancelButton: false,
-                          confirmButtonColor: '#3085d6',
-                          confirmButtonText: 'Aceptar'
-                        }).then((result) => {
-                          if (result.value) {
-                            location.reload()
-                          }
-                        })
-                      });
-                    //}
+                        .catch(function (error) {
+                          // handle error
+                          console.log(error)
+                          console.log(error.response)
+                          Swal.fire({
+                            title: 'Ha ocurrido un error',
+                            text: error.response.data,
+                            type: 'error',
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'Aceptar'
+                          }).then((result) => {
+                            if (result.value) {
+                              location.reload()
+                            }
+                          })
+                        });
+                    }
                   })
                 } else {
                   Swal.fire(
@@ -777,154 +757,14 @@
       })
 
       $('.partner-closeout').on('submit', function (e) {
-      e.preventDefault()
-      withdraw = $(this)
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-      data_send = withdraw.serialize()
-      console.log('WORK IN PROGRESS')
-      {% comment %}axios.post('{% url 'api:users:validate_withdraw' %}', data_send)
-        .then(function (response) {
-          msg = response.data
-          if (response.status === 202) {
-            Swal.fire({
-              title: 'Oops! No puedes hacer el retiro',
-              text: msg + " Deseas pedir autorización para realizar el retiro?",
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#60d3b0',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Si, pedir autorización',
-              cancelButtonText: "No, Cancelar",
-              allowOutsideClick: false,
-            }).then((result) => {
-              if (result.value) {
-                const {value: text} = Swal.fire({
-                  title: 'Escribe el motivo para pedir la autorización',
-                  input: 'textarea',
-                  inputPlaceholder: 'Se debe autorizar el retiro de socio porque ...',
-                  showCancelButton: true,
-                  allowOutsideClick: false,
-                  showCloseButton: true
-                }).then((result) => {
-                  //if (result.value) {
-                  data_withdraw = withdraw.serialize()
-                  data_withdraw += `&observation=Testtt&message=${msg}`
-                  axios.post('{% url "api:movements:movement_withdraw_request_create" %}', data_withdraw)
-                    .then(function (response) {
-                      Swal.fire({
-                        title: 'Exitoso!',
-                        text: response.data,
-                        type: 'success',
-                        allowOutsideClick: false
-                      }).then((result) => {
-                        if (result.value) {
-                          location.reload()
-                        }
-                      })
-                    })
-                    .catch(function (error) {
-                      // handle error
-                      console.log(error)
-                      console.log(error.response)
-                      Swal.fire({
-                        title: 'Ha ocurrido un error',
-                        text: error.response.data,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'Aceptar'
-                      }).then((result) => {
-                        if (result.value) {
-                          location.reload()
-                        }
-                      })
-                    });
-                  //}
-                })
-              } else {
-                Swal.fire(
-                  'Cancelado',
-                  'El movimiento se ha cancelado',
-                  'info'
-                ).then((result) => {
-                  location.reload()
-                })
-              }
-            })
-          } else {
-            Swal.fire({
-              title: 'Validación exitosa!!',
-              text: msg + " Deseas continuar?",
-              type: 'info',
-              showCancelButton: true,
-              confirmButtonColor: '#60d3b0',
-              cancelButtonColor: '#d33',
-              confirmButtonText: 'Si, continuar',
-              cancelButtonText: "No, Cancelar",
-              allowOutsideClick: false,
-              reverseButtons: true,
-            }).then((result) => {
-              if (result.value) {
-                data_withdraw = withdraw.serialize()
-                axios.post('{% url "api:movements:withdraw_movement_create" %}', data_withdraw)
-                  .then(function (response) {
-                    Swal.fire({
-                      title: 'Exitoso!',
-                      text: response.data,
-                      type: 'success',
-                      allowOutsideClick: false
-                    }).then((result) => {
-                      if (result.value) {
-                        location.reload()
-                      }
-                    })
-                  })
-                  .catch(function (error) {
-                    // handle error
-                    console.log(error)
-                    Swal.fire({
-                      title: 'Ha ocurrido un error',
-                      text: error.response,
-                      type: 'error',
-                      showCancelButton: false,
-                      confirmButtonColor: '#3085d6',
-                      confirmButtonText: 'Aceptar'
-                    }).then((result) => {
-                      if (result.value) {
-                        location.reload()
-                      }
-                    })
-                  });
-              } else {
-                Swal.fire(
-                  'Cancelado',
-                  'El movimiento se ha cancelado',
-                  'info'
-                ).then((result) => {
-                  location.reload()
-                })
-              }
-            })
-          }
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error)
-          Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: error,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
-            }
-          })
-        }){% endcomment %}
-    })
+        e.preventDefault()
+        withdraw = $(this)
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+        data_send = withdraw.serialize()
+        console.log('WORK IN PROGRESS')
+
+      })
 
       $('#form-investment').on('submit', function (e) {
         e.preventDefault()
@@ -962,6 +802,39 @@
           })
       })
     })
+
+    $('#menuToggle').on('click', function (event) {
+      var windowWidth = $(window).width();
+      if (windowWidth < 1010) {
+        $('body').removeClass('open');
+        if (windowWidth < 760) {
+          $('#left-panel').slideToggle();
+        } else {
+          $('#left-panel').toggleClass('open-menu');
+        }
+      } else {
+        $('body').toggleClass('open');
+        $('#left-panel').removeClass('open-menu');
+      }
+
+    });
+
+    $(window).on("load resize", function (event) {
+      var windowWidth = $(window).width();
+      if (windowWidth < 1010) {
+        $('body').addClass('small-device');
+      } else {
+        $('body').removeClass('small-device');
+      }
+
+    });
+
+    $('.datetimepicker').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/03',//yesterday is minimum date(for today use 0 or -1970/01/01)
+      maxDate: '0',//tomorrow is maximum date calendar
+      timepicker: false,
+    });
 
   </script>
 {% endblock %}
