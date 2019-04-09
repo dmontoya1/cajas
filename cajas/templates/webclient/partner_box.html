@@ -366,7 +366,6 @@
     $(".add-movement").on("click", function () {
       slug = "{{ office.slug }}"
       partner_id = $("#partner_id").val()
-
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       //get partner units 
@@ -395,7 +394,6 @@
       $('.add-movement-form').on('submit', function (e) {
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
           e.preventDefault()
-          console.log("Compra de unidad")
           var elemts = []
           /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
           *  there: obtaining directly data from python dictionary using these identifiers
@@ -408,7 +406,6 @@
           $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
           data = $(this).serialize()
 
-          console.log(data)
           axios.post("{% url 'api:movements:movement_partner_create' %}", data)
             .then(function (response) {
               data = response.data

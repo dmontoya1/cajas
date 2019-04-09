@@ -95,13 +95,11 @@
 {% endblock %}
 
 {% block extra_js %}
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('#table').DataTable({
-        responsive: {
-          details: true
-        },
+        responsive: true,
         dom: 'lBfrtip',
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         buttons: [
