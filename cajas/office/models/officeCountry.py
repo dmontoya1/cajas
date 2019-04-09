@@ -28,6 +28,10 @@ class OfficeCountry(models.Model):
         null=True,
         blank=True,
     )
+    consecutive = models.IntegerField(
+        'Consecutivo Socios',
+        default=1
+    )
 
     class Meta:
         verbose_name = 'Oficina por país'
