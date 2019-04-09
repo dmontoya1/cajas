@@ -3,6 +3,8 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from django.shortcuts import get_object_or_404
+
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from chains.models.chain import Chain
@@ -25,7 +27,8 @@ class CreateDailySquareMovement(APIView):
     """
 
     def post(self, request, format=None):
-        box_daily_square = BoxDailySquare.objects.get(user__pk=request.POST['user_id'])
+        office_ = get_object_or_404(OfficeCountry, slug=request.POST['office_slug'])
+        box_daily_square = BoxDailySquare.objects.get(user__pk=request.POST['user_id'], office=office_)
         concept = Concept.objects.get(pk=request.POST['concept'])
         date = request.POST['date']
         movement_type = request.POST['movement_type']

@@ -7,7 +7,6 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
-from office.models.office import Office
 from units.models.units import Unit
 from office.models.officeCountry import OfficeCountry
 

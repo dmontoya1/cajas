@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from inventory.models.category import Category
+from boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from office.models.officeCountry import OfficeCountry
 
 
@@ -25,6 +25,6 @@ class OfficeUSDBox(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        context['categories'] = Category.objects.all()
         context['offices'] = OfficeCountry.objects.all()
+        context['box'] = BoxDonJuanUSD.objects.get(office=office)
         return context
