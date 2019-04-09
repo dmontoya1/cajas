@@ -29,7 +29,7 @@ class PartnerCreate(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         office = OfficeCountry.objects.get(pk=request.POST['office'])
-        admin_senior = get_object_or_none(Employee, office=office, charge__name='Administrador Senior')
+        admin_senior = get_object_or_none(Employee, office=office.office, charge__name='Administrador Senior')
         if not admin_senior:
             messages.add_message(
                 request,
@@ -102,7 +102,7 @@ class PartnerCreate(LoginRequiredMixin, View):
                 'ip': ip,
             }
             movement = movement_partner_manager.create_partner_movements(data)
-            data['box'] = admin_senior.user.related_daily_box.get()
+            data['box'] = admin_senior.user.related_daily_box.filter(office=office).first()
             movement1 = daily_square_manager.create_new_partner_movement(data)
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el socio exitosamente')
         return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 from office.models.office import Office
@@ -24,7 +25,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        offices = Office.objects.all()
+        offices = OfficeCountry.objects.all()
         units = Unit.objects.filter(partner__office=office)
         users = User.objects.filter(Q(partner__office=office) or Q(employee__office=office))
         try:
@@ -34,9 +35,14 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     user__is_active=True,
                     user__is_daily_square=True
                 ).exclude(partner_type='DJ')
-        except:
+                context['employees'] = Employee.objects.filter(
+                    office=office.office,
+                    user__is_active=True,
+                    user__is_daily_square=True
+                )
+        except Exception as e:
+            print(e)
             context['partner'] = self.request.user.partner.get()
-
         context['offices'] = offices
         context['units'] = units
         context['users'] = users

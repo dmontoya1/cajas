@@ -75,7 +75,6 @@ class Partner(models.Model):
 
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
-        super(Partner, self).save(*args, **kwargs)
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
                 if self.partner_type == PartnerType.DIRECTO:
