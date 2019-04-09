@@ -6,6 +6,7 @@ from django.dispatch import receiver
 
 from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
+from .models.movement_don_juan_usd import MovementDonJuanUsd
 from .models.movement_office import MovementOffice
 from .models.movement_partner import MovementPartner
 from .models.movement_provisioning import MovementProvisioning
@@ -46,6 +47,17 @@ def delete_movement_don_juan(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_don_juan
     if instance.movement_type == MovementDonJuan.IN:
+        box.balance -= instance.value
+    else:
+        box.balance += instance.value
+    box.save()
+
+
+@receiver(pre_delete, sender=MovementDonJuanUsd)
+def delete_movement_usd_don_juan(sender, **kwargs):
+    instance = kwargs.get('instance')
+    box = instance.box_don_juan
+    if instance.movement_type == MovementDonJuanUsd.IN:
         box.balance -= instance.value
     else:
         box.balance += instance.value

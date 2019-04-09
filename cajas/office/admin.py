@@ -5,7 +5,7 @@ from .models.officeItems import OfficeItems
 from .models.officeCommitments import OfficeCommitments
 from .models.officeCountry import OfficeCountry
 from .models.supervisorCalendar import SupervisorCalendar
-
+from .models.notifications import Notifications
 
 class OfficeItemsAdmin(admin.StackedInline):
     """
@@ -29,7 +29,7 @@ class OfficeCountryInline(admin.StackedInline):
 
     model = OfficeCountry
     extra = 0
-    readonly_fields = ('slug', )
+    readonly_fields = ('slug', 'consecutive',)
 
 
 @admin.register(Office)
@@ -37,9 +37,8 @@ class OfficeAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ('number', )
+    list_display = ('__str__', )
     search_fields = ('number', )
-    readonly_fields = ('consecutive', )
     inlines = [OfficeCountryInline, OfficeItemsAdmin, OfficeCommitmentsAdmin]
 
 
@@ -49,4 +48,13 @@ class SupervisorCalendarAdmin(admin.ModelAdmin):
     """
 
     model = SupervisorCalendar
+    extra = 0
+
+
+@admin.register(Notifications)
+class NotificationsAdmin(admin.ModelAdmin):
+    """
+    """
+
+    model = Notifications
     extra = 0

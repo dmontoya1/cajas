@@ -52,6 +52,12 @@
           </a>
         </li>
       {% endif %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:notifications' office.slug %}">
+          <i class="fas fa-bell mr-4 ml-1"></i>
+          Notificaciones
+        </a>
+      </li>
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
@@ -112,7 +118,7 @@
       </li>
     {% endif %}
     {% if perms.chains.change_chain %}
-      <li class="menu-item-has-children dropdown active">
+      <li class="menu-item-has-children dropdown">
         <a href="{% url 'webclient:chain_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Cadenas
@@ -130,48 +136,29 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                <h2 class="mb-3">Crear Cadena</h2>
-                <form class="create-chain">
-                  {% csrf_token %}
-                  <input type="hidden" name="office" value="{{ office.pk }}">
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="chain-name">Nombre Cadena</label>
-                      <input type="text" class="form-control name" id="chain-name" name="name"
-                             placeholder="Nombre cadena" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="places">Número de puestos</label>
-                      <input type="number" class="form-control" id="places" name="places"
-                             placeholder="Número de puestos" required>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="place_value">Valor del puesto</label>
-                      <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                          <div class="input-group-text">$</div>
-                        </div>
-                        <input type="number" class="form-control" name="place_value" id="place_value" value="0"
-                               placeholder="Valor del puesto" required>
-                      </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="chain_type">Tipo de cadena</label>
-                      <select class="form-control" name="chain_type" id="chain_type" style="width: 100%; height: 20px;"
-                              required>
-                        <option value="" selected disabled>Selecciona el tipo de cadena</option>
-                        <option value="IN">Interna</option>
-                        <option value="EX">Externa</option>
-                      </select>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="places">
-                    <div class="form-row places-list">
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-submit float-right d-none mt-4">Crear Cadena</button>
-                </form>
+                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
+                       cellspacing="0" style="width:100%">
+                  <thead>
+                  <tr>
+                    <th>Oficina</th>
+                    <th>Concepto</th>
+                    <th>Valor</th>
+                    <th>Detalle</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                      <tr>
+                        <td>Nombre</td>
+                        <td>Apellidos</td>
+                        <td>Código</td>
+                        <td>Tipo de Socio</td>
+                        <td></td>
+                      </tr>
+                  {% endif %}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -184,7 +171,22 @@
 
 {% block extra_js %}
 
-  <script type="text/javascript">
+<script src="{% static 'js/data-table/datatables.min.js' %}"></script>
+<script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
+<script src="{% static 'js/data-table/jszip.min.js' %}"></script>
+<script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
+<script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
+<script type="text/javascript">
+
+
+    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
@@ -221,108 +223,9 @@
           }
         }
       });
-
-      $('.create-chain select').each(function () {
-        $(this).select2({
-          language: "es"
-        });
-      });
     });
-    var counters = {}
-    $('#places').on('change', function () {
-      counters = {}
-      $('.btn-submit').removeClass('d-none')
-      $('.places-list').empty()
 
-      for (i = 1; i <= $(this).val(); i++) {
-        $('.places-list').append(
-          `
-                <div class="form-group col-md-6">
-                  <div class="places-item">
-                    <span class="place-name">Puesto ${i}</span>
-                    <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="pay_date_${i}">Fecha de pago del puesto</label>
-                        <input type="date" class="form-control" id="pay_date_${i}" name="pay_date_${i}" placeholder="yyyy-mm-dd" style="width: 100%;" required>
-                      </div>
-                    </div>
-                    <div class="form-group" id="dynamic_form_${i}">
-                      <div class="row" id="field">
-                        <div class="col-md-6">
-                          <label for="partner">Socio</label>
-                          <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
-                            <option value="" selected disabled>Selecciona un socio</option>
-                            {% for p in all_partners %}
-                              <option value="{{p.pk}}">{{p}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="place_porcentaje">Porcentaje</label>
-                            <div class="input-group mb-2">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text">%</div>
-                              </div>
-                              <input type="number" class="form-control" name="place_porcentaje_${i}" id="place_porcentaje_${i}" value="0">
-                            </div>
-                        </div>
-                        <div class="col-md-2 pt-4">
-                            <a href="#" class="btn btn-danger minus_${i} minus_btn" data-id="${i}" id="minus_${i}"><i class="fas fa-trash-alt"></i></a>
-                        </div>
-                      </div>
-                      <a href="#" class="btn btn-dynamic mt-4 plus_${i} plus_btn" data-id="${i}" id="plus_${i}">Agregar socio</a>
-                    </div>
-                  </div>
-                </div>
-              `
-        )
-        counters[`counter_${i}`] = 1
-        $(`#dynamic_form_${i}`).dynamicForm(`#dynamic_form_${i}`, `#plus_${i}`, `#minus_${i}`, {
-          limit: 15,
-          formPrefix: "form",
-          normalizeFullForm: false,
-        });
-      }
-    })
 
-    $('.places-list').on('click', `a.minus_btn`, function () {
-      id = $(this).data('id')
-      counters[`counter_${id}`] -= 1
-    })
-    $('.places-list').on('click', `a.plus_btn`, function () {
-      id = $(this).data('id')
-      counters[`counter_${id}`] += 1
-    })
-
-    $('.create-chain').on('submit', function (e) {
-      e.preventDefault()
-      var values = {};
-      $.each($('form.create-chain').serializeArray(), function (i, field) {
-        values[field.name] = field.value;
-      });
-      values['counters'] = counters
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-      axios.post("{% url 'api:chains:chain_create' %}", values)
-        .then(function (response) {
-          data = response.data
-          Swal.fire({
-            title: 'Exitoso',
-            text: data,
-            type: 'success',
-            showCancelButton: false,
-            confirmButtonColor: '#60d3b0',
-            confirmButtonText: 'Aceptar'
-          }).then(() => {
-            location.href = "{% url 'webclient:chain_list' office.slug %}"
-          })
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
-
+    
   </script>
 {% endblock %}
-

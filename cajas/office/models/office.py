@@ -20,10 +20,6 @@ class Office(models.Model):
         max_length=255,
         blank=True, null=True
     )
-    consecutive = models.IntegerField(
-        'Consecutivo Socios',
-        default=1
-    )
     image = models.ImageField(
         'Imágen',
         upload_to='contries/',

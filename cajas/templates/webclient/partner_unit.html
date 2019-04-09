@@ -403,19 +403,6 @@
 {% endblock %}
 
 {% block extra_js %}
-
-
-  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
-  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-  <script type="text/javascript" src="{% static 'js/dynamic-form.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.full.js"></script>
   <script type="text/javascript">
 
     //units_inventory modal script
@@ -519,7 +506,7 @@
     $('.decline-mv').on('click', function () {
       pk = $(this).data('id')
       const {value: text} = Swal.fire({
-        title: 'Escribe el motivo de eliminación del item',
+        title: 'Escribe el motivo de eliminación de la unidad',
         input: 'textarea',
         inputPlaceholder: 'Se elimina el item porque ...',
         showCancelButton: true,
