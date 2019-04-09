@@ -196,9 +196,12 @@
             data = response.data
             $('#unit').empty()
             $.each(data, function (k, v) {
-                $('#unit').append(
-                `<option value=${v.id}>${v.name} - ${v.collector.first_name} ${v.collector.last_name}</option>`
-                )
+                if(v.is_active){
+                  $('#unit').append(
+                    `<option value=${v.id}>${v.name} - ${v.collector.first_name} ${v.collector.last_name}</option>`
+                  )
+                }
+
             })
             $('#unit').prepend(
                 '<option value="" selected disabled>Selecciona una unidad</option>'

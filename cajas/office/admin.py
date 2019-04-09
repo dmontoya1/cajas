@@ -5,7 +5,7 @@ from .models.officeItems import OfficeItems
 from .models.officeCommitments import OfficeCommitments
 from .models.officeCountry import OfficeCountry
 from .models.supervisorCalendar import SupervisorCalendar
-
+from .models.notifications import Notifications
 
 class OfficeItemsAdmin(admin.StackedInline):
     """
@@ -48,4 +48,13 @@ class SupervisorCalendarAdmin(admin.ModelAdmin):
     """
 
     model = SupervisorCalendar
+    extra = 0
+
+
+@admin.register(Notifications)
+class NotificationsAdmin(admin.ModelAdmin):
+    """
+    """
+
+    model = Notifications
     extra = 0

@@ -21,6 +21,7 @@ from .views.loan_list import LoanList
 from .views.loan_payment_list import LoanPaymentList
 from .views.movement_requirement_list import MovementRequireList
 from .views.movement_withdraw_requirement_list import MovementWithdrawRequireList
+from .views.notifications import Notifications
 from .views.office_box import OfficeBox
 from .views.office_usd_box import OfficeUSDBox
 from .views.office_items_list import OfficeItemsList
@@ -30,7 +31,6 @@ from .views.partner_list import PartnerList
 from .views.partner_unit import PartnerUnitsList
 from .views.provisioning import Provisioning
 from .views.units_list import UnitsList
-
 
 app_name = 'webclient'
 
@@ -47,6 +47,7 @@ urlpatterns = [
     path("office/<slug:slug>/provisioning", Provisioning.as_view(), name='provisioning'),
     path("office/<slug:slug>/calendar", Calendar.as_view(), name='calendar'),
     path("office/<slug:slug>/usd/", OfficeUSDBox.as_view(), name='box_usd'),
+    path("office/<slug:slug>/notifications/", Notifications.as_view(), name='notifications'),
     # path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(),
     #      name='create_donjuan_movement'),
 
