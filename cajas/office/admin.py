@@ -29,7 +29,7 @@ class OfficeCountryInline(admin.StackedInline):
 
     model = OfficeCountry
     extra = 0
-    readonly_fields = ('slug', )
+    readonly_fields = ('slug', 'consecutive',)
 
 
 @admin.register(Office)
@@ -37,9 +37,8 @@ class OfficeAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ('number', )
+    list_display = ('__str__', )
     search_fields = ('number', )
-    readonly_fields = ('consecutive', )
     inlines = [OfficeCountryInline, OfficeItemsAdmin, OfficeCommitmentsAdmin]
 
 

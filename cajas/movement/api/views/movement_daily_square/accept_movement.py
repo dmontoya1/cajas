@@ -70,8 +70,6 @@ class AcceptMovement(APIView):
                 pass
             elif relationship == Relationship.CHAIN:
                 pass
-            else:
-                pass
 
         movement.review = True
         movement.status = MovementDailySquare.APPROVED

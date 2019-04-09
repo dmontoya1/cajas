@@ -26,6 +26,7 @@ class UserManager:
                 document_type=data['document_type'],
                 document_id=data['document_id'],
                 is_active=True,
+                is_daily_square=data['is_daily_square']
             )
             if "password1" in data:
                 user.password = make_password(data['password1'])
