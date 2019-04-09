@@ -83,10 +83,9 @@
               </a><br>
               <label class="label label-rounded label-success">Notificaciones </label> <i class="fas fa-bell" style="color: #60d3b0"></i>
               <ul class="notify-list">
-                <li>Lorem ipsum dolor sit amet </li>
-                <li>Lorem ipsum dolor sit amet </li>
-                <li>Lorem ipsum dolor sit amet </li>
-                <li>Lorem ipsum dolor sit amet </li>
+                {% for n in o.related_office_movement.all %}
+                  <li>{{ n.office_sender }} {{ n.concept }} $ {{ n.value|intcomma }}</li>
+                {% endfor %}
               </ul>
               <div class="d-flex">
                 <div class="read"><a href="javascript:void(0)" class="link font-medium">Ver más</a></div>
