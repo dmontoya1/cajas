@@ -2,17 +2,23 @@
 from django.db import models
 
 from concepts.models.concepts import Concept
-from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class Notifications(models.Model):
     """
     """
-
     office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
-        related_name='related_supervisor_calendar',
+        OfficeCountry,
+        verbose_name='Oficina Destinatario',
+        related_name='related_office_movement',
+        blank=True, null=True,
+        on_delete=models.SET_NULL
+    )
+    office_sender = models.ForeignKey(
+        OfficeCountry,
+        verbose_name='Oficina Remitente',
+        related_name='related_office_sender_movement',
         blank=True, null=True,
         on_delete=models.SET_NULL
     )
