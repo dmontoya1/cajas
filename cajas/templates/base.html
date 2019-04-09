@@ -317,6 +317,13 @@
                            placeholder="Valor a retirar">
                   </div>
                 </div>
+                <div class="form-group col-md-12 ">
+                  <label for="withdraw-reason">Motivo Retiro</label>
+                  <select class="form-control" id="withdraw-reason" name="withdraw-reason" style="width: 100%; height: 20px;"
+                          required>
+                    <option value="" selected disabled>Primero selecciona un socio</option>
+                  </select>
+                </div>
               </div>
           </div>
           <div class="modal-footer">
@@ -807,6 +814,20 @@
             }
           })
         })
+    })
+
+    $('#partner-withdraw').on('change', function (e) {
+      $('#withdraw-reason').empty()
+      $('#withdraw-reason').append(
+        `
+          <option value="" selected disabled>Selecciona un motivo</option>
+          <option value="DJ">Caja Don Juan</option>
+          <option value="PP">Préstamo Personal</option>
+          <option value="IN">Inversión Negocios</option>
+          <option value="OT">Otros</option>
+        `
+      )
+
     })
 
     $('#menuToggle').on('click', function (event) {
