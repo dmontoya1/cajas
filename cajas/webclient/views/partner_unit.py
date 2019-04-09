@@ -25,8 +25,8 @@ class PartnerUnitsList(LoginRequiredMixin, TemplateView):
         owner = get_object_or_404(Partner, pk=pk)
         office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner=owner)
-        supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
-        collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
+        supervisor = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
+        collectors = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
         categories = Category.objects.all()
 
         context['office'] = office
