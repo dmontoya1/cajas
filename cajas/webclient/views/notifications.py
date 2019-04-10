@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from office.models.officeCountry import OfficeCountry
+from office.models.notifications import Notifications as Notify
 
 
 class Notifications(LoginRequiredMixin, TemplateView):
@@ -18,5 +19,8 @@ class Notifications(LoginRequiredMixin, TemplateView):
         context = super(Notifications, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
+        notifications = Notify.objects.filter(office=office)
         context['office'] = office
+        context['notifications'] = notifications
+
         return context

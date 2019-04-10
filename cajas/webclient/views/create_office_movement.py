@@ -14,6 +14,7 @@ from inventory.models.category import Category
 from inventory.models.brand import Brand
 from movement.models.movement_office import MovementOffice
 from movement.services.don_juan_service import DonJuanManager
+from office.models.notifications import Notifications
 from office.models.officeCountry import OfficeCountry
 from office.services.office_item_create import OfficeItemsManager
 
@@ -66,8 +67,12 @@ class CreateOfficeMovement(View):
                 'ip': ip,
             }
             movement1 = donjuan_manager.create_movement(data)
-            secretary = Employee.objects.filter(office=destine_office, charge__name='Secretaria').first()
+            secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             email_manager.send_office_mail(request, secretary.user.email)
+            Notifications.objects.create(
+                office=office, office_sender=destine_office,
+                concept=concept, detail=movement1.detail, value=movement1.value
+            )
 
         if "brand" in request.POST:
             aux = copy.deepcopy(request.POST)
