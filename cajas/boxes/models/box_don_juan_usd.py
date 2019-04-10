@@ -18,6 +18,7 @@ class BoxDonJuanUSD(models.Model):
         OfficeCountry,
         verbose_name='Oficina por país',
         on_delete=models.SET_NULL,
+        related_name='related_usd_box',
         blank=True, null=True
     )
     balance = models.IntegerField(
@@ -35,7 +36,7 @@ class BoxDonJuanUSD(models.Model):
 
     def __str__(self):
         if self.office is not None:
-            return "Caja de Don Juan de la oficina".format(self.office)
+            return "Caja Dólares de {}".format(self.office)
         return "Caja de don Juan"
 
     class Meta:

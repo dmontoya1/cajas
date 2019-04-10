@@ -49,7 +49,6 @@ class CreateWithdrawMovement(APIView):
             data['partner'] = partner
             movement = movement_partner_manager.create_withdraw_movement_full(data)
 
-
         return Response(
             'Se ha creado el movimiento exitosamente',
             status=status.HTTP_201_CREATED
