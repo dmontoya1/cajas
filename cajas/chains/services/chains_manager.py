@@ -1,5 +1,4 @@
 
-from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from cajas.users.models.partner import Partner
@@ -7,8 +6,6 @@ from office.models.officeCountry import OfficeCountry
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
 from ..models.user_place import UserPlace
-
-User = get_user_model()
 
 
 class ChainManager(object):
