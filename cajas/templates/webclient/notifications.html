@@ -52,12 +52,14 @@
           </a>
         </li>
       {% endif %}
-      <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:notifications' office.slug %}">
-          <i class="fas fa-bell mr-4 ml-1"></i>
-          Notificaciones
-        </a>
-      </li>
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown active">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
@@ -144,18 +146,18 @@
                     <th>Concepto</th>
                     <th>Valor</th>
                     <th>Detalle</th>
-                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
-                      <tr>
-                        <td>Nombre</td>
-                        <td>Apellidos</td>
-                        <td>Código</td>
-                        <td>Tipo de Socio</td>
-                        <td></td>
+                    {% for n in notifications%}
+                       <tr>
+                        <td>{{ n.office_sender }}</td>
+                        <td>{{ n.concept }}</td>
+                        <td>$ {{ n.value|intcomma }}</td>
+                        <td>{{ n.detail }}</td>
                       </tr>
+                    {% endfor %}
                   {% endif %}
                   </tbody>
                 </table>

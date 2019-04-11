@@ -52,6 +52,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
@@ -145,26 +153,44 @@
                   </thead>
                   <tbody>
                   {% for e in employees %}
-                    {% if e.user.is_active %}
-                      <tr>
-                        <td>{{ e.user.first_name }}</td>
-                        <td>{{ e.user.last_name }}</td>
-                        <td>{{ e.charge }}</td>
-                        <td>{{ e.salary }}</td>
-                        <td>
-                          <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
-                               data-target="#modalDetail">Ver detalle</a></td>
-                        <td>
-                          {% if perms.users.change_employee %}
-                            <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
-                               data-target="#editEmployee">Editar</a>
-                          {% endif %}
-                          {% if perms.users.delete_employee %}
-                            <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% endif %}
+                    <tr>
+                      <td>{{ e.user.first_name }}</td>
+                      <td>{{ e.user.last_name }}</td>
+                      <td>{{ e.charge }}</td>
+                      <td>{{ e.salary }}</td>
+                      <td>
+                        <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#modalDetail">Ver detalle</a></td>
+                      <td>
+                        {% if perms.users.change_employee %}
+                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#editEmployee">Editar</a>
+                        {% endif %}
+                        {% if perms.users.delete_employee %}
+                          <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for e in employees1 %}
+                    <tr>
+                      <td>{{ e.user.first_name }}</td>
+                      <td>{{ e.user.last_name }}</td>
+                      <td>{{ e.charge }}</td>
+                      <td>{{ e.salary }}</td>
+                      <td>
+                        <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#modalDetail">Ver detalle</a></td>
+                      <td>
+                        {% if perms.users.change_employee %}
+                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#editEmployee">Editar</a>
+                        {% endif %}
+                        {% if perms.users.delete_employee %}
+                          <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                        {% endif %}
+                      </td>
+                    </tr>
                   {% endfor %}
                   </tbody>
                 </table>

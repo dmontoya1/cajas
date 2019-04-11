@@ -10,6 +10,7 @@ from cajas.users.models.employee import Employee
 from concepts.models.concepts import Concept
 from core.services.email_service import EmailManager
 from movement.services.don_juan_service import DonJuanManager
+from office.models.notifications import Notifications
 from office.models.officeCountry import OfficeCountry
 
 from .get_ip import get_ip
@@ -56,8 +57,13 @@ class CreateDonJuanMovement(View):
                 'ip': ip,
             }
             movement1 = donjuan_manager.create_movement(data1)
-            secretary = Employee.objects.filter(office=destine_office, charge__name='Secretaria').first()
+            secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
                 email_manager.send_office_mail(request, secretary.user.email)
+                Notifications.objects.create(
+                    office=office, office_sender=destine_office,
+                    concept=concept, detail=movement1.detail, value=movement1.value
+                )
+
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return HttpResponseRedirect(reverse('webclient:box_don_juan', kwargs={'slug': office.slug}))

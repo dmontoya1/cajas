@@ -53,6 +53,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
@@ -140,7 +148,7 @@
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Email</th>
-                    <th>Detalle</th>
+                    {% comment %}<th>Detalle</th>{% endcomment %}
                     <th>Saldo</th>
                     <th></th>
                   </tr>
@@ -153,7 +161,7 @@
                         <td>{{ p.user.last_name }}</td>
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.user.email }}</td>
-                        <td><a href="#">Detalle</a></td>
+                        {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {{ p.user.related_daily_box.get.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}
@@ -163,6 +171,8 @@
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
                               class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                            <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver movimientos venda+</a>
                           {% endif %}
                         </td>
                       </tr>
@@ -173,7 +183,7 @@
                         <td>{{ p.user.last_name }}</td>
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.user.email }}</td>
-                        <td><a href="#">Detalle</a></td>
+                        {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {% get_dq_box office p.user %}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}
@@ -183,6 +193,8 @@
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
                               class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                            <a href="{% url 'webclient:daily_square_venda' office.slug p.user.pk %}" class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver movimientos venda+</a>
                           {% endif %}
                         </td>
                       </tr>

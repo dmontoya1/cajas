@@ -3,8 +3,10 @@ from allauth.account.signals import user_logged_in, user_logged_out
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from boxes.models.box_daily_square import BoxDailySquare
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.auth_logs import AuthLogs
+from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 
 from webclient.views.get_ip import get_ip
