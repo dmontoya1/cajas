@@ -159,7 +159,7 @@
                       <tr>
                         <td>{{ p.user.first_name }}</td>
                         <td>{{ p.user.last_name }}</td>
-                        <td>{{ p.code|default:"Sin Codigo" }}</td>
+                        <td>{{ p.user.pk|default:"Sin Codigo" }}</td>
                         <td>{{ p.user.email }}</td>
                         {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {{ p.user.related_daily_box.get.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
@@ -171,7 +171,7 @@
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
                               class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
-                            <a href="{% url 'webclient:daily_square_box' office.slug p.user.pk %}" class="see-box"><i
+                            <a href="{% url 'webclient:daily_square_venda' office.slug p.user.pk %}" class="see-box"><i
                               class="fas fa-eye mr-2"></i>Ver movimientos venda+</a>
                           {% endif %}
                         </td>
@@ -181,7 +181,7 @@
                       <tr>
                         <td>{{ p.user.first_name }}</td>
                         <td>{{ p.user.last_name }}</td>
-                        <td>{{ p.code|default:"Sin Codigo" }}</td>
+                        <td>{{ p.user.pk|default:"Sin Codigo" }}</td>
                         <td>{{ p.user.email }}</td>
                         {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {% get_dq_box office p.user %}</td>
