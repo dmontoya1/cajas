@@ -20,16 +20,17 @@ class Home(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
         user = self.request.user
+        # print("hello", user.partner.get().office)
+
         if not self.request.user.is_superuser:
             try:
                 if user.related_employee.get().is_admin_charge:
-                    print(user.related_employee.get().office.all())
                     context['offices'] = user.related_employee.get().office.all()
                 else:
                     context['offices'] = user.related_employee.get().office_country.all()
             except Exception as e:
                 print(e)
-                pass
+                context['office'] = user.partner.get().office
         else:
             context['offices'] = Office.objects.all()
         return context

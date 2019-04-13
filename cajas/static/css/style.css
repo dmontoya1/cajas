@@ -2185,7 +2185,7 @@ footer.site-footer {
   opacity:0.5;
 }
 
-.float{
+.float, .close-box{
   position:fixed;
   width:60px;
   height:60px;
