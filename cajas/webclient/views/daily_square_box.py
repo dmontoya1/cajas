@@ -9,6 +9,8 @@ from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
+from movement.models.movement_daily_square import MovementDailySquare
+from datetime import datetime
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -30,6 +32,12 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         offices = OfficeCountry.objects.all()
         partners = Partner.objects.filter(office=box_daily_square.office).order_by('user__first_name')
         units = Unit.objects.filter(partner__office=office)
+        past_mvments = MovementDailySquare.objects.filter(
+            ~Q(date=datetime.today()),
+            box_daily_square=box_daily_square,
+            box_daily_square__is_closed=False,
+            review=False
+        )
         context['box'] = box_daily_square
         context['offices'] = offices
         context['office'] = office
@@ -37,4 +45,6 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['box_user'] = user
         context['users'] = users
         context['units'] = units
+        context['today'] = datetime.today().strftime('%d/%m/%Y')
+        context['past_mvments'] = past_mvments
         return context

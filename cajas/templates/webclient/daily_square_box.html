@@ -151,9 +151,6 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
-                    {% if not box.is_closed %}
-                      <th></th>
-                    {% endif %}
                     <th></th>
                   </tr>
                   </thead>
@@ -161,20 +158,26 @@
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y" }}</td>
+                      <td>{{ m.date|date:"d-M-Y"}}</td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if not box.is_closed or request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
-                        <td>
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                          data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
                       <td>
+                        {% if not m.status %}
+                          {% if request.user.related_employee.get.charge|stringformat:"s" == 'Secretaria' %}
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                            data-target="#addMovement">Editar</a>
+                          {% endif %}
+                        {% endif %}
+                        {% if not box.is_closed and not m.status %}
+                            {% if not request.user.related_employee.get.charge|stringformat:"s" == "Secretaria" and m.date|date:"d/m/Y" == today %}
+                              <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                              data-target="#addMovement">Editar</a>
+                            {% endif %}
+                        {% endif %}
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
                             <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
@@ -197,7 +200,7 @@
             </div>
           </div>
         </div>
-        {% if perms.movement.add_movementdailysquare and not box.is_closed %}
+        {% if perms.movement.add_movementdailysquare and not box.is_closed and not past_mvments %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
@@ -206,7 +209,7 @@
             <i class="fa fa-play label-arrow"></i>
           </div>
         {% endif %}
-        {% if not box.is_closed %}
+        {% if not box.is_closed and request.user.related_daily_box.get == box %}
           <a href="#" class="close-box" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
@@ -249,7 +252,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
                 style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -929,5 +932,11 @@
         })
       })
 
+      $('.datetimepicker_dailysquare').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/01',
+        maxDate: '0',
+        timepicker: false,
+      });
   </script>
 {% endblock %}
