@@ -141,8 +141,8 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                <h3 class="mb-4">Cuadre Diario de {{ box_user }}</h3>
-                <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
+                <h3 class="mb-4">Cuadre Diario de {{ box_user }} {% if box.is_closed %} <span style="color:red">Cerrada</span> {% endif %}</h3>
+                <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ office.country.currency.abbr }}  </h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -151,6 +151,9 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    {% if not box.is_closed %}
+                      <th></th>
+                    {% endif %}
                     <th></th>
                   </tr>
                   </thead>
@@ -165,6 +168,12 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      {% if not box.is_closed or request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                        <td>
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                          data-target="#addMovement">Editar</a>
+                        </td>
+                      {% endif %}
                       <td>
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
@@ -188,12 +197,21 @@
             </div>
           </div>
         </div>
-        {% if perms.movement.add_movementdailysquare %}
-          <a href="" class="float" data-toggle="modal" data-target="#addMovement">
+        {% if perms.movement.add_movementdailysquare and not box.is_closed %}
+          <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
             <div class="label-text">Añadir movimiento</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+        {% endif %}
+        {% if not box.is_closed %}
+          <a href="#" class="close-box" style="bottom:110px;">
+            <i class="fas fa-power-off my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Cerrar Caja</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
         {% endif %}
@@ -214,6 +232,7 @@
         <div class="modal-body">
           <form method="POST" class="add-movement">
             {% csrf_token %}
+            <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="user_id" value="{{ box.user.pk }}">
             <input type="hidden" name="office_slug" value="{{ office.slug }}">
             <div class="form-row">
@@ -365,6 +384,7 @@
       </div>
     </div>
   </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -517,6 +537,14 @@
         })
     })
 
+    $("#add-movement-btn").on("click", function(){
+      $('#addMovement').on('show.bs.modal', function (event) {
+        $("#method_modal").val("add")
+        $("#method_modal").data("id","")
+        $('.modal-title').text("Añadir Movimiento")
+      })
+    })
+
     $('.accept-mv').on('click', function () {
       id = $(this).data('id')
       Swal.fire({
@@ -649,7 +677,8 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       console.log("data_send",data_send)
-      axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
+      if( $("#method_modal").val() === "add" ){
+        axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
         .then(function (response) {
           msg = response.data
           if (response.status === 204) {
@@ -736,6 +765,169 @@
             }
           })
         })
+      }
+      if( $("#method_modal").val() === "edit" ){
+        mvment_id = $("#method_modal").data("id")
+        axios.patch(`/api/movements/${mvment_id}/list-daily-square-movement/`, data_send)
+        .then(function (response) {
+          msg = response.data
+          if (response.status === 204) {
+            Swal.fire({
+              title: 'Oops! Has llegado al tope',
+              text: msg + " Deseas pedir autorización para generar este movimiento?",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#60d3b0',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, pedir autorización',
+              cancelButtonText: "No, Cancelar",
+              allowOutsideClick: false,
+            }).then((result) => {
+              if (result.value) {
+                const {value: text} = Swal.fire({
+                  title: 'Escribe el motivo para pedir la autorización',
+                  input: 'textarea',
+                  inputPlaceholder: 'Se debe autorizar el movimiento porque ...',
+                  showCancelButton: true,
+                  inputValidator: (value) => {
+                    return !value && 'Debes escribir el motivo para pedir la autorización'
+                  },
+                  allowOutsideClick: false,
+                  showCloseButton: true
+                }).then((result) => {
+                  if (result.value) {
+                    data_stop = movement.serialize()
+                    data_stop += `&observation=${result.value}`
+                    axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
+                      .then(function (response) {
+                        Swal.fire({
+                          title: 'Exitoso!',
+                          text: response.data,
+                          type: 'success',
+                          allowOutsideClick: false
+                        }).then((result) => {
+                          if (result.value) {
+                            location.reload()
+                          }
+                        })
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                        console.log(error.response)
+                      });
+                  }
+                })
+              } else {
+                Swal.fire(
+                  'Cancelado',
+                  'El movimiento se ha cancelado',
+                  'info'
+                ).then((result) => {
+                  location.reload()
+                })
+              }
+            })
+          } else {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: msg,
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
+
+      }
     })
+
+    // Cerrar caja
+    $('.close-box').on('click', function () {
+      pk = '{{ box.pk }}'
+      const {value: text} = Swal.fire({
+        title: 'Cerrar Caja',
+        text:  "¿Estás seguro de cerrar la caja?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, cerrar',
+        cancelButtonText: "No, Cancelar",
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.value) {
+          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+          axios.patch(`/api/boxes/${pk}/close-box`,
+            {"is_closed": true}
+          )
+          .then(function (response) {
+            Swal.fire({
+              title: 'Exitoso!',
+              text: response.data,
+              type: 'success',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            console.log(error);
+            console.log(error.response)
+          });
+        }
+      })
+    })
+    
+    //Edit movement
+    $('.edit-item').on('click', function () {
+      var mov_pk = $(this).data("id")
+      $('#addMovement').on('show.bs.modal', function (event) {
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        var modal = $(this)
+        $("#method_modal").val("edit")
+        $("#method_modal").data("id", mov_pk)
+        $('.modal-title').text("Editar Movimiento")
+
+        //get movement data
+        axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
+          .then(function (response) {
+            data = response.data
+            $("#concept option").prop("selected", false);
+            $("#concept option[value='" + data.concept + "']").prop("selected", true);
+            $("#concept").trigger("change")
+            $("#date").val(data.date)
+            $("#movement_type").prop("selected", false);
+            $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+            $("#movement_type").trigger("change")
+            $("#value").val(data.value)
+            $("#detail").val(data.detail)
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        })
+      })
+
   </script>
 {% endblock %}

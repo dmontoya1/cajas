@@ -66,3 +66,15 @@ class EmailManager(object):
         }
         subject = "Has recibido una transferencia de otra oficina"
         self.send_email(url, ctx, subject, email_to)
+
+    def send_close_box_mail(self, request, email_to):
+        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+        ctx = {
+            "title": "Notificación de cierre de cuadre diario",
+            "content": "Aún no has cerrado la caja de cuadre diario, ingresa a la plataforma y revisa el estado de tu caja"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Notificación de cierre de cuadre diario"
+        self.send_email(url, ctx, subject, email_to)

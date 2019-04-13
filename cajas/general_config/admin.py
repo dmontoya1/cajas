@@ -24,7 +24,7 @@ class ExchangeAdmin(admin.StackedInline):
             for i in range(int(request.POST["exchange_set-INITIAL_FORMS"])):
                 date = re.split(r'\/', request.POST["exchange_set-"+str(i)+"-month"])
                 if date[1] == '{:02d}'.format(datetime.today().month):
-                    if '{:02d}'.format(datetime.today().day) == '06':
+                    if '{:02d}'.format(datetime.today().day) == '01':
                         validator = True
                     else:
                         validator = False

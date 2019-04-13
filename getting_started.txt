@@ -29,4 +29,5 @@
 7 Crear países 
 8 Crear divisas
 9 crear oficinas
+10 Crear administrador senior con cuadre diario para la oficina 
 

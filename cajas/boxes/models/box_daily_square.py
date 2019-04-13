@@ -34,6 +34,10 @@ class BoxDailySquare(models.Model):
         'id último movimiento',
         default=0
     )
+    is_closed = models.BooleanField(
+        "Caja cerrada?",
+        default=False
+    )
 
     def __str__(self):
         if self.user:
