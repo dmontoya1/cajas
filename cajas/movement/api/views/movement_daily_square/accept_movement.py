@@ -53,7 +53,17 @@ class AcceptMovement(APIView):
                 }
                 unit_movement = movement_partner_manager.create_simple(data)
             elif relationship == Relationship.PERSON:
-                pass
+                data = {
+                    'box': movement.user.partner.get().box,
+                    'concept': movement.concept,
+                    'movement_type': movement.movement_type,
+                    'value': movement.value,
+                    'detail': movement.detail,
+                    'date': movement.date,
+                    'responsible': request.user,
+                    'ip': get_ip(request)
+                }
+                movement_person = movement_partner_manager.create_simple(data)
             elif relationship == Relationship.OFFICE:
                 data = {
                     'box': movement.office.box,

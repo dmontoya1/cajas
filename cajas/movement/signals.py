@@ -102,6 +102,7 @@ def delete_movement_provisioning(sender, **kwargs):
 @receiver(post_save, sender=MovementPartner)
 def inactive_partner_box(sender, **kwargs):
     instance = kwargs.get('instance')
-    if instance.get_box_status == 'En Liquidación' and instance.balance == 0:
-        instance.box_status = BoxStatus.LIQUIDADA
-        instance.save()
+    box = instance.box_partner
+    if box.box_status == BoxStatus.EN_LIQUIDACION and box.balance == instance.value:
+        box.box_status = BoxStatus.LIQUIDADA
+        box.save()

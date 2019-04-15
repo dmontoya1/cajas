@@ -682,7 +682,6 @@
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
-      console.log("data_send",data_send)
       if( $("#method_modal").val() === "add" ){
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
         .then(function (response) {
