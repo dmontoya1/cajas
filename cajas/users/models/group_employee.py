@@ -20,7 +20,7 @@ class GroupEmployee(models.Model):
     )
 
     def __str__(self):
-        return self.group.admin.user
+        return self.group.admin.user.username
 
     class Meta:
         verbose_name = 'Grupo'

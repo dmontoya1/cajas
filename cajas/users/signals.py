@@ -51,5 +51,6 @@ def create_partner_box(sender, **kwargs):
 @receiver(post_save, sender=Employee)
 def create_employee_admin_group(sender, instance, **kwargs):
     if kwargs.get('created'):
-        if instance.charge == "Administrador de Grupo":
-            Group.objects.create(admin=instance)
+        if str(instance.charge) == "Administrador de Grupo":
+            group = Group(admin=instance)
+            group.save()

@@ -8,6 +8,8 @@ from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.charges import Charge
 from cajas.users.models.auth_logs import AuthLogs
+from cajas.users.models.group import Group
+from cajas.users.models.group_employee import GroupEmployee
 
 User = get_user_model()
 
@@ -74,3 +76,25 @@ class AuthLogsAdmin(admin.ModelAdmin):
 
     list_display = ['user', 'date', 'action', 'ip']
     search_fields = ['user__first_name', 'user__last_name', 'date', 'action', 'ip']
+
+
+class GroupEmployeeInline(admin.StackedInline):
+    """
+    """
+
+    model = GroupEmployee
+    extra = 1
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "supervisor":
+            kwargs["queryset"] = Employee.objects.filter(charge__name="Supervisor")
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+
+@admin.register(Group)
+class GroupAdmin(admin.ModelAdmin):
+    """
+    """
+
+    list_display = ['admin', ]
+    inlines = [GroupEmployeeInline, ]

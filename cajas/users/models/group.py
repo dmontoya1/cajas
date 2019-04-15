@@ -16,5 +16,4 @@ class Group(models.Model):
         return "Grupo de {}".format(self.admin.user)
 
     class Meta:
-        verbose_name = 'Grupo'
-        verbose_name_plural = 'Grupos'
+        verbose_name = 'Administrador de grupo'
