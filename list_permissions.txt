@@ -114,6 +114,7 @@ movement.delete_movementoffice
 movement.delete_movementpartner
 movement.delete_movementprovisioning
 movement.delete_movementrequest
+movement.delete_movementwithdraw
 office.add_notifications
 office.add_office
 office.add_officecommitments

@@ -65,9 +65,9 @@ class PartnerCreate(LoginRequiredMixin, View):
             return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
         if 'daily_square' in request.POST:
             request.POST['daily_square']
-            daily_square = True
+            daily_square = "true"
         else:
-            daily_square = False
+            daily_square = "false"
         initial_value = request.POST['initial_value']
 
         data_user = {

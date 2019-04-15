@@ -12,6 +12,7 @@ from .views.create_don_juan_movement import CreateDonJuanMovement
 from .views.create_office_movement import CreateOfficeMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
+from .views.daily_square_venda import DailySquareVenda
 from .views.employee_list import EmployeeList
 from .views.home_view import Home
 from .views.investment_list import InvestmentList
@@ -48,8 +49,6 @@ urlpatterns = [
     path("office/<slug:slug>/calendar", Calendar.as_view(), name='calendar'),
     path("office/<slug:slug>/usd/", OfficeUSDBox.as_view(), name='box_usd'),
     path("office/<slug:slug>/notifications/", Notifications.as_view(), name='notifications'),
-    # path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(),
-    #      name='create_donjuan_movement'),
 
     # DonJuan
     path("office/<slug:slug>/donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
@@ -67,6 +66,7 @@ urlpatterns = [
     # Daily Square
     path("office/<slug:slug>/daily-square/", DailySquareList.as_view(), name='daily_square_list'),
     path("office/<slug:slug>/daily-square/<int:pk>/box/", DailySquareBox.as_view(), name='daily_square_box'),
+    path("office/<slug:slug>/daily-square/<int:pk>/venda/", DailySquareVenda.as_view(), name='daily_square_venda'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
 
     # Loans

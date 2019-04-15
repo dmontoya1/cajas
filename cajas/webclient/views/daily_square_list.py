@@ -26,19 +26,17 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         context['office'] = office
         offices = OfficeCountry.objects.all()
         units = Unit.objects.filter(partner__office=office)
-        users = User.objects.filter(Q(partner__office=office) or Q(employee__office=office))
+        users = User.objects.filter(Q(partner__office=office) or Q(related_employee__office_country=office) or
+                                    Q(related_employee__office=office.office))
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
-                context['partners'] = Partner.objects.filter(
-                    office=office,
-                    user__is_active=True,
-                    user__is_daily_square=True
-                ).exclude(partner_type='DJ')
-                context['employees'] = Employee.objects.filter(
-                    office=office.office,
-                    user__is_active=True,
-                    user__is_daily_square=True
-                )
+                context['dailys'] = User.objects.filter(
+                    Q(is_daily_square=True) &
+                    (Q(related_employee__office=office.office) |
+                     Q(partner__office=office) |
+                     Q(related_employee__office_country=office)
+                     )
+                ).distinct()
         except Exception as e:
             print(e)
             context['partner'] = self.request.user.partner.get()

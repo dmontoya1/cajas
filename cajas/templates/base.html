@@ -317,10 +317,9 @@
                            placeholder="Valor a retirar">
                   </div>
                 </div>
-                <div class="form-group col-md-12 ">
+                <div class="form-group col-md-12 d-none">
                   <label for="withdraw-reason">Motivo Retiro</label>
-                  <select class="form-control" id="withdraw-reason" name="withdraw-reason" style="width: 100%; height: 20px;"
-                          required>
+                  <select class="form-control" id="withdraw-reason" name="withdraw-reason" style="width: 100%; height: 20px;">
                     <option value="" selected disabled>Primero selecciona un socio</option>
                   </select>
                 </div>
@@ -350,7 +349,7 @@
             <form method="POST" class="partner-closeout">
               {% csrf_token %}
               <div class="form-row">
-                <div class="form-group col-md-6 ">
+                <div class="form-group col-md-12">
                   <label for="partner-closeout">Socio</label>
                   <select class="form-control" id="partner-closeout" name="partner" style="width: 100%; height: 20px;"
                           required>
@@ -503,6 +502,7 @@
     $(document).ready(function (e) {
 
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
       $('.datetimepicker').keypress(function (e) {
         return false
       });
@@ -616,13 +616,201 @@
           })
       })
 
+      let partners = {}
+      {% for p in all_partners %}
+        partners['{{ p.pk }}'] = '{{ p }}'
+      {% endfor %}
+
+      $('#partner-closeout1').on('click', function () {
+        Swal.fire({
+          title: 'Liquidación de Sociedad',
+          input: 'select',
+          inputOptions: partners,
+          inputPlaceholder: 'Selecciona un socio',
+          showCancelButton: true,
+          confirmButtonText: 'Validar',
+          confirmButtonColor: '#60d3b0',
+          cancelButtonText: 'Cancelar',
+          showLoaderOnConfirm: true,
+          reverseButtons: true,
+          inputValidator: (value) => {
+            return new Promise((resolve) => {
+              if (value) {
+                resolve()
+              } else {
+                resolve('Debes seleccionar un socio')
+              }
+            })
+          },
+          preConfirm: (partner) => {
+            csrftoken = '{{ csrf_token }}'
+            data_send = `csrfmiddlewaretoken=${csrftoken}&partner=${partner}`
+            return axios.post('{% url 'api:users:validate_closeout' %}', data_send)
+              .then(response => {
+                console.log(response)
+                if (response.status === 202) {
+                  return response.data
+                }
+                else {
+                  return `${partner}`
+                }
+              })
+              .catch(error => {
+                Swal.showValidationMessage(
+                  `Ha ocurrido un error: ${error}`
+                )
+              })
+          },
+          allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+          if (!$.isNumeric(result.value)) {
+            Swal.fire({
+              title: 'Oops! No puedes hacer la liquidación',
+              text: result.value ,
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#60d3b0',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,
+              reverseButtons: true,
+            })
+          }
+          else {
+            Swal.fire({
+              title: 'El socio se puede liquidar. Deseas continuar?',
+              showCancelButton: true,
+              confirmButtonText: 'Si, hacer liquidación',
+              confirmButtonColor: '#60d3b0',
+              cancelButtonText: 'Cancelar',
+              showLoaderOnConfirm: true,
+              reverseButtons: true,
+              preConfirm: () => {
+                csrftoken = '{{ csrf_token }}'
+                data_send = `csrfmiddlewaretoken=${csrftoken}&partner=${result.value}`
+                return axios.post('{% url 'api:users:closeout' %}', data_send)
+                  .then(response => {
+                    if (response.status === 200) {
+                      return response.data
+                    }
+                  })
+                  .catch(error => {
+                    Swal.showValidationMessage(
+                      `Ha ocurrido un error: ${error}`
+                    )
+                  })
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+              if (result.value) {
+                Swal.fire({
+                  title: 'Liquidación Correcta',
+                  text: result.value ,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#60d3b0',
+                  confirmButtonText: 'Aceptar',
+                  allowOutsideClick: false,
+                  reverseButtons: true,
+                })
+              }
+            })
+          }
+        })
+      })
+
       $('.partner-closeout').on('submit', function (e) {
         e.preventDefault()
         withdraw = $(this)
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = withdraw.serialize()
-        console.log('WORK IN PROGRESS')
+        console.log(data_send)
+        axios.post('{% url 'api:users:validate_closeout' %}', data_send)
+        .then(function (response) {
+          msg = response.data
+          if (response.status === 202) {
+            Swal.fire({
+              title: 'Oops! No puedes hacer la liquidación',
+              text: msg,
+              type: 'warning',
+              showCancelButton: false,
+              confirmButtonColor: '#60d3b0',
+              confirmButtonText: 'Aceptar',
+              allowOutsideClick: false,
+              reverseButtons: true,
+            })
+          } else {
+            Swal.fire({
+              title: 'El socio se puede liquidar. Deseas continuar?',
+              text: 'Si el socio tiene cadenas activas, a que socio las va a transpasar?',
+              input: 'select',
+              inputOptions: partners,
+              inputPlaceholder: 'Selecciona un socio',
+              showCancelButton: true,
+              confirmButtonText: 'Si, hacer liquidación',
+              confirmButtonColor: '#60d3b0',
+              cancelButtonText: 'Cancelar',
+              showLoaderOnConfirm: true,
+              reverseButtons: true,
+              inputValidator: (value) => {
+                return new Promise((resolve) => {
+                  if (value) {
+                    resolve()
+                  } else {
+                    resolve('Debes seleccionar un socio')
+                  }
+                })
+              },
+              preConfirm: (partner) => {
+                csrftoken = '{{ csrf_token }}'
+                data_send += `&partner_destiny=${partner}`
+                console.log(data_send)
+                return axios.post('{% url 'api:users:closeout' %}', data_send)
+                  .then(response => {
+                    if (response.status === 200) {
+                      return response.data
+                    }
+                  })
+                  .catch(error => {
+                    Swal.showValidationMessage(
+                      `Ha ocurrido un error: ${error}`
+                    )
+                  })
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+              if (result.value) {
+                Swal.fire({
+                  title: 'Liquidación Correcta',
+                  text: result.value ,
+                  type: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#60d3b0',
+                  confirmButtonText: 'Aceptar',
+                  allowOutsideClick: false,
+                  reverseButtons: true,
+                })
+              }
+            })
+
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
 
       })
 
