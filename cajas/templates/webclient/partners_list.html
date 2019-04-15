@@ -497,28 +497,26 @@
     //detail modal script
     $(".partner_detail").on("click", function () {
       var partner_pk = $(this).data("id")
-      $('#modalDetail').on('shown.bs.modal', function () {
-        axios.get(`/api/users/${partner_pk}/partner-list`)
-          .then(function (response) {
-            data = response.data[0]
-            $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
-            $("#detail_document").val(data.user.document_id)
-            $("#detail_email").val(data.user.email)
-            $("#type_document").text(data.user.document_type)
-            $("#code").val(data.code)
-            if (data.partner_type == "Indirecto") {
-              $("#partner_type_detail").val(data.partner_type)
-              $("#direct_partner_form").removeClass("d-none")
-              $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name)
-            } else {
-              $("#partner_type_detail_form").addClass("d-none")
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+      axios.get(`/api/users/${partner_pk}/partner-list`)
+        .then(function (response) {
+          data = response.data[0]
+          $("#detail_first_name").val(data.user.first_name + " " + data.user.last_name)
+          $("#detail_document").val(data.user.document_id)
+          $("#detail_email").val(data.user.email)
+          $("#type_document").text(data.user.document_type)
+          $("#code").val(data.code)
+          if (data.partner_type == "Indirecto") {
+            $("#partner_type_detail").val(data.partner_type)
+            $("#direct_partner_form").removeClass("d-none")
+            $("#direct_partner_detail").val(data.direct_partner.user.first_name + " " + data.direct_partner.user.last_name)
+          } else {
+            $("#partner_type_detail_form").addClass("d-none")
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
     })
 
     //Displays unit_form if concept equals to Compra de Unidades
@@ -611,6 +609,7 @@
             })
         }
       })
+    })
 
       $('.add-movement-form').on('submit', function (e) {
         e.preventDefault()
@@ -648,9 +647,7 @@
               location.reload()
             })
           })
-
       })
-    })
 
     $(document).ready(function () {
       $('#table').DataTable({

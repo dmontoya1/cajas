@@ -904,31 +904,28 @@
     //Edit movement
     $('.edit-item').on('click', function () {
       var mov_pk = $(this).data("id")
-      $('#addMovement').on('show.bs.modal', function (event) {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        var modal = $(this)
-        $("#method_modal").val("edit")
-        $("#method_modal").data("id", mov_pk)
-        $('.modal-title').text("Editar Movimiento")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      $("#method_modal").val("edit")
+      $("#method_modal").data("id", mov_pk)
+      $('.modal-title').text("Editar Movimiento")
 
-        //get movement data
-        axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
-          .then(function (response) {
-            data = response.data
-            $("#concept option").prop("selected", false);
-            $("#concept option[value='" + data.concept + "']").prop("selected", true);
-            $("#concept").trigger("change")
-            $("#date").val(data.date)
-            $("#movement_type").prop("selected", false);
-            $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
-            $("#movement_type").trigger("change")
-            $("#value").val(data.value)
-            $("#detail").val(data.detail)
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+      //get movement data
+      axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
         })
       })
 

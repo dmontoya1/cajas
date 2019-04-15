@@ -6,6 +6,8 @@ from django.dispatch import receiver
 from boxes.models.box_partner import BoxPartner
 from cajas.users.models.auth_logs import AuthLogs
 from cajas.users.models.partner import Partner
+from cajas.users.models.employee import Employee
+from cajas.users.models.group import Group
 
 from webclient.views.get_ip import get_ip
 
@@ -42,3 +44,10 @@ def create_partner_box(sender, **kwargs):
             partner=instance,
         )
         box.save()
+
+
+@receiver(post_save, sender=Employee)
+def create_employee_admin_group(sender, instance, **kwargs):
+    if kwargs.get('created'):
+        if instance.charge == "Administrador de Grupo":
+            Group.objects.create(admin=instance)

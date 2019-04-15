@@ -259,6 +259,7 @@
         <div class="modal-body">
           <form method="POST" class="edit-provisioning">
             {% csrf_token %}
+            <input type="hidden" id="provisioning_item" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -336,54 +337,53 @@
     //edit provisioning
     $('.edit_provisioning').on('click', function () {
         var provisioning_pk = $(this).data("id")
-        $('#editProvisioning').on('show.bs.modal', function (event) {
-          
-          axios.get(`/api/boxes/${provisioning_pk}/privisioning-detail`)
-          .then(function (response) {
-            data = response.data
-            $("#edit_date").val(data.date)
-            $("#edit_value").val(data.value)
-            $("#edit_detail").val(data.detail)
-            $("#edit_movement_type").prop("selected", false);
-            $("#edit_movement_type option[value='" + data.movement_type + "']").prop("selected", true);
-            $("#edit_movement_type").trigger('change');
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+        $("#provisioning_item").val(provisioning_pk)
 
-          //and then update unit
-          $('.edit-provisioning').on('submit', function(e){
-              e.preventDefault()
-              axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-              data = $(this).serialize()
+        axios.get(`/api/boxes/${provisioning_pk}/privisioning-detail`)
+        .then(function (response) {
+          data = response.data
+          $("#edit_date").val(data.date)
+          $("#edit_value").val(data.value)
+          $("#edit_detail").val(data.detail)
+          $("#edit_movement_type").prop("selected", false);
+          $("#edit_movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#edit_movement_type").trigger('change');
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
 
-              axios.patch(`/api/boxes/${provisioning_pk}/privisioning-detail`, data)
-              .then(function (response) {
-                data = response.data
-                Swal.fire({
-                  type: 'success',
-                  title: 'Exitoso',
-                  text: data,
-                }).then(function () {
-                  location.reload()
-                })
-              })
-              .catch(function (error) {
-                // handle error
-                Swal.fire({
-                  type: 'error',
-                  title: 'Error',
-                  text: error,
-                }).then(function () {
-                  location.reload()
-                })
-              })
+    })
+    //and then update unit
+    $('.edit-provisioning').on('submit', function(e){
+        e.preventDefault()
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        data = $(this).serialize()
+
+        axios.patch(`/api/boxes/${$("#provisioning_item").val()}/privisioning-detail`, data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
           })
-
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
         })
     })
+
 
     $(document).ready(function () {
 
