@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
+from boxes.models.box_partner import BoxStatus
+
 from .models.movement_daily_square import MovementDailySquare
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_don_juan_usd import MovementDonJuanUsd
@@ -95,3 +97,11 @@ def delete_movement_provisioning(sender, **kwargs):
     else:
         box.balance += instance.value
     box.save()
+
+
+@receiver(post_save, sender=MovementPartner)
+def inactive_partner_box(sender, **kwargs):
+    instance = kwargs.get('instance')
+    if instance.get_box_status == 'En Liquidación' and instance.balance == 0:
+        instance.box_status = BoxStatus.LIQUIDADA
+        instance.save()

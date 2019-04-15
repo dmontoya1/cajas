@@ -7,6 +7,7 @@ from .views.chain_create import ChainCreate
 from .views.chain_list import ChainList
 from .views.chain_payments import ChainPayments
 from .views.chain_places_list import ChainPlacesList
+from .views.closeout_boxes import CloseoutBoxesList
 from .views.create_daily_square_movement import CreateDailySquareMovement
 from .views.create_don_juan_movement import CreateDonJuanMovement
 from .views.create_office_movement import CreateOfficeMovement
@@ -59,6 +60,7 @@ urlpatterns = [
     path("office/<slug:slug>/partner/<int:pk>/box/", PartnerBox.as_view(), name='partner_box'),
     path("office/<slug:slug>/partners/", PartnerList.as_view(), name='partners_list'),
     path("partner/add/", PartnerCreate.as_view(), name='partner_add'),
+    path("office/<slug:slug>/closeout-boxes/", CloseoutBoxesList.as_view(), name='closeout_boxes'),
 
     # Employees
     path("employee/<slug:slug>/employee-list/", EmployeeList.as_view(), name='employee-list'),

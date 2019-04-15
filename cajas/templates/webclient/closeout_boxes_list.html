@@ -4,6 +4,7 @@
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 {% endblock %}
 
@@ -15,7 +16,7 @@
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
       {% if perms.office.change_office %}
-        <li class="menu-item-has-children dropdown">
+        <li class="menu-item-has-children dropdown active">
           <a href="{% url 'webclient:office' office.slug %}">
             <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja oficina
@@ -29,7 +30,7 @@
         </li>
       {% endif %}
       {% if perms.boxes.change_boxdonjuan %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja Don Juan
@@ -147,29 +148,29 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                  <h3 class="mb-3">Caja Don Juan</h3>
-                  <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ box.office.country.currency.abbr }} </h3>
+                <h3 class="mb-3">Cajas en Liquidación o Liquidadas</h3>
                   <thead>
                   <tr>
-                    <th>Responsable</th>
-                    <th>Fecha</th>
-                    <th>Concepto</th>
-                    <th>Detalle</th>
-                    <th>Entra</th>
-                    <th>Sale</th>
+                    <th>Socio</th>
+                    <th>Estado</th>
+                    <th>Saldo de la caja</th>
+                    <th>Acciones</th>
                   </tr>
                   </thead>
                   <tbody>
-                  {% for m in box.movements.all %}
+                  {% for b in boxes %}
                     <tr>
-                      <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y" }}</td>
-                      <td>{{ m.concept.name }}</td>
-                      <td>{{ m.detail }}</td>
-                      <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      <td>{{ b.partner }}</td>
+                      <td class="{% if b.get_box_status == "Liquidada" %}red{% else %}orange{% endif %}">
+                        {{ b.box_status }}
+                      </td>
+                      <td>${{ b.balance|intcomma }}</td>
+                      <td>
+                        <a href="{% url 'webclient:partner_box' office.slug b.partner.pk %}" class="see-box">
+                          <i class="fas fa-eye mr-2"></i>
+                          Ver movimientos
+                        </a>
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -178,89 +179,16 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Añadir movimiento</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal add movement -->
-  <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle"
-       aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir movimiento</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form method="POST" class="add-movement" action="{% url 'webclient:create_donjuan_movement' office.slug %} ">
-            {% csrf_token %}
-            <input type="hidden" name="box_office" value="{{ office.box.pk }}">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="concept">Concepto</label>
-                <select class="form-control" id="concept" name="concept" style="width: 100%; height: 20px;" required>
-                  <option disabled selected value="">Selecciona un concepto</option>
-                  {% for concept in concepts %}
-                    <option value="{{ concept.pk }}">{{ concept }}</option>
-                  {% endfor %}
-                </select>
-
-              </div>
-              <div class="form-group col-md-6">
-                <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
-                style="width: 100%;" required autocomplete="off">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="movement_type">Entra / Sale</label>
-                <select class="form-control" id="movement_type" name="movement_type" style="width: 100%; height: 20px;" required>
-                  <option selected disabled value="">Selecciona el tipo de movimiento</option>
-                  <option value="IN">Entra</option>
-                  <option value="OUT">Sale</option>
-                </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="value">Valor</label>
-                <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento"
-                       required>
-              </div>
-            </div>
-            <div class="form-group destine-office d-none">
-              <label for="office">Oficina de destino</label>
-              <select class="form-control" id="office" name="destine_office" style="width: 100%; height: 20px;">
-                  <option selected disabled value="">Selecciona la oficina de destino</option>
-                  {% for office in offices %}
-                    <option value="{{ office.pk }}">{{ office }}</option>
-                  {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-              <label for="detail">Detalle</label>
-              <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
-                        required></textarea>
-            </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
 {% endblock %}
 
 {% block extra_js %}
 
   <script type="text/javascript">
+
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
@@ -297,33 +225,6 @@
           }
         }
       });
-
-
-
-      $('.add-movement select').each(function () {
-        $(this).select2({
-          language: "es"
-        });
-      });
-
-      $("#concept").on("change", function(){
-        axios.get(`/api/concepts/${$(this).val()}/`)
-          .then(function (response) {
-            data = response.data
-            if( data['relationship'] == 'Entre oficinas'){
-              $('.destine-office').removeClass('d-none')
-            }
-            else{
-              $('.destine-office').addClass('d-none')
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-
-
-      })
 
     });
   </script>
