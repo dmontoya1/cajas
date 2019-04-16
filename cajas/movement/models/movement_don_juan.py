@@ -19,21 +19,6 @@ class MovementDonJuan(MovementMixin):
     def __str__(self):
         return "Movimiento de la caja de {} de Don Juan".format(self.box_don_juan.office)
 
-    def save(self, *args, **kwargs):
-        if self.box_don_juan.balance:
-            l_balance = self.box_don_juan.balance
-        else:
-            l_balance = 0
-
-        if self.movement_type == MovementDonJuan.IN:
-            self.balance = int(l_balance) + int(self.value)
-        else:
-            self.balance = int(l_balance) - int(self.value)
-
-        super(MovementDonJuan, self).save(*args, **kwargs)
-        self.box_don_juan.balance = self.balance
-        self.box_don_juan.last_movement_id = self.pk
-        self.box_don_juan.save()
 
     class Meta:
         verbose_name = 'Movimiento de Don Juan'
