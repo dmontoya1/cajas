@@ -13,7 +13,7 @@ class Group(models.Model):
     )
 
     def __str__(self):
-        return "Grupo de {}".format(self.admin.user)
+        return "Administrador {}".format(self.admin.user)
 
     class Meta:
         verbose_name = 'Administrador de grupo'
