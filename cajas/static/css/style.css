@@ -650,7 +650,7 @@ aside.left-panel {
       .navbar .navbar-nav li.menu-item-has-children {
         position: relative; }
         .navbar .navbar-nav li.menu-item-has-children a {
-          line-height: 30px; }
+          line-height: 23px; }
           .navbar .navbar-nav li.menu-item-has-children a:before {
             content: "";
             position: absolute;
@@ -2781,4 +2781,24 @@ span.investment-element span {
   display: block;
   color: #000000;
   font-weight: normal;
+}
+
+td.red {
+  color: red;
+  font-weight: bold !important;
+}
+
+td.orange {
+  color: orange;
+  font-weight: bold !important;
+}
+
+span.red {
+  color: red !important;
+  font-weight: bold !important;
+}
+
+span.orange {
+  color: orange !important;
+  font-weight: bold !important;
 }

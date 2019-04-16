@@ -32,6 +32,8 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         tomorrow = today + timedelta(1)
         today_start = datetime.combine(today, time())
         today_end = datetime.combine(tomorrow, time())
+        total_withdraws = 0
+        total_investments = 0
         withdraws = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=withdraw_concept,
@@ -46,11 +48,15 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         )
         withdraws_total = withdraws.aggregate(Sum('value'))
         investments_total = investments.aggregate(Sum('value'))
+        if withdraws_total['value__sum']:
+            total_withdraws = withdraws_total['value__sum']
+        if investments_total['value__sum']:
+            total_investments = investments_total['value__sum']
         context['box'] = box_daily_square
         context['office'] = office
         context['box_user'] = user
         context['withdraws'] = withdraws
         context['investments'] = investments
-        context['withdraws_total'] = withdraws_total['value__sum']
-        context['investments_total'] = investments_total['value__sum']
+        context['withdraws_total'] = total_withdraws
+        context['investments_total'] = total_investments
         return context

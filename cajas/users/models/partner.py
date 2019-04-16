@@ -65,6 +65,10 @@ class Partner(models.Model):
         'Consecutivo Mini-Socios',
         default=1
     )
+    is_active = models.BooleanField(
+        'Socio activo?',
+        default=True
+    )
 
     class Meta:
         verbose_name = 'Socio'

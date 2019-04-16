@@ -16,3 +16,8 @@ class ConceptAdmin(admin.ModelAdmin):
     list_display = ['name', 'concept_type', 'counterpart']
     search_fields = ['name', 'counterpart__name']
     inlines = [StopAdmin, ]
+
+    class Media:
+        js = (
+            'js/admin/concept_admin.js',
+        )
