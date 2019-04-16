@@ -164,7 +164,7 @@
                         <td>{{ i.brand }}</td>
                         <td>{{ i.price }}</td>
                         <td>{{ i.description }}</td>
-                        <td>
+                        <td class="text-center">
                           {% if perms.office.change_officeitems %}
                             <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
                                data-target="#editOfficeItem">Editar</a>
@@ -264,6 +264,7 @@
         <div class="modal-body">
           <form method="POST" class="edit_item">
             {% csrf_token %}
+            <input type="hidden" id="office_item_pk" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -343,7 +344,6 @@
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       data = $(this).serialize()
-      console.log(data)
       axios.post("{% url 'api:office:office_item_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -371,96 +371,89 @@
     //edit items
     $('.edit-item').on('click', function () {
       var office_item_pk = $(this).data("id")
-      //when modal open
-      $('#editOfficeItem').on('show.bs.modal', function (event) {
-        var modal = $(this)
-        //get info of office item
-          axios.get(`/api/office/${office_item_pk}/office-item-detail`)
-          .then(function (response) {
-            data_office = response.data
-            console.log("office", data_office)
+      $("#office_item_pk").val(office_item_pk)
+      //get info of office item
+      axios.get(`/api/office/${office_item_pk}/office-item-detail`)
+      .then(function (response) {
+        data_office = response.data
 
-            $("#edit_name").val(data_office.name)
-            $("#edit_price").val(data_office.price)
-            $("#edit_description").val(data_office.description)
+        $("#edit_name").val(data_office.name)
+        $("#edit_price").val(data_office.price)
+        $("#edit_description").val(data_office.description)
 
-            $("#edit_category option").prop("selected", false);
-            $("#edit_category option[value='" + data_office.brand.category.id + "']").prop("selected", true)
-            $("#edit_category").trigger('change');
+        $("#edit_category option").prop("selected", false);
+        $("#edit_category option[value='" + data_office.brand.category.id + "']").prop("selected", true)
+        $("#edit_category").trigger('change');
 
-            axios.get(`/api/inventory/${data_office.brand.category.id}/brand`)
-            .then(function (response) {
-              data = response.data
-              console.log("brand",data)
-              $('#edit_brand').empty()
-              $.each(data, function (k, v) {
-                $('#edit_brand').append(
-                  `<option value=${v.id}>${v.name}</option>`
-                )
-              })
-              $('#edit_brand').prepend(
-                '<option value="" disabled>Selecciona una marca</option>'
-              )
-              $("#edit_brand option").prop("selected", false);
-              $("#edit_brand option[value='" + data_office.brand.id + "']").prop("selected", true);
-              $("#edit_brand").trigger("click")
-            })
-            .catch(function (error) {
-              // handle error
-              console.log(error);
-            })
-
-            $('#edit_category').on('change', function () {
-              axios.get(`/api/inventory/${$(this).val()}/brand`)
-                .then(function (response) {
-                  data = response.data
-
-                  $('#edit_brand').empty()
-                  $.each(data, function (k, v) {
-                    $('#edit_brand').append(
-                      `<option value=${v.id}>${v.name}</option>`
-                    )
-                  })
-                  $('#edit_brand').prepend(
-                    '<option value="" selected disabled>Selecciona una marca</option>'
-                  )
-                })
-                .catch(function (error) {
-                  // handle error
-                  console.log(error);
-                })
-            })
-
-
-            //update items
-            $('.edit_item').on('submit', function(e){
-                e.preventDefault()
-                axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-                data = $(this).serialize()
-                axios.patch(`/api/office/${office_item_pk}/office-item-detail`, data)
-                .then(function (response) {
-                  data = response.data
-                  Swal.fire({
-                    type: 'success',
-                    title: 'Exitoso',
-                    text: data,
-                  }).then(function () {
-                    location.reload()
-                  })
-                })
-                .catch(function (error) {
-                  // handle error
-                  Swal.fire({
-                    type: 'error',
-                    title: 'Error',
-                    text: error,
-                  }).then(function () {
-                    location.reload()
-                  })
-                })
-            })
+        axios.get(`/api/inventory/${data_office.brand.category.id}/brand`)
+        .then(function (response) {
+          data = response.data
+          $('#edit_brand').empty()
+          $.each(data, function (k, v) {
+            $('#edit_brand').append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $('#edit_brand').prepend(
+            '<option value="" disabled>Selecciona una marca</option>'
+          )
+          $("#edit_brand option").prop("selected", false);
+          $("#edit_brand option[value='" + data_office.brand.id + "']").prop("selected", true);
+          $("#edit_brand").trigger("click")
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
         })
       })
+    })
+
+    //update items
+    $('#edit_category').on('change', function () {
+      axios.get(`/api/inventory/${$(this).val()}/brand`)
+        .then(function (response) {
+          data = response.data
+
+          $('#edit_brand').empty()
+          $.each(data, function (k, v) {
+            $('#edit_brand').append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $('#edit_brand').prepend(
+            '<option value="" selected disabled>Selecciona una marca</option>'
+          )
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+    $('.edit_item').on('submit', function(e){
+        e.preventDefault()
+        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+        data = $(this).serialize()
+        axios.patch(`/api/office/${$("#office_item_pk").val()}/office-item-detail`, data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
     })
 
     //delete items
