@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from boxes.models.box_partner import BoxStatus
 from inventory.models.category import Category
 from cajas.users.models.partner import Partner
 from office.models.officeCountry import OfficeCountry
@@ -27,7 +28,8 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['partners'] = Partner.objects.filter(
                     office=office,
-                    user__is_active=True
+                    is_active=True,
+                    box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
         except Exception as e:
             context['partner'] = self.request.user.partner.get()

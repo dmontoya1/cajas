@@ -17,7 +17,6 @@ class MovementUSDCreate(APIView):
 
     def post(self, request, format=None):
         data = request.data
-        print(data)
         concept = get_object_or_404(Concept, pk=data['concept'])
         if concept.name == 'Compra Dólares':
             MovementDonJuanUsd.objects.create(

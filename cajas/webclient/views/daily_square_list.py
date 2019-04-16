@@ -26,7 +26,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         context['office'] = office
         offices = OfficeCountry.objects.all()
         units = Unit.objects.filter(partner__office=office)
-        users = User.objects.filter(Q(partner__office=office) or Q(related_employee__office_country=office) or
+        users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
                                     Q(related_employee__office=office.office))
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
