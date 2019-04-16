@@ -77,7 +77,7 @@ class PartnerCloseout(APIView):
                     else:
                         MovementPartner.objects.create(
                             box_partner=partner_destiny.box,
-                            concept=concept1,
+                            concept=concept1.counterpart,
                             movement_type='OUT',
                             value=total,
                             detail='Pagos puestos de la cadena {}'.format(place.chain_place.chain),

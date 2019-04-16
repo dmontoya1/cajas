@@ -232,12 +232,12 @@ class MovementPartnerManager(object):
         return movement1
 
     def create_withdraw_movement_full(self, data):
-        concept = Concept.objects.get(name='Retiro de Socio', concept_type=ConceptType.SIMPLEDOUBLE)
+        concept = Concept.objects.get(name='Retiro de Socio', concept_type=ConceptType.DOUBLE)
         data1 = {
             'box': data['box'],
             'concept': concept,
             'movement_type': 'OUT',
-            'value': data['value'] * 3,
+            'value': int(data['value']) * 3,
             'detail': data['detail'],
             'date': data['date'],
             'responsible': data['responsible'],
@@ -250,7 +250,7 @@ class MovementPartnerManager(object):
                 'box': box_don_juan,
                 'concept': concept.counterpart,
                 'movement_type': 'IN',
-                'value': data['value'] * 3,
+                'value': int(data['value']) * 3,
                 'detail': data['detail'],
                 'date': data['date'],
                 'responsible': data['responsible'],
@@ -263,7 +263,7 @@ class MovementPartnerManager(object):
                 'box': box_direct_partner,
                 'concept': concept.counterpart,
                 'movement_type': 'IN',
-                'value': data['value'] * 3,
+                'value': int(data['value']) * 3,
                 'detail': data['detail'],
                 'date': data['date'],
                 'responsible': data['responsible'],

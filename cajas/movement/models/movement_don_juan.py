@@ -19,7 +19,6 @@ class MovementDonJuan(MovementMixin):
     def __str__(self):
         return "Movimiento de la caja de {} de Don Juan".format(self.box_don_juan.office)
 
-
     class Meta:
         verbose_name = 'Movimiento de Don Juan'
         verbose_name_plural = 'Movimientos de Don Juan'

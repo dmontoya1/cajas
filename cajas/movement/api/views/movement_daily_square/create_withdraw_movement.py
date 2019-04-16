@@ -40,7 +40,7 @@ class CreateWithdrawMovement(APIView):
             'loan': None,
             'chain': None,
         }
-        if request.user.related_daily_box:
+        if request.user.related_daily_box and request.user.is_daily_square:
             box_daily_square = request.user.related_daily_box.get()
             data['box'] = box_daily_square
             movement = daily_square_manager.create_movement(data)

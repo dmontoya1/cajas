@@ -213,6 +213,11 @@
                                                 data-toggle="modal" data-target="#modalAddPayment">
                                           Pagar Puesto
                                         </button>
+                                        <button type="button" class="btn-dynamic user-edit-place" data-id="{{ u.pk }}"
+                                                data-value="{{ u.get_user_value }}"
+                                                data-toggle="modal" data-target="#modalEditPlace">
+                                          Editar Puesto
+                                        </button>
                                       {% else %}
                                         Este puesto se paga en otra oficina
                                       {% endif %}
@@ -269,6 +274,39 @@
     </div>
   </div>
 
+  <!-- Modal editar puesto -->
+  <div class="modal fade" id="modalEditPlace" role="dialog" aria-labelledby="modalEditPlaceTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modalEditPlaceTitle">Editar puesto de la cadena</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="edit-place">
+            {% csrf_token %}
+            <input type="hidden" name="user_place" id="user_place_edit" value="">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="partner-chain">Socio</label>
+                  <select class="form-control" id="partner-chain" name="code" style="width: 100%; height: 20px;">
+                    <option disabled value="" selected>Selecciona un socio</option>
+                    {% for p in partners %}
+                      <option value="{{ p.code }}">{{ p }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-submit">Editar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -310,11 +348,20 @@
           }
         }
       });
+
+      $('#partner-chain').select2({
+        language: "es"
+      });
     });
+
     $('.user-place-pay').on('click', function () {
       $('#user_place').val($(this).data('id'))
       $('#pay_value').val(parseInt($(this).data('value')))
     })
+    $('.user-edit-place').on('click', function () {
+      $('#user_place_edit').val($(this).data('id'))
+    })
+
     $('.add-user-payment').on('submit', function (e) {
       e.preventDefault()
       data = $(this).serialize()
@@ -347,6 +394,41 @@
         })
       })
     })
+
+    $('.edit-place').on('submit', function (e) {
+      e.preventDefault()
+      data = $(this).serialize()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      axios.post('{% url 'api:chains:user_place_update' %}', data)
+      .then(function (response) {
+        data = response.data
+        Swal.fire({
+          type: 'success',
+          title: 'Exitoso',
+          text: "Se ha editado el puesto exitosamente",
+        }).then((result) => {
+          if (result.value) {
+            location.reload()
+          }
+        })
+        .catch(function (error) {
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
+      })
+    })
+
+
   </script>
 {% endblock %}
 
