@@ -34,10 +34,11 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         partners = Partner.objects.filter(office=box_daily_square.office).order_by('user__first_name')
         units = Unit.objects.filter(partner__office=office)
         past_mvments = MovementDailySquare.objects.filter(
-            ~Q(date=datetime.today()),
             box_daily_square=box_daily_square,
             box_daily_square__is_closed=False,
             review=False
+        ).exclude(
+            date=datetime.today().strftime('%Y-%m-%d')
         )
         context['box'] = box_daily_square
         context['offices'] = offices

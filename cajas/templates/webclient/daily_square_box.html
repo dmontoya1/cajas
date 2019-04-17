@@ -173,24 +173,15 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if not box.is_closed or request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
-                        <td>
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                             data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
                       <td>
-                        {% if not m.status %}
-                          {% if request.user.related_employee.get.charge|stringformat:"s" == 'Secretaria' %}
+                        {% if not m.status and not m.review %}
+                          {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                  data-target="#addMovement">Editar</a>
+                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                             data-target="#addMovement">Editar</a>
                           {% endif %}
-                        {% endif %}
-                        {% if not box.is_closed and not m.status %}
-                            {% if not request.user.related_employee.get.charge|stringformat:"s" == "Secretaria" and m.date|date:"d/m/Y" == today %}
-                              <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                              data-target="#addMovement">Editar</a>
-                            {% endif %}
                         {% endif %}
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
@@ -266,7 +257,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -986,7 +977,6 @@
             console.log(error);
           })
       })
-    })
 
       $('.datetimepicker_dailysquare').datetimepicker({
         format: 'Y-m-d',
