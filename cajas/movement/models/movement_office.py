@@ -19,6 +19,19 @@ class MovementOffice(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_office.office)
 
+    def __init__(self, *args, **kwargs):
+        super(MovementOffice, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
+
+    def save(self, *args, **kwargs):
+        if self.__movement_type != self.movement_type:
+            box = self.box_office
+            if self.movement_type == 'IN':
+                box.balance = box.balance + (int(self.value) * 2)
+            else:
+                box.balance = box.balance - (int(self.value) * 2)
+            box.save()
+        super(MovementOffice, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Movimiento de la oficina'

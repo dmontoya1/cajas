@@ -19,6 +19,19 @@ class MovementPartner(MovementMixin):
     def __str__(self):
         return "Movimiento del {}".format(self.box_partner.partner)
 
+    def __init__(self, *args, **kwargs):
+        super(MovementPartner, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
+
+    def save(self, *args, **kwargs):
+        if self.__movement_type != self.movement_type:
+            box = self.box_partner
+            if self.movement_type == 'IN':
+                box.balance = box.balance + (int(self.value) * 2)
+            else:
+                box.balance = box.balance - (int(self.value) * 2)
+            box.save()
+        super(MovementPartner, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Movimiento del socio'

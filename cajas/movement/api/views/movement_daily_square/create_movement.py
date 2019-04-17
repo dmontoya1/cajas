@@ -23,14 +23,13 @@ from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 
-daily_square_manager = MovementDailySquareManager()
-
 
 class CreateDailySquareMovement(APIView):
     """
     """
 
     def post(self, request, format=None):
+        daily_square_manager = MovementDailySquareManager()
         office_ = get_object_or_404(OfficeCountry, slug=request.POST['office_slug'])
         box_daily_square = BoxDailySquare.objects.get(user__pk=request.POST['user_id'], office=office_)
         concept = Concept.objects.get(pk=request.POST['concept'])
