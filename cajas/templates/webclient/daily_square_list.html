@@ -168,8 +168,8 @@
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box office d %}</td>
-                        <td>
-                          {% if perms.movement.add_movementdailysquare %}
+                        <td class="text-right">
+                          {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>

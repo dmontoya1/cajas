@@ -189,18 +189,27 @@
                   <h3 class="mb-4">Cajas Cuadre diario</h3>
                   <thead>
                   <tr>
+                    <th></th>
                     <th>Socio</th>
                     <th>Saldo final</th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for d in box_daily %}
-                    <tr>
+                  <tr>
+                      <td>
+                        {% if d.is_closed %}
+                          <i class="fas fa-check" style="color:green;"></i>
+                        {% else %}
+                          <i class="fas fa-times" style="color: red;"></i>
+                        {% endif %}
+                      </td>
                       <td>{{ d.user.get_full_name }}</td>
                       <td>$ {{ d.balance|intcomma }}</td>
                     </tr>
                   {% endfor %}
                   <tr>
+                    <td></td>
                     <td>
                       <strong>TOTAL</strong>
                     </td>
