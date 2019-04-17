@@ -15,6 +15,7 @@ from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
 from .views.daily_square_venda import DailySquareVenda
 from .views.employee_list import EmployeeList
+from .views.groups import Groups
 from .views.home_view import Home
 from .views.investment_list import InvestmentList
 from .views.investment_pay_list import InvestmentPaymentList
@@ -48,6 +49,7 @@ urlpatterns = [
     path("office/<slug:slug>/create-office-movement/", CreateOfficeMovement.as_view(), name='create_office_movement'),
     path("office/<slug:slug>/provisioning", Provisioning.as_view(), name='provisioning'),
     path("office/<slug:slug>/calendar", Calendar.as_view(), name='calendar'),
+    path("office/<slug:slug>/groups", Groups.as_view(), name='groups'),
     path("office/<slug:slug>/usd/", OfficeUSDBox.as_view(), name='box_usd'),
     path("office/<slug:slug>/notifications/", Notifications.as_view(), name='notifications'),
 
