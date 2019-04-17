@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_dailysquare_box %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -214,7 +215,7 @@
             <i class="fa fa-play label-arrow"></i>
           </div>
         {% endif %}
-        {% if not box.is_closed and request.user.related_daily_box.get == box %}
+        {% if not box.is_closed and request.user == box_user %}
           <a href="#" class="close-box" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
@@ -274,7 +275,7 @@
               <div class="form-group col-md-6" id="regular-value">
                 <label for="value">Valor</label>
                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento"
-                       >
+                       autocomplete="off">
               </div>
             </div>
             <div class="form-row d-none" id="usd-buy">
@@ -466,7 +467,7 @@
         });
       });
 
-      var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
+      $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
         formPrefix: "form",
         normalizeFullForm: true,

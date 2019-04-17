@@ -76,6 +76,21 @@ class MovementDailySquare(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_daily_square.user)
 
+    def __init__(self, *args, **kwargs):
+        super(MovementDailySquare, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
+
+    def save(self, *args, **kwargs):
+        if self.__movement_type != self.movement_type:
+            box = self.box_daily_square
+            if self.movement_type == 'IN':
+                box.balance = box.balance + (int(self.value) * 2)
+            else:
+                box.balance = box.balance - (int(self.value) * 2)
+            box.save()
+        super(MovementDailySquare, self).save(*args, **kwargs)
+
+
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'
         verbose_name_plural = 'Movimientos del Cuadre Diario'

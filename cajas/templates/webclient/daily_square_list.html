@@ -148,13 +148,13 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
+                  <h3 class="mb-4">Lista de Cuadres Diarios</h3>
                   <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Email</th>
-                    {% comment %}<th>Detalle</th>{% endcomment %}
                     <th>Saldo</th>
                     <th></th>
                   </tr>
@@ -167,7 +167,6 @@
                         <td>{{ d.last_name }}</td>
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
-                        {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {% get_dq_box office d %}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}

@@ -88,12 +88,13 @@ class MovementRequestAdmin(admin.ModelAdmin):
 
     list_display = ('box_partner', 'date', 'concept', )
     readonly_fields = ('box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
-    exclude = ('balance', )\
+    exclude = ('balance', )
 
 
 @admin.register(MovementWithdraw)
 class MovementWithdraw(admin.ModelAdmin):
 
     list_display = ('box_daily_square', 'box_partner', 'date', 'concept', )
-    readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip')
+    readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail',
+                       'date', 'responsible', 'ip')
     exclude = ('balance', )
