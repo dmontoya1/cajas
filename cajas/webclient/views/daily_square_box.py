@@ -1,3 +1,4 @@
+from datetime import datetime, date
 
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +11,6 @@ from cajas.users.models.user import User
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 from movement.models.movement_daily_square import MovementDailySquare
-from datetime import datetime
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -38,7 +38,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
             box_daily_square__is_closed=False,
             review=False
         ).exclude(
-            date=datetime.today().strftime('%Y-%m-%d')
+            date=date.today()
         )
         context['box'] = box_daily_square
         context['offices'] = offices

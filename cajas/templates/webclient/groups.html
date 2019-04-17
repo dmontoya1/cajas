@@ -149,19 +149,23 @@
                   <thead>
                   <tr>
                     <th>Administrador</th>
-                    <th>Ver grupo</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
-                       <tr>
+                    {% for e in existing %}
+                      <tr>
                          <td>
-                            {% for gp in exisiting %}
-                              {{gp}}
-                            {% endfor %}
-                        </td>
-                        
-                        <td></td>
+                              {{e}}
+                         </td>
+                         <td class="text-center">
+                            <a href="#" class="show-group" data-id="{{ e.id }}" data-toggle="modal"
+                            data-target="#showGroup">Ver grupo</a>
+                            <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                            data-target="#editGroup">Editar</a>
+                         </td>
                       </tr>
+                    {% endfor %}
                   </tbody>
                 </table>
               </div>
@@ -179,7 +183,7 @@
     </div>
   </div>
 
-    <!-- Modal add provisioning -->
+    <!-- Modal add group -->
     <div class="modal fade" id="addGroup" role="dialog" aria-labelledby="addGroupTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -213,6 +217,76 @@
                 </div>
               </div>
               <button type="submit" class="btn btn-submit">Añadir</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <!-- Modal show group -->
+  <div class="modal fade" id="showGroup" role="dialog" aria-labelledby="showGroupTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Grupo de supervisores</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <div class="table-responsive">
+                      <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Nombre</th>
+                              <th scope="col">Documento</th>
+                            </tr>
+                          </thead>
+                          <tbody id="related_items_table">
+                          </tbody>
+                      </table>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal edit group -->
+    <div class="modal fade" id="editGroup" role="dialog" aria-labelledby="editGroupTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar Grupo</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST" class="edit-group">
+              {% csrf_token %}
+              <input type="hidden" name="office" value="{{ office.pk }}">
+              <input type="hidden" id="admin_pk" value="">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="admin">Administrador</label>
+                  <select class="form-control" id="edit_admin" name="admin" style="width: 100%; height: 20px;" required>
+                    <option value="" selected disabled>Selecciona un administrador</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="superv">Supervisores</label>
+                  <select class="supervisors form-control" id="edit_superv" name="supervisors[]" style="width: 100%; height: 20px;" multiple="">
+                    {% for e in employees %}
+                      <option value="{{e.pk}}">{{e}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-submit">Editar</button>
             </form>
           </div>
         </div>
@@ -280,6 +354,11 @@
           language: "es"
         });
       });
+      $('.edit-group select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
       $('.supervisors').select2({
         placeholder: "Selecciona",
         multiple:true,
@@ -314,5 +393,90 @@
           })
         })
     })
+
+    $(".show-group").on("click", function(){
+      var adm_group_pk = $(this).data("id")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      axios.get(`/api/office/${adm_group_pk}/group-detail`)
+      .then(function (response) {
+        data = response.data
+        console.log(data)
+
+        //fill table with related items
+        $("#related_items_table").empty()
+        $(data).each( function(){
+          $("#related_items_table").append(
+            `\
+              <tr>\
+                <td>${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name}</td>\
+                <td>${$(this)[0].supervisor.user.document_id}</td>\
+              </tr>\
+            `
+          );
+        })
+
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+    })
+
+    $(".edit-item").on("click", function(){
+      var adm_group_pk = $(this).data("id")
+      $("#admin_pk").val(adm_group_pk)
+      axios.get(`/api/office/${adm_group_pk}/group-detail`)
+      .then(function (response) {
+        data = response.data
+        $("#edit_admin").append(
+          `\
+            <option selected value="${data[0].group.pk}">\
+            Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name}
+            </option>\
+          `
+        )
+        $(data).each( function(){
+          $("#edit_superv").append(
+            `\
+                <option selected value="${$(this)[0].supervisor.id}">\
+                ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name}\
+                </option>\
+            `
+          );
+        })
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    })
+    
+    $('.edit-group').on('submit', function (e) {
+      e.preventDefault()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      var adm_group_pk =  $("#admin_pk").val()
+      data = $(this).serialize() 
+      axios.patch(`/api/office/${adm_group_pk}/group-detail`, data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
+    })
+
   </script>
 {% endblock %}

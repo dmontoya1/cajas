@@ -32,11 +32,9 @@ class Groups(LoginRequiredMixin, TemplateView):
         existing_admins = Group.objects.filter(
             ~Q(related_group=None),
         )
-        gp = GroupEmployee.objects.all()
-        print(gp)
         context['office'] = office
         context['admins'] = admin
-        context['groups'] = gp
+        context['existing'] = existing_admins
         context['employees'] = employees
 
         return context
