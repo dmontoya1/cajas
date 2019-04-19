@@ -1,7 +1,7 @@
 from django.db import models
 
 from inventory.models.brand import Brand
-from units.models.units import Unit
+from ..models.units import Unit
 
 
 class UnitItems(models.Model):

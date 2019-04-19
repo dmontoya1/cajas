@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from inventory.models import Category
 from office.models.officeCountry import OfficeCountry
 from office.models.officeItems import OfficeItems
+from units.models.unitItems import UnitItems
 
 
 class OfficeItemsList(LoginRequiredMixin, TemplateView):
@@ -20,9 +21,11 @@ class OfficeItemsList(LoginRequiredMixin, TemplateView):
         context = super(OfficeItemsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
+        unit_items = UnitItems.objects.filter(unit__partner__office=office)
         items = OfficeItems.objects.filter(office=office.office)
         categories = Category.objects.all()
         context['office'] = office
         context['items'] = items
+        context['unit_items'] = unit_items
         context['categories'] = categories
         return context
