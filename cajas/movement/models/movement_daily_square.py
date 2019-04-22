@@ -90,7 +90,6 @@ class MovementDailySquare(MovementMixin):
             box.save()
         super(MovementDailySquare, self).save(*args, **kwargs)
 
-
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'
         verbose_name_plural = 'Movimientos del Cuadre Diario'
