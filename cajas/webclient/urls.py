@@ -22,6 +22,7 @@ from .views.investment_pay_list import InvestmentPaymentList
 from .views.loan_create import LoanCreate
 from .views.loan_list import LoanList
 from .views.loan_payment_list import LoanPaymentList
+from .views.movement_between_offices_requirement import MovementBetweenOfficesRequire
 from .views.movement_requirement_list import MovementRequireList
 from .views.movement_withdraw_requirement_list import MovementWithdrawRequireList
 from .views.notifications import Notifications
@@ -42,6 +43,7 @@ urlpatterns = [
     path("arqueo/", ArcRequest.as_view(), name='arc_request'),
     path("movement-require/", MovementRequireList.as_view(), name='movement_required'),
     path("movement-withdraw-require/", MovementWithdrawRequireList.as_view(), name='movement_withdraw_required'),
+    path("movement-between-offices-require/", MovementBetweenOfficesRequire.as_view(), name='movement_between_offices_require'),
 
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),

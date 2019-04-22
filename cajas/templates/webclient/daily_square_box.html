@@ -53,6 +53,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_notifications %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:notifications' office.slug %}">
@@ -219,7 +227,7 @@
           <a href="#" class="close-box" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
-          <div class="label-container">
+          <div class="label-close">
             <div class="label-text">Cerrar Caja</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
@@ -934,7 +942,7 @@
             .then(function (response) {
               Swal.fire({
                 title: 'Exitoso!',
-                text: response.data,
+                text: "La caja se ha cerrado exitosamente",
                 type: 'success',
                 allowOutsideClick: false
               }).then((result) => {
