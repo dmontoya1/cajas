@@ -32,6 +32,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         offices = OfficeCountry.objects.all()
         partners = Partner.objects.filter(office=box_daily_square.office).order_by('user__first_name')
+        dq_list = User.objects.filter(is_daily_square=True)
         units = Unit.objects.filter(partner__office=office)
         past_mvments = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
@@ -44,6 +45,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['offices'] = offices
         context['office'] = office
         context['partners'] = partners
+        context['dq_list'] = dq_list
         context['box_user'] = user
         context['users'] = users
         context['units'] = units

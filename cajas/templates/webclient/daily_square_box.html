@@ -175,7 +175,7 @@
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y"}}</td>
+                      <td>{{ m.date|date:"d-M-Y" }}</td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
@@ -186,10 +186,10 @@
                         {% if not m.status and not m.review %}
                           {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                                  data-target="#addMovement">Editar</a>
+                               data-target="#addMovement">Editar</a>
                           {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                            data-target="#addMovement">Editar</a>
+                               data-target="#addMovement">Editar</a>
                           {% endif %}
                         {% endif %}
                         {% if not m.review %}
@@ -205,7 +205,7 @@
                         {% else %}
                           {{ m.get_status_display }}
                         {% endif %}
-                      </td> 
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -266,7 +266,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date"
+                       placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -335,6 +336,15 @@
                   {% for unit in units %}
                     <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
                     </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-6 dq-select d-none" id="dq-select">
+                <label for="dq-select">Socio</label>
+                <select class="form-control" id="dq-select" name="dq" style="width: 100%; height: 20px;">
+                  <option value="" selected disabled>Selecciona un cuadre diario</option>
+                  {% for d in dq_list %}
+                    <option value="{{ d.pk }}">{{ d }} (Codigo: {{ d.pk }})</option>
                   {% endfor %}
                 </select>
               </div>
@@ -563,14 +573,22 @@
             $('#usd-buy').removeClass('d-none')
             $('#usd-sell').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
           } else if (data['name'] == 'Venta Dólares') {
             $('#usd-sell').removeClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
+          } else if (data['name'] == 'Entrega de Efectivo a CD') {
+            $('#dq-select').removeClass('d-none')
+            $('#regular-value').removeClass('d-none')
+            $('#usd-sell').addClass('d-none')
+            $('#usd-buy').addClass('d-none')
           } else {
             $('#usd-sell').addClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').removeClass('d-none')
+            $('#dq-select').addClass('d-none')
           }
         })
         .catch(function (error) {
@@ -967,31 +985,31 @@
       $("#method_modal").data("id", mov_pk)
       $('.modal-title').text("Editar Movimiento")
 
-        //get movement data
-        axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
-          .then(function (response) {
-            data = response.data
-            $("#concept option").prop("selected", false);
-            $("#concept option[value='" + data.concept + "']").prop("selected", true);
-            $("#concept").trigger("change")
-            $("#date").val(data.date)
-            $("#movement_type").prop("selected", false);
-            $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
-            $("#movement_type").trigger("change")
-            $("#value").val(data.value)
-            $("#detail").val(data.detail)
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+      //get movement data
+      axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
 
-      $('.datetimepicker_dailysquare').datetimepicker({
-        format: 'Y-m-d',
-        minDate: '-1970/01/01',
-        maxDate: '0',
-        timepicker: false,
-      });
+    $('.datetimepicker_dailysquare').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/01',
+      maxDate: '0',
+      timepicker: false,
+    });
   </script>
 {% endblock %}
