@@ -414,7 +414,7 @@
                   <label for="partner">Socio</label>
                   <select class="form-control select2-test" name="partner" id="partner" style="width: 100%">
                     <option value="" selected disabled>Selecciona un socio</option>
-                    {% for p in partners %}
+                    {% for p in partners_list %}
                       <option value="{{ p.pk }}">{{ p }}</option>
                     {% endfor %}
                   </select>
