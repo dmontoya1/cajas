@@ -70,7 +70,7 @@ class CreateOfficeMovement(View):
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             email_manager.send_office_mail(request, secretary.user.email)
             Notifications.objects.create(
-                office=office, office_sender=destine_office,
+                office=destine_office, office_sender=office,
                 concept=concept, detail=movement1.detail, value=movement1.value
             )
 

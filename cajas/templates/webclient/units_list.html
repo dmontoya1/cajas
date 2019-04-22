@@ -233,7 +233,7 @@
           </div>
           <div class="form-row">
               <div class="form-group col-md-12">
-                  <h5 class="text-center">Inventario de unidad</h5>              
+                  <h5 class="text-center">Inventario de unidad</h5>
               </div>
               <div class="form-group col-md-12">
                   <div class="table-responsive">
@@ -313,6 +313,8 @@
                     <input readonly type="text" class="form-control" id="total_price" name="price" required>
                   </div>
                 </div>
+            </div>
+            <div id="unit_inventory_edit">
             </div>
             <button type="submit" class="btn btn-submit">Editar</button>
             </form>
@@ -482,6 +484,71 @@
         $("#edit_supervisor option").prop("selected", false);
         $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
         $("#edit_supervisor").trigger("change")
+
+        $("#unit_inventory_edit").empty()
+        $(data.related_items).each( function(index){
+          $("#unit_inventory_edit").append(
+            `
+            <hr>
+            <div class="form-row">
+              <input type="hidden" name="office" value="">
+              <div class="form-group col-md-6">
+                    <label for="inventory_name">Nombre</label>
+                    <input type="text" class="form-control" id="edit_inventory_name${index}" name="name" placeholder="Nombre del item"
+                          value="${$(this)[0].name}" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="category">Categoría </label>
+                <div>
+                  <select class="form-control category_control" id="edit_inventory_category${index}" name="category" style="width: 100%;" required>
+                    <option disabled value="" selected>Selecciona una categoría</option>
+                    {% for category in categories %}
+                      <option value="{{ category.pk }}">{{ category }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                  <label for="brand">Marca </label>
+                  <select class="form-control brand_control" id="edit_inventory_brand${index}" name="brand" style="width: 100%;" required>
+                    <option disabled value="" selected>Selecciona una categoría</option>
+                  </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="price">Precio</label>
+                <input type="number" class="form-control" id="edit_inventory_price${index}" name="price" placeholder="Precio del item"
+                        value="${$(this)[0].price}" required>
+              </div>
+            </div>
+            `
+          );
+
+          $(`#edit_inventory_category${index} option`).prop("selected", false);
+          $(`#edit_inventory_category${index} option[value=${$(this)[0].brand.category.id}]`).prop("selected", true);
+          $(`#edit_inventory_category${index}`).trigger("change")
+          
+
+          axios.get(`/api/inventory/${$(this)[0].brand.category.id}/brand`)
+          .then(function (response) {
+            data_brand = response.data
+            $(`#edit_inventory_brand${index}`).empty()
+            $.each(data_brand, function (k, v) {
+              $(`#edit_inventory_brand${index}`).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            // $(`#brand${index}`).prepend(
+            //   '<option value="" selected disabled>Selecciona una marca</option>'
+            // )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+
+        })
       })
       .catch(function (error) {
         console.log(error);
