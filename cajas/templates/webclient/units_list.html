@@ -314,8 +314,68 @@
                   </div>
                 </div>
             </div>
-            <div id="unit_inventory_edit">
+            <hr>
+            <h5 class="text-center">Inventario de unidad</h5>
+            <hr>
+            <!-- Replications -->
+            <div class="dynamic_controller" id="unit_inventory_edit">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                      <label for="inventory_name">Nombre</label>
+                      <input type="text" class="form-control" id="edit_inventory_name" name="name" placeholder="Nombre del item"
+                              required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="category">Categoría </label>
+                  <div>
+                    <select class="form-control category_edit_control" id="edit_inventory_category" name="category" style="width: 100%;" required>
+                      <option disabled value="" selected>Selecciona una categoría</option>
+                      {% for category in categories %}
+                        <option value="{{ category.pk }}">{{ category }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row">
+                  <div class="form-group col-md-6">
+                      <label for="brand">Marca </label>
+                      <select class="form-control brand_control" id="edit_inventory_brand" name="brand" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una categoría</option>
+                      </select>
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="price">Precio</label>
+                    <input type="number" class="form-control" id="edit_inventory_price" name="price" placeholder="Precio del item"
+                            required>
+                  </div>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input edit_option_control" type="radio" name="options" id="edit_option" value="">
+                <label class="form-check-label" for="edit_option">
+                  Editar
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input delete_option_control" type="radio" name="options" id="delete_option" value="">
+                <label class="form-check-label" for="delete_option">
+                  Eliminar
+                </label>
+              </div>
+              <div class="form-group">
+                  <textarea placeholder="Motivo de eliminación" class="form-control d-none elimination_control" id="elimination_reason" rows="3"></textarea>
+              </div>
+              <div class="form-row justify-content-center">
+                  <div class="col-md-3 pt-1 text-center">
+                      <a href="#" class="btn btn-danger d-none" id="minus5_edit">Eliminar</a>
+                  </div>
+                  <div class="col-md-3 pt-1 text-center">
+                      <a href="#" class="btn btn-primary d-none" id="plus5_edit">Agregar Item</a>
+                  </div>
+              </div>
+              <br>
             </div>
+            <!-- end replication -->
             <button type="submit" class="btn btn-submit">Editar</button>
             </form>
         </div>
@@ -432,6 +492,7 @@
 
 {% block extra_js %}
   <script type="text/javascript">
+
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
@@ -485,52 +546,22 @@
         $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
         $("#edit_supervisor").trigger("change")
 
-        $("#unit_inventory_edit").empty()
+        if(data.related_items.length < 2){
+          $("#plus5_edit").removeClass("d-none")
+        }
+
         $(data.related_items).each( function(index){
-          $("#unit_inventory_edit").append(
-            `
-            <hr>
-            <div class="form-row">
-              <input type="hidden" name="office" value="">
-              <div class="form-group col-md-6">
-                    <label for="inventory_name">Nombre</label>
-                    <input type="text" class="form-control" id="edit_inventory_name${index}" name="name" placeholder="Nombre del item"
-                          value="${$(this)[0].name}" required>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="category">Categoría </label>
-                <div>
-                  <select class="form-control category_control" id="edit_inventory_category${index}" name="category" style="width: 100%;" required>
-                    <option disabled value="" selected>Selecciona una categoría</option>
-                    {% for category in categories %}
-                      <option value="{{ category.pk }}">{{ category }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                  <label for="brand">Marca </label>
-                  <select class="form-control brand_control" id="edit_inventory_brand${index}" name="brand" style="width: 100%;" required>
-                    <option disabled value="" selected>Selecciona una categoría</option>
-                  </select>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="price">Precio</label>
-                <input type="number" class="form-control" id="edit_inventory_price${index}" name="price" placeholder="Precio del item"
-                        value="${$(this)[0].price}" required>
-              </div>
-            </div>
-            `
-          );
+          item = $(this)[0]
+          $(`#edit_inventory_name${index}`).val(item.name)
+          $(`#edit_inventory_price${index}`).val(item.price)
 
           $(`#edit_inventory_category${index} option`).prop("selected", false);
-          $(`#edit_inventory_category${index} option[value=${$(this)[0].brand.category.id}]`).prop("selected", true);
+          $(`#edit_inventory_category${index} option[value=${item.brand.category.id}]`).prop("selected", true);
           $(`#edit_inventory_category${index}`).trigger("change")
-          
 
-          axios.get(`/api/inventory/${$(this)[0].brand.category.id}/brand`)
+          $(`#delete_option${index}`).val(item.id)
+
+          axios.get(`/api/inventory/${item.brand.category.id}/brand`)
           .then(function (response) {
             data_brand = response.data
             $(`#edit_inventory_brand${index}`).empty()
@@ -539,15 +570,15 @@
                 `<option value=${v.id}>${v.name}</option>`
               )
             })
-            // $(`#brand${index}`).prepend(
-            //   '<option value="" selected disabled>Selecciona una marca</option>'
-            // )
           })
           .catch(function (error) {
-            // handle error
             console.log(error);
           })
 
+          if( data.related_items.length != (index + 1) ){
+            $("#plus5_edit").trigger("click")
+          }
+          $(`#edit_option${index}`).prop('checked', true);
         })
       })
       .catch(function (error) {
@@ -686,6 +717,58 @@
       });
     })
 
+
+    //dynamic form fill select brand input depending category into edit modal
+    $(".edit-item").on("click", function(){
+      $(document).on('change','.category_edit_control',function(){
+        //fill brands depending $(this) select
+        if( $(this).hasClass("category_edit_control")){
+          var select_category_id = $(this).attr('id');
+          axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
+            )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+        }
+      });
+    })
+
+    $(".edit-item").on("click", function(){
+      $(document).on('change','.delete_option_control',function(){
+        elem_delete = $(this).attr('id')
+        if( $(this).prop('checked') ){
+          id = elem_delete[elem_delete.length - 1]
+          $("#elimination_reason"+id).removeClass("d-none")
+          $("#edit_inventory_name"+id).prop("readonly", true);
+          $("#edit_inventory_price"+id).prop("readonly", true);
+          $("#edit_inventory_category"+id).attr("disabled", true);
+          $("#edit_inventory_brand"+id).attr("disabled", true);
+        }
+      });
+      $(document).on('change','.edit_option_control',function(){
+        elem_edit = $(this).attr('id')
+        if( $(this).prop('checked') ){
+          $("#elimination_reason"+elem_delete[elem_delete.length - 1]).addClass("d-none")
+          $("#edit_inventory_name"+id).prop("readonly", false);
+          $("#edit_inventory_price"+id).prop("readonly", false);
+          $("#edit_inventory_category"+id).attr("disabled", false);
+          $("#edit_inventory_brand"+id).attr("disabled", false);
+        }
+      });
+    })
+
     $(document).ready(function () {
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
@@ -737,6 +820,21 @@
           $(this).closest('#dynamic_form').next().find('#minus5').hide();
         }
         $(this).closest('#dynamic_form').remove();
+      });
+
+
+      var unit_inventory_edit = $("#unit_inventory_edit").dynamicForm("#unit_inventory_edit", "#plus5_edit", "#minus5_edit", {
+        limit: 15,
+        formPrefix: "form",
+        normalizeFullForm: true,
+      });
+
+      $("#unit_inventory_edit #minus5_edit").on('click', function () {
+        var initDynamicId = $(this).closest('#unit_inventory_edit').parent().find("[id^='unit_inventory_edit']").length;
+        if (initDynamicId === 2) {
+          $(this).closest('#unit_inventory_edit').next().find('#minus5_edit').hide();
+        }
+        $(this).closest('#unit_inventory_edit').remove();
       });
 
       $('.edit_unit_form select').each(function () {
