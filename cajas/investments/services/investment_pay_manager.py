@@ -21,7 +21,7 @@ class InvestmentPayManager(object):
         investment.balance -= int(request.data['value'])
         investment.save()
 
-        concept = get_object_or_404(Concept, name='Inversión Negocios', concept_type=ConceptType.DOUBLE)
+        concept = get_object_or_404(Concept, name='Inversión Negocios', concept_type=ConceptType.SIMPLE)
         data = {
             'partner': investment.partner,
             'box': investment.partner.box,
