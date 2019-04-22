@@ -2169,6 +2169,14 @@ footer.site-footer {
   visibility: hidden;
 }
 
+.label-close{
+  position:fixed;
+  bottom:118px;
+  right:105px;
+  display:table;
+  visibility: hidden;
+}
+
 .label-text{
   color:#FFF;
   background:rgba(51,51,51,0.5);
@@ -2203,13 +2211,13 @@ footer.site-footer {
   margin-top:18px;
 }
 
-a.float + div.label-container {
+a.float + div.label-container, a.float + div.label-close {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s, opacity 0.5s ease;
 }
 
-a.float:hover + div.label-container{
+a.float:hover + div.label-container,  a.float:hover + div.label-close{
   visibility: visible;
   opacity: 1;
 }
@@ -2624,7 +2632,7 @@ button.add-movement, button.add-movement-button{
   padding: 10px;
 }
 
-.accept-mv, .edit-item{
+.accept-mv, .edit-item, .show-group {
   background-color: var(--aqua-box);
   color: #fff;
   border-radius: 10px;

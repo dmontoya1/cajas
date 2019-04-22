@@ -20,7 +20,6 @@ class Home(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
         user = self.request.user
-        # print("hello", user.partner.get().office)
 
         if not self.request.user.is_superuser:
             try:

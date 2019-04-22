@@ -55,6 +55,13 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateAPIView):
             'ip': ip,
         }
         update_mvment = MovementDailySquare.objects.filter(pk=self.kwargs['pk'])
+        if update_mvment.first().movement_type != movement_type:
+            box = box_daily_square
+            if movement_type == 'IN':
+                box.balance = box.balance + (int(update_mvment.first().value) * 2)
+            else:
+                box.balance = box.balance - (int(update_mvment.first().value) * 2)
+            box.save()
         if user:
             total_movements = daily_square_manager.get_user_value(data)
             stop = StopManager.validate_stop(data)

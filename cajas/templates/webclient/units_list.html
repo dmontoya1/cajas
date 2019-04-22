@@ -52,6 +52,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_notifications %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:notifications' office.slug %}">
@@ -262,6 +270,7 @@
         <div class="modal-body">
             <form method="POST" class="edit_unit_form">
             {% csrf_token %}
+            <input type="hidden" id="unitpk" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
                 <div class="form-group col-md-12">
@@ -425,11 +434,7 @@
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-
-      $('#modalDetail').on('show.bs.modal', function (event) {
-
         var modal = $(this)
-
         axios.get(`/api/units/${unit_pk}/detail`)
           .then(function (response) {
             data = response.data
@@ -437,6 +442,7 @@
             $("#price_detail").val(data.unit_price)
             $("#exampleModalLongTitle").text("Unidad de " + data.partner.user.first_name + " " + data.partner.user.last_name)
             //fill table with related items
+            $("#related_items_table").empty()
             $(data.related_items).each( function(){
               $("#related_items_table").append(
                 `\
@@ -454,72 +460,60 @@
             // handle error
             console.log(error);
           })
-      })
     })
 
     //edit units script
     $('.edit-item').on('click', function () {
       var unit_pk = $(this).data("id")
       var office_pk = "{{ office.pk }}"
-      $('#editUnit').on('show.bs.modal', function (event) {
-        var modal = $(this)
+      $("#unitpk").val(unit_pk)
+      //get unit data and fill inputs with it
+      axios.get(`/api/units/${unit_pk}/detail`)
+      .then(function (response) {
+        data = response.data
+        $("#edit_name").val(data.name)
+        $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
+        $('#total_price').val(data.unit_price)
+        
+        $("#edit_collector option").prop("selected", false);
+        $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
+        $("#edit_collector").trigger("change")
 
-        //get unit data and fill inputs with it
-        axios.get(`/api/units/${unit_pk}/detail`)
-        .then(function (response) {
-          data = response.data
-          console.log("units data", data)
-          $("#edit_name").val(data.name)
-          $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
-          $('#total_price').val(data.unit_price)
-          
-          $("#edit_collector option").prop("selected", false);
-          $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
-          $("#edit_collector").trigger("change")
+        $("#edit_supervisor option").prop("selected", false);
+        $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
+        $("#edit_supervisor").trigger("change")
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    })
 
-          $("#edit_supervisor option").prop("selected", false);
-          $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
-          $("#edit_supervisor").trigger("change")
+    //and then update unit
+    $('.edit_unit_form').on('submit', function(e){
+      e.preventDefault()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      data = $(this).serialize()
+      console.log(data)
+      axios.patch(`/api/units/${$("#unitpk").val()}/detail`, data)
+      .then(function (response) {
+        data = response.data
+        Swal.fire({
+          type: 'success',
+          title: 'Exitoso',
+          text: data,
+        }).then(function () {
+          location.reload()
         })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
+      })
+      .catch(function (error) {
+        // handle error
+        Swal.fire({
+          type: 'error',
+          title: 'Error',
+          text: error,
+        }).then(function () {
+          location.reload()
         })
-
-        //and then update unit
-        $('.edit_unit_form').on('submit', function(e){
-            e.preventDefault()
-            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-            data = $(this).serialize()
-
-            axios.patch(`/api/units/${unit_pk}/detail`, data)
-            .then(function (response) {
-              data = response.data
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: data,
-              }).then(function () {
-                location.reload()
-              })
-            })
-            .catch(function (error) {
-              // handle error
-              Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: error,
-              }).then(function () {
-                location.reload()
-              })
-            })
-        })
-
-        $('#modalDetail').on('hidden.bs.modal', function () {
-            $(this).data('bs.modal', null);
-        })
-
-
       })
     })
 

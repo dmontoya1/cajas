@@ -53,6 +53,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_notifications %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:notifications' office.slug %}">
@@ -148,13 +156,13 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
+                  <h3 class="mb-4">Lista de Cuadres Diarios</h3>
                   <thead>
                   <tr>
                     <th>Nombre</th>
                     <th>Apellidos</th>
                     <th>Código</th>
                     <th>Email</th>
-                    {% comment %}<th>Detalle</th>{% endcomment %}
                     <th>Saldo</th>
                     <th></th>
                   </tr>
@@ -167,10 +175,9 @@
                         <td>{{ d.last_name }}</td>
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
-                        {% comment %}<td><a href="#">Detalle</a></td>{% endcomment %}
                         <td>$ {% get_dq_box office d %}</td>
                         <td>
-                          {% if perms.movement.add_movementdailysquare %}
+                          {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
@@ -190,7 +197,7 @@
                       <td>{{ partner.user.last_name }}</td>
                       <td>{{ partner.code|default:"Sin Codigo" }}</td>
                       <td>{{ partner.user.email }}</td>
-                      <td><a href="#">Detalle</a></td>
+                      <td>$ {% get_dq_box office partner.user %}</td>
                       <td>
                         {% if perms.movement.add_movementdailysquare %}
                           <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
@@ -304,6 +311,15 @@
                   <option value="" selected disabled>Selecciona un socio</option>
                   {% for p in partners %}
                     <option value="{{ p.pk }}">{{ p }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-6 dq-select d-none" id="dq-select">
+                <label for="dq-select">Socio</label>
+                <select class="form-control" id="dq-select" name="dq" style="width: 100%; height: 20px;">
+                  <option value="" selected disabled>Selecciona un cuadre diario</option>
+                  {% for d in dq_list %}
+                    <option value="{{ d.pk }}">{{ d }} (Codigo: {{ d.pk }})</option>
                   {% endfor %}
                 </select>
               </div>
@@ -501,14 +517,22 @@
             $('#usd-buy').removeClass('d-none')
             $('#usd-sell').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
           } else if (data['name'] == 'Venta Dólares') {
             $('#usd-sell').removeClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
+          } else if (data['name'] == 'Entrega de Efectivo a CD') {
+            $('#dq-select').removeClass('d-none')
+            $('#regular-value').removeClass('d-none')
+            $('#usd-sell').addClass('d-none')
+            $('#usd-buy').addClass('d-none')
           } else {
             $('#usd-sell').addClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').removeClass('d-none')
+            $('#dq-select').addClass('d-none')
           }
         })
         .catch(function (error) {

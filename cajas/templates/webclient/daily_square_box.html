@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_dailysquare_box %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -49,6 +50,14 @@
           <a href="{% url 'webclient:calendar' office.slug %}">
             <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Calendario Supervisor
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
           </a>
         </li>
       {% endif %}
@@ -159,9 +168,6 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
-                    {% if not box.is_closed %}
-                      <th></th>
-                    {% endif %}
                     <th></th>
                   </tr>
                   </thead>
@@ -176,13 +182,16 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if not box.is_closed or request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
-                        <td>
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                             data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
                       <td>
+                        {% if not m.status and not m.review %}
+                          {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                               data-target="#addMovement">Editar</a>
+                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                               data-target="#addMovement">Editar</a>
+                          {% endif %}
+                        {% endif %}
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
                             <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
@@ -205,7 +214,7 @@
             </div>
           </div>
         </div>
-        {% if perms.movement.add_movementdailysquare and not box.is_closed %}
+        {% if perms.movement.add_movementdailysquare and not box.is_closed and not past_mvments %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
@@ -214,11 +223,11 @@
             <i class="fa fa-play label-arrow"></i>
           </div>
         {% endif %}
-        {% if not box.is_closed %}
+        {% if not box.is_closed and request.user == box_user %}
           <a href="#" class="close-box" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
-          <div class="label-container">
+          <div class="label-close">
             <div class="label-text">Cerrar Caja</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
@@ -257,7 +266,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date"
+                       placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -274,7 +284,7 @@
               <div class="form-group col-md-6" id="regular-value">
                 <label for="value">Valor</label>
                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento"
-                       >
+                       autocomplete="off">
               </div>
             </div>
             <div class="form-row d-none" id="usd-buy">
@@ -326,6 +336,15 @@
                   {% for unit in units %}
                     <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
                     </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-6 dq-select d-none" id="dq-select">
+                <label for="dq-select">Socio</label>
+                <select class="form-control" id="dq-select" name="dq" style="width: 100%; height: 20px;">
+                  <option value="" selected disabled>Selecciona un cuadre diario</option>
+                  {% for d in dq_list %}
+                    <option value="{{ d.pk }}">{{ d }} (Codigo: {{ d.pk }})</option>
                   {% endfor %}
                 </select>
               </div>
@@ -395,7 +414,7 @@
                   <label for="partner">Socio</label>
                   <select class="form-control select2-test" name="partner" id="partner" style="width: 100%">
                     <option value="" selected disabled>Selecciona un socio</option>
-                    {% for p in partners %}
+                    {% for p in partners_list %}
                       <option value="{{ p.pk }}">{{ p }}</option>
                     {% endfor %}
                   </select>
@@ -466,7 +485,7 @@
         });
       });
 
-      var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
+      $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
         formPrefix: "form",
         normalizeFullForm: true,
@@ -554,14 +573,22 @@
             $('#usd-buy').removeClass('d-none')
             $('#usd-sell').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
           } else if (data['name'] == 'Venta Dólares') {
             $('#usd-sell').removeClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').addClass('d-none')
+            $('#dq-select').addClass('d-none')
+          } else if (data['name'] == 'Entrega de Efectivo a CD') {
+            $('#dq-select').removeClass('d-none')
+            $('#regular-value').removeClass('d-none')
+            $('#usd-sell').addClass('d-none')
+            $('#usd-buy').addClass('d-none')
           } else {
             $('#usd-sell').addClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').removeClass('d-none')
+            $('#dq-select').addClass('d-none')
           }
         })
         .catch(function (error) {
@@ -933,7 +960,7 @@
             .then(function (response) {
               Swal.fire({
                 title: 'Exitoso!',
-                text: response.data,
+                text: "La caja se ha cerrado exitosamente",
                 type: 'success',
                 allowOutsideClick: false
               }).then((result) => {
@@ -953,33 +980,36 @@
     //Edit movement
     $('.edit-item').on('click', function () {
       var mov_pk = $(this).data("id")
-      $('#addMovement').on('show.bs.modal', function (event) {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        var modal = $(this)
-        $("#method_modal").val("edit")
-        $("#method_modal").data("id", mov_pk)
-        $('.modal-title').text("Editar Movimiento")
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      $("#method_modal").val("edit")
+      $("#method_modal").data("id", mov_pk)
+      $('.modal-title').text("Editar Movimiento")
 
-        //get movement data
-        axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
-          .then(function (response) {
-            data = response.data
-            $("#concept option").prop("selected", false);
-            $("#concept option[value='" + data.concept + "']").prop("selected", true);
-            $("#concept").trigger("change")
-            $("#date").val(data.date)
-            $("#movement_type").prop("selected", false);
-            $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
-            $("#movement_type").trigger("change")
-            $("#value").val(data.value)
-            $("#detail").val(data.detail)
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+      //get movement data
+      axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
     })
 
+    $('.datetimepicker_dailysquare').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/01',
+      maxDate: '0',
+      timepicker: false,
+    });
   </script>
 {% endblock %}

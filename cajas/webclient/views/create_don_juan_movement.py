@@ -12,6 +12,7 @@ from core.services.email_service import EmailManager
 from movement.services.don_juan_service import DonJuanManager
 from office.models.notifications import Notifications
 from office.models.officeCountry import OfficeCountry
+from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
 
 from .get_ip import get_ip
 
@@ -45,24 +46,23 @@ class CreateDonJuanMovement(View):
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            box_don_juan = get_object_or_404(BoxDonJuan, office=destine_office)
-            data1 = {
-                'box': box_don_juan,
-                'concept': concept.counterpart,
-                'date': request.POST['date'],
-                'movement_type': contrapart,
-                'value': request.POST['value'],
-                'detail': request.POST['detail'],
-                'responsible': request.user,
-                'ip': ip,
-            }
-            movement1 = donjuan_manager.create_movement(data1)
+            mv = MovementBetweenOfficeRequest.objects.create(
+                box_office=destine_office.box,
+                observation=request.POST['detail'],
+                detail=request.POST['detail'],
+                concept=concept,
+                movement_type=contrapart,
+                date=request.POST['date'],
+                value=request.POST['value'],
+                responsible=request.user,
+                ip=ip,
+            )
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
                 email_manager.send_office_mail(request, secretary.user.email)
                 Notifications.objects.create(
                     office=office, office_sender=destine_office,
-                    concept=concept, detail=movement1.detail, value=movement1.value
+                    concept=concept, detail=request.POST['detail'], value=request.POST['value']
                 )
 
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')

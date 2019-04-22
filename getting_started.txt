@@ -9,6 +9,7 @@
     Supervisor
     Cobrador
     Tarjetero
+    Administrador de Grupo
 
 3 crear un usario con los siguientes datos
     3.1 username: donjuan

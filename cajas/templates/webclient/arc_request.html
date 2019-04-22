@@ -52,6 +52,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_notifications %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:notifications' office.slug %}">
@@ -189,18 +197,27 @@
                   <h3 class="mb-4">Cajas Cuadre diario</h3>
                   <thead>
                   <tr>
+                    <th></th>
                     <th>Socio</th>
                     <th>Saldo final</th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for d in box_daily %}
-                    <tr>
+                  <tr>
+                      <td>
+                        {% if d.is_closed %}
+                          <i class="fas fa-check" style="color:green;"></i>
+                        {% else %}
+                          <i class="fas fa-times" style="color: red;"></i>
+                        {% endif %}
+                      </td>
                       <td>{{ d.user.get_full_name }}</td>
                       <td>$ {{ d.balance|intcomma }}</td>
                     </tr>
                   {% endfor %}
                   <tr>
+                    <td></td>
                     <td>
                       <strong>TOTAL</strong>
                     </td>

@@ -23,14 +23,13 @@ from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 
-daily_square_manager = MovementDailySquareManager()
-
 
 class CreateDailySquareMovement(APIView):
     """
     """
 
     def post(self, request, format=None):
+        daily_square_manager = MovementDailySquareManager()
         office_ = get_object_or_404(OfficeCountry, slug=request.POST['office_slug'])
         box_daily_square = BoxDailySquare.objects.get(user__pk=request.POST['user_id'], office=office_)
         concept = Concept.objects.get(pk=request.POST['concept'])
@@ -123,6 +122,17 @@ class CreateDailySquareMovement(APIView):
             data['movement_type'] = 'IN'
             movement = daily_square_manager.create_movement(data)
 
+        elif concept.name == "Entrega de Efectivo a CD":
+            dq_target = get_object_or_404(User, pk=request.POST['dq'])
+            box_daily_square_target = BoxDailySquare.objects.get(user=dq_target, office=office_)
+            daily_square_manager.create_movement(data)
+            data['box'] = box_daily_square_target
+            data['concept'] = concept.counterpart
+            if movement_type == 'OUT':
+                data['movement_type'] = 'IN'
+            else:
+                data['movement_type'] = 'OUT'
+            daily_square_manager.create_movement(data)
         else:
             if user:
                 total_movements = daily_square_manager.get_user_value(data)
@@ -130,10 +140,6 @@ class CreateDailySquareMovement(APIView):
                 stop = stop_manager.validate_stop(data)
                 if stop == 0 or (stop >= (total_movements['value__sum'] + int(data['value']))):
                     movement = daily_square_manager.create_movement(data)
-                    return Response(
-                        'Se ha creado el movimiento exitosamente',
-                        status=status.HTTP_201_CREATED
-                    )
                 else:
                     return Response(
                         'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.',

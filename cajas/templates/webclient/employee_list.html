@@ -52,6 +52,14 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_notifications %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:notifications' office.slug %}">
@@ -163,10 +171,10 @@
                       <td>{{ e.user.first_name }}</td>
                       <td>{{ e.user.last_name }}</td>
                       <td>{{ e.charge }}</td>
-                      <td>{{ e.salary }}</td>
+                      <td>{% if e.salary_type == 'FX' %}${% else %}%{% endif %} {{ e.salary }}</td>
                       <td>
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
-                             data-target="#modalDetail">Ver detalle</a></td>
+                           data-target="#modalDetail">Ver detalle</a></td>
                       <td>
                         {% if perms.users.change_employee %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
@@ -183,10 +191,10 @@
                       <td>{{ e.user.first_name }}</td>
                       <td>{{ e.user.last_name }}</td>
                       <td>{{ e.charge }}</td>
-                      <td>{{ e.salary }}</td>
+                      <td>{% if e.salary_type == 'FX' %}${% else %}%{% endif %} {{ e.salary }}</td>
                       <td>
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
-                             data-target="#modalDetail">Ver detalle</a></td>
+                           data-target="#modalDetail">Ver detalle</a></td>
                       <td>
                         {% if perms.users.change_employee %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
@@ -212,7 +220,7 @@
             <div class="label-text">Añadir empleado</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-      {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -261,13 +269,13 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                  <label for="charge">Cargo</label>
-                  <select class="form-control" id="charge" name="charge" required>
-                      <option selected disabled value="">Selecciona el cargo</option>
-                      {% for c in charges %}
-                        <option value="{{ c.pk }}">{{ c }}</option>
-                      {% endfor %}
-                  </select>
+                <label for="charge">Cargo</label>
+                <select class="form-control" id="charge" name="charge" required>
+                  <option selected disabled value="">Selecciona el cargo</option>
+                  {% for c in charges %}
+                    <option value="{{ c.pk }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
               </div>
               <div class="form-group col-md-6">
                 <label for="email">Correo electrónico</label>
@@ -294,18 +302,18 @@
                 </div>
               </div>
             </div>
-            
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="cv">Hoja de vida</label>
-                  <input type="file" class="form-control-file" id="cv" name="cv">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="passport">Pasaporte</label>
-                  <input type="file" class="form-control-file" id="passport" name="passport">
-                </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="cv">Hoja de vida</label>
+                <input type="file" class="form-control-file" id="cv" name="cv" required>
               </div>
-            
+              <div class="form-group col-md-6">
+                <label for="passport">Pasaporte</label>
+                <input type="file" class="form-control-file" id="passport" name="passport" required>
+              </div>
+            </div>
+
             <div class="form-row">
               <div class="form-group col-md-6">
                 <div class="form-check">
@@ -319,7 +327,7 @@
                 <input type="checkbox" class="form-check-input" id="is_daily_square" name="is_daily_square">
                 <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
               </div>
-            </div> 
+            </div>
             <div class="form-row d-none" id="password_inputs">
               <div class="form-group col-md-6">
                 <label for="password1">Contraseña</label>
@@ -410,6 +418,7 @@
         <div class="modal-body">
           <form method="POST" class="edit_employee_form">
             {% csrf_token %}
+            <input type="hidden" id="employee_pk" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -425,18 +434,36 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
+                <label for="email">Correo Electronico</label>
+                <input type="emaiil" class="form-control" id="edit_email" name="email" placeholder="Email"
+                       required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="charge">Cargo</label>
+                <select class="form-control" id="charge" name="charge" style="width: 100%; height: 20px;" required>
+                  <option selected disabled value="">Selecciona el cargo</option>
+                  {% for c in charges %}
+                    <option value="{{ c.pk }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="salary_type">Tipo de sueldo</label><br>
+                <select class="form-control" id="edit_salary_type" name="salary_type" style="width: 100%; height: 20px;"
+                        required>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
                 <label for="initial_value">Sueldo</label>
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
+                    <div class="input-group-text salary-type-icon">$</div>
                   </div>
                   <input type="number" class="form-control" id="edit_salary" name="salary" required>
                 </div>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="daily_square">Cargo</label><br>
-                <select class="form-control" id="edit_charge" name="charge" style="width: 100%; height: 20px;" required>
-                </select>
               </div>
             </div>
             <div class="form-row">
@@ -542,107 +569,96 @@
     //"Ver detalles" modal functionality
     $('.employee_detail').on('click', function () {
       var employee_pk = $(this).data("id")
-      $('#modalDetail').on('show.bs.modal', function (event) {
-        var modal = $(this)
-        //get employee data depending <a> data-id
-        axios.get(`/api/users/${employee_pk}/employee-detail`)
-          .then(function (response) {
-            data = response.data
-            $("#detail_first_name").val(data.user.first_name)
-            $("#detail_last_name").val(data.user.last_name)
-            $("#detail_salary").val(data.salary)
-            $("#detail_charge").val(data.charge.name)
-            $("#detail_charge").attr("data-id", data.charge.id)
-            $("#detail_cv").attr("href", data.cv)
-            $("#detail_passport").attr("href", data.passport)
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+      //get employee data depending <a> data-id
+      axios.get(`/api/users/${employee_pk}/employee-detail`)
+        .then(function (response) {
+          data = response.data
+          $("#detail_first_name").val(data.user.first_name)
+          $("#detail_last_name").val(data.user.last_name)
+          $("#detail_salary").val(data.salary)
+          $("#detail_charge").val(data.charge.name)
+          $("#detail_charge").attr("data-id", data.charge.id)
+          $("#detail_cv").attr("href", data.cv)
+          $("#detail_passport").attr("href", data.passport)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
     })
 
     //Edit an employee
     $('.edit-item').on('click', function () {
       var employee_pk = $(this).data("id")
-      $('#editEmployee').on('show.bs.modal', function (event) {
-        var modal = $(this)
-
-        //fill charges select input
-        axios.get("{% url 'api:users:charge-list' %}")
-          .then(function (response) {
-            data = response.data
-
-            $('#edit_charge').empty()
-            $.each(data, function (k, v) {
-              $('#edit_charge').append(
-                `<option value=${v.id}>${v.name}</option>`
-              )
-            })
-            $('#edit_charge').prepend(
-              '<option value="" selected disabled>Selecciona un cargo</option>'
+      $("#employee_pk").val(employee_pk)
+      //fill charges select input
+      axios.get("{% url 'api:users:charge-list' %}")
+        .then(function (response) {
+          data = response.data
+          $('#edit_charge').empty()
+          $.each(data, function (k, v) {
+            $('#edit_charge').append(
+              `<option value=${v.id}>${v.name}</option>`
             )
           })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-
-        //get employee data
-        axios.get(`/api/users/${employee_pk}/employee-detail`)
-          .then(function (response) {
-            data = response.data
-            $("#edit_first_name").val(data.user.first_name)
-            $("#edit_last_name").val(data.user.last_name)
-            $("#edit_salary").val(data.salary)
-            $("#edit_cv").attr("href", data.cv)
-            $("#edit_passport").attr("href", data.passport)
-
-            $("#edit_charge").find('option:selected').remove()
-            $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
-            $("#edit_charge").trigger("click")
-
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-
-        //and then submit the form
-        $('.edit_employee_form').on('submit', function (e) {
-          e.preventDefault()
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-          data = $(this).serialize()
-
-          axios.patch(`/api/users/${employee_pk}/employee-detail`, data)
-            .then(function (response) {
-              data = response.data
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: data,
-              }).then(function () {
-                location.reload()
-              })
-            })
-            .catch(function (error) {
-              // handle error
-              Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: error,
-              }).then(function () {
-                location.reload()
-              })
-            })
+          $('#edit_charge').prepend(
+            '<option value="" selected disabled>Selecciona un cargo</option>'
+          )
         })
-        $('#modalDetail').on('hidden.bs.modal', function () {
-            $(this).data('bs.modal', null);
+        .catch(function (error) {
+          // handle error
+          console.log(error);
         })
 
+      //get employee data
+      axios.get(`/api/users/${employee_pk}/employee-detail`)
+        .then(function (response) {
+          data = response.data
+          $("#edit_first_name").val(data.user.first_name)
+          $("#edit_last_name").val(data.user.last_name)
+          $("#edit_email").val(data.user.email)
+          $("#edit_salary").val(data.salary)
+          $("#edit_cv").attr("href", data.cv)
+          $("#edit_passport").attr("href", data.passport)
 
-      })
+          $("#edit_charge").find('option:selected').remove()
+          $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
+          $("#edit_charge").trigger("click")
+
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    //and then submit the form
+    $('.edit_employee_form').on('submit', function (e) {
+      e.preventDefault()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      data = $(this).serialize()
+
+      axios.patch(`/api/users/${$("#employee_pk").val()}/employee-detail`, data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
     })
 
     //delete items
@@ -661,10 +677,10 @@
         showCloseButton: true
       }).then((result) => {
         if (result.value) {
-            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-            axios.delete(`/api/users/${pk}/employee-delete`,
-              {data: {description: result.value}}
-            )
+          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+          axios.delete(`/api/users/${pk}/employee-delete`,
+            {data: {description: result.value}}
+          )
             .then(function (response) {
               Swal.fire({
                 title: 'Exitoso!',
@@ -681,7 +697,7 @@
               console.log(error);
               console.log(error.response)
             });
-          }
+        }
       })
     })
 
