@@ -149,7 +149,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
-          axios.post('{% url "api:movements:accept_withdraw_request" %}', {
+          axios.post('{% url "api:movements:accept_between_office_request" %}', {
             movement_id: id,
           })
             .then(function (response) {
@@ -191,7 +191,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
-          axios.post('{% url "api:movements:denied_withdraw_request" %}', {
+          axios.post('{% url "api:movements:denied_between_office_request" %}', {
             movement_id: id,
           })
             .then(function (response) {

@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from movement.models.movement_withdraw import MovementWithdraw
+from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
 
 
 class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
@@ -14,7 +14,7 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
     template_name = 'webclient/movement_between_offices.html'
 
     def get_context_data(self, **kwargs):
-        context = super(MovementWithdrawRequireList, self).get_context_data(**kwargs)
-        movements = MovementWithdraw.objects.all()
+        context = super(MovementBetweenOfficesRequire, self).get_context_data(**kwargs)
+        movements = MovementBetweenOfficeRequest.objects.all()
         context['movements'] = movements
         return context

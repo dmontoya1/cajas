@@ -2,6 +2,7 @@
 from django.db import models
 
 from boxes.models.box_daily_square import BoxDailySquare
+from boxes.models.box_office import BoxOffice
 from boxes.models.box_partner import BoxPartner
 from .movement_mixin import MovementMixin
 
@@ -15,11 +16,11 @@ class MovementBetweenOfficeRequest(MovementMixin):
         verbose_name='Caja oficina',
         on_delete=models.SET_NULL,
         blank=True, null=True,
-        related_name='movements'
+        related_name='movements_between_office'
     )
     observation = models.TextField(
         'Observación',
-        help_text='Observación por la cual se debería de aceptar el movimiento que sobrepasó el tope'
+        help_text='Observación por la cual se debería de aceptar el movimiento'
     )
 
     def __str__(self):

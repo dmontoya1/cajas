@@ -16,7 +16,8 @@ from .api.views.movement_request.accept_movement import AcceptRequestMovement
 from .api.views.movement_request.accept_withdraw import AcceptWithDrawRequestMovement
 from .api.views.movement_request.decline_movement import DeclineRequestMovement
 from .api.views.movement_request.denied_withdraw import DeclineWithdrawMovement
-
+from .api.views.movement_request.denied_between_office import DeclineBetweenOfficeMovement
+from .api.views.movement_request.accept_between_office import AcceptBetweenOfficeMovement
 app_name = 'movements'
 urlpatterns = [
     path("create-mv-office/", MovementOfficeCreate.as_view(), name='movement-create'),
@@ -34,7 +35,9 @@ urlpatterns = [
     path("accept-request/", AcceptRequestMovement.as_view(), name='accept_request'),
     path("denied-request/", DeclineRequestMovement.as_view(), name='denied_request'),
     path("accept-withdraw-request/", AcceptWithDrawRequestMovement.as_view(), name='accept_withdraw_request'),
+    path("accept-between-office-request/", AcceptBetweenOfficeMovement.as_view(), name='accept_between_office_request'),
     path("denied-withdraw-request/", DeclineWithdrawMovement.as_view(), name='denied_withdraw_request'),
+    path("denied-between-office-request/", DeclineBetweenOfficeMovement.as_view(), name='denied_between_office_request'),
     path("create-withdraw-movement/", CreateWithdrawMovement.as_view(), name='withdraw_movement_create'),
     path("movement-usd-create/", MovementUSDCreate.as_view(), name='movement_usd_create'),
 ]
