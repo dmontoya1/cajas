@@ -59,7 +59,7 @@ class Employee(models.Model):
         choices=SALARY_TYPE,
         default=FIXED
     )
-    salary = models.IntegerField(
+    salary = models.FloatField(
         'Salario Empleado',
         default=0
     )
