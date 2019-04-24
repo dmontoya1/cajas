@@ -22,17 +22,18 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         context = super(UnitsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        units = Unit.objects.filter(partner__office=office)
-        supervisor = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
-        collectors = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
-        partners = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
-        categories = Category.objects.all()
+
+        try:
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+                context['units'] = Unit.objects.filter(partner__office=office)
+                context['supervisor'] = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
+                context['collectors'] = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
+                context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+                context['categories'] = Category.objects.all()
+        except Exception as e:
+            partner = Partner.objects.get(user=self.request.user, office=office)
+            context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
 
         context['office'] = office
-        context['units'] = units
-        context['supervisor'] = supervisor
-        context['collectors'] = collectors
-        context['partners'] = partners
-        context['categories'] = categories
 
         return context

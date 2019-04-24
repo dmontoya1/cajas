@@ -26,6 +26,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     model = Employee
     list_display = ['get_full_name', 'salary_type', 'salary']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
+    list_filter = ['charge',]
 
     class Media:
         js = (
@@ -56,7 +57,7 @@ class UserAdmin(auth_admin.UserAdmin):
     add_form = UserCreationForm
     fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", 
         {"fields": ("document_type", 'document_id', 'is_abstract', 'is_daily_square')}),)
-    list_display = ["username", "first_name", "last_name", "is_daily_square"]
+    list_display = ["email", "first_name", "last_name", "is_daily_square"]
     readonly_fields = ('last_login', 'date_joined')
     search_fields = ["first_name", 'document_id', ]
     inlines = [EmployeeAdminInline, ]

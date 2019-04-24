@@ -23,7 +23,7 @@ class Home(LoginRequiredMixin, TemplateView):
 
         if not self.request.user.is_superuser:
             try:
-                if user.related_employee.get().is_admin_charge:
+                if user.related_employee.get().is_admin_charge():
                     context['offices'] = user.related_employee.get().office.all()
                 else:
                     context['offices'] = user.related_employee.get().office_country.all()
