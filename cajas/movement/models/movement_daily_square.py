@@ -34,31 +34,31 @@ class MovementDailySquare(MovementMixin):
         blank=True, null=True,
         related_name='movements'
     )
-    movement_don_juan = models.ForeignKey(
+    movement_don_juan = models.OneToOneField(
         MovementDonJuan,
         verbose_name='Movimiento Don Juan Contrapartida',
         on_delete=models.CASCADE,
         null=True, blank=True
     )
-    movement_don_juan_usd = models.ForeignKey(
+    movement_don_juan_usd = models.OneToOneField(
         MovementDonJuanUsd,
         verbose_name='Movimiento Don Juan Dolares Contrapartida',
         on_delete=models.CASCADE,
         null=True, blank=True
     )
-    movement_partner = models.ForeignKey(
+    movement_partner = models.OneToOneField(
         MovementPartner,
         verbose_name='Movimiento Socio Contrapartida',
         on_delete=models.CASCADE,
         null=True, blank=True
     )
-    movement_office = models.ForeignKey(
+    movement_office = models.OneToOneField(
         MovementOffice,
         verbose_name='Movimiento Oficina Contrapartida',
         on_delete=models.CASCADE,
         null=True, blank=True
     )
-    movement_cd = models.ForeignKey(
+    movement_cd = models.OneToOneField(
         "self",
         verbose_name='Movimiento CD Contrapartida',
         on_delete=models.CASCADE,
