@@ -17,14 +17,13 @@ from general_config.models.country import Country
 from loans.models.loan import Loan
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
-from units.models.unitItems import UnitItems
 from webclient.views.get_ip import get_ip
 from webclient.views.utils import get_object_or_none
 
 from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
-
+from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
 class CreateDailySquareMovement(APIView):
     """
@@ -162,8 +161,8 @@ class CreateDailySquareMovement(APIView):
                     if request.data["form[form]["+str(values[0])+"][name]"] != '':
                         unit = Unit.objects.get(pk=request.data["unity"])
                         for value in values:
-                            UnitItems.objects.create(
-                                unit=unit,
+                            MovementDailySquareRequestItem.objects.create(
+                                movement=movement,
                                 name=request.data["form[form]["+value+"][name]"],
                                 brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
                                 price=request.data["form[form]["+value+"][price]"]
