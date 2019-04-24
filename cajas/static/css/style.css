@@ -650,7 +650,7 @@ aside.left-panel {
       .navbar .navbar-nav li.menu-item-has-children {
         position: relative; }
         .navbar .navbar-nav li.menu-item-has-children a {
-          line-height: 23px; }
+          line-height: 0px; }
           .navbar .navbar-nav li.menu-item-has-children a:before {
             content: "";
             position: absolute;
@@ -2805,7 +2805,10 @@ span.red {
   color: red !important;
   font-weight: bold !important;
 }
-
+span.green {
+  color: var(--green-box) !important;
+  font-weight: bold !important;
+}
 span.orange {
   color: orange !important;
   font-weight: bold !important;

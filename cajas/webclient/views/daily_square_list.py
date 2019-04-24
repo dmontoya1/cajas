@@ -38,6 +38,8 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                      Q(related_employee__office_country=office)
                      )
                 ).distinct()
+            else:
+                context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
         except Exception as e:
             print(e)
             context['partner'] = self.request.user.partner.get()

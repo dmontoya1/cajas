@@ -84,12 +84,14 @@
           Lista de inversiones
         </a>
       </li>
-      <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:closeout_boxes' office.slug %}">
-          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-          Cajas Liquidadas
-        </a>
-      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
@@ -168,7 +170,28 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                  {% if partner %}
+                    <tr>
+                      <td>{{ partner.user.first_name }}</td>
+                      <td>{{ partner.user.last_name }}</td>
+                      <td>{{ partner.code|default:"Sin Codigo" }}</td>
+                      <td>{{ partner.user.email }}</td>
+                      <td>$ {% get_dq_box office partner.user %}</td>
+                      <td>
+                        {% if perms.movement.add_movementdailysquare %}
+                          <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
+                                  data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
+                            Movimiento
+                          </button>
+                        {% endif %}
+                        {% if perms.boxes.change_boxdailysquare %}
+                          <a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
+                             class="see-box"><i
+                            class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% elif request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
                     {% for d in dailys %}
                       <tr>
                         <td>{{ d.first_name }}</td>
@@ -176,7 +199,7 @@
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box office d %}</td>
-                        <td class="text-right">
+                        <td>
                           {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
@@ -192,26 +215,28 @@
                       </tr>
                     {% endfor %}
                   {% else %}
-                    <tr>
-                      <td>{{ partner.user.first_name }}</td>
-                      <td>{{ partner.user.last_name }}</td>
-                      <td>{{ partner.code|default:"Sin Codigo" }}</td>
-                      <td>{{ partner.user.email }}</td>
-                      <td><a href="#">Detalle</a></td>
-                      <td>
-                        {% if perms.movement.add_movementdailysquare %}
-                          <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
-                                  data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
-                            Movimiento
-                          </button>
-                        {% endif %}
-                        {% if perms.boxes.change_boxdailysquare %}
-                          <a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
-                             class="see-box"><i
-                            class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
-                        {% endif %}
-                      </td>
-                    </tr>
+                    {% for d in dailys %}
+                      <tr>
+                        <td>{{ d.first_name }}</td>
+                        <td>{{ d.last_name }}</td>
+                        <td>{{ d.pk|default:"Sin Codigo" }}</td>
+                        <td>{{ d.email }}</td>
+                        <td>$ {% get_dq_box office d %}</td>
+                        <td>
+                          {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
+                            <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
+                                    data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                            </button>
+                          {% endif %}
+                          {% if perms.boxes.change_boxdailysquare %}
+                            <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
+                            <a href="{% url 'webclient:daily_square_venda' office.slug d.pk %}" class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver movimientos venda+</a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
                   {% endif %}
                   </tbody>
                 </table>

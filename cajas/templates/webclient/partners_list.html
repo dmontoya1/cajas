@@ -83,12 +83,14 @@
           Lista de inversiones
         </a>
       </li>
-      <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:closeout_boxes' office.slug %}">
-          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-          Cajas Liquidadas
-        </a>
-      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
@@ -204,7 +206,9 @@
                       <td>{{ partner.code|default:"Sin Codigo" }}</td>
                       <td>{{ partner.get_partner_type_display }}</td>
                       <td>{{ partner.user.email }}</td>
-                      <td><a href="#">Detalle</a></td>
+                      <td><a href="#" class="partner_detail" data-id="{{ partner.id }}" data-toggle="modal"
+                               data-target="#modalDetail">Detalle</a></td>
+                      <td>$ {{ partner.box.balance|intcomma }} {{ partner.office.country.currency.abbr }}</td>
                       <td>
                         {% if perms.movements.movement.add_movementpartner %}
                           <button type="button" class="add-movement" data-id="{{ p.id }}" data-toggle="modal"

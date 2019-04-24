@@ -15,7 +15,7 @@ from units.models.units import Unit
 from units.models.unitItems import UnitItems
 from django.shortcuts import get_object_or_404
 
-StopManager = StopManager()
+
 MovementPartnerManager = MovementPartnerManager()
 
 
@@ -60,7 +60,8 @@ class MovementPartnerCreate(APIView):
                 '_user': partner.user,
             }
             total_movements = MovementPartnerManager.get_user_value(data)
-            stop = StopManager.validate_stop(data)
+            stop_manager = StopManager(partner.user)
+            stop = stop_manager.get_user_movements_top_value_by_concept(concept)
             if stop == 0 or(stop >= (total_movements['value__sum'] + int(data['value']))):
                 movement = MovementPartnerManager.create_simple(data)
             else:

@@ -31,7 +31,8 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                                     Q(related_employee__office=office.office))
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         offices = OfficeCountry.objects.all()
-        partners = Partner.objects.filter(office=box_daily_square.office).order_by('user__first_name')
+        partners = Partner.objects.filter(Q(office=box_daily_square.office) | Q(code='DONJUAN'))\
+            .order_by('user__first_name')
         dq_list = User.objects.filter(is_daily_square=True)
         units = Unit.objects.filter(partner__office=office)
         past_mvments = MovementDailySquare.objects.filter(
@@ -44,7 +45,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['box'] = box_daily_square
         context['offices'] = offices
         context['office'] = office
-        context['partners'] = partners
+        context['partners_list'] = partners
         context['dq_list'] = dq_list
         context['box_user'] = user
         context['users'] = users
