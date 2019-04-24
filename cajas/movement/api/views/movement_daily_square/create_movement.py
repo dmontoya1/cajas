@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from boxes.models.box_daily_square import BoxDailySquare
 from boxes.models.box_don_juan import BoxDonJuan
 from boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from inventory.models.brand import Brand
 from cajas.users.models.user import User
 from chains.models.chain import Chain
 from concepts.models.concepts import Concept
@@ -16,6 +17,7 @@ from general_config.models.country import Country
 from loans.models.loan import Loan
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
+from units.models.unitItems import UnitItems
 from webclient.views.get_ip import get_ip
 from webclient.views.utils import get_object_or_none
 
@@ -146,7 +148,22 @@ class CreateDailySquareMovement(APIView):
                         status=status.HTTP_204_NO_CONTENT
                     )
             else:
-                movement = daily_square_manager.create_movement(data)
+                if concept.name == "Compra de Inventario Unidad":
+                    print(concept.name)
+                    print(request.data)
+                    movement = daily_square_manager.create_movement(data)
+                    values = request.data["elemts"].split(",")
+                    if request.data["form[form]["+str(values[0])+"][name]"] != '':
+                        unit = Unit.objects.get(pk=request.data["unity"])
+                        for value in values:
+                            UnitItems.objects.create(
+                                unit=unit,
+                                name=request.data["form[form]["+value+"][name]"],
+                                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                price=request.data["form[form]["+value+"][price]"]
+                            )
+                else:
+                    movement = daily_square_manager.create_movement(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',
