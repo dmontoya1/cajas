@@ -244,6 +244,7 @@
                             <th scope="col">Categoría</th>
                             <th scope="col">Marca</th>
                             <th scope="col">Precio</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody id="related_items_table">
@@ -341,7 +342,6 @@
                   <div class="form-group col-md-6">
                       <label for="brand">Marca </label>
                       <select class="form-control brand_control" id="edit_inventory_brand" name="brand" style="width: 100%;" required>
-                        <option disabled value="" selected>Selecciona una categoría</option>
                       </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -359,11 +359,11 @@
               <div class="form-check form-check-inline">
                 <input class="form-check-input delete_option_control" type="radio" name="options" id="delete_option" value="">
                 <label class="form-check-label" for="delete_option">
-                  Eliminar
+                  Reemplazar
                 </label>
               </div>
               <div class="form-group">
-                  <textarea placeholder="Motivo de eliminación" class="form-control d-none elimination_control" id="elimination_reason" rows="3"></textarea>
+                  <textarea style="resize: none;" placeholder="Motivo de eliminación" class="form-control d-none elimination_control" id="elimination_reason" name="reason" rows="3"></textarea>
               </div>
               <div class="form-row justify-content-center">
                   <div class="col-md-3 pt-1 text-center">
@@ -507,16 +507,42 @@
             //fill table with related items
             $("#related_items_table").empty()
             $(data.related_items).each( function(){
-              $("#related_items_table").append(
+              if( $(this)[0].is_deleted == false ){
+                $("#related_items_table").append(
                 `\
                   <tr>\
                     <td>${$(this)[0].name}</td>\
                     <td>${$(this)[0].brand.category.name}</td>\
                     <td>${$(this)[0].brand.name}</td>\
                     <td>$ ${$(this)[0].price}</td>\
+                    <td></td>
                   </tr>\
                 `
-              );
+                );
+              } else {
+                $("#related_items_table").append(
+                `\
+                  <tr style="color: red;">\
+                    <td>${$(this)[0].name}</td>\
+                    <td>${$(this)[0].brand.category.name}</td>\
+                    <td>${$(this)[0].brand.name}</td>\
+                    <td>$ ${$(this)[0].price}</td>\
+                    <td>\
+                      <a href="#" class="see-details" id="inventory-${$(this)[0].id}" data-id="${$(this)[0].id}">ver</a>\
+                      <input type="hidden" id="detail_reason${$(this)[0].id}" value="${$(this)[0].observations}">\
+                    </td>\
+                  </tr>\
+                `
+                );
+                $(`#inventory-${$(this)[0].id}`).on("click", function(){
+                  var detail_pk = $(this).data("id")
+                  message = $(`#detail_reason${detail_pk}`).val()
+                  Swal.fire({
+                    title: "Motivo de eliminación",
+                    text: message,
+                  })
+                })
+              }
             })
           })
           .catch(function (error) {
@@ -525,10 +551,31 @@
           })
     })
 
+
+    var fill_brands = function(cat_id, index_pk, brand_pk){
+      axios.get(`/api/inventory/${cat_id}/brand`)
+      .then(function (response) {
+        data_brand = response.data
+        $(`#edit_inventory_brand${index_pk}`).empty()
+        $.each(data_brand, function (k, v) {
+          $(`#edit_inventory_brand${index_pk}`).append(
+            `<option value=${v.id}>${v.name}</option>`
+          )
+        })
+        $(`#edit_inventory_brand${index_pk} option`).prop("selected", false);
+        $(`#edit_inventory_brand${index_pk} option[value=${brand_pk}]`).prop("selected", true);
+        $(`#edit_inventory_brand${index_pk}`).trigger("change")
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+    }
+
     //edit units script
     $('.edit-item').on('click', function () {
       var unit_pk = $(this).data("id")
       var office_pk = "{{ office.pk }}"
+      var data_brand = []
       $("#unitpk").val(unit_pk)
       //get unit data and fill inputs with it
       axios.get(`/api/units/${unit_pk}/detail`)
@@ -549,36 +596,31 @@
         if(data.related_items.length < 2){
           $("#plus5_edit").removeClass("d-none")
         }
-
-        $(data.related_items).each( function(index){
+        var index_pk = 0
+        items_lenght = data.related_items.length
+        $(data.related_items).each( function(){
           item = $(this)[0]
-          $(`#edit_inventory_name${index}`).val(item.name)
-          $(`#edit_inventory_price${index}`).val(item.price)
+          if( item.is_deleted == true){
+            items_lenght = items_lenght - 1;
+          } else {
+            $(`#edit_inventory_name${index_pk}`).val(item.name)
+            $(`#edit_inventory_price${index_pk}`).val(item.price)
 
-          $(`#edit_inventory_category${index} option`).prop("selected", false);
-          $(`#edit_inventory_category${index} option[value=${item.brand.category.id}]`).prop("selected", true);
-          $(`#edit_inventory_category${index}`).trigger("change")
+            $(`#edit_inventory_category${index_pk} option`).prop("selected", false);
+            $(`#edit_inventory_category${index_pk} option[value=${item.brand.category.id}]`).prop("selected", true);
+            $(`#edit_inventory_category${index_pk}`).trigger("change")
 
-          $(`#delete_option${index}`).val(item.id)
+            $(`#delete_option${index_pk}`).val(item.id+","+"delete")
+            $(`#edit_option${index_pk}`).val(item.id+","+"edit")
 
-          axios.get(`/api/inventory/${item.brand.category.id}/brand`)
-          .then(function (response) {
-            data_brand = response.data
-            $(`#edit_inventory_brand${index}`).empty()
-            $.each(data_brand, function (k, v) {
-              $(`#edit_inventory_brand${index}`).append(
-                `<option value=${v.id}>${v.name}</option>`
-              )
-            })
-          })
-          .catch(function (error) {
-            console.log(error);
-          })
+            fill_brands(item.brand.category.id, index_pk, item.brand.id)
 
-          if( data.related_items.length != (index + 1) ){
-            $("#plus5_edit").trigger("click")
+            if( items_lenght != (index_pk + 1) ){
+              $("#plus5_edit").trigger("click")
+            }
+            $(`#edit_option${index_pk}`).prop('checked', true);
+            index_pk = index_pk + 1;
           }
-          $(`#edit_option${index}`).prop('checked', true);
         })
       })
       .catch(function (error) {
@@ -589,7 +631,15 @@
     //and then update unit
     $('.edit_unit_form').on('submit', function(e){
       e.preventDefault()
+      var elemts = []
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+      $('.edit_unit_form .dynamic_controller *').filter('.category_edit_control').each(function(){
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
       data = $(this).serialize()
       console.log(data)
       axios.patch(`/api/units/${$("#unitpk").val()}/detail`, data)
@@ -666,7 +716,6 @@
       });
       $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
       data = $(this).serialize() 
-      console.log(data)
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -717,8 +766,7 @@
       });
     })
 
-
-    //dynamic form fill select brand input depending category into edit modal
+    // dynamic form fill select brand input depending category into edit modal
     $(".edit-item").on("click", function(){
       $(document).on('change','.category_edit_control',function(){
         //fill brands depending $(this) select
@@ -749,22 +797,17 @@
       $(document).on('change','.delete_option_control',function(){
         elem_delete = $(this).attr('id')
         if( $(this).prop('checked') ){
-          id = elem_delete[elem_delete.length - 1]
-          $("#elimination_reason"+id).removeClass("d-none")
-          $("#edit_inventory_name"+id).prop("readonly", true);
-          $("#edit_inventory_price"+id).prop("readonly", true);
-          $("#edit_inventory_category"+id).attr("disabled", true);
-          $("#edit_inventory_brand"+id).attr("disabled", true);
+          id_delete = elem_delete[elem_delete.length - 1]
+          $("#elimination_reason"+id_delete).removeClass("d-none");
+          $("#elimination_reason"+id_delete).prop("required", true);
         }
       });
       $(document).on('change','.edit_option_control',function(){
         elem_edit = $(this).attr('id')
         if( $(this).prop('checked') ){
-          $("#elimination_reason"+elem_delete[elem_delete.length - 1]).addClass("d-none")
-          $("#edit_inventory_name"+id).prop("readonly", false);
-          $("#edit_inventory_price"+id).prop("readonly", false);
-          $("#edit_inventory_category"+id).attr("disabled", false);
-          $("#edit_inventory_brand"+id).attr("disabled", false);
+          id_edit = elem_edit[elem_edit.length - 1]
+          $("#elimination_reason"+id_edit).prop("required", false);
+          $("#elimination_reason"+id_edit).addClass("d-none")
         }
       });
     })
@@ -807,7 +850,7 @@
           }
         }
       });
-      
+
       var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
         formPrefix: "form",
@@ -821,7 +864,6 @@
         }
         $(this).closest('#dynamic_form').remove();
       });
-
 
       var unit_inventory_edit = $("#unit_inventory_edit").dynamicForm("#unit_inventory_edit", "#plus5_edit", "#minus5_edit", {
         limit: 15,
