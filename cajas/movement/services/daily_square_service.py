@@ -3,14 +3,15 @@ from datetime import datetime
 
 from django.db.models import Sum
 
+from boxes.models import BoxDailySquare
 from concepts.models.concepts import Concept
+from concepts.services.stop_service import StopManager
 from cajas.users.models.user import User
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
-from concepts.services.stop_service import StopManager
-from ..models.movement_daily_square import MovementDailySquare
-
 from webclient.views.utils import get_object_or_none
+
+from ..models.movement_daily_square import MovementDailySquare
 
 
 class MovementDailySquareManager(object):
@@ -77,7 +78,7 @@ class MovementDailySquareManager(object):
         return total
 
     def __get_movement_by_pk(self, pk):
-        return MovementDailySquare.objects.get(pk=pk)
+        return MovementDailySquare.objects.filter(pk=pk)
 
     def __get_user_box_daily_square(self, user_id, office_slug):
         return BoxDailySquare.objects.get(user__pk=user_id, office__slug=office_slug)
@@ -92,63 +93,70 @@ class MovementDailySquareManager(object):
         return movement.value != value
 
     def __update_movement_type(self, data):
-        update_mvment = data['movement']
-        self.update_movement(data)
-        if update_mvment.movement_don_juan:
-            data['box'] = update_mvment.movement_don_juan.box_don_juan
-            self.update_movement(data)
-        if update_mvment.movement_don_juan_usd:
-            data['box'] = update_mvment.movement_don_juan_usd.box_don_juan
-            self.update_movement(data)
-        if update_mvment.movement_partner:
-            data['box'] = update_mvment.movement_partner.box_partner
-            self.update_movement(data)
-        if update_mvment.movement_office:
-            data['box'] = update_mvment.movement_office.box_office
-            self.update_movement(data)
-        if update_mvment.movement_cd:
-            data['box'] = update_mvment.movement_cd.box_daily_square
-            self.update_movement(data)
+        current_movement = data['movement']
+        self.update_movement_type(data)
+        if current_movement.movement_don_juan:
+            data['box'] = current_movement.movement_don_juan.box_don_juan
+            self.update_movement_type(data)
+            self.update_counterpart_movement_type(current_movement.movement_don_juan)
+        if current_movement.movement_don_juan_usd:
+            data['box'] = current_movement.movement_don_juan_usd.box_don_juan
+            self.update_movement_type(data)
+            self.update_counterpart_movement_type(current_movement.movement_don_juan_usd)
+        if current_movement.movement_partner:
+            data['box'] = current_movement.movement_partner.box_partner
+            self.update_movement_type(data)
+            self.update_counterpart_movement_type(current_movement.movement_partner)
+        if current_movement.movement_office:
+            data['box'] = current_movement.movement_office.box_office
+            self.update_movement_type(data)
+            self.update_counterpart_movement_type(current_movement.movement_office)
+        if current_movement.movement_cd:
+            data['box'] = current_movement.movement_cd.box_daily_square
+            self.update_movement_type(data)
+            self.update_counterpart_movement_type(current_movement.movement_cd)
 
-
-    def update_value(self, data):
-        update_mvment = data['movement']
-        self.update_extern_value(data)
-        if update_mvment.movement_don_juan:
-            data['box'] = update_mvment.movement_don_juan.box_don_juan
-            self.update_extern_value(data)
-            update_mvment.movement_don_juan.value = data['value']
-            update_mvment.movement_don_juan.save()
-        if update_mvment.movement_don_juan_usd:
-            data['box'] = update_mvment.movement_don_juan_usd.box_don_juan
-            self.update_extern_value(data)
-            update_mvment.movement_don_juan_usd.value = data['value']
-            update_mvment.movement_don_juan_usd.save()
-        if update_mvment.movement_partner:
-            data['box'] = update_mvment.movement_partner.box_partner
-            self.update_extern_value(data)
-            update_mvment.movement_partner.value = data['value']
-            update_mvment.movement_partner.save()
-        if update_mvment.movement_office:
-            data['box'] = update_mvment.movement_office.box_office
-            self.update_extern_value(data)
-            update_mvment.movement_office.value = data['value']
-            update_mvment.movement_office.save()
-        if update_mvment.movement_cd:
-            data['box'] = update_mvment.movement_cd.box_daily_square
-            self.update_extern_value(data)
-            update_mvment.movement_cd.value = data['value']
-            update_mvment.movement_cd.save()
-
-    def update_movement(self, data):
+    def update_movement_type(self, data):
         box = data['box']
         if data['movement_type'] == 'IN':
-            box.balance = box.balance + (int(data['movement'].value) * 2)
+            box.balance += (int(data['movement'].value) * 2)
         else:
-            box.balance = box.balance - (int(data['movement'].value) * 2)
+            box.balance -= (int(data['movement'].value) * 2)
         box.save()
 
-    def update_extern_value(self, data):
+    def update_counterpart_movement_type(self, movement):
+        if movement.movement_type == movement.IN:
+            movement.movement_type = movement.OUT
+        else:
+            movement.movement_type = movement.IN
+        movement.save()
+
+    def __update_value(self, data):
+        current_movement = data['movement']
+        self.update_movement_box_value(data)
+        if current_movement.movement_don_juan:
+            data['box'] = current_movement.movement_don_juan.box_don_juan
+            self.update_movement_box_value(data)
+            self.update_counterpart_movement_value(current_movement.movement_don_juan, data['value'])
+        if current_movement.movement_don_juan_usd:
+            data['box'] = current_movement.movement_don_juan_usd.box_don_juan
+            self.update_movement_box_value(data)
+            self.update_counterpart_movement_value(current_movement.movement_don_juan_usd, data['value'])
+        if current_movement.movement_partner:
+            print(current_movement.movement_partner)
+            data['box'] = current_movement.movement_partner.box_partner
+            self.update_movement_box_value(data)
+            self.update_counterpart_movement_value(current_movement.movement_partner, data['value'])
+        if current_movement.movement_office:
+            data['box'] = current_movement.movement_office.box_office
+            self.update_movement_box_value(data)
+            self.update_counterpart_movement_value(current_movement.movement_office, data['value'])
+        if current_movement.movement_cd:
+            data['box'] = current_movement.movement_cd.box_daily_square
+            self.update_movement_box_value(data)
+            self.update_counterpart_movement_value(current_movement.movement_cd, data['value'])
+
+    def update_movement_box_value(self, data):
         box = data['box']
         if data['movement_type'] == 'IN':
             box.balance -= int(data['movement'].value)
@@ -158,27 +166,37 @@ class MovementDailySquareManager(object):
             box.balance -= int(data['value'])
         box.save()
 
-    def update_daily_square_movement(self, data):
-        # validate data
+    def update_counterpart_movement_value(self, movement, value):
+        movement.value = value
+        movement.save()
 
-        # get movement
+    def update_daily_square_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
-        # get box daily square
+        current_movement = current_movement_daily_square.first()
         current_user_box_daily_square = self.__get_user_box_daily_square(data['user_id'], data['office_slug'])
-        # get current concept
         current_concept = self.__get_current_concept(data['concept'])
 
         current_user = get_object_or_none(User, pk=data.get('user', None))
-        object_data = data.copy()
+        object_data = dict()
+        object_data['box_daily_square'] = current_user_box_daily_square
+        object_data['concept'] = current_concept
+        object_data['value'] = data['value']
+        object_data['movement_type'] = data['movement_type']
+        object_data['detail'] = data['detail']
+        object_data['date'] = data['date']
         object_data['user'] = current_user
         object_data['office'] = get_object_or_none(OfficeCountry, pk=data.get('office', None))
         object_data['unit'] = get_object_or_none(Unit, pk=data.get('unit', None))
 
-        if self.__is_movement_type_updated(current_movement_daily_square, data['movement_type']):
-            self.__update_movement_type(object_data)
+        if self.__is_movement_type_updated(current_movement, data['movement_type']):
+            data['movement'] = current_movement
+            data['box'] = current_user_box_daily_square
+            self.__update_movement_type(data)
 
-        if self.__is_movement_value_updated(current_movement_daily_square, data['value']):
-            self.update_value(object_data)
+        if self.__is_movement_value_updated(current_movement, data['value']):
+            data['movement'] = current_movement
+            data['box'] = current_user_box_daily_square
+            self.__update_value(data)
 
         if current_user is not None:
             stop_manager = StopManager(current_user)

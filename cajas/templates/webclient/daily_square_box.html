@@ -390,7 +390,7 @@
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
                         required></textarea>
             </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
+            <button type="submit" class="btn btn-submit btn-add-movement">Agregar</button>
           </form>
         </div>
       </div>
@@ -627,6 +627,7 @@
       $("#method_modal").val("add")
       $("#method_modal").data("id", "")
       $('.modal-title').text("Añadir Movimiento")
+      $('.btn-add-movement').text('Agregar')
     })
 
     $('.accept-mv').on('click', function () {
@@ -987,6 +988,7 @@
       $("#method_modal").val("edit")
       $("#method_modal").data("id", mov_pk)
       $('.modal-title').text("Editar Movimiento")
+      $('.btn-add-movement').text('Guardar')
 
       //get movement data
       axios.get(`/api/movements/${mov_pk}/dq-detail/`)
