@@ -10,7 +10,7 @@ from ..models.movement_daily_square import MovementDailySquare
 class MovementDailySquareManager(object):
 
     PROPERTIES = ['box', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip',
-                  'unit', 'user', 'country', 'office', 'loan', 'chain']
+                  'unit', 'user', 'office', 'loan', 'chain']
 
     def __validate_data(self, data):
         if not all(property in data for property in self.PROPERTIES):
@@ -29,7 +29,6 @@ class MovementDailySquareManager(object):
             ip=data['ip'],
             unit=data['unit'],
             user=data['user'],
-            country=data['country'],
             office=data['office'],
         )
         return movement

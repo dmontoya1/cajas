@@ -2,7 +2,10 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from boxes.models.box_daily_square import BoxDailySquare
-from general_config.models.country import Country
+from movement.models.movement_don_juan import MovementDonJuan
+from movement.models.movement_don_juan_usd import MovementDonJuanUsd
+from movement.models.movement_office import MovementOffice
+from movement.models.movement_partner import MovementPartner
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 from .movement_mixin import MovementMixin
@@ -31,6 +34,36 @@ class MovementDailySquare(MovementMixin):
         blank=True, null=True,
         related_name='movements'
     )
+    movement_don_juan = models.ForeignKey(
+        MovementDonJuan,
+        verbose_name='Movimiento Don Juan Contrapartida',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
+    movement_don_juan_usd = models.ForeignKey(
+        MovementDonJuanUsd,
+        verbose_name='Movimiento Don Juan Dolares Contrapartida',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
+    movement_partner = models.ForeignKey(
+        MovementPartner,
+        verbose_name='Movimiento Socio Contrapartida',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
+    movement_office = models.ForeignKey(
+        MovementOffice,
+        verbose_name='Movimiento Oficina Contrapartida',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
+    movement_cd = models.ForeignKey(
+        "self",
+        verbose_name='Movimiento CD Contrapartida',
+        on_delete=models.CASCADE,
+        null=True, blank=True
+    )
     unit = models.ForeignKey(
         Unit,
         verbose_name='Unidad',
@@ -41,12 +74,6 @@ class MovementDailySquare(MovementMixin):
         User,
         verbose_name='Socio, empleado',
         related_name='related_movements',
-        on_delete=models.SET_NULL,
-        blank=True, null=True
-    )
-    country = models.ForeignKey(
-        Country,
-        verbose_name='País',
         on_delete=models.SET_NULL,
         blank=True, null=True
     )
@@ -79,6 +106,7 @@ class MovementDailySquare(MovementMixin):
     def __init__(self, *args, **kwargs):
         super(MovementDailySquare, self).__init__(*args, **kwargs)
         self.__movement_type = self.movement_type
+        self.__value = self.value
 
     def save(self, *args, **kwargs):
         if self.__movement_type != self.movement_type:
@@ -87,6 +115,15 @@ class MovementDailySquare(MovementMixin):
                 box.balance = box.balance + (int(self.value) * 2)
             else:
                 box.balance = box.balance - (int(self.value) * 2)
+            box.save()
+        if self.__value != self.value:
+            box = self.box_daily_square
+            if self.movement_type == 'IN':
+                box.balance -= int(self.value)
+                box.balance += int(self.value)
+            else:
+                box.balance += int(self.value)
+                box.balance -= int(self.value)
             box.save()
         super(MovementDailySquare, self).save(*args, **kwargs)
 

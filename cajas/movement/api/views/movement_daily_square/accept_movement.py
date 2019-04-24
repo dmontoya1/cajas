@@ -52,6 +52,7 @@ class AcceptMovement(APIView):
                     'ip': get_ip(request)
                 }
                 unit_movement = movement_partner_manager.create_simple(data)
+                movement.movement_partner = unit_movement
             elif relationship == Relationship.PERSON:
                 data = {
                     'box': movement.user.partner.get().box,
@@ -64,6 +65,7 @@ class AcceptMovement(APIView):
                     'ip': get_ip(request)
                 }
                 movement_person = movement_partner_manager.create_simple(data)
+                movement.movement_partner = movement_person
             elif relationship == Relationship.OFFICE:
                 data = {
                     'box': movement.office.box,
@@ -76,6 +78,7 @@ class AcceptMovement(APIView):
                     'ip': get_ip(request)
                 }
                 office_movement = movement_office_manager.create_movement(data)
+                movement.movement_office = office_movement
             elif relationship == Relationship.LOAN:
                 pass
             elif relationship == Relationship.CHAIN:

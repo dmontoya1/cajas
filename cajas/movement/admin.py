@@ -29,6 +29,7 @@ class MovementDailySquareInline(admin.TabularInline):
 
     model = MovementDailySquare
     extra = 0
+    exclude = ('movement_don_juan', 'movement_don_juan_usd', 'movement_partner', 'movement_office', 'movement_cd')
 
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},

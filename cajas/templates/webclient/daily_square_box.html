@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
-{% load office_dailysquare_box %}
+{% load office_dailysquare_box three_days %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -183,14 +183,14 @@
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>
-                        {% if not m.status and not m.review %}
-                          {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                          {% if m.date|three_last_days %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                data-target="#addMovement">Editar</a>
-                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
-                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                               data-target="#addMovement">Editar</a>
-                          {% endif %}
+                            {% endif %}
+                        {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                             data-target="#addMovement">Editar</a>
                         {% endif %}
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
@@ -203,7 +203,10 @@
                             </a>
                           {% endif %}
                         {% else %}
-                          {{ m.get_status_display }}
+                          <span class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
+                            {{ m.get_status_display }}
+                          </span>
+
                         {% endif %}
                       </td>
                     </tr>
@@ -618,11 +621,10 @@
     })
 
     $("#add-movement-btn").on("click", function () {
-      $('#addMovement').on('show.bs.modal', function (event) {
-        $("#method_modal").val("add")
-        $("#method_modal").data("id", "")
-        $('.modal-title').text("Añadir Movimiento")
-      })
+      $('.add-movement')[0].reset();
+      $("#method_modal").val("add")
+      $("#method_modal").data("id", "")
+      $('.modal-title').text("Añadir Movimiento")
     })
 
     $('.accept-mv').on('click', function () {
@@ -847,7 +849,7 @@
       }
       if ($("#method_modal").val() === "edit") {
         mvment_id = $("#method_modal").data("id")
-        axios.patch(`/api/movements/${mvment_id}/list-daily-square-movement/`, data_send)
+        axios.patch(`/api/movements/${mvment_id}/dq-detail/`, data_send)
           .then(function (response) {
             msg = response.data
             if (response.status === 204) {
@@ -980,13 +982,12 @@
     //Edit movement
     $('.edit-item').on('click', function () {
       var mov_pk = $(this).data("id")
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       $("#method_modal").val("edit")
       $("#method_modal").data("id", mov_pk)
       $('.modal-title').text("Editar Movimiento")
 
       //get movement data
-      axios.get(`/api/movements/${mov_pk}/list-daily-square-movement/`)
+      axios.get(`/api/movements/${mov_pk}/dq-detail/`)
         .then(function (response) {
           data = response.data
           $("#concept option").prop("selected", false);
@@ -998,6 +999,15 @@
           $("#movement_type").trigger("change")
           $("#value").val(data.value)
           $("#detail").val(data.detail)
+          if (data.unit){
+            $("#unit option").prop("selected", false);
+            $("#unit option[value='" + data.unit + "']").prop("selected", true);
+            $("#unit").trigger("change")
+          } else if (data.office){
+            $("#office option").prop("selected", false);
+            $("#office option[value='" + data.office + "']").prop("selected", true);
+            $("#office").trigger("change")
+          }
         })
         .catch(function (error) {
           // handle error
