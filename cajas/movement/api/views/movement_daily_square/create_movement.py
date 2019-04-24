@@ -41,7 +41,6 @@ class CreateDailySquareMovement(APIView):
         ip = get_ip(request)
         unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
         user = get_object_or_none(User, pk=request.POST.get('user', None))
-        country = get_object_or_none(Country, pk=request.POST.get('country', None))
         office = get_object_or_none(OfficeCountry, pk=request.POST.get('office', None))
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
@@ -57,7 +56,6 @@ class CreateDailySquareMovement(APIView):
             'ip': ip,
             'unit': unit,
             'user': user,
-            'country': country,
             'office': office,
             'loan': loan,
             'chain': chain,
@@ -65,7 +63,7 @@ class CreateDailySquareMovement(APIView):
         }
 
         if concept.name == 'Compra Dólares':
-            MovementDonJuanUsd.objects.create(
+            movement_djd = MovementDonJuanUsd.objects.create(
                 box_don_juan=get_object_or_404(BoxDonJuanUSD, office=office_),
                 concept=concept,
                 movement_type=request.POST['movement_type'],
@@ -79,7 +77,7 @@ class CreateDailySquareMovement(APIView):
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            MovementDonJuan.objects.create(
+            movement_dj = MovementDonJuan.objects.create(
                 box_don_juan=get_object_or_404(BoxDonJuan, office=office_),
                 concept=concept.counterpart,
                 movement_type=contrapart,
@@ -92,9 +90,12 @@ class CreateDailySquareMovement(APIView):
             data['value'] = request.POST['buy_value']
             data['movement_type'] = 'OUT'
             movement = daily_square_manager.create_movement(data)
+            movement.movement_don_juan = movement_dj
+            movement.movement_don_juan_usd = movement_djd
+            movement.save()
 
         elif concept.name == 'Venta Dólares':
-            MovementDonJuanUsd.objects.create(
+            movement_djd = MovementDonJuanUsd.objects.create(
                 box_don_juan=get_object_or_404(BoxDonJuanUSD, office=office_),
                 concept=concept,
                 movement_type=request.POST['movement_type'],
@@ -108,7 +109,7 @@ class CreateDailySquareMovement(APIView):
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            MovementDonJuan.objects.create(
+            movement_dj = MovementDonJuan.objects.create(
                 box_don_juan=get_object_or_404(BoxDonJuan, office=office_),
                 concept=concept.counterpart,
                 movement_type=contrapart,
@@ -121,18 +122,23 @@ class CreateDailySquareMovement(APIView):
             data['value'] = request.POST['sell_value']
             data['movement_type'] = 'IN'
             movement = daily_square_manager.create_movement(data)
+            movement.movement_don_juan = movement_dj
+            movement.movement_don_juan_usd = movement_djd
+            movement.save()
 
         elif concept.name == "Entrega de Efectivo a CD":
             dq_target = get_object_or_404(User, pk=request.POST['dq'])
             box_daily_square_target = BoxDailySquare.objects.get(user=dq_target, office=office_)
-            daily_square_manager.create_movement(data)
+            movement = daily_square_manager.create_movement(data)
             data['box'] = box_daily_square_target
             data['concept'] = concept.counterpart
             if movement_type == 'OUT':
                 data['movement_type'] = 'IN'
             else:
                 data['movement_type'] = 'OUT'
-            daily_square_manager.create_movement(data)
+            movement_cd = daily_square_manager.create_movement(data)
+            movement.movement_cd = movement_cd
+            movement.save()
         else:
             if user:
                 total_movements = daily_square_manager.get_user_value(data)

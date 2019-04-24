@@ -26,7 +26,7 @@ urlpatterns = [
     path("accept-daily-square-movement/", AcceptMovement.as_view(), name='accept_daily_square_movement'),
     path("denied-daily-square-movement/", DeniedMovement.as_view(), name='denied_daily_square_movement'),
     path("dispersion-movement/", DispersionMovement.as_view(), name='dispersion_movement'),
-    path("<int:pk>/list-daily-square-movement/", UpdateDailySquareMovement.as_view(), name='list_daily_square_movement'),
+    path("<int:pk>/dq-detail/", UpdateDailySquareMovement.as_view(), name='dq_detail'),
     path("movement-partner-create/", MovementPartnerCreate.as_view(), name='movement_partner_create'),
     path("movement-request-create/", MovementRequestCreate.as_view(), name='movement_request_create'),
     path("movement-withdraw-request-create/", MovementWithdrawRequestCreate.as_view(),
