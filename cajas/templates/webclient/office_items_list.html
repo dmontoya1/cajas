@@ -83,12 +83,14 @@
           Lista de inversiones
         </a>
       </li>
-      <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:closeout_boxes' office.slug %}">
-          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-          Cajas Liquidadas
-        </a>
-      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
@@ -172,7 +174,7 @@
                         <td>{{ i.name }}</td>
                         <td>{{ i.brand }}</td>
                         <td>$ {{ i.price|intcomma }}</td>
-                        <td>{{ i.description }}</td>
+                        <td>{{ i.description|default:"Sin descripcion" }}</td>
                         <td class="text-center">
                           {% if perms.office.change_officeitems %}
                             <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
@@ -218,7 +220,7 @@
                         <td>{{ unit.name }}</td>
                         <td>{{ unit.brand }}</td>
                         <td>${{ unit.price|intcomma }}</td>
-                        <td>{{ unit.description }}</td>
+                        <td>{{ unit.description|default:"Sin descripcion" }}</td>
                         <td class="text-center">
                           {% if perms.units.change_unititems %}
                             <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"

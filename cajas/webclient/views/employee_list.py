@@ -20,12 +20,14 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
         context = super(EmployeeList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        employees = Employee.objects.filter(office_country=office, user__is_active=True)
-        employees1 = Employee.objects.filter(office=office.office, user__is_active=True)
-        charges = Charge.objects.all().exclude(name="Presidente")
+
+        try:
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+                context['employees'] = Employee.objects.filter(office_country=office, user__is_active=True)
+                context['employees1'] = Employee.objects.filter(office=office.office, user__is_active=True)
+                context['charges'] = Charge.objects.all().exclude(name="Presidente")
+        except Exception as e:
+            context['employees'] = Employee.objects.filter(office_country=office, user=self.request.user)
 
         context['office'] = office
-        context['employees'] = employees
-        context['employees1'] = employees1
-        context['charges'] = charges
         return context

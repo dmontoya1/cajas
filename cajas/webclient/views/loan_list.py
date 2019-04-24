@@ -28,18 +28,19 @@ class LoanList(LoginRequiredMixin, TemplateView):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        loans = Loan.objects.filter(office=office)
-        partners = Partner.objects.filter(office=office)
-        employees = Employee.objects.filter(office_country=office, office=office.office)
-        now = datetime.now()
-        exchange = get_object_or_none(
-            Exchange,
-            currency=office.country.currency,
-            month__month=now.month,
-        )
+
+        try:
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+                context['loans'] = Loan.objects.filter(office=office)
+                context['partners'] = Partner.objects.filter(office=office)
+                context['employees'] = Employee.objects.filter(office_country=office, office=office.office)
+                now = datetime.now()
+                context['exchange'] = get_object_or_none(
+                    Exchange,
+                    currency=office.country.currency,
+                    month__month=now.month,
+                )
+        except Exception as e:
+            context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
         context['office'] = office
-        context['loans'] = loans
-        context['partners'] = partners
-        context['employees'] = employees
-        context['exchange'] = exchange
         return context
