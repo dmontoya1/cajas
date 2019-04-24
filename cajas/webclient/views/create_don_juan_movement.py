@@ -61,7 +61,7 @@ class CreateDonJuanMovement(View):
             if secretary:
                 email_manager.send_office_mail(request, secretary.user.email)
                 Notifications.objects.create(
-                    office=office, office_sender=destine_office,
+                    office=destine_office, office_sender=office,
                     concept=concept, detail=request.POST['detail'], value=request.POST['value']
                 )
 
