@@ -40,20 +40,28 @@ class UnitDetail(generics.RetrieveUpdateAPIView):
         if request.data["elemts"]:
             values = request.data["elemts"].split(",")
             for value in values:
-                option = request.data["form[form]["+value+"][options]"].split(",")
-                if option[1] == "delete":
-                    item = UnitItems.objects.filter(pk=option[0]).update(
-                        is_deleted=True,
-                        observations=request.data["form[form]["+value+"][reason]"]
-                    )
+                if "form[form]["+value+"][options]" in request.data:
+                    option = request.data["form[form]["+value+"][options]"].split(",")
+                    if option[1] == "delete":
+                        item = UnitItems.objects.filter(pk=option[0]).update(
+                            is_deleted=True,
+                            observations=request.data["form[form]["+value+"][reason]"]
+                        )
+                        UnitItems.objects.create(
+                            unit=unit,
+                            name=request.data["form[form]["+value+"][name]"],
+                            brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                            price=request.data["form[form]["+value+"][price]"]
+                        )
+                    if option[1] == "edit":
+                        item = UnitItems.objects.filter(pk=option[0]).update(
+                            name=request.data["form[form]["+value+"][name]"],
+                            brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                            price=request.data["form[form]["+value+"][price]"]
+                        )
+                else:
                     UnitItems.objects.create(
                         unit=unit,
-                        name=request.data["form[form]["+value+"][name]"],
-                        brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                        price=request.data["form[form]["+value+"][price]"]
-                    )
-                if option[1] == "edit":
-                    item = UnitItems.objects.filter(pk=option[0]).update(
                         name=request.data["form[form]["+value+"][name]"],
                         brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
                         price=request.data["form[form]["+value+"][price]"]

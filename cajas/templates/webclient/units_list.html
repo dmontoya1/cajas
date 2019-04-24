@@ -342,6 +342,7 @@
                   <div class="form-group col-md-6">
                       <label for="brand">Marca </label>
                       <select class="form-control brand_control" id="edit_inventory_brand" name="brand" style="width: 100%;" required>
+                        <option disabled value="" selected>Selecciona una marca</option>
                       </select>
                   </div>
                   <div class="form-group col-md-6">
@@ -598,6 +599,10 @@
         }
         var index_pk = 0
         items_lenght = data.related_items.length
+        if(items_lenght == 0){
+          $("#edit_option0").attr("disabled", true)
+          $("#delete_option0").attr("disabled", true)
+        }
         $(data.related_items).each( function(){
           item = $(this)[0]
           if( item.is_deleted == true){
@@ -620,6 +625,12 @@
             }
             $(`#edit_option${index_pk}`).prop('checked', true);
             index_pk = index_pk + 1;
+          }
+        })
+        $("#plus5_edit").on("click", function(){
+          if(items_lenght == 1){
+            $("#edit_option1").attr("disabled", true)
+            $("#delete_option1").attr("disabled", true)
           }
         })
       })
@@ -664,7 +675,9 @@
         })
       })
     })
-
+    $('#editUnit').on('hidden.bs.modal', function (e) {
+      location.reload()
+    })
     //delete items
     $('.decline-mv').on('click', function () {
       pk = $(this).data('id')

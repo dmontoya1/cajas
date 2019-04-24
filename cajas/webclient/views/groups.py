@@ -24,13 +24,16 @@ class Groups(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         employees = Employee.objects.filter(
             Q(related_group_supervisor=None),
-            charge__name="Supervisor"
+            charge__name="Supervisor",
+            office_country=office
         )
         admin = Group.objects.filter(
             Q(related_group=None),
+            admin__office=office.office
         )
         existing_admins = Group.objects.filter(
             ~Q(related_group=None),
+            admin__office=office.office
         )
         context['office'] = office
         context['admins'] = admin
