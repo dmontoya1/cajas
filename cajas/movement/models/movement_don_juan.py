@@ -17,21 +17,9 @@ class MovementDonJuan(MovementMixin):
     )
 
     def __str__(self):
-        return "Movimiento de la caja de {} de Don Juan".format(self.box_don_juan.office)
-
-    def __init__(self, *args, **kwargs):
-        super(MovementDonJuan, self).__init__(*args, **kwargs)
-        self.__movement_type = self.movement_type
-
-    def save(self, *args, **kwargs):
-        if self.__movement_type != self.movement_type:
-            box = self.box_don_juan
-            if self.movement_type == 'IN':
-                box.balance = box.balance + (int(self.value) * 2)
-            else:
-                box.balance = box.balance - (int(self.value) * 2)
-            box.save()
-        super(MovementDonJuan, self).save(*args, **kwargs)
+        if self.box_don_juan.office is not None:
+            return "Movimiento de la caja de {} de Don Juan".format(self.box_don_juan.office)
+        return "Movimiento de la caja de Don Juan"
 
     class Meta:
         verbose_name = 'Movimiento de Don Juan'
