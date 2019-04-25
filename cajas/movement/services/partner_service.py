@@ -283,3 +283,54 @@ class MovementPartnerManager(object):
         if total['value__sum'] is None:
             total['value__sum'] = 0
         return total
+
+    def __get_movement_by_pk(self, pk):
+        return MovementPartner.objects.filter(pk=pk)
+
+    def __get_current_concept(self, pk):
+        return Concept.objects.get(pk=pk)
+
+    def __is_movement_type_updated(self, movement, movement_type):
+        return movement.movement_type != movement_type
+
+    def __is_movement_value_updated(self, movement, value):
+        return movement.value != value
+
+    def __update_movement_type(self, data):
+        box = data['box']
+        if data['movement_type'] == 'IN':
+            box.balance += (int(data['movement'].value) * 2)
+        else:
+            box.balance -= (int(data['movement'].value) * 2)
+        box.save()
+
+    def __update_value(self, data):
+        box = data['box']
+        if data['movement_type'] == 'IN':
+            box.balance -= int(data['movement'].value)
+            box.balance += int(data['value'])
+        else:
+            box.balance += int(data['movement'].value)
+            box.balance -= int(data['value'])
+        box.save()
+
+    def update_partner_movement(self, data):
+        current_movement_office = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_office.first()
+        current_concept = self.__get_current_concept(data['concept'])
+        object_data = dict()
+        object_data['box_partner'] = current_movement.box_partner
+        object_data['concept'] = current_concept
+        object_data['value'] = data['value']
+        object_data['movement_type'] = data['movement_type']
+        object_data['detail'] = data['detail']
+        object_data['date'] = data['date']
+        data['movement'] = current_movement
+        data['box'] = current_movement.box_partner
+
+        if self.__is_movement_type_updated(current_movement, data['movement_type']):
+            self.__update_movement_type(data)
+        if self.__is_movement_value_updated(current_movement, data['value']):
+            self.__update_value(data)
+        current_movement_office.update(**object_data)
+
