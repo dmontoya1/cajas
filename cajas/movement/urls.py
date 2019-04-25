@@ -9,6 +9,7 @@ from .api.views.movement_daily_square.update_movement import UpdateDailySquareMo
 from .api.views.movement_don_juan.movement_don_juan_create import MovementDonJuanCreate
 from .api.views.movement_don_juan.movement_don_juan_update import MovementDonJuanUpdate
 from .api.views.movement_don_juan_usd.movement_create import MovementUSDCreate
+from .api.views.movement_don_juan_usd.movement_don_juan_usd_update import MovementDonJuanUSDUpdate
 from .api.views.movement_office.movement_detail import MovementOfficeDetail
 from .api.views.movement_office.movement_office_create import MovementOfficeCreate
 from .api.views.movement_partner.movement_partner_create import MovementPartnerCreate
@@ -34,6 +35,7 @@ urlpatterns = [
 
     # DonJuanUSD
     path("movement-usd-create/", MovementUSDCreate.as_view(), name='movement_usd_create'),
+    path("<int:pk>/movement-don-juan-usd-update/", MovementDonJuanUSDUpdate.as_view(), name='movement_donjuan_usd_update'),
 
     # Partner
     path("movement-partner-create/", MovementPartnerCreate.as_view(), name='movement_partner_create'),
