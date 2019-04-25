@@ -48,5 +48,5 @@ class StopManager(object):
                 concept=concept,
                 charge=self.user.employee.get().charge
             )
-        except Employee.DoesNotExist:
+        except:
             return None
