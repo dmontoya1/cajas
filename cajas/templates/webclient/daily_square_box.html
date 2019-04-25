@@ -189,10 +189,13 @@
                           {% if m.date|three_last_days %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                data-target="#addMovement">Editar</a>
-                            {% endif %}
+                          {% endif %}
                         {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                          <a href="#" class="delete-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
                         {% endif %}
                         {% if not m.review %}
                           {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
@@ -205,7 +208,8 @@
                             </a>
                           {% endif %}
                         {% else %}
-                          <span class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
+                          <span
+                            class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
                             {{ m.get_status_display }}
                           </span>
 
@@ -1002,11 +1006,11 @@
           $("#movement_type").trigger("change")
           $("#value").val(data.value)
           $("#detail").val(data.detail)
-          if (data.unit){
+          if (data.unit) {
             $("#unit option").prop("selected", false);
             $("#unit option[value='" + data.unit + "']").prop("selected", true);
             $("#unit").trigger("change")
-          } else if (data.office){
+          } else if (data.office) {
             $("#office option").prop("selected", false);
             $("#office option[value='" + data.office + "']").prop("selected", true);
             $("#office").trigger("change")
@@ -1018,11 +1022,57 @@
         })
     })
 
+    $('.delete-item').on('click', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento y los movimientos asociados (si los tiene). Esta accion no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/movements/${mov_pk}/dq-detail/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
+    })
+
     $('.datetimepicker_dailysquare').datetimepicker({
       format: 'Y-m-d',
       minDate: '-1970/01/01',
       maxDate: '0',
       timepicker: false,
     });
+
+
   </script>
 {% endblock %}
