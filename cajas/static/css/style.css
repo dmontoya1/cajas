@@ -2646,6 +2646,13 @@ button.add-movement, button.add-movement-button{
   padding: 7px 20px;
 }
 
+.delete-item {
+  background-color: #f3034b;
+  color: #fff;
+  border-radius: 10px;
+  padding: 7px 20px;
+}
+
 .dispersion-mv {
   background-color: var(--green-box);
   color: #fff;

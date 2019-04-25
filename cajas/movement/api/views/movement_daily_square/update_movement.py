@@ -13,9 +13,10 @@ from ....services.daily_square_service import MovementDailySquareManager
 from ...serializers.movement_daily_square_serializer import MovementDailySquareSerializer
 
 logger = logging.getLogger(__name__)
+daily_square_manager = MovementDailySquareManager()
 
 
-class UpdateDailySquareMovement(generics.RetrieveUpdateAPIView):
+class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
     queryset = MovementDailySquare.objects.all()
     serializer_class = MovementDailySquareSerializer
     authentication_classes = (CsrfExemptSessionAuthentication,)
@@ -26,7 +27,7 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateAPIView):
         data['ip'] = get_ip(request)
 
         try:
-            daily_square_manager = MovementDailySquareManager()
+
             daily_square_manager.update_daily_square_movement(data)
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
@@ -39,3 +40,13 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateAPIView):
                 'Se ha alcanzado el tope para este usuario para este concepto. No se ha creado el movimiento.',
                 status=status.HTTP_204_NO_CONTENT
             )
+
+    def delete(self, request, *args, **kwargs):
+        data = request.POST.copy()
+        data['pk'] = self.kwargs['pk']
+
+        daily_square_manager.delete_daily_square_movement(data)
+        return Response(
+            'Se ha actualizado el movimiento exitosamente',
+            status=status.HTTP_201_CREATED
+        )

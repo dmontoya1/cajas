@@ -226,6 +226,7 @@
             {% csrf_token %}
             <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="box_office" value="{{ office.box.pk }}">
+            <input type="hidden" name="responsible" value="{{ request.user.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto</label>
@@ -462,13 +463,13 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        axios.post('{% url 'api:movements:movement-create' %}', data_send)
+        axios.post('{% url 'api:movements:movement_create' %}', data_send)
           .then(function (response) {
-            msg = response.data
             Swal.fire({
               type: 'success',
               title: 'Exitoso',
-              text: msg,
+              text: 'Se ha creado el movimiento exitosamente',
+              allowOutsideClick: false
             }).then((result) => {
               if (result.value) {
                 location.reload()
