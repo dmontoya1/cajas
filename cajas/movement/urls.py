@@ -10,6 +10,7 @@ from .api.views.movement_don_juan_usd.movement_create import MovementUSDCreate
 from .api.views.movement_office.movement_detail import MovementOfficeDetail
 from .api.views.movement_office.movement_office_create import MovementOfficeCreate
 from .api.views.movement_partner.movement_partner_create import MovementPartnerCreate
+from .api.views.movement_partner.movement_partner_update import MovementPartnerDetail
 from .api.views.movement_request.movement_request_create import MovementRequestCreate
 from .api.views.movement_request.movement_withdraw_request_create import MovementWithdrawRequestCreate
 from .api.views.movement_request.accept_movement import AcceptRequestMovement
@@ -18,6 +19,7 @@ from .api.views.movement_request.decline_movement import DeclineRequestMovement
 from .api.views.movement_request.denied_withdraw import DeclineWithdrawMovement
 from .api.views.movement_request.denied_between_office import DeclineBetweenOfficeMovement
 from .api.views.movement_request.accept_between_office import AcceptBetweenOfficeMovement
+
 app_name = 'movements'
 urlpatterns = [
     path("create-mv-office/", MovementOfficeCreate.as_view(), name='movement-create'),
@@ -28,6 +30,7 @@ urlpatterns = [
     path("dispersion-movement/", DispersionMovement.as_view(), name='dispersion_movement'),
     path("<int:pk>/dq-detail/", UpdateDailySquareMovement.as_view(), name='dq_detail'),
     path("movement-partner-create/", MovementPartnerCreate.as_view(), name='movement_partner_create'),
+    path("<int:pk>/movement-partner-update/", MovementPartnerDetail.as_view(), name='movement_partner_detail'),
     path("movement-request-create/", MovementRequestCreate.as_view(), name='movement_request_create'),
     path("movement-withdraw-request-create/", MovementWithdrawRequestCreate.as_view(),
          name='movement_withdraw_request_create'

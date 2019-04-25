@@ -1,5 +1,6 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
@@ -26,8 +27,11 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['units'] = Unit.objects.filter(partner__office=office)
-                context['supervisor'] = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
-                context['collectors'] = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
+                context['employees'] = Employee.objects.filter(
+                    Q(office_country=office) |
+                    Q(office=office.office) &
+                    Q(user__is_active=True)
+                )
                 context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
                 context['categories'] = Category.objects.all()
         except Exception as e:

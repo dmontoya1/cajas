@@ -147,7 +147,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
+  <div class="row">
     <div class="col-lg-12">
       <div class="card">
         <div class="row">
@@ -193,13 +193,13 @@
           </div>
         </div>
         {% if perms.units.add_unit %}
-            <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
+          <a id="plus_button" href="" class="float" data-toggle="modal" data-target="#addUnit">
             <i class="fa fa-plus my-float"></i>
-            </a>
-            <div class="label-container">
+          </a>
+          <div class="label-container">
             <div class="label-text">Añadir unidad</div>
             <i class="fa fa-play label-arrow"></i>
-            </div>
+          </div>
         {% endif %}
       </div>
     </div>
@@ -224,36 +224,36 @@
                      placeholder="Nombres" required>
             </div>
             <div class="form-group col-md-6">
-                <label for="price_detail">Precio la unidad</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                  </div>
-                  <input readonly type="text" class="form-control" id="price_detail" name="price_detail">
+              <label for="price_detail">Precio la unidad</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">$</div>
                 </div>
+                <input readonly type="text" class="form-control" id="price_detail" name="price_detail">
               </div>
+            </div>
           </div>
           <div class="form-row">
-              <div class="form-group col-md-12">
-                  <h5 class="text-center">Inventario de unidad</h5>
+            <div class="form-group col-md-12">
+              <h5 class="text-center">Inventario de unidad</h5>
+            </div>
+            <div class="form-group col-md-12">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Categoría</th>
+                    <th scope="col">Marca</th>
+                    <th scope="col">Precio</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody id="related_items_table">
+                  </tbody>
+                </table>
               </div>
-              <div class="form-group col-md-12">
-                  <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                          <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Categoría</th>
-                            <th scope="col">Marca</th>
-                            <th scope="col">Precio</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody id="related_items_table">
-                        </tbody>
-                    </table>
-                  </div>
-              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -263,59 +263,61 @@
   <!-- Modal Edit -->
   <div class="modal fade" id="editUnit" role="dialog" aria-labelledby="editUnitTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
+      <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar unidad</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar unidad</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-            </button>
+          </button>
         </div>
         <div class="modal-body">
-            <form method="POST" class="edit_unit_form">
+          <form method="POST" class="edit_unit_form">
             {% csrf_token %}
             <input type="hidden" id="unitpk" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
-                <div class="form-group col-md-12">
-                    <label for="concept">Nombre</label>
-                    <input type="text" class="form-control" id="edit_name" name="name" placeholder="Nombre de la unidad"
-                            required>
-                </div>
+              <div class="form-group col-md-12">
+                <label for="concept">Nombre</label>
+                <input type="text" class="form-control" id="edit_name" name="name" placeholder="Nombre de la unidad"
+                       required>
+              </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="partner">Socio</label>
-                    <input readonly class="form-control" type="text"  id="edit_partner" name="partner">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="collector">Cobrador</label>
-                    <select class="form-control" id="edit_collector" name="collector" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona un cobrador</option>
-                        {% for c in collectors %}
-                          <option value="{{c.user.pk}}">{{ c }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
+              <div class="form-group col-md-6">
+                <label for="partner">Socio</label>
+                <input readonly class="form-control" type="text" id="edit_partner" name="partner">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="collector">Cobrador</label>
+                <select class="form-control" id="edit_collector" name="collector" style="width: 100%; height: 20px;"
+                        required>
+                  <option disabled value="" selected>Selecciona un cobrador</option>
+                  {% for c in collectors %}
+                    <option value="{{ c.user.pk }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="edit_supervisor">Supervisor</label>
-                    <select class="form-control" id="edit_supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
-                      <option disabled value="" selected>Selecciona un supervisor</option>
-                      {% for s in supervisor %}
-                        <option value="{{ s.user.pk }}">{{ s }}</option>
-                      {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="price">Precio</label>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">$</div>
-                    </div>
-                    <input readonly type="text" class="form-control" id="total_price" name="price" required>
+              <div class="form-group col-md-6">
+                <label for="edit_supervisor">Supervisor</label>
+                <select class="form-control" id="edit_supervisor" name="supervisor" style="width: 100%; height: 20px;"
+                        required>
+                  <option disabled value="" selected>Selecciona un supervisor</option>
+                  {% for s in supervisor %}
+                    <option value="{{ s.user.pk }}">{{ s }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="price">Precio</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">$</div>
                   </div>
+                  <input readonly type="text" class="form-control" id="total_price" name="price" required>
                 </div>
+              </div>
             </div>
             <hr>
             <h5 class="text-center">Inventario de unidad</h5>
@@ -324,14 +326,16 @@
             <div class="dynamic_controller" id="unit_inventory_edit">
               <div class="form-row">
                 <div class="form-group col-md-6">
-                      <label for="inventory_name">Nombre</label>
-                      <input type="text" class="form-control" id="edit_inventory_name" name="name" placeholder="Nombre del item"
-                              required>
+                  <label for="inventory_name">Nombre</label>
+                  <input type="text" class="form-control" id="edit_inventory_name" name="name"
+                         placeholder="Nombre del item"
+                         required>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="category">Categoría </label>
                   <div>
-                    <select class="form-control category_edit_control" id="edit_inventory_category" name="category" style="width: 100%;" required>
+                    <select class="form-control category_edit_control" id="edit_inventory_category" name="category"
+                            style="width: 100%;" required>
                       <option disabled value="" selected>Selecciona una categoría</option>
                       {% for category in categories %}
                         <option value="{{ category.pk }}">{{ category }}</option>
@@ -341,47 +345,53 @@
                 </div>
               </div>
               <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="brand">Marca </label>
-                      <select class="form-control brand_control" id="edit_inventory_brand" name="brand" style="width: 100%;" required>
-                      </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="price">Precio</label>
-                    <input type="number" class="form-control" id="edit_inventory_price" name="price" placeholder="Precio del item"
-                            required>
-                  </div>
+                <div class="form-group col-md-6">
+                  <label for="brand">Marca </label>
+                  <select class="form-control brand_control" id="edit_inventory_brand" name="brand" style="width: 100%;"
+                          required>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="price">Precio</label>
+                  <input type="number" class="form-control" id="edit_inventory_price" name="price"
+                         placeholder="Precio del item"
+                         required>
+                </div>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input edit_option_control" type="radio" name="options" id="edit_option" value="">
+                <input class="form-check-input edit_option_control" type="radio" name="options" id="edit_option"
+                       value="">
                 <label class="form-check-label" for="edit_option">
                   Editar
                 </label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input delete_option_control" type="radio" name="options" id="delete_option" value="">
+                <input class="form-check-input delete_option_control" type="radio" name="options" id="delete_option"
+                       value="">
                 <label class="form-check-label" for="delete_option">
                   Reemplazar
                 </label>
               </div>
               <div class="form-group">
-                  <textarea style="resize: none;" placeholder="Motivo de eliminación" class="form-control d-none elimination_control" id="elimination_reason" name="reason" rows="3"></textarea>
+                <textarea style="resize: none;" placeholder="Motivo de eliminación"
+                          class="form-control d-none elimination_control" id="elimination_reason" name="reason"
+                          rows="3"></textarea>
               </div>
               <div class="form-row justify-content-center">
-                  <div class="col-md-3 pt-1 text-center">
-                      <a href="#" class="btn btn-danger d-none" id="minus5_edit">Eliminar</a>
-                  </div>
-                  <div class="col-md-3 pt-1 text-center">
-                      <a href="#" class="btn btn-primary d-none" id="plus5_edit">Agregar Item</a>
-                  </div>
+                <div class="col-md-3 pt-1 text-center">
+                  <a href="#" class="btn btn-danger d-none" id="minus5_edit">Eliminar</a>
+                </div>
+                <div class="col-md-3 pt-1 text-center">
+                  <a href="#" class="btn btn-primary d-none" id="plus5_edit">Agregar Item</a>
+                </div>
               </div>
               <br>
             </div>
             <!-- end replication -->
             <button type="submit" class="btn btn-submit">Editar</button>
-            </form>
+          </form>
         </div>
-        </div>
+      </div>
     </div>
   </div>
 
@@ -390,10 +400,10 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title text-center" id="exampleModalLongTitle">Crear Unidad</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Crear Unidad</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-            </button>
+          </button>
         </div>
         <div class="modal-body">
           <form method="POST" class="create_unit_form">
@@ -401,87 +411,88 @@
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="scape">
               <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="concept">Nombre</label>
-                      <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
-                              required>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="partner">Socio</label>
-                      <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona un socio</option>
-                        {% for p in partners %}
-                          <option value="{{p.pk}}">{{ p }}</option>
-                        {% endfor %}
-                      </select>
-                  </div>
+                <div class="form-group col-md-6">
+                  <label for="concept">Nombre</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Nombre de la unidad"
+                         required>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="partner">Socio</label>
+                  <select class="form-control" id="partner" name="partner" style="width: 100%; height: 20px;" required>
+                    <option disabled value="" selected>Selecciona un socio</option>
+                    {% for p in partners %}
+                      <option value="{{ p.pk }}">{{ p }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
               <div class="form-row">
-                  <div class="form-group col-md-6">
-                      <label for="collector">Cobrador</label>
-                        <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;" required>
-                          <option disabled value="" selected>Selecciona un cobrador</option>
-                          {% for c in collectors %}
-                            <option value="{{c.user.pk}}">{{ c }}</option>
-                          {% endfor %}
-                        </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="edit_supervisor">Supervisor</label>
-                      <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;" required>
-                        <option disabled value="" selected>Selecciona un supervisor</option>
-                        {% for s in supervisor %}
-                          <option value="{{s.user.pk}}">{{ s }}</option>
-                        {% endfor %}
-                      </select>
-                  </div>
+                <div class="form-group col-md-6">
+                  <label for="collector">Cobrador</label>
+                  <select class="form-control" id="collector" name="collector" style="width: 100%; height: 20px;">
+                    <option disabled value="" selected>Selecciona un cobrador</option>
+                    {% for c in employees %}
+                      <option value="{{ c.user.pk }}">{{ c }} ({{ c.charge }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="edit_supervisor">Supervisor</label>
+                  <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;">
+                    <option disabled value="" selected>Selecciona un supervisor</option>
+                    {% for s in employees %}
+                      <option value="{{ s.user.pk }}">{{ s }} ({{ s.charge }})</option>
+                    {% endfor %}
+                  </select>
+                </div>
               </div>
             </div>
             <hr>
             <h5 class="text-center">Inventario de unidad</h5>
             <br>
             <!--Replication-->
-              <div class="dynamic_controller" id="dynamic_form">
-                <div class="form-row">
-                  <div class="form-group col-md-6">
-                        <label for="inventory_name">Nombre</label>
-                        <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
-                                required>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="category">Categoría </label>
-                    <div>
-                      <select class="form-control category_control" id="category" name="category" style="width: 100%;" required>
-                        <option disabled value="" selected>Selecciona una categoría</option>
-                        {% for category in categories %}
-                          <option value="{{ category.pk }}">{{ category }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
-                  </div>
+            <div class="dynamic_controller" id="dynamic_form">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inventory_name">Nombre</label>
+                  <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
+                         required>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="brand">Marca </label>
-                        <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
-                          <option disabled value="" selected>Selecciona una categoría</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="price">Precio</label>
-                      <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                              required>
-                    </div>
-                </div>
-                <div class="form-row justify-content-center">
-                    <div class="col-md-3 pt-1 text-center">
-                        <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
-                    </div>
-                    <div class="col-md-3 pt-1 text-center">
-                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>
-                    </div>
+                <div class="form-group col-md-6">
+                  <label for="category">Categoría </label>
+                  <div>
+                    <select class="form-control category_control" id="category" name="category" style="width: 100%;"
+                            required>
+                      <option disabled value="" selected>Selecciona una categoría</option>
+                      {% for category in categories %}
+                        <option value="{{ category.pk }}">{{ category }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
                 </div>
               </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="brand">Marca </label>
+                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
+                    <option disabled value="" selected>Selecciona una categoría</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="price">Precio</label>
+                  <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
+                         required>
+                </div>
+              </div>
+              <div class="form-row justify-content-center">
+                <div class="col-md-3 pt-1 text-center">
+                  <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
+                </div>
+                <div class="col-md-3 pt-1 text-center">
+                  <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>
+                </div>
+              </div>
+            </div>
             <!--end Replication-->
             <button type="submit" class="btn btn-submit">Crear</button>
           </form>
@@ -499,18 +510,18 @@
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        var modal = $(this)
-        axios.get(`/api/units/${unit_pk}/detail`)
-          .then(function (response) {
-            data = response.data
-            $("#detail_first_name").val(data.name)
-            $("#price_detail").val(data.unit_price)
-            $("#exampleModalLongTitle").text("Unidad de " + data.partner.user.first_name + " " + data.partner.user.last_name)
-            //fill table with related items
-            $("#related_items_table").empty()
-            $(data.related_items).each( function(){
-              if( $(this)[0].is_deleted == false ){
-                $("#related_items_table").append(
+      var modal = $(this)
+      axios.get(`/api/units/${unit_pk}/detail`)
+        .then(function (response) {
+          data = response.data
+          $("#detail_first_name").val(data.name)
+          $("#price_detail").val(data.unit_price)
+          $("#exampleModalLongTitle").text("Unidad de " + data.partner.user.first_name + " " + data.partner.user.last_name)
+          //fill table with related items
+          $("#related_items_table").empty()
+          $(data.related_items).each(function () {
+            if ($(this)[0].is_deleted == false) {
+              $("#related_items_table").append(
                 `\
                   <tr>\
                     <td>${$(this)[0].name}</td>\
@@ -520,9 +531,9 @@
                     <td></td>
                   </tr>\
                 `
-                );
-              } else {
-                $("#related_items_table").append(
+              );
+            } else {
+              $("#related_items_table").append(
                 `\
                   <tr style="color: red;">\
                     <td>${$(this)[0].name}</td>\
@@ -535,42 +546,42 @@
                     </td>\
                   </tr>\
                 `
-                );
-                $(`#inventory-${$(this)[0].id}`).on("click", function(){
-                  var detail_pk = $(this).data("id")
-                  message = $(`#detail_reason${detail_pk}`).val()
-                  Swal.fire({
-                    title: "Motivo de eliminación",
-                    text: message,
-                  })
+              );
+              $(`#inventory-${$(this)[0].id}`).on("click", function () {
+                var detail_pk = $(this).data("id")
+                message = $(`#detail_reason${detail_pk}`).val()
+                Swal.fire({
+                  title: "Motivo de eliminación",
+                  text: message,
                 })
-              }
-            })
+              })
+            }
           })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
     })
 
 
-    var fill_brands = function(cat_id, index_pk, brand_pk){
+    var fill_brands = function (cat_id, index_pk, brand_pk) {
       axios.get(`/api/inventory/${cat_id}/brand`)
-      .then(function (response) {
-        data_brand = response.data
-        $(`#edit_inventory_brand${index_pk}`).empty()
-        $.each(data_brand, function (k, v) {
-          $(`#edit_inventory_brand${index_pk}`).append(
-            `<option value=${v.id}>${v.name}</option>`
-          )
+        .then(function (response) {
+          data_brand = response.data
+          $(`#edit_inventory_brand${index_pk}`).empty()
+          $.each(data_brand, function (k, v) {
+            $(`#edit_inventory_brand${index_pk}`).append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $(`#edit_inventory_brand${index_pk} option`).prop("selected", false);
+          $(`#edit_inventory_brand${index_pk} option[value=${brand_pk}]`).prop("selected", true);
+          $(`#edit_inventory_brand${index_pk}`).trigger("change")
         })
-        $(`#edit_inventory_brand${index_pk} option`).prop("selected", false);
-        $(`#edit_inventory_brand${index_pk} option[value=${brand_pk}]`).prop("selected", true);
-        $(`#edit_inventory_brand${index_pk}`).trigger("change")
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
+        .catch(function (error) {
+          console.log(error);
+        })
     }
 
     //edit units script
@@ -581,90 +592,90 @@
       $("#unitpk").val(unit_pk)
       //get unit data and fill inputs with it
       axios.get(`/api/units/${unit_pk}/detail`)
-      .then(function (response) {
-        data = response.data
-        $("#edit_name").val(data.name)
-        $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
-        $('#total_price').val(data.unit_price)
-        
-        $("#edit_collector option").prop("selected", false);
-        $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
-        $("#edit_collector").trigger("change")
+        .then(function (response) {
+          data = response.data
+          $("#edit_name").val(data.name)
+          $("#edit_partner").val(data.partner.user.first_name + " " + data.partner.user.last_name)
+          $('#total_price').val(data.unit_price)
 
-        $("#edit_supervisor option").prop("selected", false);
-        $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
-        $("#edit_supervisor").trigger("change")
+          $("#edit_collector option").prop("selected", false);
+          $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
+          $("#edit_collector").trigger("change")
 
-        if(data.related_items.length < 2){
-          $("#plus5_edit").removeClass("d-none")
-        }
-        var index_pk = 0
-        items_lenght = data.related_items.length
-        $(data.related_items).each( function(){
-          item = $(this)[0]
-          if( item.is_deleted == true){
-            items_lenght = items_lenght - 1;
-          } else {
-            $(`#edit_inventory_name${index_pk}`).val(item.name)
-            $(`#edit_inventory_price${index_pk}`).val(item.price)
+          $("#edit_supervisor option").prop("selected", false);
+          $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
+          $("#edit_supervisor").trigger("change")
 
-            $(`#edit_inventory_category${index_pk} option`).prop("selected", false);
-            $(`#edit_inventory_category${index_pk} option[value=${item.brand.category.id}]`).prop("selected", true);
-            $(`#edit_inventory_category${index_pk}`).trigger("change")
-
-            $(`#delete_option${index_pk}`).val(item.id+","+"delete")
-            $(`#edit_option${index_pk}`).val(item.id+","+"edit")
-
-            fill_brands(item.brand.category.id, index_pk, item.brand.id)
-
-            if( items_lenght != (index_pk + 1) ){
-              $("#plus5_edit").trigger("click")
-            }
-            $(`#edit_option${index_pk}`).prop('checked', true);
-            index_pk = index_pk + 1;
+          if (data.related_items.length < 2) {
+            $("#plus5_edit").removeClass("d-none")
           }
+          var index_pk = 0
+          items_lenght = data.related_items.length
+          $(data.related_items).each(function () {
+            item = $(this)[0]
+            if (item.is_deleted == true) {
+              items_lenght = items_lenght - 1;
+            } else {
+              $(`#edit_inventory_name${index_pk}`).val(item.name)
+              $(`#edit_inventory_price${index_pk}`).val(item.price)
+
+              $(`#edit_inventory_category${index_pk} option`).prop("selected", false);
+              $(`#edit_inventory_category${index_pk} option[value=${item.brand.category.id}]`).prop("selected", true);
+              $(`#edit_inventory_category${index_pk}`).trigger("change")
+
+              $(`#delete_option${index_pk}`).val(item.id + "," + "delete")
+              $(`#edit_option${index_pk}`).val(item.id + "," + "edit")
+
+              fill_brands(item.brand.category.id, index_pk, item.brand.id)
+
+              if (items_lenght != (index_pk + 1)) {
+                $("#plus5_edit").trigger("click")
+              }
+              $(`#edit_option${index_pk}`).prop('checked', true);
+              index_pk = index_pk + 1;
+            }
+          })
         })
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
+        .catch(function (error) {
+          console.log(error);
+        })
     })
 
     //and then update unit
-    $('.edit_unit_form').on('submit', function(e){
+    $('.edit_unit_form').on('submit', function (e) {
       e.preventDefault()
       var elemts = []
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
-      $('.edit_unit_form .dynamic_controller *').filter('.category_edit_control').each(function(){
-          id_form = $(this).attr("id")
-          id_form = id_form[id_form.length - 1]
-          elemts.push(id_form)
+      $('.edit_unit_form .dynamic_controller *').filter('.category_edit_control').each(function () {
+        id_form = $(this).attr("id")
+        id_form = id_form[id_form.length - 1]
+        elemts.push(id_form)
       });
-      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
+      $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
       data = $(this).serialize()
       console.log(data)
       axios.patch(`/api/units/${$("#unitpk").val()}/detail`, data)
-      .then(function (response) {
-        data = response.data
-        Swal.fire({
-          type: 'success',
-          title: 'Exitoso',
-          text: data,
-        }).then(function () {
-          location.reload()
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
+          })
         })
-      })
-      .catch(function (error) {
-        // handle error
-        Swal.fire({
-          type: 'error',
-          title: 'Error',
-          text: error,
-        }).then(function () {
-          location.reload()
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
         })
-      })
     })
 
     //delete items
@@ -711,13 +722,13 @@
       e.preventDefault()
       var elemts = []
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function(){
-          id_form = $(this).attr("id")
-          id_form = id_form[id_form.length - 1]
-          elemts.push(id_form)
+      $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function () {
+        id_form = $(this).attr("id")
+        id_form = id_form[id_form.length - 1]
+        elemts.push(id_form)
       });
-      $(this).append('<input type="hidden" name="elemts" value="'+elemts+'" >')
-      data = $(this).serialize() 
+      $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
+      data = $(this).serialize()
       axios.post("{% url 'api:units:unit_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -740,76 +751,76 @@
           })
         })
     })
-    
+
     //dynamic form fill select brand input depending category
-    $("#plus_button").on("click", function(){
-      $(document).on('change','.category_control',function(){
+    $("#plus_button").on("click", function () {
+      $(document).on('change', '.category_control', function () {
         //fill brands depending $(this) select
-        if( $(this).hasClass("category_control")){
+        if ($(this).hasClass("category_control")) {
           var select_category_id = $(this).attr('id');
           axios.get(`/api/inventory/${$(this).val()}/brand`)
-          .then(function (response) {
-            data = response.data
-            $("#brand" + select_category_id[select_category_id.length - 1]).empty()
-            $.each(data, function (k, v) {
-              $("#brand" + select_category_id[select_category_id.length - 1]).append(
-                `<option value=${v.id}>${v.name}</option>`
+            .then(function (response) {
+              data = response.data
+              $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+              $.each(data, function (k, v) {
+                $("#brand" + select_category_id[select_category_id.length - 1]).append(
+                  `<option value=${v.id}>${v.name}</option>`
+                )
+              })
+              $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+                '<option value="" selected disabled>Selecciona una marca</option>'
               )
             })
-            $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
-              '<option value="" selected disabled>Selecciona una marca</option>'
-            )
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
         }
       });
     })
 
     // dynamic form fill select brand input depending category into edit modal
-    $(".edit-item").on("click", function(){
-      $(document).on('change','.category_edit_control',function(){
+    $(".edit-item").on("click", function () {
+      $(document).on('change', '.category_edit_control', function () {
         //fill brands depending $(this) select
-        if( $(this).hasClass("category_edit_control")){
+        if ($(this).hasClass("category_edit_control")) {
           var select_category_id = $(this).attr('id');
           axios.get(`/api/inventory/${$(this).val()}/brand`)
-          .then(function (response) {
-            data = response.data
-            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).empty()
-            $.each(data, function (k, v) {
-              $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).append(
-                `<option value=${v.id}>${v.name}</option>`
+            .then(function (response) {
+              data = response.data
+              $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).empty()
+              $.each(data, function (k, v) {
+                $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).append(
+                  `<option value=${v.id}>${v.name}</option>`
+                )
+              })
+              $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).prepend(
+                '<option value="" selected disabled>Selecciona una marca</option>'
               )
             })
-            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).prepend(
-              '<option value="" selected disabled>Selecciona una marca</option>'
-            )
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
         }
       });
     })
 
-    $(".edit-item").on("click", function(){
-      $(document).on('change','.delete_option_control',function(){
+    $(".edit-item").on("click", function () {
+      $(document).on('change', '.delete_option_control', function () {
         elem_delete = $(this).attr('id')
-        if( $(this).prop('checked') ){
+        if ($(this).prop('checked')) {
           id_delete = elem_delete[elem_delete.length - 1]
-          $("#elimination_reason"+id_delete).removeClass("d-none");
-          $("#elimination_reason"+id_delete).prop("required", true);
+          $("#elimination_reason" + id_delete).removeClass("d-none");
+          $("#elimination_reason" + id_delete).prop("required", true);
         }
       });
-      $(document).on('change','.edit_option_control',function(){
+      $(document).on('change', '.edit_option_control', function () {
         elem_edit = $(this).attr('id')
-        if( $(this).prop('checked') ){
+        if ($(this).prop('checked')) {
           id_edit = elem_edit[elem_edit.length - 1]
-          $("#elimination_reason"+id_edit).prop("required", false);
-          $("#elimination_reason"+id_edit).addClass("d-none")
+          $("#elimination_reason" + id_edit).prop("required", false);
+          $("#elimination_reason" + id_edit).addClass("d-none")
         }
       });
     })
@@ -892,7 +903,7 @@
           language: "es"
         });
       });
-      
+
     }) //end document ready
 
   </script>

@@ -288,7 +288,7 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="salary_type">Tipo de Salario</label>
-                <select class="form-control" id="salary_type" name="salary_type" required>
+                <select class="form-control salary_type" id="salary_type" name="salary_type" required>
                   <option selected disabled value="">Selecciona el tipo de salario</option>
                   <option value="FX">Salario Fijo</option>
                   <option value="PE">Porcentaje de comisión</option>
@@ -436,13 +436,13 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="email">Correo Electronico</label>
-                <input type="emaiil" class="form-control" id="edit_email" name="email" placeholder="Email"
+                <label for="edit_email">Correo Electronico</label>
+                <input type="email" class="form-control" id="edit_email" name="email" placeholder="Email"
                        required>
               </div>
               <div class="form-group col-md-6">
-                <label for="charge">Cargo</label>
-                <select class="form-control" id="charge" name="charge" style="width: 100%; height: 20px;" required>
+                <label for="edit_charge">Cargo</label>
+                <select class="form-control" id="edit_charge" name="charge" style="width: 100%; height: 20px;" required>
                   <option selected disabled value="">Selecciona el cargo</option>
                   {% for c in charges %}
                     <option value="{{ c.pk }}">{{ c }}</option>
@@ -453,13 +453,16 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="salary_type">Tipo de sueldo</label><br>
-                <select class="form-control" id="edit_salary_type" name="salary_type" style="width: 100%; height: 20px;"
+                <label for="edit_salary_type">Tipo de sueldo</label><br>
+                <select class="form-control salary_type" id="edit_salary_type" name="salary_type" style="width: 100%; height: 20px;"
                         required>
+                  <option selected disabled value="">Selecciona el tipo de salario</option>
+                  <option value="FX">Salario Fijo</option>
+                  <option value="PE">Porcentaje de comisión</option>
                 </select>
               </div>
               <div class="form-group col-md-6">
-                <label for="initial_value">Sueldo</label>
+                <label for="edit_salary">Sueldo</label>
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <div class="input-group-text salary-type-icon">$</div>
@@ -541,7 +544,7 @@
     })
 
     //changes icon depending salary type
-    $("#salary_type").on("change", function () {
+    $(".salary_type").on("change", function () {
       if ($(this).find(":selected").val() == "PE") {
         $("#type_icon").text("%")
       } else {
