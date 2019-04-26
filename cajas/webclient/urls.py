@@ -67,7 +67,7 @@ urlpatterns = [
     path("office/<slug:slug>/closeout-boxes/", CloseoutBoxesList.as_view(), name='closeout_boxes'),
 
     # Employees
-    path("employee/<slug:slug>/employee-list/", EmployeeList.as_view(), name='employee-list'),
+    path("employee/<slug:slug>/employee_list/", EmployeeList.as_view(), name='employee_list'),
 
     # Daily Square
     path("office/<slug:slug>/daily-square/", DailySquareList.as_view(), name='daily_square_list'),

@@ -35,15 +35,15 @@
 
 <body>
 {% block left-panel %}
-<!-- Left Panel -->
-<aside id="left-panel" class="left-panel">
-  <nav class="navbar navbar-expand-sm navbar-default">
-    <div id="main-menu" class="main-menu collapse navbar-collapse">
-      {% block navbar %}
-      {% endblock %}
-    </div><!-- /.navbar-collapse -->
-  </nav>
-</aside>
+  <!-- Left Panel -->
+  <aside id="left-panel" class="left-panel">
+    <nav class="navbar navbar-expand-sm navbar-default">
+      <div id="main-menu" class="main-menu collapse navbar-collapse">
+        {% block navbar %}
+        {% endblock %}
+      </div><!-- /.navbar-collapse -->
+    </nav>
+  </aside>
 {% endblock %}
 <!-- /#left-panel -->
 <!-- Right Panel -->
@@ -62,22 +62,22 @@
       </div>
       <div class="top-right">
         <div class="header-menu">
-          {% if request.session.office %}
+          {% if request.session.office and request.user.is_super_user or request.user.is_secretary %}
             <a href="{% url 'webclient:arc_request' %} " type="button" class="arqueo">Solicitar Arqueo</a>
-            <div class="user-area dropdown float-right">
-              <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
-                 aria-expanded="false">
-                <img class="user-avatar rounded-circle" src="{% static 'icons/ICONOS-27.png' %}" alt="User Avatar">
-              </a>
-
-              <div class="user-menu dropdown-menu">
-                <a class="nav-link" href="#"><i class="fas fa-user"></i></i>Mi perfil</a>
-
-                <a class="nav-link" href="{% url 'account_logout' %}"><i class="fas fa-power-off"></i></i>Cerrar
-                  Sesión</a>
-              </div>
-            </div>
           {% endif %}
+          <div class="user-area dropdown float-right">
+            <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true"
+               aria-expanded="false">
+              <img class="user-avatar rounded-circle" src="{% static 'icons/ICONOS-27.png' %}" alt="User Avatar">
+            </a>
+
+            <div class="user-menu dropdown-menu">
+              <a class="nav-link" href="#"><i class="fas fa-user"></i></i>Mi perfil</a>
+
+              <a class="nav-link" href="{% url 'account_logout' %}"><i class="fas fa-power-off"></i></i>Cerrar
+                Sesión</a>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -88,81 +88,86 @@
       {% block index_actions %}
         <!-- Widgets  -->
         <div class="row">
-          <div class="col-lg-3 col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <a href="#" data-toggle="modal" data-target="#partner-withdraw">
-                  <div class="stat-widget-five">
-                    <div class="stat-icon dib flat-color-1">
-                      <img src="{% static 'icons/ICONOS-21.png' %}" alt="icon-21" height="70" width="70">
-                    </div>
-                    <div class="stat-content">
-                      <div class="text-left dib">
-                        <div class="stat-heading">Registro retiro de socio</div>
+          {% if request.user.is_super_user or request.user.is_secretary or request.user.is_daily_square %}
+            <div class="col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <a href="#" data-toggle="modal" data-target="#partner-withdraw">
+                    <div class="stat-widget-five">
+                      <div class="stat-icon dib flat-color-1">
+                        <img src="{% static 'icons/ICONOS-21.png' %}" alt="icon-21" height="70" width="70">
+                      </div>
+                      <div class="stat-content">
+                        <div class="text-left dib">
+                          <div class="stat-heading">Registro retiro de socio</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <a href="#" data-toggle="modal" data-target="#sell-unit">
-                  <div class="stat-widget-five">
-                    <div class="stat-icon dib flat-color-2">
-                      <img src="{% static 'icons/ICONOS-22.png' %}" alt="icon-22" height="70" width="70">
-                    </div>
-                    <div class="stat-content">
-                      <div class="text-left dib">
-                        <div class="stat-heading">Registro venta de unidades</div>
+          {% endif %}
+          {% if request.user.is_super_user or request.user.is_secretary %}
+            <div class="col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <a href="#" data-toggle="modal" data-target="#sell-unit">
+                    <div class="stat-widget-five">
+                      <div class="stat-icon dib flat-color-2">
+                        <img src="{% static 'icons/ICONOS-22.png' %}" alt="icon-22" height="70" width="70">
+                      </div>
+                      <div class="stat-content">
+                        <div class="text-left dib">
+                          <div class="stat-heading">Registro venta de unidades</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <a href="#" data-toggle="modal" data-target="#investments">
-                  <div class="stat-widget-five">
-                    <div class="stat-icon dib flat-color-3">
-                      <img src="{% static 'icons/ICONOS-23.png' %}" alt="icon-23" height="70" width="70">
-                    </div>
-                    <div class="stat-content">
-                      <div class="text-left dib">
-                        <div class="stat-heading">Registro inversión a negocios</div>
+          {% endif %}
+          {% if request.user.is_super_user or request.user.is_secretary %}
+            <div class="col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <a href="#" data-toggle="modal" data-target="#investments">
+                    <div class="stat-widget-five">
+                      <div class="stat-icon dib flat-color-3">
+                        <img src="{% static 'icons/ICONOS-23.png' %}" alt="icon-23" height="70" width="70">
+                      </div>
+                      <div class="stat-content">
+                        <div class="text-left dib">
+                          <div class="stat-heading">Registro inversión a negocios</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-
-          <div class="col-lg-3 col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <a href="#" data-toggle="modal" data-target="#partner-closeout">
-                  <div class="stat-widget-five">
-                    <div class="stat-icon dib flat-color-4">
-                      <img src="{% static 'icons/ICONOS-24.png' %}" alt="icon-24" height="70" width="70">
-                    </div>
-                    <div class="stat-content">
-                      <div class="text-left dib">
-                        <div class="stat-heading">Registro liquidación de sociedad</div>
+          {% endif %}
+          {% if request.user.is_super_user or request.user.is_secretary %}
+            <div class="col-lg-3 col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <a href="#" data-toggle="modal" data-target="#partner-closeout">
+                    <div class="stat-widget-five">
+                      <div class="stat-icon dib flat-color-4">
+                        <img src="{% static 'icons/ICONOS-24.png' %}" alt="icon-24" height="70" width="70">
+                      </div>
+                      <div class="stat-content">
+                        <div class="text-left dib">
+                          <div class="stat-heading">Registro liquidación de sociedad</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </a>
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          {% endif %}
         </div>
         <!-- /Widgets -->
       {% endblock %}
@@ -322,7 +327,8 @@
                 </div>
                 <div class="form-group col-md-12 d-none">
                   <label for="withdraw-reason">Motivo Retiro</label>
-                  <select class="form-control" id="withdraw-reason" name="withdraw-reason" style="width: 100%; height: 20px;">
+                  <select class="form-control" id="withdraw-reason" name="withdraw-reason"
+                          style="width: 100%; height: 20px;">
                     <option value="" selected disabled>Primero selecciona un socio</option>
                   </select>
                 </div>
@@ -633,94 +639,94 @@
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = withdraw.serialize()
         axios.post('{% url 'api:users:validate_closeout' %}', data_send)
-        .then(function (response) {
-          msg = response.data
-          if (response.status === 202) {
-            Swal.fire({
-              title: 'Oops! No puedes hacer la liquidación',
-              text: msg,
-              type: 'warning',
-              showCancelButton: false,
-              confirmButtonColor: '#60d3b0',
-              confirmButtonText: 'Aceptar',
-              allowOutsideClick: false,
-              reverseButtons: true,
-            })
-          } else {
-            Swal.fire({
-              title: 'El socio se puede liquidar. Deseas continuar?',
-              text: 'Si el socio tiene cadenas activas, a que socio las va a transpasar?',
-              input: 'select',
-              inputOptions: partners,
-              inputPlaceholder: 'Selecciona un socio',
-              showCancelButton: true,
-              confirmButtonText: 'Si, hacer liquidación',
-              confirmButtonColor: '#60d3b0',
-              cancelButtonText: 'Cancelar',
-              showLoaderOnConfirm: true,
-              reverseButtons: true,
-              inputValidator: (value) => {
-                return new Promise((resolve) => {
-                  if (value) {
-                    resolve()
-                  } else {
-                    resolve('Debes seleccionar un socio')
-                  }
-                })
-              },
-              preConfirm: (partner) => {
-                csrftoken = '{{ csrf_token }}'
-                data_send += `&partner_destiny=${partner}`
-                return axios.post('{% url 'api:users:closeout' %}', data_send)
-                  .then(response => {
-                    if (response.status === 200) {
-                      return response.data
+          .then(function (response) {
+            msg = response.data
+            if (response.status === 202) {
+              Swal.fire({
+                title: 'Oops! No puedes hacer la liquidación',
+                text: msg,
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: '#60d3b0',
+                confirmButtonText: 'Aceptar',
+                allowOutsideClick: false,
+                reverseButtons: true,
+              })
+            } else {
+              Swal.fire({
+                title: 'El socio se puede liquidar. Deseas continuar?',
+                text: 'Si el socio tiene cadenas activas, a que socio las va a transpasar?',
+                input: 'select',
+                inputOptions: partners,
+                inputPlaceholder: 'Selecciona un socio',
+                showCancelButton: true,
+                confirmButtonText: 'Si, hacer liquidación',
+                confirmButtonColor: '#60d3b0',
+                cancelButtonText: 'Cancelar',
+                showLoaderOnConfirm: true,
+                reverseButtons: true,
+                inputValidator: (value) => {
+                  return new Promise((resolve) => {
+                    if (value) {
+                      resolve()
+                    } else {
+                      resolve('Debes seleccionar un socio')
                     }
                   })
-                  .catch(error => {
-                    Swal.showValidationMessage(
-                      `Ha ocurrido un error: ${error}`
-                    )
+                },
+                preConfirm: (partner) => {
+                  csrftoken = '{{ csrf_token }}'
+                  data_send += `&partner_destiny=${partner}`
+                  return axios.post('{% url 'api:users:closeout' %}', data_send)
+                    .then(response => {
+                      if (response.status === 200) {
+                        return response.data
+                      }
+                    })
+                    .catch(error => {
+                      Swal.showValidationMessage(
+                        `Ha ocurrido un error: ${error}`
+                      )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+              }).then((result) => {
+                if (result.value) {
+                  Swal.fire({
+                    title: 'Liquidación Correcta',
+                    text: result.value,
+                    type: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#60d3b0',
+                    confirmButtonText: 'Aceptar',
+                    allowOutsideClick: false,
+                    reverseButtons: true,
+                  }).then((result) => {
+                    if (result.value) {
+                      location.reload()
+                    }
                   })
-              },
-              allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-              if (result.value) {
-                Swal.fire({
-                  title: 'Liquidación Correcta',
-                  text: result.value,
-                  type: 'success',
-                  showCancelButton: false,
-                  confirmButtonColor: '#60d3b0',
-                  confirmButtonText: 'Aceptar',
-                  allowOutsideClick: false,
-                  reverseButtons: true,
-                }).then((result) => {
-                  if (result.value) {
-                    location.reload()
-                  }
-                })
-              }
-            })
+                }
+              })
 
-          }
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error)
-          Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: error,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
             }
           })
-        })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
 
       })
 
