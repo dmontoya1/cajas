@@ -157,13 +157,17 @@ class MovementDailySquareManager(object):
 
     def __delete_related_movement(self, movement):
         if movement.movement_don_juan:
-            movement.movement_don_juan.delete()
+            movement_don_juan = movement.movement_don_juan
+            movement_don_juan.delete()
         if movement.movement_don_juan_usd:
-            movement.movement_don_juan_usd.delete()
+            movement_don_juan_usd = movement.movement_don_juan_usd
+            movement_don_juan_usd.delete()
         if movement.movement_partner:
-            movement.movement_partner.delete()
+            movement_partner = movement.movement_partner
+            movement_partner.delete()
         if movement.movement_cd:
-            movement.movement_cd.delete()
+            movement_cd = movement.movement_cd
+            movement_cd.delete()
 
     def update_movement_box_value(self, data):
         box = data['box']
@@ -226,6 +230,5 @@ class MovementDailySquareManager(object):
     def delete_daily_square_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_daily_square.first()
-
         self.__delete_related_movement(current_movement)
         current_movement.delete()

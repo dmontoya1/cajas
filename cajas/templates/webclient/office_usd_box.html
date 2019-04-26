@@ -157,8 +157,8 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                <h3 class="mb-3">{{ box }}</h3>
-                <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }} USD</h3>
+                  <h3 class="mb-3">{{ box }}</h3>
+                  <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }} USD</h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -181,12 +181,15 @@
                         USD{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         USD{% else %}-{% endif %}</td>
-                      {% if perms.movement.add_movementdonjuanusd %}
-                        <td>
+                      <td>
+                        {% if perms.movement.add_movementdonjuanusd %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -238,7 +241,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="aaaa-mm-dd" style="width: 100%;" required autocomplete="off">
+                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="aaaa-mm-dd"
+                       style="width: 100%;" required autocomplete="off">
               </div>
             </div>
             <div class="form-row">
@@ -259,7 +263,8 @@
             <div class="form-row d-none" id="usd-buy">
               <div class="form-group col-md-6">
                 <label for="buy_usd_value">Valor en USD</label>
-                <input type="number" class="form-control" id="buy_usd_value" name="buy_usd_value" placeholder="Valor compra en USD">
+                <input type="number" class="form-control" id="buy_usd_value" name="buy_usd_value"
+                       placeholder="Valor compra en USD">
               </div>
               <div class="form-group col-md-6">
                 <label for="buy_value">Valor en ${{ box.office.country.abbr }}</label>
@@ -269,22 +274,24 @@
             <div class="form-row d-none" id="usd-sell">
               <div class="form-group col-md-6">
                 <label for="sell_usd_value">Valor en USD</label>
-                <input type="number" class="form-control" id="sell_usd_value" name="sell_usd_value" placeholder="Valor venta en usd">
+                <input type="number" class="form-control" id="sell_usd_value" name="sell_usd_value"
+                       placeholder="Valor venta en usd">
               </div>
               <div class="form-group col-md-6">
                 <label for="sell_value">Valor en ${{ box.office.country.abbr }}</label>
-                <input type="number" class="form-control" id="sell_value" name="sell_value" placeholder="Valor venta en ${{ box.office.country.abbr }}">
+                <input type="number" class="form-control" id="sell_value" name="sell_value"
+                       placeholder="Valor venta en ${{ box.office.country.abbr }}">
               </div>
             </div>
 
             <div class="form-group destine-office d-none">
               <label for="office">Oficina de destino</label>
               <select class="form-control" id="office" name="destine_office" style="width: 100%; height: 20px;">
-                  <option selected disabled value="">Selecciona la oficina de destino</option>
-                  {% for office in offices %}
-                    <option value="{{ office.pk }}">{{ office }}</option>
-                  {% endfor %}
-                </select>
+                <option selected disabled value="">Selecciona la oficina de destino</option>
+                {% for office in offices %}
+                  <option value="{{ office.pk }}">{{ office }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-group">
               <label for="detail">Detalle</label>
@@ -349,21 +356,19 @@
       });
     });
 
-    $("#concept").on("change", function(){
+    $("#concept").on("change", function () {
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {
           data = response.data
-          if( data['name'] == 'Compra Dólares'){
+          if (data['name'] == 'Compra Dólares') {
             $('#usd-buy').removeClass('d-none')
             $('#usd-sell').addClass('d-none')
             $('#regular-value').addClass('d-none')
-          }
-          else if( data['name'] == 'Venta Dólares'){
+          } else if (data['name'] == 'Venta Dólares') {
             $('#usd-sell').removeClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').addClass('d-none')
-          }
-          else{
+          } else {
             $('#usd-sell').addClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').removeClass('d-none')
@@ -384,6 +389,7 @@
       $('.modal-title').text("Añadir Movimiento")
       $('.btn-add-movement').text('Agregar')
     })
+
     $('.edit-item').on('click', function () {
       var mov_pk = $(this).data("id")
       $("#method_modal").val("edit")
@@ -411,40 +417,40 @@
         })
     })
 
-    $('.add-usd-movement').on('submit', function(e){
+    $('.add-usd-movement').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       form = $(this)
       data = form.serialize()
       if ($("#method_modal").val() === "add") {
-      axios.post("{% url 'api:movements:movement_usd_create' %}", data)
-        .then(function (response) {
-          data = response.data
-          Swal.fire({
-            type: 'success',
-            title: 'Exitoso',
-            text: data,
-            allowOutsideClick: false
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
-            }
+        axios.post("{% url 'api:movements:movement_usd_create' %}", data)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data,
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+              .catch(function (error) {
+                Swal.fire({
+                  title: 'Ha ocurrido un error',
+                  text: error,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                  if (result.value) {
+                    location.reload()
+                  }
+                })
+              })
           })
-        .catch(function (error) {
-          Swal.fire({
-            title: 'Ha ocurrido un error',
-            text: error,
-            type: 'error',
-            showCancelButton: false,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Aceptar'
-          }).then((result) => {
-            if (result.value) {
-              location.reload()
-            }
-          })
-        })
-      })
       }
       if ($("#method_modal").val() === "edit") {
         mov_pk = $("#method_modal").data("id")
@@ -479,5 +485,50 @@
 
       }
     })
+
+    $('.delete-item').on('click', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento. Esta acción no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/movements/${mov_pk}/movement-don-juan-usd-update/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
+    })
+
   </script>
 {% endblock %}

@@ -23,6 +23,8 @@ class InvestmentList(LoginRequiredMixin, TemplateView):
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 investments = Investment.objects.filter(partner__office=office)
+            else:
+                investments = None
         except Exception as e:
             partner = Partner.objects.get(user=self.request.user, office=office)
             investments = Investment.objects.filter(partner=partner)

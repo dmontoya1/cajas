@@ -27,7 +27,7 @@ app_name = 'movements'
 urlpatterns = [
     # Office
     path("create-mv-office/", MovementOfficeCreate.as_view(), name='movement_create'),
-    path("detail-mv-office/<int:pk>/", MovementOfficeDetail.as_view(), name='movement_office_detail'),
+    path("<int:pk>/detail-mv-office/", MovementOfficeDetail.as_view(), name='movement_office_detail'),
 
     # DonJuan
     path("movement-don-juan-create/", MovementDonJuanCreate.as_view(), name='movement_donjuan_create'),
@@ -35,7 +35,8 @@ urlpatterns = [
 
     # DonJuanUSD
     path("movement-usd-create/", MovementUSDCreate.as_view(), name='movement_usd_create'),
-    path("<int:pk>/movement-don-juan-usd-update/", MovementDonJuanUSDUpdate.as_view(), name='movement_donjuan_usd_update'),
+    path("<int:pk>/movement-don-juan-usd-update/", MovementDonJuanUSDUpdate.as_view(),
+         name='movement_donjuan_usd_update'),
 
     # Partner
     path("movement-partner-create/", MovementPartnerCreate.as_view(), name='movement_partner_create'),
@@ -49,6 +50,7 @@ urlpatterns = [
     path("<int:pk>/dq-detail/", UpdateDailySquareMovement.as_view(), name='dq_detail'),
 
     # Request Movements
+    path("<int:pk>/dq-request-item-detail/", DailySquareRequestItemDetail.as_view(), name='dq_request_item_detail'),
     path("movement-request-create/", MovementRequestCreate.as_view(), name='movement_request_create'),
     path("movement-withdraw-request-create/", MovementWithdrawRequestCreate.as_view(),
          name='movement_withdraw_request_create'
@@ -58,7 +60,8 @@ urlpatterns = [
     path("accept-withdraw-request/", AcceptWithDrawRequestMovement.as_view(), name='accept_withdraw_request'),
     path("accept-between-office-request/", AcceptBetweenOfficeMovement.as_view(), name='accept_between_office_request'),
     path("denied-withdraw-request/", DeclineWithdrawMovement.as_view(), name='denied_withdraw_request'),
-    path("denied-between-office-request/", DeclineBetweenOfficeMovement.as_view(), name='denied_between_office_request'),
+    path("denied-between-office-request/", DeclineBetweenOfficeMovement.as_view(),
+         name='denied_between_office_request'),
     path("create-withdraw-movement/", CreateWithdrawMovement.as_view(), name='withdraw_movement_create'),
 
 ]

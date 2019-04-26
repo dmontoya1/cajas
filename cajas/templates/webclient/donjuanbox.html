@@ -182,12 +182,15 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if perms.movement.change_movementdonjuan %}
-                        <td>
+                      <td>
+                        {% if perms.movement.change_movementdonjuan %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -442,6 +445,50 @@
           })
 
       }
+    })
+
+    $('.delete-item').on('click', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento. Esta acción no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/movements/${mov_pk}/movement-don-juan-update/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
     })
   </script>
 {% endblock %}
