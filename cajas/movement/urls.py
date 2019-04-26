@@ -31,7 +31,7 @@ urlpatterns = [
     path("<int:pk>/detail-mv-office/", MovementOfficeDetail.as_view(), name='movement_office_detail'),
 
     # DonJuan
-    path("movement-don-juan-create/", MovementDonJuanCreate.as_view(), name='movement_donjuan_create'),
+    path("<slug:slug>/movement-don-juan-create/", MovementDonJuanCreate.as_view(), name='movement_donjuan_create'),
     path("<int:pk>/movement-don-juan-update/", MovementDonJuanUpdate.as_view(), name='movement_donjuan_update'),
 
     # DonJuanUSD

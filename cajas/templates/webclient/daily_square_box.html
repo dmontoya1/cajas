@@ -400,12 +400,8 @@
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
                         required></textarea>
             </div>
-<<<<<<< HEAD
             <!-- Start Replication -->
             <div class="dynamic_controller" id="unit_inventory_edit">
-=======
-            <div class="dynamic_controller d-none" id="unit_inventory_edit">
->>>>>>> 8188243418a7fbadbdedf9e0f070920c4c22857b
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="inventory_name">Nombre</label>
@@ -607,6 +603,8 @@
         }
         $(this).closest('#unit_inventory_edit').remove();
       });
+
+      $("#dynamic_form").addClass("d-none")
     });
 
     $('#concept').on('change', function () {
@@ -876,9 +874,6 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
         var elemts = []
-        /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
-        *  there: obtaining directly data from python dictionary using these identifiers
-        */
         $('.add-movement .dynamic_controller *').filter('.category_edit_control').each(function () {
           id_form = $(this).attr("id")
           id_form = id_form[id_form.length - 1]
@@ -888,29 +883,6 @@
       }
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        if($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
-          axios.post("{% url 'api:movements:movement_partner_create' %}", data_send)
-          .then(function (response) {
-            data = response.data
-            Swal.fire({
-              type: 'success',
-              title: 'Exitoso',
-              text: data,
-            }).then(function () {
-              location.reload()
-            })
-          })
-          .catch(function (error) {
-            // handle error
-            Swal.fire({
-              type: 'error',
-              title: 'Error',
-              text: error,
-            }).then(function () {
-              location.reload()
-            })
-          })
-        } else {
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
           .then(function (response) {
             msg = response.data
@@ -998,7 +970,6 @@
               }
             })
           })
-        }
       }
       if ($("#method_modal").val() === "edit") {
         mvment_id = $("#method_modal").data("id")
@@ -1212,7 +1183,7 @@
               data = response.data
               var index_pk = 0
               items_lenght = data.length
-              if (items_lenght !=1 && data[0].name != null && data[0].brand != null && data[0].description != null && data[0].price != null ) {
+              if (items_lenght != 0){
                 $(data).each( function(){
                   item = $(this)[0]
                   if( item.is_deleted == true){
@@ -1246,6 +1217,54 @@
           console.log(error);
         })
     })
+
+    $("#concept").on("change", function () {
+      if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
+        $(".dynamic_controller").removeClass("d-none")
+        $("#unit_select").removeClass("d-none")
+        $("#unity").prop("required", true)
+        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+          $(this).prop("required", true)
+        })
+      } else {
+        $(".dynamic_controller").addClass("d-none")
+        $("#unit_select").addClass("d-none")
+        $("#unity").val("")
+        $("#unity").prop("required", false)
+        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+          $(this).prop("required", false)
+          $(this).val("")
+        })
+        $(".add-movement .dynamic_controller").find("#minus5").each(function () {
+          if ($(this).css("display") != "none") {
+            $(this).trigger("click")
+          }
+        })
+      }
+    })
+    $(document).on('change', '.category_edit_control', function () {
+      if ($(this).hasClass("category_edit_control")) {
+        var select_category_id = $(this).attr('id');
+        axios.get(`/api/inventory/${$(this).val()}/brand`)
+          .then(function (response) {
+            data = response.data
+            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#edit_inventory_brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
+            )
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+      }
+    });
+
 
     $('.delete-item').on('click', function () {
       mov_pk = $(this).data('id')

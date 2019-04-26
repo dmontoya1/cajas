@@ -616,9 +616,6 @@
           $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
           $("#edit_supervisor").trigger("change")
 
-          if (data.related_items.length < 2) {
-            $("#plus5_edit").removeClass("d-none")
-          }
           var index_pk = 0
           items_lenght = data.related_items.length
           $(data.related_items).each(function () {
