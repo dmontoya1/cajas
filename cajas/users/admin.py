@@ -26,7 +26,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     model = Employee
     list_display = ['get_full_name', 'salary_type', 'salary']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
-    list_filter = ['charge',]
+    list_filter = ['charge', ]
 
     class Media:
         js = (
@@ -41,6 +41,7 @@ class PartnerAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'code', 'partner_type', ]
     search_fields = ['user__first_name', 'user__last_name', 'code', 'office__number', 'office__country__abbr',]
     extra = 0
+    list_filter = ['office', 'office__office', 'office__country']
     inlines = [UnitInline, ]
     readonly_fields = ('code', 'consecutive')
 

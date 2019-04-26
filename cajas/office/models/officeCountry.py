@@ -32,6 +32,11 @@ class OfficeCountry(models.Model):
         'Consecutivo Socios',
         default=1
     )
+    image = models.ImageField(
+        'Imágen',
+        upload_to='office_images/',
+        blank=True, null=True
+    )
 
     class Meta:
         verbose_name = 'Oficina por país'
