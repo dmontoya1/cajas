@@ -35,16 +35,15 @@ class DailySquareRequestItemDetail(generics.RetrieveUpdateAPIView):
                 status=status.HTTP_204_NO_CONTENT
             )
         movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
-        request_item = MovementDailySquareRequestItem.objects.filter(movement=movement)
+        request_item = MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
         values = request.data["elemts"].split(",")
         for value in values:
-                MovementDailySquareRequestItem.objects.create(
-                    movement=movement,
-                    name=request.data["form[form]["+value+"][name]"],
-                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                    price=request.data["form[form]["+value+"][price]"]
-                )
-        request_item.delete()
+            MovementDailySquareRequestItem.objects.create(
+                movement=movement,
+                name=request.data["form[form]["+value+"][name]"],
+                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                price=request.data["form[form]["+value+"][price]"]
+            )
         return Response(
             'El item se ha actualizado correctamente',
             status=status.HTTP_200_OK
