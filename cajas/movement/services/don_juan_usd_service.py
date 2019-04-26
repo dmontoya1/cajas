@@ -1,10 +1,10 @@
 
 from concepts.models.concepts import Concept
 
-from ..models.movement_don_juan import MovementDonJuan
+from ..models.movement_don_juan_usd import MovementDonJuanUsd
 
 
-class DonJuanManager(object):
+class DonJuanUSDManager(object):
 
     PROPERTIES = ['box', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip']
 
@@ -14,7 +14,7 @@ class DonJuanManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        movement = MovementDonJuan.objects.create(
+        movement = MovementDonJuanUsd.objects.create(
             box_don_juan=data['box'],
             concept=data['concept'],
             movement_type=data['movement_type'],
@@ -27,7 +27,7 @@ class DonJuanManager(object):
         return movement
 
     def __get_movement_by_pk(self, pk):
-        return MovementDonJuan.objects.filter(pk=pk)
+        return MovementDonJuanUsd.objects.filter(pk=pk)
 
     def __get_current_concept(self, pk):
         return Concept.objects.get(pk=pk)

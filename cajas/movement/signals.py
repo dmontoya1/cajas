@@ -75,6 +75,8 @@ def save_balance_office(sender, **kwargs):
 def save_balance_donjuan(sender, **kwargs):
     if kwargs.get('created'):
         instance = kwargs.get('instance')
+        print(instance)
+        print(instance.box_don_juan)
         if instance.box_don_juan.balance:
             l_balance = instance.box_don_juan.balance
         else:

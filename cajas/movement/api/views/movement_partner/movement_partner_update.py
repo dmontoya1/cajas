@@ -7,19 +7,19 @@ from rest_framework import status
 
 from webclient.views.get_ip import get_ip
 
-from ....models.movement_office import MovementOffice
-from ....services.office_service import MovementOfficeManager
-from ...serializers.movement_office_serializer import MovementOfficeSerializer
+from ....models.movement_partner import MovementPartner
+from ....services.partner_service import MovementPartnerManager
+from ...serializers.movement_partner_serializer import MovementPartnerSerializer
 
 logger = logging.getLogger(__name__)
 
 
-class MovementOfficeDetail(generics.RetrieveUpdateDestroyAPIView):
+class MovementPartnerDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     """
 
-    serializer_class = MovementOfficeSerializer
-    queryset = MovementOffice.objects.all()
+    serializer_class = MovementPartnerSerializer
+    queryset = MovementPartner.objects.all()
 
     def update(self, request, *args, **kwargs):
         data = request.POST.copy()
@@ -27,8 +27,8 @@ class MovementOfficeDetail(generics.RetrieveUpdateDestroyAPIView):
         data['ip'] = get_ip(request)
 
         try:
-            office_manager = MovementOfficeManager()
-            office_manager.update_office_movement(data)
+            office_manager = MovementPartnerManager()
+            office_manager.update_partner_movement(data)
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
                 status=status.HTTP_201_CREATED

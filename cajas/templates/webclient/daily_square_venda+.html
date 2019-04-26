@@ -305,11 +305,11 @@
 
     function get_investments(route) {
       let token;
-      axios.get(`${api_venda_url}/api/Session/Login/User20180109/123**abc`)
+      axios.get(`${api_venda_url}/api/Session/Login/c184Ext/Gj7uQU`)
         .then((response) => {
           data = response.data
           token = data[0].data[0].user.token
-          axios.get(`${api_venda_url}/api/Vmas/GetInvestments/${token}/20180101/${today}/${route}/`)
+          axios.get(`${api_venda_url}/api/Vmas/GetInvestments/${token}/${today}/${today}/${route}/`)
             .then((response) => {
               data = response.data
               if (data.length > 0){
@@ -347,11 +347,11 @@
 
     function get_withdraws(route) {
       let token;
-      axios.get(`${api_venda_url}/api/Session/Login/User20180109/123**abc`)
+      axios.get(`${api_venda_url}/api/Session/Login/c184Ext/Gj7uQU`)
         .then((response) => {
           data = response.data
           token = data[0].data[0].user.token
-          axios.get(`${api_venda_url}/api/Vmas/GetWithdrawals/${token}/20180101/${today}/${route}/`)
+          axios.get(`${api_venda_url}/api/Vmas/GetWithdrawals/${token}/${today}/${today}/${route}/`)
             .then((response) => {
               data = response.data
               if (data.length > 0){

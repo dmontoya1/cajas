@@ -158,8 +158,9 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                <h3 class="mb-3">Caja {{ office }}</h3>
-                <h3 class="float-right">SALDO CAJA: $ {{ office.box.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
+                  <h3 class="mb-3">Caja {{ office }}</h3>
+                  <h3 class="float-right">SALDO CAJA: $
+                    {{ office.box.balance|intcomma }}{{ office.country.currency.abbr }} </h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -168,6 +169,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -181,6 +183,12 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      {% if perms.movement.change_movementoffice %}
+                        <td>
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                             data-target="#addMovement">Editar</a>
+                        </td>
+                      {% endif %}
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -190,7 +198,7 @@
           </div>
         </div>
         {% if perms.movement.add_movementoffice %}
-          <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+          <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -203,7 +211,7 @@
   </div>
 
   <!-- Modal add movement -->
-  <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle"
        aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -214,9 +222,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-movement" action="{% url 'webclient:create_office_movement' office.slug %}">
+          <form method="POST" class="add-movement">
             {% csrf_token %}
+            <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="box_office" value="{{ office.box.pk }}">
+            <input type="hidden" name="responsible" value="{{ request.user.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto</label>
@@ -230,7 +240,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd" style="width: 100%;" required autocomplete="off">
+                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                       style="width: 100%;" required autocomplete="off">
               </div>
             </div>
             <div class="form-row">
@@ -252,11 +263,11 @@
             <div class="form-group destine-office d-none">
               <label for="office">Oficina de destino</label>
               <select class="form-control" id="office" name="destine_office" style="width: 100%; height: 20px;">
-                  <option selected disabled value="">Selecciona la oficina de destino</option>
-                  {% for office in offices %}
-                    <option value="{{ office.pk }}">{{ office }}</option>
-                  {% endfor %}
-                </select>
+                <option selected disabled value="">Selecciona la oficina de destino</option>
+                {% for office in offices %}
+                  <option value="{{ office.pk }}">{{ office }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="form-group">
               <label for="detail">Detalle</label>
@@ -301,7 +312,7 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
+            <button type="submit" class="btn btn-submit btn-add-movement">Añadir</button>
           </form>
         </div>
       </div>
@@ -313,8 +324,8 @@
 {% block extra_js %}
 
   <script type="text/javascript">
-    $("#concept").on("change", function(){
-      if( $("#concept option:selected").text() == "Compra Inventario Oficina de tipo Simple"){
+    $("#concept").on("change", function () {
+      if ($("#concept option:selected").text() == "Compra Inventario Oficina de tipo Simple") {
         $("#inventory_form").removeClass("d-none");
         $("#name").prop('required', true);
         $("#category").prop('required', true);
@@ -333,10 +344,9 @@
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {
           data = response.data
-          if( data['relationship'] == 'Entre oficinas'){
+          if (data['relationship'] == 'Entre oficinas') {
             $('.destine-office').removeClass('d-none')
-          }
-          else{
+          } else {
             $('.destine-office').addClass('d-none')
           }
         })
@@ -413,5 +423,108 @@
         });
       });
     });
+
+    $("#add-movement-btn").on("click", function () {
+      $('.add-movement')[0].reset();
+      $("#method_modal").val("add")
+      $("#method_modal").data("id", "")
+      $('.modal-title').text("Añadir Movimiento")
+      $('.btn-add-movement').text('Agregar')
+    })
+    $('.edit-item').on('click', function () {
+      var mov_pk = $(this).data("id")
+      $("#method_modal").val("edit")
+      $("#method_modal").data("id", mov_pk)
+      $('.modal-title').text("Editar Movimiento")
+      $('.btn-add-movement').text('Guardar')
+
+      //get movement data
+      axios.get(`/api/movements/detail-mv-office/${mov_pk}/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    $('.add-movement').on('submit', function (ev) {
+      ev.preventDefault()
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data_send = $(this).serialize()
+      if ($("#method_modal").val() === "add") {
+        axios.post('{% url 'api:movements:movement_create' %}', data_send)
+          .then(function (response) {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: 'Se ha creado el movimiento exitosamente',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+      }
+      if ($("#method_modal").val() === "edit") {
+        mvment_id = $("#method_modal").data("id")
+        axios.patch(`/api/movements/detail-mv-office/${mvment_id}/`, data_send)
+          .then(function (response) {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: "Se ha actualizado el movimiento correctamente",
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+
+      }
+    })
   </script>
 {% endblock %}

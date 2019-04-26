@@ -167,6 +167,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -180,6 +181,12 @@
                         USD{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         USD{% else %}-{% endif %}</td>
+                      {% if perms.movement.add_movementdonjuanusd %}
+                        <td>
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                             data-target="#addMovement">Editar</a>
+                        </td>
+                      {% endif %}
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -189,7 +196,7 @@
           </div>
         </div>
         {% if perms.movement.add_movementdonjuanusd %}
-          <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+          <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -202,7 +209,7 @@
   </div>
 
   <!-- Modal add movement -->
-  <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle"
        aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -217,6 +224,7 @@
             {% csrf_token %}
             <input type="hidden" name="box" value="{{ box.pk }}">
             <input type="hidden" name="office" value="{{ office.pk }}">
+            <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto</label>
@@ -369,11 +377,46 @@
 
     })
 
+    $("#add-movement-btn").on("click", function () {
+      $('.add-movement')[0].reset();
+      $("#method_modal").val("add")
+      $("#method_modal").data("id", "")
+      $('.modal-title').text("Añadir Movimiento")
+      $('.btn-add-movement').text('Agregar')
+    })
+    $('.edit-item').on('click', function () {
+      var mov_pk = $(this).data("id")
+      $("#method_modal").val("edit")
+      $("#method_modal").data("id", mov_pk)
+      $('.modal-title').text("Editar Movimiento")
+      $('.btn-add-movement').text('Guardar')
+
+      //get movement data
+      axios.get(`/api/movements/${mov_pk}/movement-don-juan-usd-update/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
     $('.add-usd-movement').on('submit', function(e){
       e.preventDefault()
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       form = $(this)
       data = form.serialize()
-      console.log(data)
+      if ($("#method_modal").val() === "add") {
       axios.post("{% url 'api:movements:movement_usd_create' %}", data)
         .then(function (response) {
           data = response.data
@@ -402,6 +445,39 @@
           })
         })
       })
+      }
+      if ($("#method_modal").val() === "edit") {
+        mov_pk = $("#method_modal").data("id")
+        axios.patch(`/api/movements/${mov_pk}/movement-don-juan-usd-update/`, data)
+          .then(function (response) {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: "Se ha actualizado el movimiento correctamente",
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+
+      }
     })
   </script>
 {% endblock %}

@@ -143,7 +143,6 @@ class MovementDailySquareManager(object):
             self.update_movement_box_value(data)
             self.update_counterpart_movement_value(current_movement.movement_don_juan_usd, data['value'])
         if current_movement.movement_partner:
-            print(current_movement.movement_partner)
             data['box'] = current_movement.movement_partner.box_partner
             self.update_movement_box_value(data)
             self.update_counterpart_movement_value(current_movement.movement_partner, data['value'])
@@ -155,6 +154,16 @@ class MovementDailySquareManager(object):
             data['box'] = current_movement.movement_cd.box_daily_square
             self.update_movement_box_value(data)
             self.update_counterpart_movement_value(current_movement.movement_cd, data['value'])
+
+    def __delete_related_movement(self, movement):
+        if movement.movement_don_juan:
+            movement.movement_don_juan.delete()
+        if movement.movement_don_juan_usd:
+            movement.movement_don_juan_usd.delete()
+        if movement.movement_partner:
+            movement.movement_partner.delete()
+        if movement.movement_cd:
+            movement.movement_cd.delete()
 
     def update_movement_box_value(self, data):
         box = data['box']
@@ -214,3 +223,9 @@ class MovementDailySquareManager(object):
         else:
             current_movement_daily_square.update(**object_data)
 
+    def delete_daily_square_movement(self, data):
+        current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_daily_square.first()
+
+        self.__delete_related_movement(current_movement)
+        current_movement.delete()

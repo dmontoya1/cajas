@@ -29,12 +29,13 @@ class AcceptMovement(APIView):
     def post(self, request, format=None):
         withdraw_concept = get_object_or_404(Concept, name="Retiro de Socio")
         movement = get_object_or_404(MovementDailySquare, pk=request.data['movement_id'])
+        user = movement.box_daily_square.user
         if movement.concept == withdraw_concept:
             data = {
                 'box': movement.user.partner.get().box,
                 'partner': movement.user.partner.get(),
                 'value': movement.value,
-                'detail': movement.detail,
+                'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
                 'date': movement.date,
                 'responsible': request.user,
                 'ip': get_ip(request)
@@ -48,7 +49,7 @@ class AcceptMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': movement.value,
-                    'detail': movement.detail,
+                    'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
                     'date': movement.date,
                     'responsible': request.user,
                     'ip': get_ip(request)
@@ -61,7 +62,7 @@ class AcceptMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': movement.value,
-                    'detail': movement.detail,
+                    'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
                     'date': movement.date,
                     'responsible': request.user,
                     'ip': get_ip(request)
@@ -74,7 +75,7 @@ class AcceptMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': movement.value,
-                    'detail': movement.detail,
+                    'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
                     'date': movement.date,
                     'responsible': request.user,
                     'ip': get_ip(request)
