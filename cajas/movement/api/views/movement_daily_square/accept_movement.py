@@ -93,7 +93,7 @@ class AcceptMovement(APIView):
             for item in movement_items:
                 if not item.name or not item.price or not item.brand:
                     return Response(
-                        'No se especificaron todos los campos para crear el inventario',
+                        'Debe crearse el inventario de la unidad para aprobar el movimiento',
                         status=status.HTTP_206_PARTIAL_CONTENT
                     )
                 else:

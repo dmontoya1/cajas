@@ -191,7 +191,7 @@
                                data-target="#addMovement">Editar</a>
                           {% endif %}
                         {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
-                          <a href="#" class="delete-item" data-id="{{ m.id }}" data-toggle="modal"
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
                         {% endif %}
                         {% if request.user.is_superuser %}
@@ -395,6 +395,7 @@
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
                         required></textarea>
             </div>
+            <!-- Start Replication -->
             <div class="dynamic_controller" id="unit_inventory_edit">
               <div class="form-row">
                 <div class="form-group col-md-6">
@@ -698,6 +699,7 @@
       $("#method_modal").data("id", "")
       $('.modal-title').text("Añadir Movimiento")
       $('.btn-add-movement').text('Agregar')
+      $("#unit_inventory_edit").addClass("d-none")
     })
 
     $('.accept-mv').on('click', function () {
@@ -719,16 +721,26 @@
             movement_id: id,
           })
             .then(function (response) {
+              if (response.status === 206) {
+                Swal.fire({
+                type: 'warning',
+                title: 'Se debe editar el Movimiento',
+                text: response.data,
+              }).then(function () {
+                location.reload()
+              })
+            } else {
               Swal.fire({
                 title: 'Exitoso!',
                 text: response.data,
                 type: 'success',
                 allowOutsideClick: false
               }).then((result) => {
-                if (result.value) {
-                  location.reload()
-                }
-              })
+                  if (result.value) {
+                    location.reload()
+                  }
+                })
+              }
             })
             .catch(function (error) {
               Swal.fire({
@@ -843,6 +855,29 @@
       }
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
+        if($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
+          axios.post("{% url 'api:movements:movement_partner_create' %}", data_send)
+          .then(function (response) {
+            data = response.data
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: data,
+            }).then(function () {
+              location.reload()
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            Swal.fire({
+              type: 'error',
+              title: 'Error',
+              text: error,
+            }).then(function () {
+              location.reload()
+            })
+          })
+        } else {
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
           .then(function (response) {
             msg = response.data
@@ -930,6 +965,7 @@
               }
             })
           })
+        }
       }
       if ($("#method_modal").val() === "edit") {
         mvment_id = $("#method_modal").data("id")
@@ -937,13 +973,25 @@
           axios.patch(`/api/movements/${$("#concept_id").val()}/dq-request-item-detail/`, data_send)
           .then(function (response) {
             data = response.data
-            Swal.fire({
-              type: 'success',
-              title: 'Exitoso',
-              text: data,
-            }).then(function () {
-              location.reload()
-            })
+            console.log(response.status)
+            if (response.status === 206) {
+                Swal.fire({
+                type: 'warning',
+                title: 'Se debe editar el Movimiento',
+                text: data,
+              }).then(function () {
+                location.reload()
+              })
+            }
+            if (response.status === 200) {
+              Swal.fire({
+                type: 'success',
+                title: 'Exitoso',
+                text: data,
+              }).then(function () {
+                location.reload()
+              })
+            }
           })
           .catch(function (error) {
             // handle error
@@ -1136,34 +1184,35 @@
             $("#office").trigger("change")
           }
           if($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple"){
+            $("#unit_inventory_edit").removeClass("d-none")
             axios.get(`/api/movements/${mov_pk}/dq-request-item-detail/`)
             .then(function (response) {
               console.log(response.data)
               data = response.data
               var index_pk = 0
               items_lenght = data.length
+              if (items_lenght !=1 && data[0].name != null && data[0].brand != null && data[0].description != null && data[0].price != null ) {
+                $(data).each( function(){
+                  item = $(this)[0]
+                  if( item.is_deleted == true){
+                    items_lenght = items_lenght - 1;
+                  } else {
+                    $(`#edit_inventory_name${index_pk}`).val(item.name)
+                    $(`#edit_inventory_price${index_pk}`).val(item.price)
 
-              $(data).each( function(){
-                item = $(this)[0]
-                if( item.is_deleted == true){
-                  items_lenght = items_lenght - 1;
-                } else {
-                  $(`#edit_inventory_name${index_pk}`).val(item.name)
-                  $(`#edit_inventory_price${index_pk}`).val(item.price)
+                    $(`#edit_inventory_category${index_pk} option`).prop("selected", false);
+                    $(`#edit_inventory_category${index_pk} option[value=${item.brand.category.id}]`).prop("selected", true);
+                    $(`#edit_inventory_category${index_pk}`).trigger("change")
 
-                  $(`#edit_inventory_category${index_pk} option`).prop("selected", false);
-                  $(`#edit_inventory_category${index_pk} option[value=${item.brand.category.id}]`).prop("selected", true);
-                  $(`#edit_inventory_category${index_pk}`).trigger("change")
+                    fill_brands(item.brand.category.id, index_pk, item.brand.id)
 
-                  fill_brands(item.brand.category.id, index_pk, item.brand.id)
-
-                  if( items_lenght != (index_pk + 1) ){
-                    $("#plus5_edit").trigger("click")
+                    if( items_lenght != (index_pk + 1) ){
+                      $("#plus5_edit").trigger("click")
+                    }
+                    index_pk = index_pk + 1;
                   }
-                  $(`#edit_option${index_pk}`).prop('checked', true);
-                  index_pk = index_pk + 1;
-                }
-              })
+                })
+              }
             })
             .catch(function (error) {
               // handle error

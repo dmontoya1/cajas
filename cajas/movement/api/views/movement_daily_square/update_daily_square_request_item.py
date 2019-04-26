@@ -31,7 +31,7 @@ class DailySquareRequestItemDetail(generics.RetrieveUpdateAPIView):
         print("asda", request.data)
         if request.data["elemts"] == '':
             return Response(
-                'No se actualizó el inventario de unidad',
+                'Debe crearse el inventario de la unidad para aprobar el movimiento',
                 status=status.HTTP_204_NO_CONTENT
             )
         movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
