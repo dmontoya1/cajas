@@ -10,7 +10,18 @@
 {% block navbar %}
   <ul class="nav navbar-nav">
     <li class="active">
-      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+      <a href="
+        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
     </li>
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
@@ -95,7 +106,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:employee-list' office.slug %}">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -197,12 +208,17 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if perms.movement.change_movementpartner %}
-                        <td>
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                             data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
+                      <td>
+                        {% if perms.movement.change_movementpartner %}
+
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                               data-target="#addMovement">Editar</a>
+
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                              <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                            {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -661,8 +677,51 @@
               }
             })
           })
-
       }
+    })
+
+    $('.delete-item').on('click', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento. Esta acción no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/movements/${mov_pk}/movement-partner-update/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
     })
   </script>
 {% endblock %}

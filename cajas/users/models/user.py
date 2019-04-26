@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from .charges import Charge
+
 
 class User(AbstractUser):
 
@@ -36,3 +38,17 @@ class User(AbstractUser):
 
     def __str__(self):
         return "{} ({})".format(self.get_full_name(), self.document_id)
+
+    def is_employee(self):
+        try:
+            if self.related_employee.get():
+                return True
+            return False
+        except:
+            return False
+
+    def is_secretary(self):
+        secretary = Charge.objects.get(name="Secretaria")
+        if self.related_employee.get().charge == secretary:
+            return True
+        return False

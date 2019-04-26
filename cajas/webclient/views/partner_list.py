@@ -31,10 +31,13 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     is_active=True,
                     box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
+            else:
+                context['partner'] = Partner.objects.filter(office=office, user=self.request.user)
         except Exception as e:
             context['partner'] = self.request.user.partner.get()
 
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
+        print(context)
         return context

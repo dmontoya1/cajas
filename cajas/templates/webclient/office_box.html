@@ -11,7 +11,18 @@
 {% block navbar %}
   <ul class="nav navbar-nav">
     <li class="active">
-      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+      <a href="
+        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
     </li>
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
@@ -96,7 +107,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:employee-list' office.slug %}">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -183,12 +194,15 @@
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      {% if perms.movement.change_movementoffice %}
-                        <td>
+                      <td>
+                        {% if perms.movement.change_movementoffice %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
-                        </td>
-                      {% endif %}
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -431,6 +445,7 @@
       $('.modal-title').text("Añadir Movimiento")
       $('.btn-add-movement').text('Agregar')
     })
+
     $('.edit-item').on('click', function () {
       var mov_pk = $(this).data("id")
       $("#method_modal").val("edit")
@@ -439,7 +454,7 @@
       $('.btn-add-movement').text('Guardar')
 
       //get movement data
-      axios.get(`/api/movements/detail-mv-office/${mov_pk}/`)
+      axios.get(`/api/movements/${mov_pk}/detail-mv-office/`)
         .then(function (response) {
           data = response.data
           $("#concept option").prop("selected", false);
@@ -494,8 +509,8 @@
           })
       }
       if ($("#method_modal").val() === "edit") {
-        mvment_id = $("#method_modal").data("id")
-        axios.patch(`/api/movements/detail-mv-office/${mvment_id}/`, data_send)
+        mov_pk = $("#method_modal").data("id")
+        axios.patch(`/api/movements/${mov_pk}/detail-mv-office/`, data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',
@@ -525,6 +540,50 @@
           })
 
       }
+    })
+
+    $('.delete-item').on('click', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento. Esta acción no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/movements/${mov_pk}/detail-mv-office/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
     })
   </script>
 {% endblock %}
