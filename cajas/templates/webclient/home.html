@@ -72,7 +72,6 @@
 {% endblock %}
 
 {% block content %}
-
   {% if office %}
     <div class="row country-row">
       <div class="col-12">
@@ -85,7 +84,7 @@
       <div class="col-lg-4 col-xlg-4 col-md-6">
         <div class="card blog-widget">
           <div class="card-body">
-            <a href="{% url 'webclient:office' office.slug %}">
+            <a href="{% url 'webclient:partners_list' office.slug %}">
               <div class="blog-image">
                 <img
                   src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
@@ -185,7 +184,7 @@
           <div class="col-lg-4 col-xlg-4 col-md-6">
             <div class="card blog-widget">
               <div class="card-body">
-                <a href="{% url 'webclient:office' office.slug %}">
+                <a href="{% url 'webclient:employee_list' office.slug %}">
                   <div class="blog-image">
                     <img
                       src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
