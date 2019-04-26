@@ -462,7 +462,9 @@
         console.log(error);
       })
     })
-    
+    $('#editGroup').on('hidden.bs.modal', function (e) {
+      location.reload()
+    })
     $('.edit-group').on('submit', function (e) {
       e.preventDefault()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'

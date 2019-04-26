@@ -5,6 +5,7 @@ from .api.views.movement_daily_square.create_movement import CreateDailySquareMo
 from .api.views.movement_daily_square.create_withdraw_movement import CreateWithdrawMovement
 from .api.views.movement_daily_square.denied_movement import DeniedMovement
 from .api.views.movement_daily_square.dispersion_movement import DispersionMovement
+from .api.views.movement_daily_square.update_daily_square_request_item import DailySquareRequestItemDetail
 from .api.views.movement_daily_square.update_movement import UpdateDailySquareMovement
 from .api.views.movement_don_juan.movement_don_juan_create import MovementDonJuanCreate
 from .api.views.movement_don_juan.movement_don_juan_update import MovementDonJuanUpdate

@@ -9,7 +9,10 @@ from django.shortcuts import get_object_or_404
 from api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from ....models.movement_daily_square import MovementDailySquare
+from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
+from units.models.unitItems import UnitItems
+from units.models.units import Unit
 
 class DeniedMovement(APIView):
     """
@@ -19,6 +22,8 @@ class DeniedMovement(APIView):
 
     def post(self, request, format=None):
         movement = get_object_or_404(MovementDailySquare, pk=request.data['movement_id'])
+        if movement.concept.name == "Compra de Inventario Unidad" or movement.concept.name == "Compra ":
+            MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
         box = movement.box_daily_square
         movement.denied_detail = request.data['text']
         movement.review = True

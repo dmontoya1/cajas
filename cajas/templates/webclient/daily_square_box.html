@@ -272,6 +272,7 @@
             <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="user_id" value="{{ box.user.pk }}">
             <input type="hidden" name="office_slug" value="{{ office.slug }}">
+            <input type="hidden" id="concept_id" name="concept_id" value="">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto </label>
@@ -540,10 +541,38 @@
         }
       });
 
-      $('.add-movement select').each(function () {
-        $(this).select2({
-          language: "es"
-        });
+      // $('.add-movement select').each(function () {
+      //   $(this).select2({
+      //     language: "es"
+      //   });
+      // });
+
+      $('#concept').select2({
+        language: "es"
+      });
+      $('#movement_type').select2({
+        language: "es"
+      });
+      $('#office').select2({
+        language: "es"
+      });
+      $('#partner').select2({
+        language: "es"
+      });
+      $('#unit').select2({
+        language: "es"
+      });
+      $('#dq-select').select2({
+        language: "es"
+      });
+      $('#user').select2({
+        language: "es"
+      });
+      $('#loan').select2({
+        language: "es"
+      });
+      $('#chain').select2({
+        language: "es"
       });
       $('#movement_type').select2({
         language: "es"
@@ -1136,7 +1165,7 @@
       $("#method_modal").data("id", mov_pk)
       $('.modal-title').text("Editar Movimiento")
       $('.btn-add-movement').text('Guardar')
-
+      $("#concept_id").val(mov_pk)
       //get movement data
       axios.get(`/api/movements/${mov_pk}/dq-detail/`)
         .then(function (response) {

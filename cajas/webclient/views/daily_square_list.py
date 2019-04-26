@@ -7,8 +7,9 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
-from units.models.units import Unit
+from inventory.models.category import Category
 from office.models.officeCountry import OfficeCountry
+from units.models.units import Unit
 
 
 class DailySquareList(LoginRequiredMixin, TemplateView):
@@ -42,6 +43,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         except Exception as e:
             print(e)
             context['partner'] = self.request.user.partner.get()
+        context['categories'] = Category.objects.all()
         context['offices'] = offices
         context['units'] = units
         context['users'] = users

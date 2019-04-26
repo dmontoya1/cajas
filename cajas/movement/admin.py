@@ -3,6 +3,7 @@ from django.db import models
 from django.forms import Textarea
 
 from .models.movement_daily_square import MovementDailySquare
+from .models.movement_daily_square_request_item import MovementDailySquareRequestItem
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_don_juan_usd import MovementDonJuanUsd
 from .models.movement_office import MovementOffice
@@ -99,3 +100,9 @@ class MovementWithdraw(admin.ModelAdmin):
     readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail',
                        'date', 'responsible', 'ip')
     exclude = ('balance', )
+
+
+@admin.register(MovementDailySquareRequestItem)
+class MovementDailySquareRequestItemAdmin(admin.ModelAdmin):
+
+    list_display = ('movement', 'name', 'description', 'price', 'brand')
