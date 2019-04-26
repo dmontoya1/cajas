@@ -1,8 +1,9 @@
 from django.db import models
 
 from inventory.models.brand import Brand
-from ..models.units import Unit
+from units.models.units import Unit
 from .movement_daily_square import MovementDailySquare
+
 
 class MovementDailySquareRequestItem(models.Model):
     """
@@ -35,8 +36,8 @@ class MovementDailySquareRequestItem(models.Model):
     )
 
     def __str__(self):
-        return '%s de la unidad %s' % (self.name, self.unit.name)
+        return 'movimiento de aprobación para %s' % (self.name)
 
     class Meta:
-        verbose_name = 'Inventario unidad'
-        verbose_name_plural = 'Inventarios unidades'
+        verbose_name = 'Movimiento de Aprobación'
+        verbose_name_plural = 'Movimientos de aprobación'

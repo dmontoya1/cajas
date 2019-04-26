@@ -22,7 +22,7 @@ class DeniedMovement(APIView):
 
     def post(self, request, format=None):
         movement = get_object_or_404(MovementDailySquare, pk=request.data['movement_id'])
-        if movement.concept.name == "Compra de Inventario Unidad" and movement.concept.name == "Compra ":
+        if movement.concept.name == "Compra de Inventario Unidad" or movement.concept.name == "Compra ":
             MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
         box = movement.box_daily_square
         movement.denied_detail = request.data['text']

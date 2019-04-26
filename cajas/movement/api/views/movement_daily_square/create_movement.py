@@ -154,13 +154,14 @@ class CreateDailySquareMovement(APIView):
                     )
             else:
                 if concept.name == "Compra de Inventario Unidad":
-                    print(concept.name)
-                    print(request.data)
                     movement = daily_square_manager.create_movement(data)
                     values = request.data["elemts"].split(",")
-                    if request.data["form[form]["+str(values[0])+"][name]"] != '':
-                        unit = Unit.objects.get(pk=request.data["unity"])
-                        for value in values:
+                    for value in values:
+                        if request.data["form[form]["+value+"][name]"] == '' or request.data["form[form]["+value+"][price]"] == '':
+                            MovementDailySquareRequestItem.objects.create(
+                                movement=movement,
+                            )
+                        else:
                             MovementDailySquareRequestItem.objects.create(
                                 movement=movement,
                                 name=request.data["form[form]["+value+"][name]"],

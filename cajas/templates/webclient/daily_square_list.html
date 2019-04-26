@@ -417,13 +417,13 @@
                 <div class="form-group col-md-6">
                   <label for="inventory_name">Nombre</label>
                   <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
-                         required>
+                         >
                 </div>
                 <div class="form-group col-md-6">
                   <label for="category">Categoría </label>
                   <div>
                     <select class="form-control category_control" id="category" name="category" style="width: 100%;"
-                            required>
+                            >
                       <option disabled value="" selected>Selecciona una categoría</option>
                       {% for category in categories %}
                         <option value="{{ category.pk }}">{{ category }}</option>
@@ -435,14 +435,14 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="brand">Marca </label>
-                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" required>
+                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" >
                     <option disabled value="" selected>Selecciona una categoría</option>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="price">Precio</label>
                   <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                         required>
+                         >
                 </div>
               </div>
               <div class="form-row justify-content-center">
@@ -611,11 +611,11 @@
         }
       });
 
-      $('.add-movement select').each(function () {
-        $(this).select2({
-          language: "es"
-        });
-      });
+      // $('.add-movement select').each(function () {
+      //   $(this).select2({
+      //     language: "es"
+      //   });
+      // });
 
       var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
@@ -631,7 +631,16 @@
         $(this).closest('#dynamic_form').remove();
       });
 
+      $('.add-movement .scape select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+
       $('#concept').select2({
+        language: "es"
+      });
+      $('#movement_type').select2({
         language: "es"
       });
     });

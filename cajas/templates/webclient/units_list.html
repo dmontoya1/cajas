@@ -577,8 +577,6 @@
     //edit units script
     $('.edit-item').on('click', function () {
       var unit_pk = $(this).data("id")
-      var office_pk = "{{ office.pk }}"
-      var data_brand = []
       $("#unitpk").val(unit_pk)
       //get unit data and fill inputs with it
       axios.get(`/api/units/${unit_pk}/detail`)

@@ -85,17 +85,24 @@ class AcceptMovement(APIView):
                 pass
             elif relationship == Relationship.CHAIN:
                 pass
-        if concept.name == "Compra de Inventario Unidad":
+        if movement.concept.name == "Compra de Inventario Unidad":
             movement_items = MovementDailySquareRequestItem.objects.filter(
                 movement=movement
             )
             for item in movement_items:
-                UnitItems.objects.create(
-                    unit=movement.unit,
-                    name=item.name,
-                    price=item.price,
-                    brand=item.brand
-                )
+                if not item.name or not item.price or not item.brand:
+                    return Response(
+                        'No se especificaron todos los campos para crear el inventario',
+                        status=status.HTTP_206_PARTIAL_CONTENT
+                    )
+                else:
+                    UnitItems.objects.create(
+                        unit=movement.unit,
+                        name=item.name,
+                        price=item.price,
+                        brand=item.brand
+                    )
+            movement_items.delete()
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
         movement.save()
