@@ -17,7 +17,8 @@ class MovementDailySquareRequestItem(models.Model):
     )
     name = models.CharField(
         'Nombre',
-        max_length=255
+        max_length=255,
+        blank=True, null=True
     )
     description = models.TextField(
         'Descripción',
@@ -25,7 +26,8 @@ class MovementDailySquareRequestItem(models.Model):
     )
     price = models.IntegerField(
         'Precio',
-        help_text='Precio en la modena local'
+        help_text='Precio en la modena local',
+        blank=True, null=True
     )
     brand = models.ForeignKey(
         Brand,
