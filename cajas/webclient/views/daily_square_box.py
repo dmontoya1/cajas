@@ -8,9 +8,10 @@ from django.views.generic import TemplateView
 from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
+from inventory.models import Category
+from movement.models.movement_daily_square import MovementDailySquare
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
-from movement.models.movement_daily_square import MovementDailySquare
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -52,4 +53,6 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['units'] = units
         context['today'] = datetime.today().strftime('%d/%m/%Y')
         context['past_mvments'] = past_mvments
+        context['categories'] = Category.objects.all()
+
         return context

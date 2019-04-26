@@ -100,4 +100,3 @@ class MovementPartnerCreate(APIView):
             'Se ha añadido el movimiento exitosamente.',
             status=status.HTTP_201_CREATED
         )
-

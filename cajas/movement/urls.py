@@ -5,6 +5,7 @@ from .api.views.movement_daily_square.create_movement import CreateDailySquareMo
 from .api.views.movement_daily_square.create_withdraw_movement import CreateWithdrawMovement
 from .api.views.movement_daily_square.denied_movement import DeniedMovement
 from .api.views.movement_daily_square.dispersion_movement import DispersionMovement
+from .api.views.movement_daily_square.update_daily_square_request_item import DailySquareRequestItemDetail
 from .api.views.movement_daily_square.update_movement import UpdateDailySquareMovement
 from .api.views.movement_don_juan.movement_don_juan_create import MovementDonJuanCreate
 from .api.views.movement_don_juan.movement_don_juan_update import MovementDonJuanUpdate
@@ -49,6 +50,8 @@ urlpatterns = [
     path("<int:pk>/dq-detail/", UpdateDailySquareMovement.as_view(), name='dq_detail'),
 
     # Request Movements
+    path("<int:pk>/dq-request-item-detail/", DailySquareRequestItemDetail.as_view(), name='dq_request_item_detail'),
+    path("movement-partner-create/", MovementPartnerCreate.as_view(), name='movement_partner_create'),
     path("movement-request-create/", MovementRequestCreate.as_view(), name='movement_request_create'),
     path("movement-withdraw-request-create/", MovementWithdrawRequestCreate.as_view(),
          name='movement_withdraw_request_create'

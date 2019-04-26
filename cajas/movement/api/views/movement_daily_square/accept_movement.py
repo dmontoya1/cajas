@@ -10,9 +10,11 @@ from api.CsrfExempt import CsrfExemptSessionAuthentication
 from concepts.models.concepts import Concept, Relationship
 from movement.services.office_service import MovementOfficeManager
 from movement.services.partner_service import MovementPartnerManager
+from units.models.unitItems import UnitItems
 from webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
+from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
 movement_office_manager = MovementOfficeManager()
 movement_partner_manager = MovementPartnerManager()
@@ -84,7 +86,24 @@ class AcceptMovement(APIView):
                 pass
             elif relationship == Relationship.CHAIN:
                 pass
-
+        if movement.concept.name == "Compra de Inventario Unidad":
+            movement_items = MovementDailySquareRequestItem.objects.filter(
+                movement=movement
+            )
+            for item in movement_items:
+                if not item.name or not item.price or not item.brand:
+                    return Response(
+                        'No se especificaron todos los campos para crear el inventario',
+                        status=status.HTTP_206_PARTIAL_CONTENT
+                    )
+                else:
+                    UnitItems.objects.create(
+                        unit=movement.unit,
+                        name=item.name,
+                        price=item.price,
+                        brand=item.brand
+                    )
+            movement_items.delete()
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
         movement.save()

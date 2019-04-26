@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from boxes.models.box_daily_square import BoxDailySquare
 from boxes.models.box_don_juan import BoxDonJuan
 from boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from inventory.models.brand import Brand
 from cajas.users.models.user import User
 from chains.models.chain import Chain
 from concepts.models.concepts import Concept
@@ -22,7 +23,7 @@ from webclient.views.utils import get_object_or_none
 from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
-
+from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
 class CreateDailySquareMovement(APIView):
     """
@@ -152,7 +153,23 @@ class CreateDailySquareMovement(APIView):
                         status=status.HTTP_204_NO_CONTENT
                     )
             else:
-                movement = daily_square_manager.create_movement(data)
+                if concept.name == "Compra de Inventario Unidad":
+                    movement = daily_square_manager.create_movement(data)
+                    values = request.data["elemts"].split(",")
+                    for value in values:
+                        if request.data["form[form]["+value+"][name]"] == '' or request.data["form[form]["+value+"][price]"] == '':
+                            MovementDailySquareRequestItem.objects.create(
+                                movement=movement,
+                            )
+                        else:
+                            MovementDailySquareRequestItem.objects.create(
+                                movement=movement,
+                                name=request.data["form[form]["+value+"][name]"],
+                                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                price=request.data["form[form]["+value+"][price]"]
+                            )
+                else:
+                    movement = daily_square_manager.create_movement(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',
