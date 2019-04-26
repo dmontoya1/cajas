@@ -37,7 +37,9 @@ class User(AbstractUser):
     )
 
     def __str__(self):
-        return "{} ({})".format(self.get_full_name(), self.document_id)
+        if self.document_id:
+            return "{} ({})".format(self.get_full_name(), self.document_id)
+        return self.username
 
     def is_employee(self):
         try:
@@ -52,3 +54,6 @@ class User(AbstractUser):
         if self.related_employee.get().charge == secretary:
             return True
         return False
+
+    def is_super_user(self):
+        return self.is_superuser
