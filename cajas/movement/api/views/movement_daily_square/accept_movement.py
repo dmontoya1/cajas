@@ -97,12 +97,23 @@ class AcceptMovement(APIView):
                         status=status.HTTP_206_PARTIAL_CONTENT
                     )
                 else:
-                    UnitItems.objects.create(
-                        unit=movement.unit,
-                        name=item.name,
-                        price=item.price,
-                        brand=item.brand
-                    )
+                    item_create = UnitItems()
+                    item_create.name = item.name
+                    item_create.price = item.price
+                    item_create.brand = item.brand
+                    print(item.movement.unit)
+                    print(item.movement.office)
+                    if item.movement.unit:
+                        item_create.unit = item.movement.unit
+                    else:
+                        item_create.unit = item.movement.office
+                    if item.is_replacement:
+                        item_create.is_replacement = True
+                    item_create.save()
+                    print(item_create.office)
+                    print(item_create.name)
+                    print(item_create.unit)
+                    print(item_create.is_replacement)
             movement_items.delete()
         movement.review = True
         movement.status = MovementDailySquare.APPROVED

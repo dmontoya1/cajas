@@ -46,6 +46,7 @@ class CreateDailySquareMovement(APIView):
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
+        print(office)
         data = {
             'box': box_daily_square,
             'concept': concept,
@@ -162,12 +163,21 @@ class CreateDailySquareMovement(APIView):
                                 movement=movement,
                             )
                         else:
-                            MovementDailySquareRequestItem.objects.create(
-                                movement=movement,
-                                name=request.data["form[form]["+value+"][name]"],
-                                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                                price=request.data["form[form]["+value+"][price]"]
-                            )
+                            if request.data["form[form]["+value+"][is_replacement]"]:
+                                MovementDailySquareRequestItem.objects.create(
+                                    movement=movement,
+                                    name=request.data["form[form]["+value+"][name]"],
+                                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                    price=request.data["form[form]["+value+"][price]"],
+                                    is_replacement=True
+                                )
+                            else:
+                                MovementDailySquareRequestItem.objects.create(
+                                    movement=movement,
+                                    name=request.data["form[form]["+value+"][name]"],
+                                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                    price=request.data["form[form]["+value+"][price]"]
+                                )
                 else:
                     movement = daily_square_manager.create_movement(data)
 

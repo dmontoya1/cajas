@@ -412,7 +412,7 @@
               <div class="form-row">
                 <div class="form-group col-md-12">
                   <label for="unity">Unidad</label>
-                  <select class="form-control" id="unity" name="unit" style="width: 100%;" required>
+                  <select class="form-control" id="unity" name="unit" style="width: 100%;">
                     <option disabled value="" selected>Selecciona una unidad</option>
                     {% for unit in units %}
                     <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
@@ -456,6 +456,10 @@
                          >
                 </div>
               </div>
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_replacement" name="is_replacement">
+                <label class="form-check-label" for="is_replacement">Repuesto</label>
+              </div>
               <div class="form-row justify-content-center">
                 <div class="col-md-3 pt-1 text-center">
                   <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
@@ -483,7 +487,6 @@
       if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
         $(".dynamic_controller").removeClass("d-none")
         $("#unit_select").removeClass("d-none")
-        $("#unity").prop("required", true)
 
         // when dynamic form appears its necesary to make inputs required
         $('.add-movement .dynamic_controller *').filter(':input').each(function () {
