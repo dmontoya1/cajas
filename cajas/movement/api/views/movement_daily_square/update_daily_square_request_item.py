@@ -29,7 +29,6 @@ class DailySquareRequestItemDetail(generics.RetrieveUpdateAPIView):
         return Response(quest.data)
 
     def update(self, request, *args, **kwargs):
-        print("asda", request.data)
         if request.data["elemts"] == '':
             return Response(
                 'Debe crearse el inventario de la unidad para aprobar el movimiento',

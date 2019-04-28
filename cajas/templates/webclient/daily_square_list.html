@@ -274,6 +274,7 @@
           <form method="POST" class="add-movement">
             {% csrf_token %}
             <input type="hidden" name="office_slug" value="{{ office.slug }}">
+            <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto </label>
@@ -487,11 +488,6 @@
       if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
         $(".dynamic_controller").removeClass("d-none")
         $("#unit_select").removeClass("d-none")
-
-        // when dynamic form appears its necesary to make inputs required
-        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
-          $(this).prop("required", true)
-        })
       } else {
         $(".dynamic_controller").addClass("d-none")
         $("#unit_select").addClass("d-none")
@@ -510,6 +506,14 @@
           if ($(this).css("display") != "none") {
             $(this).trigger("click")
           }
+        })
+      }
+    })
+
+    $("#plus5").on("click", function(){
+      if($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1){
+        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+          $(this).prop("required", true)
         })
       }
     })
@@ -743,6 +747,7 @@
         }
         $(this).append('<input type="hidden" name="user_id" value="' + partner_pk + '" >')
         data_send = $(this).serialize()
+        console.log(data_send)
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
           .then(function (response) {
             msg = response.data

@@ -101,19 +101,13 @@ class AcceptMovement(APIView):
                     item_create.name = item.name
                     item_create.price = item.price
                     item_create.brand = item.brand
-                    print(item.movement.unit)
-                    print(item.movement.office)
-                    if item.movement.unit:
+                    if item.movement.unit is not None:
                         item_create.unit = item.movement.unit
                     else:
-                        item_create.unit = item.movement.office
+                        item_create.office = item.movement.office
                     if item.is_replacement:
                         item_create.is_replacement = True
                     item_create.save()
-                    print(item_create.office)
-                    print(item_create.name)
-                    print(item_create.unit)
-                    print(item_create.is_replacement)
             movement_items.delete()
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
