@@ -305,7 +305,7 @@
               <div class="form-group col-md-6" id="regular-value">
                 <label for="value">Valor</label>
                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento"
-                       >
+                >
               </div>
             </div>
             <div class="form-row d-none" id="usd-buy">
@@ -415,8 +415,8 @@
                   <select class="form-control" id="unity" name="unit" style="width: 100%;" required>
                     <option disabled value="" selected>Selecciona una unidad</option>
                     {% for unit in units %}
-                    <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
-                    </option>
+                      <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
+                      </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -428,13 +428,13 @@
                 <div class="form-group col-md-6">
                   <label for="inventory_name">Nombre</label>
                   <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
-                         >
+                  >
                 </div>
                 <div class="form-group col-md-6">
                   <label for="category">Categoría </label>
                   <div>
                     <select class="form-control category_control" id="category" name="category" style="width: 100%;"
-                            >
+                    >
                       <option disabled value="" selected>Selecciona una categoría</option>
                       {% for category in categories %}
                         <option value="{{ category.pk }}">{{ category }}</option>
@@ -446,14 +446,14 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="brand">Marca </label>
-                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" >
+                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;">
                     <option disabled value="" selected>Selecciona una categoría</option>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="price">Precio</label>
                   <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                         >
+                  >
                 </div>
               </div>
               <div class="form-row justify-content-center">
@@ -478,8 +478,8 @@
 {% block extra_js %}
 
   <script type="text/javascript">
-      //Displays unit_form if concept equals to Compra de Inventario Unidades
-      $("#concept").on("change", function () {
+    //Displays unit_form if concept equals to Compra de Inventario Unidades
+    $("#concept").on("change", function () {
       if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
         $(".dynamic_controller").removeClass("d-none")
         $("#unit_select").removeClass("d-none")
@@ -540,9 +540,9 @@
 
     // Add movement script
     $(".add-movement").on("click", function () {
-    slug = "{{ office.slug }}"
-    partner_id = $("#partner_id").val()
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      slug = "{{ office.slug }}"
+      partner_id = $("#partner_id").val()
+      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       $('.add-movement-form').on('submit', function (e) {
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
@@ -777,7 +777,6 @@
       partner_pk = $(this).data("id")
       $('.add-movement').on('submit', function (ev) {
         ev.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
           var elemts = []

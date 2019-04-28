@@ -218,7 +218,7 @@
                       <td>{{ partner.get_partner_type_display }}</td>
                       <td>{{ partner.user.email }}</td>
                       <td><a href="#" class="partner_detail" data-id="{{ partner.id }}" data-toggle="modal"
-                               data-target="#modalDetail">Detalle</a></td>
+                             data-target="#modalDetail">Detalle</a></td>
                       <td>$ {{ partner.box.balance|intcomma }} {{ partner.office.country.currency.abbr }}</td>
                       <td>
                         {% if perms.movements.movement.add_movementpartner %}
@@ -339,7 +339,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- Modal detail-->
   <div class="modal fade" id="modalDetail" role="dialog" aria-labelledby="modalDetailTitle" aria-hidden="true">
@@ -640,43 +639,42 @@
       })
     })
 
-      $('.add-movement-form').on('submit', function (e) {
-        e.preventDefault()
-        var elemts = []
-        /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
-        *  there: obtaining directly data from python dictionary using these identifiers
-        */
-        $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function () {
-          id_form = $(this).attr("id")
-          id_form = id_form[id_form.length - 1]
-          elemts.push(id_form)
-        });
-        $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
-        data = $(this).serialize()
+    $('.add-movement-form').on('submit', function (e) {
+      e.preventDefault()
+      var elemts = []
+      /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
+      *  there: obtaining directly data from python dictionary using these identifiers
+      */
+      $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function () {
+        id_form = $(this).attr("id")
+        id_form = id_form[id_form.length - 1]
+        elemts.push(id_form)
+      });
+      $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
+      data = $(this).serialize()
 
-        console.log(data)
-        axios.post("{% url 'api:movements:movement_partner_create' %}", data)
-          .then(function (response) {
-            data = response.data
-            Swal.fire({
-              type: 'success',
-              title: 'Exitoso',
-              text: data,
-            }).then(function () {
-              location.reload()
-            })
+      axios.post("{% url 'api:movements:movement_partner_create' %}", data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
           })
-          .catch(function (error) {
-            // handle error
-            Swal.fire({
-              type: 'error',
-              title: 'Error',
-              text: error,
-            }).then(function () {
-              location.reload()
-            })
+        })
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
           })
-      })
+        })
+    })
 
     $(document).ready(function () {
       $('#table').DataTable({

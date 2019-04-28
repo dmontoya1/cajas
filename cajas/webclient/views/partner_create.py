@@ -9,7 +9,7 @@ from boxes.services.box_daily_square_manager import BoxDailySquareManager
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.services.user_service import UserManager
-from cajas.users.services.partner_service import partner_manager
+from cajas.users.services.partner_service import PartnerManager
 from movement.services.partner_service import MovementPartnerManager
 from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.officeCountry import OfficeCountry
@@ -20,6 +20,7 @@ from .get_ip import get_ip
 box_daily_square_manager = BoxDailySquareManager()
 daily_square_manager = MovementDailySquareManager()
 movement_partner_manager = MovementPartnerManager()
+partner_manager = PartnerManager()
 user_manager = UserManager()
 
 

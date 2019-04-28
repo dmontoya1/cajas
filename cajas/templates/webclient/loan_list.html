@@ -370,7 +370,7 @@
                 </div>
               </div>
             </div>
-            <button type="submit" class="btn btn-submit">Registrar</button>
+            <button type="submit" class="btn btn-submit btn-add-loan">Registrar</button>
           </form>
         </div>
       </div>
@@ -403,7 +403,7 @@
               </div>
             </div>
             <hr>
-            <button type="submit" class="btn btn-submit">Abonar</button>
+            <button type="submit" class="btn btn-submit btn-add-pay">Abonar</button>
           </form>
         </div>
       </div>
@@ -505,6 +505,7 @@
 
     $('.add-loan-payment').on('submit', function (e) {
       e.preventDefault()
+      $('.btn-add-pay').attr('disabled', true)
       data = $(this).serialize()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:loans:loan_payment_create' %}', data)

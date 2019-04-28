@@ -5,6 +5,7 @@ from .api.views.employee_create import EmployeeCreate
 from .api.views.employee_delete import EmployeeDelete
 from .api.views.employee_update import EmployeeUpdate
 from .api.views.partner_list import PartnerList
+from .api.views.partner_migrate import PartnerMigrate
 from .api.views.validate_partner_withdraw import ValidatePartnerWithdraw
 from .api.views.validate_partner_closeout import ValidatePartnerCloseout
 from .api.views.partner_closeout import PartnerCloseout
@@ -20,4 +21,5 @@ urlpatterns = [
     path("validate-withdraw", ValidatePartnerWithdraw.as_view(), name='validate_withdraw'),
     path("validate-closeout", ValidatePartnerCloseout.as_view(), name='validate_closeout'),
     path("closeout", PartnerCloseout.as_view(), name='closeout'),
+    path("migrate", PartnerMigrate.as_view(), name='migrate'),
 ]

@@ -498,7 +498,7 @@
                 <!--input type="file" class="form-control-file" id="edit_passport" name="passport" required-->
               </div>
             </div>
-            <button type="submit" class="btn btn-submit">Editar</button>
+            <button type="submit" class="btn btn-submit" id="btn-edit">Editar</button>
           </form>
         </div>
       </div>
@@ -513,6 +513,7 @@
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
+      $('#addEmployee_submit').attr('disabled', true )
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var bodyFormData = new FormData();
 
@@ -651,6 +652,7 @@
     //and then submit the form
     $('.edit_employee_form').on('submit', function (e) {
       e.preventDefault()
+      $('#btn-edit').attr('disabled', true)
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       data = $(this).serialize()
 

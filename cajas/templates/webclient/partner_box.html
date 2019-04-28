@@ -541,7 +541,7 @@
 
     $('.add-movement-form').on('submit', function (e) {
       e.preventDefault()
-      console.log($("#method_modal").val())
+      $('.btn-submit').attr('disabled', true)
       movement = $(this)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
 
