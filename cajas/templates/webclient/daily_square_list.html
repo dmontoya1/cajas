@@ -289,7 +289,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -841,5 +841,20 @@
       $("#unit_select").addClass("d-none")
 
     })
+    {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      $('.datetimepicker_dailysquare').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/03',
+        maxDate: '0',
+        timepicker: false,
+      });
+    {% else %}
+      $('.datetimepicker_dailysquare').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/01',
+        maxDate: '0',
+        timepicker: false,
+      });
+    {% endif %}
   </script>
 {% endblock %}
