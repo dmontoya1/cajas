@@ -23,7 +23,7 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, pk=self.request.session['office'])
         box_office = office.box
         box_donjuan = BoxDonJuan.objects.get(office=office)
-        box_partners = BoxPartner.objects.filter(partner__office=office)
+        box_partners = BoxPartner.objects.filter(partner__office=office, is_active=True)
         box_partners_total = box_partners.aggregate(Sum('balance'))
         box_daily = BoxDailySquare.objects.filter(office=office)
         box_daily_total = box_daily.aggregate(Sum('balance'))
