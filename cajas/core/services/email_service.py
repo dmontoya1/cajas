@@ -67,11 +67,35 @@ class EmailManager(object):
         subject = "Has recibido una transferencia de otra oficina"
         self.send_email(url, ctx, subject, email_to)
 
-    def send_close_box_mail(self, request, email_to):
-        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+    def send_close_box_mail(self, domain, email_to):
+        url = 'http://{}{}'.format(domain, reverse('webclient:home'))
         ctx = {
             "title": "Notificación de cierre de cuadre diario",
             "content": "Aún no has cerrado la caja de cuadre diario, ingresa a la plataforma y revisa el estado de tu caja"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Notificación de cierre de cuadre diario"
+        self.send_email(url, ctx, subject, email_to)
+
+    def send_payment_notification(self, domain, email_to):
+        url = 'http://{}{}'.format(domain, reverse('webclient:home'))
+        ctx = {
+            "title": "Recordatorio de Pagos",
+            "content": "Recuerda el pago de intereses, abonos y prestámos"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Notificación de cierre de cuadre diario"
+        self.send_email(url, ctx, subject, email_to)
+
+    def send_employee_salary_change_notification(self, domain, email_to):
+        url = 'http://{}{}'.format(domain, reverse('webclient:home'))
+        ctx = {
+            "title": "Recordatorio de Pagos",
+            "content": "Recuerda el pago de intereses, abonos y prestámos"
             ,
             "url": url,
             "action": "Ir a la plataforma"
