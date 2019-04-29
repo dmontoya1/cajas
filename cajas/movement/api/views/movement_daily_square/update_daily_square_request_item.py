@@ -25,26 +25,25 @@ class DailySquareRequestItemDetail(generics.RetrieveUpdateAPIView):
         movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
         request_item = MovementDailySquareRequestItem.objects.filter(movement=movement)
         quest = MovementDailySquareRequestItemSerializer(request_item, many=True)
+        print(quest.data)
         return Response(quest.data)
 
     def update(self, request, *args, **kwargs):
-        print("asda", request.data)
         if request.data["elemts"] == '':
             return Response(
-                'No se actualizó el inventario de unidad',
+                'Debe crearse el inventario de la unidad para aprobar el movimiento',
                 status=status.HTTP_204_NO_CONTENT
             )
         movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
-        request_item = MovementDailySquareRequestItem.objects.filter(movement=movement)
+        request_item = MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
         values = request.data["elemts"].split(",")
         for value in values:
-                MovementDailySquareRequestItem.objects.create(
-                    movement=movement,
-                    name=request.data["form[form]["+value+"][name]"],
-                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                    price=request.data["form[form]["+value+"][price]"]
-                )
-        request_item.delete()
+            MovementDailySquareRequestItem.objects.create(
+                movement=movement,
+                name=request.data["form[form]["+value+"][name]"],
+                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                price=request.data["form[form]["+value+"][price]"]
+            )
         return Response(
             'El item se ha actualizado correctamente',
             status=status.HTTP_200_OK

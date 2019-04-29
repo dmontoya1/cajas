@@ -38,6 +38,10 @@ class UnitsList(LoginRequiredMixin, TemplateView):
             partner = Partner.objects.get(user=self.request.user, office=office)
             context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
 
+        supervisor = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
+        collectors = Employee.objects.filter(office_country=office, charge__name="Cobrador", user__is_active=True)
+        context['supervisor'] = supervisor
+        context['collectors'] = collectors
         context['office'] = office
 
         return context

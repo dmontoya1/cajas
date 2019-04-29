@@ -100,9 +100,3 @@ class MovementWithdraw(admin.ModelAdmin):
     readonly_fields = ('box_daily_square', 'box_partner', 'concept', 'movement_type', 'value', 'detail',
                        'date', 'responsible', 'ip')
     exclude = ('balance', )
-
-
-@admin.register(MovementDailySquareRequestItem)
-class MovementDailySquareRequestItemAdmin(admin.ModelAdmin):
-
-    list_display = ('movement', 'name', 'description', 'price', 'brand')

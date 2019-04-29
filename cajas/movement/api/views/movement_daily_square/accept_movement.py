@@ -93,16 +93,21 @@ class AcceptMovement(APIView):
             for item in movement_items:
                 if not item.name or not item.price or not item.brand:
                     return Response(
-                        'No se especificaron todos los campos para crear el inventario',
+                        'Debe crearse el inventario de la unidad para aprobar el movimiento',
                         status=status.HTTP_206_PARTIAL_CONTENT
                     )
                 else:
-                    UnitItems.objects.create(
-                        unit=movement.unit,
-                        name=item.name,
-                        price=item.price,
-                        brand=item.brand
-                    )
+                    item_create = UnitItems()
+                    item_create.name = item.name
+                    item_create.price = item.price
+                    item_create.brand = item.brand
+                    if item.movement.unit is not None:
+                        item_create.unit = item.movement.unit
+                    else:
+                        item_create.office = item.movement.office
+                    if item.is_replacement:
+                        item_create.is_replacement = True
+                    item_create.save()
             movement_items.delete()
         movement.review = True
         movement.status = MovementDailySquare.APPROVED

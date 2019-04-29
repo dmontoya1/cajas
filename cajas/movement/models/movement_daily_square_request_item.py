@@ -36,6 +36,10 @@ class MovementDailySquareRequestItem(models.Model):
         blank=True, null=True,
         related_name='related_unit_movement_items'
     )
+    is_replacement = models.BooleanField(
+        "Item de repuesto?",
+        default=False
+    )
 
     def __str__(self):
         return 'movimiento de aprobación para %s' % (self.name)

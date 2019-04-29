@@ -2,6 +2,7 @@ from django.db import models
 
 from inventory.models.brand import Brand
 from ..models.units import Unit
+from office.models.officeCountry import OfficeCountry
 
 
 class UnitItems(models.Model):
@@ -12,7 +13,14 @@ class UnitItems(models.Model):
         Unit,
         verbose_name='Unidad',
         on_delete=models.CASCADE,
-        related_name='related_items'
+        related_name='related_items',
+        blank=True, null=True
+    )
+    office = models.ForeignKey(
+        OfficeCountry,
+        verbose_name='Oficina por país',
+        on_delete=models.SET_NULL,
+        blank=True, null=True
     )
     name = models.CharField(
         'Nombre',
@@ -42,9 +50,13 @@ class UnitItems(models.Model):
         help_text='Por que se elimino el item?',
         blank=True, null=True
     )
+    is_replacement = models.BooleanField(
+        "Item de repuesto?",
+        default=False
+    )
 
     def __str__(self):
-        return '%s de la unidad %s' % (self.name, self.unit.name)
+        return  self.name #' de la unidad ' # % (self.name, self.unit.name)
 
     class Meta:
         verbose_name = 'Inventario unidad'
