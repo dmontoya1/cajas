@@ -70,9 +70,10 @@ class SupervisorCalendarList(APIView):
                 group=group,
             )
             for i in superv:
-                obj = get_object_or_none(SupervisorCalendar, supervisor=i.supervisor.user)
-                if obj is not None:
-                    super_calendar.append(obj)
+                obj = SupervisorCalendar.objects.filter(supervisor=i.supervisor.user)
+                for o in obj:
+                    if obj is not None:
+                        super_calendar.append(obj[0])
         elif str(user_type.charge) == "Supervisor":
             super_calendar = SupervisorCalendar.objects.filter(
                 office__slug=self.request.GET.get("office"),

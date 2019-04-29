@@ -46,6 +46,7 @@ class CreateDailySquareMovement(APIView):
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
+        print("OFICNA", office)
         data = {
             'box': box_daily_square,
             'concept': concept,
@@ -155,6 +156,8 @@ class CreateDailySquareMovement(APIView):
             else:
                 if concept.name == "Compra de Inventario Unidad":
                     movement = daily_square_manager.create_movement(data)
+                    print("movement", movement.office)
+                    print("movement", movement.unit)
                     values = request.data["elemts"].split(",")
                     for value in values:
                         if request.data["form[form]["+value+"][name]"] == '' or request.data["form[form]["+value+"][price]"] == '':
@@ -162,12 +165,21 @@ class CreateDailySquareMovement(APIView):
                                 movement=movement,
                             )
                         else:
-                            MovementDailySquareRequestItem.objects.create(
-                                movement=movement,
-                                name=request.data["form[form]["+value+"][name]"],
-                                brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                                price=request.data["form[form]["+value+"][price]"]
-                            )
+                            if "form[form]["+value+"][is_replacement]" in request.data:
+                                MovementDailySquareRequestItem.objects.create(
+                                    movement=movement,
+                                    name=request.data["form[form]["+value+"][name]"],
+                                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                    price=request.data["form[form]["+value+"][price]"],
+                                    is_replacement=True
+                                )
+                            else:
+                                MovementDailySquareRequestItem.objects.create(
+                                    movement=movement,
+                                    name=request.data["form[form]["+value+"][name]"],
+                                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                                    price=request.data["form[form]["+value+"][price]"]
+                                )
                 else:
                     movement = daily_square_manager.create_movement(data)
 

@@ -274,6 +274,7 @@
           <form method="POST" class="add-movement">
             {% csrf_token %}
             <input type="hidden" name="office_slug" value="{{ office.slug }}">
+            <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto </label>
@@ -288,7 +289,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -305,7 +306,7 @@
               <div class="form-group col-md-6" id="regular-value">
                 <label for="value">Valor</label>
                 <input type="number" class="form-control" id="value" name="value" placeholder="Valor del movimiento"
-                       >
+                >
               </div>
             </div>
             <div class="form-row d-none" id="usd-buy">
@@ -412,11 +413,11 @@
               <div class="form-row">
                 <div class="form-group col-md-12">
                   <label for="unity">Unidad</label>
-                  <select class="form-control" id="unity" name="unit" style="width: 100%;" required>
+                  <select class="form-control" id="unity" name="unit" style="width: 100%;">
                     <option disabled value="" selected>Selecciona una unidad</option>
                     {% for unit in units %}
-                    <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
-                    </option>
+                      <option value="{{ unit.pk }}">{{ unit.name }} (Cobrador: {{ unit.collector.get_full_name }})
+                      </option>
                     {% endfor %}
                   </select>
                 </div>
@@ -428,13 +429,13 @@
                 <div class="form-group col-md-6">
                   <label for="inventory_name">Nombre</label>
                   <input type="text" class="form-control" id="inventory_name" name="name" placeholder="Nombre del item"
-                         >
+                  >
                 </div>
                 <div class="form-group col-md-6">
                   <label for="category">Categoría </label>
                   <div>
                     <select class="form-control category_control" id="category" name="category" style="width: 100%;"
-                            >
+                    >
                       <option disabled value="" selected>Selecciona una categoría</option>
                       {% for category in categories %}
                         <option value="{{ category.pk }}">{{ category }}</option>
@@ -446,15 +447,19 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="brand">Marca </label>
-                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;" >
+                  <select class="form-control brand_control" id="brand" name="brand" style="width: 100%;">
                     <option disabled value="" selected>Selecciona una categoría</option>
                   </select>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="price">Precio</label>
                   <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                         >
+                  >
                 </div>
+              </div>
+              <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="is_replacement" name="is_replacement">
+                <label class="form-check-label" for="is_replacement">Repuesto</label>
               </div>
               <div class="form-row justify-content-center">
                 <div class="col-md-3 pt-1 text-center">
@@ -478,17 +483,11 @@
 {% block extra_js %}
 
   <script type="text/javascript">
-      //Displays unit_form if concept equals to Compra de Inventario Unidades
-      $("#concept").on("change", function () {
+    //Displays unit_form if concept equals to Compra de Inventario Unidades
+    $("#concept").on("change", function () {
       if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
         $(".dynamic_controller").removeClass("d-none")
         $("#unit_select").removeClass("d-none")
-        $("#unity").prop("required", true)
-
-        // when dynamic form appears its necesary to make inputs required
-        $('.add-movement-form .dynamic_controller *').filter(':input').each(function () {
-          $(this).prop("required", true)
-        })
       } else {
         $(".dynamic_controller").addClass("d-none")
         $("#unit_select").addClass("d-none")
@@ -496,14 +495,14 @@
         $("#unity").prop("required", false)
 
         // deactivate required prop and clean inputs beacause these are going to be hidden
-        $('.add-movement-form .dynamic_controller *').filter(':input').each(function () {
+        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
           $(this).prop("required", false)
           $(this).val("")
         })
         /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
         *  in this way we grant if user don't want to create unit items we send one empty form
         */
-        $(".add-movement-form .dynamic_controller").find("#minus5").each(function () {
+        $(".add-movement .dynamic_controller").find("#minus5").each(function () {
           if ($(this).css("display") != "none") {
             $(this).trigger("click")
           }
@@ -511,79 +510,37 @@
       }
     })
 
-    //dynamic form fill select brand input depending category
-    $('#addMovement').on('shown.bs.modal', function () {
-      $(document).on('change', '.category_control', function () {
-        //fill brands depending $(this) select
-        if ($(this).hasClass("category_control")) {
-          var select_category_id = $(this).attr('id');
-          axios.get(`/api/inventory/${$(this).val()}/brand`)
-            .then(function (response) {
-              data = response.data
-              $("#brand" + select_category_id[select_category_id.length - 1]).empty()
-              $.each(data, function (k, v) {
-                $("#brand" + select_category_id[select_category_id.length - 1]).append(
-                  `<option value=${v.id}>${v.name}</option>`
-                )
-              })
-              $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
-                '<option value="" selected disabled>Selecciona una marca</option>'
-              )
-            })
-            .catch(function (error) {
-              // handle error
-              console.log(error);
-            })
-        }
-      });
+    $("#plus5").on("click", function(){
+      if($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1){
+        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+          $(this).prop("required", true)
+        })
+      }
     })
 
-    // Add movement script
-    $(".add-movement").on("click", function () {
-    slug = "{{ office.slug }}"
-    partner_id = $("#partner_id").val()
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-
-      $('.add-movement-form').on('submit', function (e) {
-        if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-          e.preventDefault()
-          var elemts = []
-          /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
-          *  there: obtaining directly data from python dictionary using these identifiers
-          */
-          $('.add-movement-form .dynamic_controller *').filter('.category_control').each(function () {
-            id_form = $(this).attr("id")
-            id_form = id_form[id_form.length - 1]
-            elemts.push(id_form)
-          });
-          $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
-          data = $(this).serialize()
-
-          axios.post("{% url 'api:movements:movement_partner_create' %}", data)
-            .then(function (response) {
-              data = response.data
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: data,
-              }).then(function () {
-                location.reload()
-              })
-            })
-            .catch(function (error) {
-              // handle error
-              Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: error,
-              }).then(function () {
-                location.reload()
-              })
-            })
-        }
-      })
-    })
-
+    $(document).on('change', '.category_control', function () {
+      //fill brands depending $(this) select
+      if ($(this).hasClass("category_control")) {
+        var select_category_id = $(this).attr('id');
+        axios.get(`/api/inventory/${$(this).val()}/brand`)
+        .then(function (response) {
+          data = response.data
+          $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+          $.each(data, function (k, v) {
+            $("#brand" + select_category_id[select_category_id.length - 1]).append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+            '<option value="" selected disabled>Selecciona una marca</option>'
+          )
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+      }
+    });
 
     $(document).ready(function () {
       $('#table').DataTable({
@@ -777,13 +734,9 @@
       partner_pk = $(this).data("id")
       $('.add-movement').on('submit', function (ev) {
         ev.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
           var elemts = []
-          /* we get dynamic identifiers and send it to backend, because is the easeiest way to create objects
-          *  there: obtaining directly data from python dictionary using these identifiers
-          */
           $('.add-movement .dynamic_controller *').filter('.category_control').each(function () {
             id_form = $(this).attr("id")
             id_form = id_form[id_form.length - 1]
@@ -793,6 +746,7 @@
         }
         $(this).append('<input type="hidden" name="user_id" value="' + partner_pk + '" >')
         data_send = $(this).serialize()
+        console.log(data_send)
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
           .then(function (response) {
             msg = response.data
@@ -886,5 +840,20 @@
       $("#unit_select").addClass("d-none")
 
     })
+    {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      $('.datetimepicker_dailysquare').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/03',
+        maxDate: '0',
+        timepicker: false,
+      });
+    {% else %}
+      $('.datetimepicker_dailysquare').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/01',
+        maxDate: '0',
+        timepicker: false,
+      });
+    {% endif %}
   </script>
 {% endblock %}

@@ -8,5 +8,5 @@ register = template.Library()
 
 @register.simple_tag
 def get_dq_box(office, user):
-    box = BoxDailySquare.objects.get(user=user, office=office)
+    box, created = BoxDailySquare.objects.get_or_create(user=user, office=office)
     return box.balance

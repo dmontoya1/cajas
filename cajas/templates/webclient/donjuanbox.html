@@ -391,10 +391,11 @@
 
     $('.add-movement').on('submit', function (ev) {
       ev.preventDefault()
+      $('.btn-add-movement').attr('disabled', true )
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        axios.post('{% url 'api:movements:movement_donjuan_create' %}', data_send)
+        axios.post(`/api/movements/${'{{office.slug}}'}/movement-don-juan-create/`, data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',

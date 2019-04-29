@@ -393,7 +393,7 @@
                   <a href="#" class="btn btn-danger d-none" id="minus5_edit">Eliminar</a>
                 </div>
                 <div class="col-md-3 pt-1 text-center">
-                  <a href="#" class="btn btn-primary d-none" id="plus5_edit">Agregar Item</a>
+                  <a href="#" class="btn btn-primary" id="plus5_edit">Agregar Item</a>
                 </div>
               </div>
               <br>
@@ -603,6 +603,7 @@
       axios.get(`/api/units/${unit_pk}/detail`)
         .then(function (response) {
           data = response.data
+          console.log(data)
           $("#edit_name").val(data.name)
           $("#edit_partner").val(data.partner.user.first_name + " " + data.partner.user.last_name)
           $('#total_price').val(data.unit_price)
@@ -615,9 +616,6 @@
           $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
           $("#edit_supervisor").trigger("change")
 
-          if (data.related_items.length < 2) {
-            $("#plus5_edit").removeClass("d-none")
-          }
           var index_pk = 0
           items_lenght = data.related_items.length
           $(data.related_items).each(function () {
@@ -648,8 +646,13 @@
         .catch(function (error) {
           console.log(error);
         })
-    })
-
+        $("#plus5_edit").on("click", function(){
+          if(items_lenght == 1){
+            $("#edit_option1").attr("disabled", true)
+            $("#delete_option1").attr("disabled", true)
+          }
+        })
+      })
     //and then update unit
     $('.edit_unit_form').on('submit', function (e) {
       e.preventDefault()
