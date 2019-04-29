@@ -27,6 +27,8 @@ from .views.movement_requirement_list import MovementRequireList
 from .views.movement_withdraw_requirement_list import MovementWithdrawRequireList
 from .views.notifications import Notifications
 from .views.office_box import OfficeBox
+from .views.office_colombia import OfficeColombia
+from .views.office_colombia_bank import OfficeColombiaBank
 from .views.office_usd_box import OfficeUSDBox
 from .views.office_items_list import OfficeItemsList
 from .views.partner_box import PartnerBox
@@ -53,6 +55,8 @@ urlpatterns = [
     path("office/<slug:slug>/calendar", Calendar.as_view(), name='calendar'),
     path("office/<slug:slug>/groups", Groups.as_view(), name='groups'),
     path("office/<slug:slug>/usd/", OfficeUSDBox.as_view(), name='box_usd'),
+    path("office/<slug:slug>/box-colombia/", OfficeColombia.as_view(), name='box_colombia'),
+    path("office/<slug:slug>/box-bank/", OfficeColombiaBank.as_view(), name='box_bank'),
     path("office/<slug:slug>/notifications/", Notifications.as_view(), name='notifications'),
 
     # DonJuan

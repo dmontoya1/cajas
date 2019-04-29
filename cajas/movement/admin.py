@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.db import models
 from django.forms import Textarea
 
+from .models.movement_box_colombia import MovementBoxColombia
 from .models.movement_daily_square import MovementDailySquare
-from .models.movement_daily_square_request_item import MovementDailySquareRequestItem
 from .models.movement_don_juan import MovementDonJuan
 from .models.movement_don_juan_usd import MovementDonJuanUsd
 from .models.movement_office import MovementOffice
@@ -54,6 +54,18 @@ class MovementOfficeInline(admin.TabularInline):
     """
 
     model = MovementOffice
+    extra = 0
+
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
+    }
+
+
+class MovementColombiaInline(admin.TabularInline):
+    """Inline para los movimientos de la caja Colombia
+    """
+
+    model = MovementBoxColombia
     extra = 0
 
     formfield_overrides = {

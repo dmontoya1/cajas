@@ -16,14 +16,20 @@ class UserManager:
     def create_user(self, data):
         self.__validate_data(data)
         daily_square = False
+        email = ""
         try:
-            user = User.objects.get(username=data['email'])
+            user = User.objects.get(email=data['email'])
         except:
             if data['is_daily_square'] == "true":
                 daily_square = True
+            if data['email']:
+                email = data['email']
+                username = email
+            else:
+                username = data['document_id']
             user = User.objects.create(
-                email=data['email'],
-                username=data['email'],
+                email=email,
+                username=username,
                 first_name=data['first_name'],
                 last_name=data['last_name'],
                 document_type=data['document_type'],
@@ -36,8 +42,6 @@ class UserManager:
                 user.is_abstract = True
             else:
                 user.is_abstract = False
-            if data["is_daily_square"] == "true":
-                user.is_daily_square = True
 
             user.save()
         return user

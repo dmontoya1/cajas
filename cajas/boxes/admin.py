@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from movement.admin import (
+    MovementColombiaInline,
     MovementDonJuanUSDInline,
     MovementDailySquareInline,
     MovementDonJuanInline,
@@ -9,12 +10,25 @@ from movement.admin import (
     MovementProvisioningInline
 )
 
+from .models.box_colombia import BoxColombia
 from .models.box_daily_square import BoxDailySquare
 from .models.box_don_juan import BoxDonJuan
 from .models.box_don_juan_usd import BoxDonJuanUSD
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
 from .models.box_provisioning import BoxProvisioning
+
+
+@admin.register(BoxColombia)
+class BoxColombiaAdmin(admin.ModelAdmin):
+    """Administrador de las cajas colombia
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'name', 'balance', 'is_active')
+    inlines = [MovementColombiaInline, ]
+    search_fields = ('office__name',)
+    exclude = ('last_movement_id',)
 
 
 @admin.register(BoxDailySquare)
