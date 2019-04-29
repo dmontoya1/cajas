@@ -458,7 +458,7 @@
                 </div>
               </div>
               <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="is_replacement" name="is_replacement">
+                <input type="checkbox" class="form-check-input is_replacement_control" id="is_replacement" name="is_replacement">
                 <label class="form-check-label" for="is_replacement">Repuesto</label>
               </div>
               <div class="form-row justify-content-center">
@@ -516,6 +516,7 @@
           $(this).prop("required", true)
         })
       }
+      $(".is_replacement_control").prop("required", false)
     })
 
     $(document).on('change', '.category_control', function () {

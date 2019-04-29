@@ -13,14 +13,22 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         domain = Site.objects.get_current().domain
-        todayDate = datetime.date.today()
+        first_month_day = datetime.date.today()
         secretaries = Employee.objects.filter(charge__name="Secretaria")
-        if todayDate.day > 25:
-            todayDate += datetime.timedelta(7)
-        todayDate = todayDate.replace(day=1)
-        if todayDate == datetime.date.today():
-            for secretary in secretaries:
-                email_manager.send_payment_notification(domain, secretary)
-                self.stdout.write(self.style.SUCCESS(
-                    'Enviar correo ;)')
-                )
+        if first_month_day.day > 25:
+            first_month_day += datetime.timedelta(7)
+        first_month_day = first_month_day.replace(day=1)
+
+        if first_month_day.weekday() == 5 and datetime.date.today().day == 3:
+            self.send_email(secretaries, domail, secretary.user.email)
+        elif first_month_day.weekday() == 6 and datetime.date.today().day == 2:
+            self.send_email(secretaries, domail, secretary.user.email)
+        elif first_month_day == datetime.date.today():
+            self.send_email(secretaries, domail, secretary.user.email)
+
+    def send_email(secretaries, domain, email):
+        for secretary in secretaries:
+            email_manager.send_payment_notification(domain, secretary.user.email)
+            self.stdout.write(self.style.SUCCESS(
+                'Enviar correo ;)')
+            )

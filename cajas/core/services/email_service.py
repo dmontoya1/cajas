@@ -83,7 +83,19 @@ class EmailManager(object):
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
         ctx = {
             "title": "Recordatorio de Pagos",
-            "content": "de pagos de intereses, abonos y prestámos"
+            "content": "Recuerda el pago de intereses, abonos y prestámos"
+            ,
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Notificación de cierre de cuadre diario"
+        self.send_email(url, ctx, subject, email_to)
+
+    def send_employee_salary_change_notification(self, domain, email_to):
+        url = 'http://{}{}'.format(domain, reverse('webclient:home'))
+        ctx = {
+            "title": "Recordatorio de Pagos",
+            "content": "Recuerda el pago de intereses, abonos y prestámos"
             ,
             "url": url,
             "action": "Ir a la plataforma"
