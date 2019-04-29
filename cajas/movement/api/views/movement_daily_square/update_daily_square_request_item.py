@@ -25,7 +25,6 @@ class DailySquareRequestItemDetail(generics.RetrieveUpdateAPIView):
         movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
         request_item = MovementDailySquareRequestItem.objects.filter(movement=movement)
         quest = MovementDailySquareRequestItemSerializer(request_item, many=True)
-        print(quest.data)
         return Response(quest.data)
 
     def update(self, request, *args, **kwargs):
