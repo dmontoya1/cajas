@@ -5,6 +5,11 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <style>
+    .navbar .navbar-nav li.menu-item-has-children a {
+      line-height: 25px !important;
+    }
+  </style>
 {% endblock %}
 
 {% block navbar %}

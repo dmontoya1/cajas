@@ -25,6 +25,7 @@ from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
+
 class CreateDailySquareMovement(APIView):
     """
     """
@@ -46,7 +47,6 @@ class CreateDailySquareMovement(APIView):
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
-        print("OFICNA", office)
         data = {
             'box': box_daily_square,
             'concept': concept,
@@ -156,8 +156,6 @@ class CreateDailySquareMovement(APIView):
             else:
                 if concept.name == "Compra de Inventario Unidad":
                     movement = daily_square_manager.create_movement(data)
-                    print("movement", movement.office)
-                    print("movement", movement.unit)
                     values = request.data["elemts"].split(",")
                     for value in values:
                         if request.data["form[form]["+value+"][name]"] == '' or request.data["form[form]["+value+"][price]"] == '':
