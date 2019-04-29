@@ -20,11 +20,6 @@ class Office(models.Model):
         max_length=255,
         blank=True, null=True
     )
-    image = models.ImageField(
-        'Imágen',
-        upload_to='contries/',
-        blank=True, null=True
-    )
 
     def __str__(self):
         return "Oficina {}".format(str(self.number))

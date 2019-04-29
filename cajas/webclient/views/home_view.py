@@ -2,7 +2,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
+from cajas.users.models.partner import Partner
 from office.models.office import Office
+from office.models.officeCountry import OfficeCountry
 
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -32,4 +34,6 @@ class Home(LoginRequiredMixin, TemplateView):
                 context['office'] = user.partner.get().office
         else:
             context['offices'] = Office.objects.all()
+            context['all_offices'] = OfficeCountry.objects.all().order_by('office')
+            context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
         return context

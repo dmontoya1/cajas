@@ -251,7 +251,7 @@
               </div>
             </div>
             <hr>
-            <button type="submit" class="btn btn-submit">Abonar</button>
+            <button type="submit" class="btn btn-submit btn-pay">Abonar</button>
           </form>
         </div>
       </div>
@@ -312,6 +312,7 @@
 
     $('.add-investment-pay').on('submit', function (e) {
       e.preventDefault()
+      $('.btn-pay').attr('disabled', true)
       data = $(this).serialize()
       axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:investments:pay_create' %}', data)
