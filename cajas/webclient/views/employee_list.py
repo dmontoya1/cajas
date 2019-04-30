@@ -23,7 +23,6 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
 
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
-                print("Is admin charge")
                 context['employees'] = Employee.objects.filter(office_country=office, user__is_active=True)
                 context['employees1'] = Employee.objects.filter(office=office.office, user__is_active=True)
                 context['charges'] = Charge.objects.all().exclude(name="Presidente")

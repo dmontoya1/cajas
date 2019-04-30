@@ -8,17 +8,17 @@ from rest_framework import status
 from office.models.officeCountry import OfficeCountry
 from webclient.views.get_ip import get_ip
 
-from ....models.movement_office import MovementOffice
-from ....services.office_service import MovementOfficeManager
-from ...serializers.movement_office_serializer import MovementOfficeSerializer
+from ....models.movement_box_colombia import MovementBoxColombia
+from ....services.box_colombia_service import MovementBoxColombiaManager
+from ...serializers.movement_box_colombia_serializer import MovementBoxColombiaSerializer
 
 
-class MovementOfficeCreate(generics.CreateAPIView):
+class MovementBankColombiaCreate(generics.CreateAPIView):
     """
     """
 
-    serializer_class = MovementOfficeSerializer
-    queryset = MovementOffice.objects.all()
+    serializer_class = MovementBoxColombiaSerializer
+    queryset = MovementBoxColombia.objects.all()
 
     def post(self, request, *args, **kwargs):
         data = request.POST.copy()
@@ -26,8 +26,8 @@ class MovementOfficeCreate(generics.CreateAPIView):
         data['office'] = office
         data['ip'] = get_ip(request)
         data['responsible'] = request.user
-        movement_office_manager = MovementOfficeManager()
-        movement_office_manager.create_office_movement(data)
+        movement_box_colombia_manager = MovementBoxColombiaManager()
+        movement_box_colombia_manager.create_bank_colombia_movement(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',

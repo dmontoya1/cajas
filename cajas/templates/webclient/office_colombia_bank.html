@@ -198,7 +198,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for m in office.box.movements.all %}
+                  {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
                       <td>{{ m.date|date:"d-M-Y" }}</td>
@@ -297,48 +297,22 @@
                 {% endfor %}
               </select>
             </div>
+            {% if request.user.is_superuser %}
+              <div class="form-group destine-box d-none">
+                <label for="box">Caja de destino</label>
+                <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
+                  <option selected disabled value="">Selecciona la oficina de destino</option>
+                  <option value="CAJA_DON_JUAN">Caja Don Juan</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                  <option value="CAJA_COLOMBIA">Caja Colombia</option>
+                  <option value="CAJA_OFICINA">Caja Oficina</option>
+                </select>
+              </div>
+            {% endif %}
             <div class="form-group">
               <label for="detail">Detalle</label>
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
                         required></textarea>
-            </div>
-            <!-- Appears if concept equals to compra inventario oficina-->
-            <div id="inventory_form" class="d-none">
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="name">Nombre </label>
-                  <input type="text" id="name" name="name" class="form-control" placeholder="Nombre del item">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="category">Categoría </label>
-                  <select class="form-control" id="category" name="category" style="width: 100%; height: 20px;">
-                    <option disabled value="" selected>Selecciona una categoría</option>
-                    {% for category in categories %}
-                      <option value="{{ category.pk }}">{{ category }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="brand">Marca </label>
-                  <select class="form-control" id="brand" name="brand" style="width: 100%; height: 20px;">
-                    <option disabled value="" selected>Selecciona una marca</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="price">Precio</label>
-                  <input type="number" class="form-control" id="price" name="price" placeholder="Precio del item"
-                  >
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-12">
-                  <label for="description">Descripción</label>
-                  <textarea rows="2" style="resize: none;" class="form-control" id="description" name="description"
-                            placeholder="Ingresa una descripción"></textarea>
-                </div>
-              </div>
             </div>
             <button type="submit" class="btn btn-submit btn-add-movement">Añadir</button>
           </form>
@@ -353,20 +327,10 @@
 
   <script type="text/javascript">
     $("#concept").on("change", function () {
-      if ($("#concept option:selected").text() == "Compra Inventario Oficina de tipo Simple") {
-        $("#inventory_form").removeClass("d-none");
-        $("#name").prop('required', true);
-        $("#category").prop('required', true);
-        $("#brand").prop('required', true);
-        $("#price").prop('required', true);
-        $("#description").prop('required', true);
+      if ($("#concept option:selected").text() == "Traslado entre cajas Colombia de tipo Doble") {
+        $(".destine-box").removeClass("d-none");
       } else {
-        $("#inventory_form").addClass("d-none");
-        $("#name").prop('required', false);
-        $("#category").prop('required', false);
-        $("#brand").prop('required', false);
-        $("#price").prop('required', false);
-        $("#description").prop('required', false);
+        $(".destine-box").addClass("d-none");
       }
 
       axios.get(`/api/concepts/${$(this).val()}/`)
@@ -384,26 +348,6 @@
         })
     })
 
-    $('#category').on('change', function () {
-      axios.get(`/api/inventory/${$(this).val()}/brand`)
-        .then(function (response) {
-          data = response.data
-
-          $('#brand').empty()
-          $.each(data, function (k, v) {
-            $('#brand').append(
-              `<option value=${v.id}>${v.name}</option>`
-            )
-          })
-          $('#brand').prepend(
-            '<option value="" selected disabled>Selecciona una marca</option>'
-          )
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    })
 
     $(document).ready(function () {
       $('#table').DataTable({
@@ -468,7 +412,7 @@
       $('.btn-add-movement').text('Guardar')
 
       //get movement data
-      axios.get(`/api/movements/${mov_pk}/detail-mv-office/`)
+      axios.get(`/api/movements/${mov_pk}/detail-bank-colombia/`)
         .then(function (response) {
           data = response.data
           $("#concept option").prop("selected", false);
@@ -493,7 +437,7 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        axios.post('{% url 'api:movements:movement_create' %}', data_send)
+        axios.post('{% url 'api:movements:bank_colombia_create' 'col0' %}', data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',
@@ -525,7 +469,7 @@
       }
       if ($("#method_modal").val() === "edit") {
         mov_pk = $("#method_modal").data("id")
-        axios.patch(`/api/movements/${mov_pk}/detail-mv-office/`, data_send)
+        axios.patch(`/api/movements/${mov_pk}/detail-bank-colombia/`, data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',
@@ -572,7 +516,8 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
-          axios.delete(`/api/movements/${mov_pk}/detail-mv-office/`)
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+          axios.delete(`/api/movements/${mov_pk}/detail-bank-colombia/`)
             .then(function (response) {
               data = response.data
               console.log(data)

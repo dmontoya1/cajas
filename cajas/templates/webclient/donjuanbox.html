@@ -474,6 +474,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
           axios.delete(`/api/movements/${mov_pk}/movement-don-juan-update/`)
             .then(function (response) {
               data = response.data
