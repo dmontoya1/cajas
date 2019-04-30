@@ -144,7 +144,7 @@ class CreateDailySquareMovement(APIView):
         else:
             if user:
                 total_movements = daily_square_manager.get_user_value(data)
-                stop_manager = StopManager()
+                stop_manager = StopManager(user)
                 stop = stop_manager.validate_stop(data)
                 if stop == 0 or (stop >= (total_movements['value__sum'] + int(data['value']))):
                     movement = daily_square_manager.create_movement(data)
