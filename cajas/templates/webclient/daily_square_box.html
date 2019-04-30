@@ -498,10 +498,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" id="dispersion-mv" action="{% url 'webclient:add_daily_square_movement' %}">
+          <form method="POST" id="dispersion-mv">
             {% csrf_token %}
             <input type="hidden" name="id" value="" class="movement-id">
             <input type="hidden" name="value" value="" class="movement-value">
+            <input type="hidden" name="office" value="{{ office.slug }}">
             <div class="form-group" id="dynamic_form">
               <div class="row justify-content-center" id="field">
                 <div class="col-md-5">
@@ -893,7 +894,7 @@
       event.preventDefault();
       $('.btn-dispersion').attr('disabled', true)
       var values = {};
-      counter = -3
+      counter = -4
       $.each($('form#dispersion-mv').serializeArray(), function (i, field) {
         values[field.name] = field.value;
         counter += 1
