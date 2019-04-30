@@ -43,6 +43,11 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         except Exception as e:
             print(e)
             context['partner'] = self.request.user.partner.get()
+        dq_list = User.objects.filter(
+            Q(partner__office=office) | Q(related_employee__office_country=office) |
+            Q(related_employee__office=office.office) &
+            Q(is_daily_square=True))
+        context['dq_list'] = dq_list
         context['categories'] = Category.objects.all()
         context['offices'] = offices
         context['units'] = units
