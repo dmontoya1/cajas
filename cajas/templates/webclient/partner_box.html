@@ -228,7 +228,7 @@
           </div>
         </div>
         {% if perms.movement.add_movementpartner and box.get_box_status != 'Liquidada' %}
-          <a href="" class="float add-movement" data-toggle="modal" data-target="#addMovement">
+          <a href="" id="add-movement-btn" class="float add-movement" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -271,8 +271,7 @@
                 <div class="form-group col-md-6">
                   <label for="date">Fecha</label>
                   <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
-                         style="width: 100%;"
-                         required>
+                         style="width: 100%;" required autocomplete="off">
                 </div>
               </div>
               <div class="form-row">
@@ -506,7 +505,7 @@
     })
 
     $("#add-movement-btn").on("click", function () {
-      $('.add-movement')[0].reset();
+      $('.add-movement-form')[0].reset();
       $("#method_modal").val("add")
       $("#method_modal").data("id", "")
       $('.modal-title').text("Añadir Movimiento")
@@ -541,7 +540,7 @@
 
     $('.add-movement-form').on('submit', function (e) {
       e.preventDefault()
-      $('.btn-submit').attr('disabled', true)
+      //$('.btn-submit').attr('disabled', true)
       movement = $(this)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
 
@@ -695,6 +694,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
           axios.delete(`/api/movements/${mov_pk}/movement-partner-update/`)
             .then(function (response) {
               data = response.data

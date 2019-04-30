@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
 from rest_framework.views import APIView
-from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -10,6 +9,8 @@ from inventory.models.brand import Brand
 from api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.users.models.partner import Partner
 from units.models.units import Unit
+from webclient.views.utils import get_object_or_none
+
 from ...models.unitItems import UnitItems
 
 
@@ -25,8 +26,8 @@ class UnitCreate(APIView):
         unit = Unit.objects.create(
             name=request.data["name"],
             partner=get_object_or_404(Partner, pk=request.data["partner"]),
-            collector=get_object_or_404(User, pk=request.data["collector"]),
-            supervisor=get_object_or_404(User, pk=request.data["supervisor"])
+            collector=get_object_or_none(User, pk=request.POST.get('collector', None)),
+            supervisor=get_object_or_none(User, pk=request.POST.get('supervisor', None)),
         )
         for value in values:
             UnitItems.objects.create(

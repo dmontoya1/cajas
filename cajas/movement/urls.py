@@ -1,5 +1,9 @@
 from django.urls import path
 
+from .api.views.movement_bank_colombia.movement_bank_colombia_create import MovementBankColombiaCreate
+from .api.views.movement_bank_colombia.movement_bank_colombia_detail import MovementBankColombiaDetail
+from .api.views.movement_box_colombia.movement_box_colombia_create import MovementBoxColombiaCreate
+from .api.views.movement_box_colombia.movement_box_colombia_detail import MovementBoxColombiaDetail
 from .api.views.movement_daily_square.accept_movement import AcceptMovement
 from .api.views.movement_daily_square.create_movement import CreateDailySquareMovement
 from .api.views.movement_daily_square.create_withdraw_movement import CreateWithdrawMovement
@@ -27,8 +31,16 @@ from .api.views.movement_request.accept_between_office import AcceptBetweenOffic
 app_name = 'movements'
 urlpatterns = [
     # Office
-    path("create-mv-office/", MovementOfficeCreate.as_view(), name='movement_create'),
+    path("<slug:slug>/create-mv-office/", MovementOfficeCreate.as_view(), name='movement_create'),
     path("<int:pk>/detail-mv-office/", MovementOfficeDetail.as_view(), name='movement_office_detail'),
+
+    # Box Colombia
+    path("<slug:slug>/create-box-colombia/", MovementBoxColombiaCreate.as_view(), name='box_colombia_create'),
+    path("<int:pk>/detail-box-colombia/", MovementBoxColombiaDetail.as_view(), name='box_colombia_detail'),
+
+    # Bank Colombia
+    path("<slug:slug>/create-bank-colombia/", MovementBankColombiaCreate.as_view(), name='bank_colombia_create'),
+    path("<int:pk>/detail-bank-colombia/", MovementBankColombiaDetail.as_view(), name='bank_colombia_detail'),
 
     # DonJuan
     path("<slug:slug>/movement-don-juan-create/", MovementDonJuanCreate.as_view(), name='movement_donjuan_create'),

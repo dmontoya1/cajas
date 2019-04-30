@@ -184,8 +184,8 @@
                       <tr>
                         <td>{{ u.name }}</td>
                         <td>{{ u.partner }}</td>
-                        <td>{{ u.collector }}</td>
-                        <td>{{ u.supervisor }}</td>
+                        <td>{{ u.collector|default:"Sin cobrador" }}</td>
+                        <td>{{ u.supervisor|default:"Sin supervisor" }}</td>
 
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>

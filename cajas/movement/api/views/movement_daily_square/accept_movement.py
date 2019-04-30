@@ -71,7 +71,7 @@ class AcceptMovement(APIView):
                 movement.movement_partner = movement_person
             elif relationship == Relationship.OFFICE:
                 data = {
-                    'box': movement.office.box,
+                    'box_office': movement.office.box,
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': movement.value,

@@ -145,7 +145,7 @@ class LoanManager(object):
                 exchange=data['exchange'],
                 balance=data['value']
             )
-            data_mov['box'] = office.box
+            data_mov['box_office'] = office.box
             movement = movement_office_manager.create_movement(data_mov)
 
     def create_third_loan(self, data):

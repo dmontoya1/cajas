@@ -254,7 +254,6 @@
             {% csrf_token %}
             <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="box_office" value="{{ office.box.pk }}">
-            <input type="hidden" name="responsible" value="{{ request.user.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto</label>
@@ -302,10 +301,10 @@
                 <label for="box">Caja de destino</label>
                 <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
                   <option selected disabled value="">Selecciona la oficina de destino</option>
-                  <option value="CDJ">Caja Don Juan</option>
-                  <option value="CDJUSD">Caja Don Juan Dolares</option>
-                  <option value="CC">Caja Colombia</option>
-                  <option value="CB">Caja Banco</option>
+                  <option value="CAJA_DON_JUAN">Caja Don Juan</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                  <option value="CAJA_COLOMBIA">Caja Colombia</option>
+                  <option value="CAJA_BANCO">Caja Banco</option>
                 </select>
               </div>
             {% endif %}
@@ -514,7 +513,7 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        axios.post('{% url 'api:movements:movement_create' %}', data_send)
+        axios.post('{% url 'api:movements:movement_create' office.slug %}', data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',
@@ -593,6 +592,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
           axios.delete(`/api/movements/${mov_pk}/detail-mv-office/`)
             .then(function (response) {
               data = response.data
