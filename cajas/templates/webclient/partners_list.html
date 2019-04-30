@@ -613,8 +613,6 @@
       slug = "{{ office.slug }}"
       $("#partner_id").val(pk)
 
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-
       //get partner units 
       $("#concept").on("change", function () {
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {

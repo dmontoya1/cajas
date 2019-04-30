@@ -264,7 +264,6 @@
         //create items
         $('.supervisor_calendar').on('submit', function (e) {
             e.preventDefault()
-            axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
             axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
             data = $(this).serialize()
             axios.post("{% url 'api:office:supervisor_calendar_create' %}", data)
@@ -294,7 +293,6 @@
     })
 
     $(document).ready(function () {
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var replication = 1;
 
       $('.supervisor_calendar select').each(function () {

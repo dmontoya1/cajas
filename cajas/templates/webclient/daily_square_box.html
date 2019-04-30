@@ -1133,7 +1133,6 @@
         allowOutsideClick: false,
       }).then((result) => {
         if (result.value) {
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
           axios.patch(`/api/boxes/${pk}/close-box`,
             {"is_closed": true}
           )
