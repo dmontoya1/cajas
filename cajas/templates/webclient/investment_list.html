@@ -314,7 +314,6 @@
       e.preventDefault()
       $('.btn-pay').attr('disabled', true)
       data = $(this).serialize()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:investments:pay_create' %}', data)
         .then(function (response) {
           data = response.data

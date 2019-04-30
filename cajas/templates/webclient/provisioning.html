@@ -330,12 +330,10 @@
 {% block extra_js %}
 
   <script type="text/javascript">
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
     //create provisioning
     $('.add-provisioning').on('submit', function (e) {
       e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       data = $(this).serialize() 
       axios.post("{% url 'api:boxes:provisioning_create' %}", data)
@@ -385,7 +383,6 @@
     //and then update unit
     $('.edit-provisioning').on('submit', function(e){
         e.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         data = $(this).serialize()
 
         axios.patch(`/api/boxes/${$("#provisioning_item").val()}/privisioning-detail`, data)
