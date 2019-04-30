@@ -169,7 +169,7 @@
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered display responsive display nowrap"
                        cellspacing="0" style="width:100%">
-                  <h3 class="mb-4">Cuadre Diario de {{ box_user }} {% if box.is_closed %}
+                  <h3 class="mb-4">Cuadre Diario de {{ box_user.get_full_name }} ({{ box_user.pk }}) {% if box.is_closed %}
                     <span style="color:red">Cerrada</span> {% endif %}</h3>
                   <h3 class="float-right">SALDO CAJA: $
                     {{ box.balance|intcomma }}{{ office.country.currency.abbr }}  </h3>

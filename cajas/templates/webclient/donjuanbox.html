@@ -280,6 +280,18 @@
                 {% endfor %}
               </select>
             </div>
+            {% if request.user.is_superuser %}
+              <div class="form-group destine-box d-none">
+                <label for="box">Caja de destino</label>
+                <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
+                  <option selected disabled value="">Selecciona la oficina de destino</option>
+                  <option value="CAJA_OFICINA">Caja Oficina</option>
+                  <option value="CAJA_COLOMBIA">Caja Colombia</option>
+                  <option value="CAJA_BANCO">Caja Banco</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                </select>
+              </div>
+            {% endif %}
             <div class="form-group">
               <label for="detail">Detalle</label>
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
@@ -332,29 +344,35 @@
           }
         }
       });
-
-      $('.add-movement select').each(function () {
-        $(this).select2({
-          language: "es"
-        });
-      });
-
-      $("#concept").on("change", function () {
-        axios.get(`/api/concepts/${$(this).val()}/`)
-          .then(function (response) {
-            data = response.data
-            if (data['relationship'] == 'Entre oficinas') {
-              $('.destine-office').removeClass('d-none')
-            } else {
-              $('.destine-office').addClass('d-none')
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
     });
+
+    $('.add-movement select').each(function () {
+      $(this).select2({
+        language: "es"
+      });
+    });
+
+    $("#concept").on("change", function () {
+      if ($("#concept option:selected").text() == "Traslado entre cajas Colombia de tipo Doble") {
+        $(".destine-box").removeClass("d-none");
+      } else {
+        $(".destine-box").addClass("d-none");
+      }
+      axios.get(`/api/concepts/${$(this).val()}/`)
+        .then(function (response) {
+          data = response.data
+          if (data['relationship'] == 'Entre oficinas') {
+            $('.destine-office').removeClass('d-none')
+          } else {
+            $('.destine-office').addClass('d-none')
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
     $("#add-movement-btn").on("click", function () {
       $('.add-movement')[0].reset();
       $("#method_modal").val("add")
@@ -391,7 +409,7 @@
 
     $('.add-movement').on('submit', function (ev) {
       ev.preventDefault()
-      $('.btn-add-movement').attr('disabled', true )
+      $('.btn-add-movement').attr('disabled', true)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {

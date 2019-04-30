@@ -18,11 +18,8 @@ class UserManager:
         daily_square = False
         email = ""
         try:
-            print("Entro al TRYYY")
             user = User.objects.get(email=data['email'])
         except Exception as e:
-            print(e)
-            print("EXCEPTIOOOONNNN")
             if data['is_daily_square'] == "true":
                 daily_square = True
             if data['email']:
