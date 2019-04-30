@@ -32,7 +32,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                                     Q(related_employee__office=office.office))
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         offices = OfficeCountry.objects.all()
-        partners = Partner.objects.filter(Q(office=box_daily_square.office) | Q(code='DONJUAN'))\
+        partners = Partner.objects.filter(Q(office=box_daily_square.office) | Q(code='DONJUAN') & Q(is_active=True))\
             .order_by('user__first_name')
         dq_list = User.objects.filter(
             Q(partner__office=office) | Q(related_employee__office_country=office) |
