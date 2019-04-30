@@ -18,6 +18,11 @@ class PartnerList(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'redirect_to'
     template_name = 'webclient/partners_list.html'
 
+    def get(self, request, slug):
+        office = OfficeCountry.objects.get(slug=slug)
+        request.session['office'] = office.pk
+        return super(PartnerList, self).get(request)
+
     def get_context_data(self, **kwargs):
         context = super(PartnerList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
