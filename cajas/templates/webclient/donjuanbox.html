@@ -47,6 +47,20 @@
           </a>
         </li>
       {% endif %}
+      {% if request.user.is_superuser %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_colombia' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Colombia
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_bank' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Banco
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_officeitems %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:office_items_list' office.slug %}">
@@ -412,6 +426,7 @@
       $('.btn-add-movement').attr('disabled', true)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
+      console.log(data_send)
       if ($("#method_modal").val() === "add") {
         axios.post(`/api/movements/${'{{office.slug}}'}/movement-don-juan-create/`, data_send)
           .then(function (response) {
