@@ -97,7 +97,7 @@ class Employee(models.Model):
         super(Employee, self).save(*args, **kwargs)
         if old and old.salary != self.salary:
             domain = Site.objects.get_current().domain
-            email_manager.send_employee_salary_change_notification(domain, settings.ADMIN_EMAIL)
+            email_manager.send_employee_salary_change_notification(self, domain, settings.ADMIN_EMAIL)
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())
