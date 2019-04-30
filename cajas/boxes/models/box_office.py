@@ -28,8 +28,6 @@ class BoxOffice(models.Model):
     )
 
     def __str__(self):
-        if self.name and self.office:
-            return "Caja {} de {}".format(self.name, self.office)
         if self.office:
             return "Caja de {}".format(self.office)
         return "Caja de oficina"
