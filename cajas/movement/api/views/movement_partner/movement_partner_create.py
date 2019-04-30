@@ -62,6 +62,9 @@ class MovementPartnerCreate(APIView):
             total_movements = MovementPartnerManager.get_user_value(data)
             stop_manager = StopManager(partner.user)
             stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+            informative_value = stop_manager.get_user_movements_top_informative_value_by_concept(concept)
+            if informative_value >= (total_movements['value__sum'] + int(data['value'])):
+                print("send mail")
             if stop == 0 or(stop >= (total_movements['value__sum'] + int(data['value']))):
                 movement = MovementPartnerManager.create_simple(data)
             else:
