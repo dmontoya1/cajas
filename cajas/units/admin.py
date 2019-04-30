@@ -40,6 +40,6 @@ class UnitAdmin(admin.ModelAdmin):
     """
 
     list_display = ('name', 'partner', 'collector', 'supervisor')
-    search_fields = ('name', 'partner__first_name', 'partner__partner__code')
+    search_fields = ('name', )
     inlines = [UnitItemsAdmin, ]
     save_on_top = True
