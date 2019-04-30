@@ -508,12 +508,10 @@
 {% block extra_js %}
 
   <script type="text/javascript">
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
       $('#addEmployee_submit').attr('disabled', true )
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var bodyFormData = new FormData();
 
       bodyFormData.append("office", $(this).context.office.value)
@@ -652,7 +650,6 @@
     $('.edit_employee_form').on('submit', function (e) {
       e.preventDefault()
       $('#btn-edit').attr('disabled', true)
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       data = $(this).serialize()
 
       axios.patch(`/api/users/${$("#employee_pk").val()}/employee-detail`, data)
@@ -694,7 +691,6 @@
         showCloseButton: true
       }).then((result) => {
         if (result.value) {
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
           axios.delete(`/api/users/${pk}/employee-delete`,
             {data: {description: result.value}}
           )

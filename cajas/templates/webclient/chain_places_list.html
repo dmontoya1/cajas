@@ -386,7 +386,6 @@
     $('.add-user-payment').on('submit', function (e) {
       e.preventDefault()
       data = $(this).serialize()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:chains:user_place_pay' %}', data)
       .then(function (response) {
         data = response.data
@@ -419,7 +418,6 @@
     $('.edit-place').on('submit', function (e) {
       e.preventDefault()
       data = $(this).serialize()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.post('{% url 'api:chains:user_place_update' %}', data)
       .then(function (response) {
         data = response.data

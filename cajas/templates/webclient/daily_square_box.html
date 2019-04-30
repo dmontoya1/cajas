@@ -244,7 +244,7 @@
           </div>
         {% endif %}
         {% if not box.is_closed and request.user == box_user %}
-          <a href="#" class="close-box" style="bottom:110px;">
+          <a href="#" class="close-box float" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
           <div class="label-close">
@@ -619,7 +619,7 @@
         $(this).closest('#unit_inventory_edit').remove();
       });
 
-      $("#dynamic_form").addClass("d-none")
+      $("#unit_inventory_edit").addClass("d-none")
       $("#unit_select").addClass("d-none")
 
     });
@@ -1133,7 +1133,6 @@
         allowOutsideClick: false,
       }).then((result) => {
         if (result.value) {
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
           axios.patch(`/api/boxes/${pk}/close-box`,
             {"is_closed": true}
           )

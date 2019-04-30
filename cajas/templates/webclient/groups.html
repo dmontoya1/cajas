@@ -327,7 +327,6 @@
   <script type="text/javascript">
 
 
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
     $(document).ready(function () {
       $('#table').DataTable({
         responsive: {
@@ -383,7 +382,6 @@
 
     $('.add-group').on('submit', function (e) {
       e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       data = $(this).serialize()
       console.log(data)
@@ -412,7 +410,6 @@
 
     $(".show-group").on("click", function () {
       var adm_group_pk = $(this).data("id")
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       axios.get(`/api/office/${adm_group_pk}/group-detail`)
         .then(function (response) {
           data = response.data
@@ -470,7 +467,6 @@
     })
     $('.edit-group').on('submit', function (e) {
       e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var adm_group_pk = $("#admin_pk").val()
       data = $(this).serialize()
       axios.patch(`/api/office/${adm_group_pk}/group-detail`, data)

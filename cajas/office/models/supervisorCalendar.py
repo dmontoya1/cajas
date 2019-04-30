@@ -36,6 +36,10 @@ class SupervisorCalendar(models.Model):
         'Fecha de calendario de supervisor',
         auto_now=True,
     )
+    detail = models.TextField(
+        'Detalle del agendamiento',
+        default=''
+    )
 
     def __str__(self):
         return 'calendario'

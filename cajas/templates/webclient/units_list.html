@@ -520,7 +520,6 @@
     //units_inventory modal script
     $('.units_inventory').on('click', function () {
       var unit_pk = $(this).data("id")
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var modal = $(this)
       axios.get(`/api/units/${unit_pk}/detail`)
         .then(function (response) {
@@ -657,7 +656,6 @@
     $('.edit_unit_form').on('submit', function (e) {
       e.preventDefault()
       var elemts = []
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       $('.edit_unit_form .dynamic_controller *').filter('.category_edit_control').each(function () {
         id_form = $(this).attr("id")
@@ -707,7 +705,6 @@
         showCloseButton: true
       }).then((result) => {
         if (result.value) {
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
           axios.delete(`/api/units/${pk}/delete`,
             {data: {description: result.value}}
           )
@@ -735,7 +732,6 @@
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
       var elemts = []
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function () {
         id_form = $(this).attr("id")
         id_form = id_form[id_form.length - 1]
@@ -840,7 +836,6 @@
     })
 
     $(document).ready(function () {
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
 
       $('#table').DataTable({
         responsive: {

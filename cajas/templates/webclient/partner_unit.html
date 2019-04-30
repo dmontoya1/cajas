@@ -500,7 +500,6 @@
     //and then update unit
     $('.edit_unit_form').on('submit', function(e){
         e.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         data = $(this).serialize()
 
         axios.patch(`/api/units/${$("#unitpk").val()}/detail`, data)
@@ -542,7 +541,6 @@
         showCloseButton: true
       }).then((result) => {
         if (result.value) {
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
           axios.delete(`/api/units/${pk}/delete`,
             {data: {description: result.value}}
           )
@@ -569,7 +567,6 @@
     //create items
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var elemts = []
       var count = $('.create_unit_form').children('.dynamic_controller').length
       $(this).append('<input type="hidden" name="count" value="'+count+'" >')
@@ -632,7 +629,6 @@
     })
 
     $(document).ready(function () {
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
       var replication = 1;
 
       $('#table').DataTable({

@@ -21,12 +21,18 @@ def get_calendar(super_calendar):
             scheduling["editable"] = True
         else:
             scheduling["editable"] = False
-        scheduling["title"] = "Supervisor: {} \n Ruta: {} \n Socio: {} \n Cobrador: {}".format(
-            item.supervisor.first_name + " " + item.supervisor.last_name,
-            item.unit.name,
-            item.unit.partner.user.first_name + " " + item.unit.partner.user.last_name,
-            item.unit.collector.first_name + " " + item.unit.collector.last_name
-        )
+        if item.unit:
+            scheduling["title"] = "Supervisor: {} \n Ruta: {} \n Socio: {} \n Cobrador: {}".format(
+                item.supervisor.first_name + " " + item.supervisor.last_name,
+                item.unit.name,
+                item.unit.partner.user.first_name + " " + item.unit.partner.user.last_name,
+                item.unit.collector.first_name + " " + item.unit.collector.last_name
+            )
+        else:
+            scheduling["title"] = "Supervisor: {} \n Detalle: {}".format(
+                item.supervisor.first_name + " " + item.supervisor.last_name,
+                item.detail
+            )
         scheduling["start"] = item.assigned_date
         scheduling["end"] = item.assigned_date
         scheduling["pk"] = item.pk
