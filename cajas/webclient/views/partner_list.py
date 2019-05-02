@@ -37,9 +37,9 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
             else:
-                context['partner'] = Partner.objects.filter(office=office, user=self.request.user)
+                context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         except Exception as e:
-            context['partner'] = self.request.user.partner.get()
+            context['partner'] = Partner.objects.get(office=office, user=self.request.user)
 
         context['categories'] = Category.objects.all()
         context['office'] = office
