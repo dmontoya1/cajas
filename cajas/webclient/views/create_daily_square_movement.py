@@ -60,7 +60,9 @@ class CreateDailySquareMovement(View):
         }
 
         total_movements = daily_square_manager.get_user_value(data)
-        if StopManager.validate_stop(data) > total_movements['value__sum']:
+        stop_manager = StopManager(user)
+        stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+        if stop > total_movements['value__sum']:
             movement = daily_square_manager.create_movement(data)
             messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         else:

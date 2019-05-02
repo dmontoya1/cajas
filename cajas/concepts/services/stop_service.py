@@ -12,7 +12,15 @@ class StopManager(object):
     def get_user_movements_top_value_by_concept(self, concept):
         stop_user = self.get_user_stop(concept)
         stop_charge = self.get_charge_stop(concept)
+        stop_user, stop_charge = self.get_non_informative_stop_params(stop_user, stop_charge)
         stop_value = self.get_stop_value(stop_user, stop_charge)
+        return stop_value
+
+    def get_user_movements_top_informative_value_by_concept(self, concept):
+        stop_user = self.get_user_stop(concept)
+        stop_charge = self.get_charge_stop(concept)
+        informative_stop_user, informative_stop_charge = self.get_informative_stop_params(stop_user, stop_charge)
+        stop_value = self.get_stop_value(informative_stop_user, informative_stop_charge)
         return stop_value
 
     def user_has_tops_for_concept(self, concept):
@@ -35,18 +43,36 @@ class StopManager(object):
         return stop_value
 
     def get_user_stop(self, concept):
-        return get_object_or_none(
-            Stop,
+        return Stop.objects.filter(
             concept=concept,
             user=self.user
         )
 
     def get_charge_stop(self, concept):
         try:
-            return get_object_or_none(
-                Stop,
+            return Stop.objects.filter(
                 concept=concept,
                 charge=self.user.employee.get().charge
             )
         except:
             return None
+
+    def get_informative_stop(self, stops):
+        for stop in stops:
+            if stop.is_informative:
+                return stop
+
+    def get_non_informative_stop(self, stops):
+        for stop in stops:
+            if not stop.is_informative:
+                return stop
+
+    def get_non_informative_stop_params(self, stop_user, stop_charge):
+        stop_user = self.get_non_informative_stop(stop_user)
+        stop_charge = self.get_non_informative_stop(stop_charge)
+        return stop_user, stop_charge
+
+    def get_informative_stop_params(self, stop_user, stop_charge):
+        stop_user = self.get_informative_stop(stop_user)
+        stop_charge = self.get_informative_stop(stop_charge)
+        return stop_user, stop_charge
