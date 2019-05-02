@@ -22,7 +22,7 @@ class OfficeItemsList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         unit_items = UnitItems.objects.filter(unit__partner__office=office)
-        items = OfficeItems.objects.filter(office=office.office)
+        items = OfficeItems.objects.filter(office=office)
         categories = Category.objects.all()
         context['office'] = office
         context['items'] = items
