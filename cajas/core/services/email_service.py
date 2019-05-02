@@ -88,7 +88,7 @@ class EmailManager(object):
             "url": url,
             "action": "Ir a la plataforma"
         }
-        subject = "Notificación de cierre de cuadre diario"
+        subject = "Recodatorio de pagos"
         self.send_email(url, ctx, subject, email_to)
 
     def send_employee_salary_change_notification(self, employee, domain, email_to):
@@ -100,5 +100,5 @@ class EmailManager(object):
             "url": url,
             "action": "Ir a la plataforma"
         }
-        subject = "Notificación de cierre de cuadre diario"
+        subject = "Notificación de cambio de salario"
         self.send_email(url, ctx, subject, email_to)
