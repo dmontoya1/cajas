@@ -1,12 +1,14 @@
 
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.users.models.employee import Employee
-from office.models.officeCountry import OfficeCountry
 from cajas.users.models.group_employee import GroupEmployee
 from cajas.users.models.group import Group
+from office.models.officeCountry import OfficeCountry
+from units.models.units import Unit
 
 
 class Calendar(LoginRequiredMixin, TemplateView):
@@ -23,15 +25,16 @@ class Calendar(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         superv = {}
         context['office'] = office
+        context['units'] = Unit.objects.filter(partner__office=office)
 
         try:
             user = self.request.user.related_employee.get()
         except:
             if self.request.user.is_superuser:
                 superv = Employee.objects.filter(
-                    office_country=office,
-                    charge__name="Supervisor",
-                    user__is_active=True
+                    (Q(office_country=office) |
+                     Q(office=office.office)) &
+                    Q(user__is_active=True)
                 )
             else:
                 superv = []
@@ -47,7 +50,11 @@ class Calendar(LoginRequiredMixin, TemplateView):
             except Exception as e:
                 print(e)
         else:
-            superv = Employee.objects.filter(office_country=office, charge__name="Supervisor", user__is_active=True)
+            superv = Employee.objects.filter(
+                (Q(office_country=office) |
+                 Q(office=office.office)) &
+                Q(user__is_active=True)
+            )
 
         context['supervisors'] = superv
         return context
