@@ -38,7 +38,10 @@ class Stop(models.Model):
         on_delete=models.CASCADE,
         blank=True, null=True
     )
-
+    is_informative = models.BooleanField(
+        "Tope informativo?",
+        default=False
+    )
     def __str__(self):
         if self.user:
             return 'Tope de %s para %s' % (self.concept.name, self.user.get_full_name())

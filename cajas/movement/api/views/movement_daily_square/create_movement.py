@@ -47,6 +47,8 @@ class CreateDailySquareMovement(APIView):
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
+        print(user)
+
         data = {
             'box': box_daily_square,
             'concept': concept,
@@ -143,9 +145,13 @@ class CreateDailySquareMovement(APIView):
             movement.save()
         else:
             if user:
+                print("world")
                 total_movements = daily_square_manager.get_user_value(data)
                 stop_manager = StopManager(user)
-                stop = stop_manager.validate_stop(data)
+                stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+                informative_value = stop_manager.get_user_movements_top_informative_value_by_concept(concept)
+                if informative_value >= (total_movements['value__sum'] + int(data['value'])):
+                    print("send mail")
                 if stop == 0 or (stop >= (total_movements['value__sum'] + int(data['value']))):
                     movement = daily_square_manager.create_movement(data)
                 else:
