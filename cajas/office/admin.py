@@ -8,12 +8,13 @@ from .models.supervisorCalendar import SupervisorCalendar
 from .models.notifications import Notifications
 
 
-class OfficeItemsAdmin(admin.StackedInline):
+@admin.register(OfficeItems)
+class OfficeItemsAdmin(admin.ModelAdmin):
     """
     """
 
-    model = OfficeItems
-    extra = 0
+    list_display = ('office', 'name', 'price', 'brand')
+    list_filter = ('office', 'office__country', 'office__office')
 
 
 class OfficeCommitmentsAdmin(admin.StackedInline):
@@ -40,7 +41,7 @@ class OfficeAdmin(admin.ModelAdmin):
 
     list_display = ('__str__', )
     search_fields = ('number', )
-    inlines = [OfficeCountryInline, OfficeItemsAdmin, OfficeCommitmentsAdmin]
+    inlines = [OfficeCountryInline, OfficeCommitmentsAdmin]
 
 
 @admin.register(SupervisorCalendar)

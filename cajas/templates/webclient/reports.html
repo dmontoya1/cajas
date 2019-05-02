@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <style>
+
+    .label {
+      padding: 3px 10px;
+      line-height: 13px;
+      color: #ffffff;
+      font-weight: 400;
+      border-radius: 4px;
+      font-size: 75%;
+    }
+
+    .label-success {
+      background-color: #60d3b0;
+    }
+
+    .label-rounded {
+      border-radius: 60px;
+    }
+
+    .navbar .navbar-nav li.menu-item-has-children a {
+      line-height: 25px !important;
+    }
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
+    </li>
+    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+    <li class="menu-item-has-children dropdown">
+      <a href="{% url 'webclient:home' %}">
+        <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+        Inicio
+      </a>
+    </li>
+    {% if request.user.is_superuser %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="#" data-toggle="modal" data-target="#migrate">
+          <i class="fas fa-chart-line mr-3"></i>
+          Informes
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+{% endblock %}
+
+{% block index_actions %}
+{% endblock %}
+
+{% block content %}
+    <div class="row country-row">
+      <div class="col-12">
+        <div class="country-name">
+          <span>Reportes</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-xlg-4 col-md-6">
+        <div class="card blog-widget">
+          <div class="card-body">
+            <a href="#">
+              <div class="blog-image">
+                <img
+                  src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
+                  alt="img" class="img-responsive">
+              </div>
+              <span class="office-name">{{ office }}</span>
+            </a><br>
+            <h2></h2>
+            <label class="label label-rounded label-success">Notificaciones </label>
+            <i class="fas fa-bell" style="color: #60d3b0"></i>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+  <script type="text/javascript">
+  </script>
+{% endblock %}
