@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from django.contrib.sites.models import Site
 from django.shortcuts import get_object_or_404
 
 from boxes.models.box_daily_square import BoxDailySquare
@@ -13,6 +14,7 @@ from cajas.users.models.user import User
 from chains.models.chain import Chain
 from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
+from core.services.email_service import EmailManager
 from general_config.models.country import Country
 from loans.models.loan import Loan
 from office.models.officeCountry import OfficeCountry
@@ -24,6 +26,8 @@ from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
+
+email_manager = EmailManager()
 
 
 class CreateDailySquareMovement(APIView):
@@ -145,13 +149,12 @@ class CreateDailySquareMovement(APIView):
             movement.save()
         else:
             if user:
-                print("world")
                 total_movements = daily_square_manager.get_user_value(data)
                 stop_manager = StopManager(user)
                 stop = stop_manager.get_user_movements_top_value_by_concept(concept)
-                informative_value = stop_manager.get_user_movements_top_informative_value_by_concept(concept)
-                if informative_value >= (total_movements['value__sum'] + int(data['value'])):
-                    print("send mail")
+                informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
+                if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
+                    email_manager.send_informative_top_notification(Site.objects.get_current().domain, user, concept)
                 if stop == 0 or (stop >= (total_movements['value__sum'] + int(data['value']))):
                     movement = daily_square_manager.create_movement(data)
                 else:

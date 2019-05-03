@@ -62,6 +62,9 @@ class CreateDailySquareMovement(View):
         total_movements = daily_square_manager.get_user_value(data)
         stop_manager = StopManager(user)
         stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+        informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
+        if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
+            email_manager.send_informative_top_notification(Site.objects.get_current().domain, user, concept)
         if stop > total_movements['value__sum']:
             movement = daily_square_manager.create_movement(data)
             messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
