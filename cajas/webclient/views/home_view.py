@@ -31,7 +31,7 @@ class Home(LoginRequiredMixin, TemplateView):
                     context['offices'] = user.related_employee.get().office_country.all()
             except Exception as e:
                 print(e)
-                context['office'] = user.partner.get().office
+                context['actual_partners'] = Partner.objects.filter(user=user)
         else:
             context['offices'] = Office.objects.all()
             context['all_offices'] = OfficeCountry.objects.all().order_by('office')

@@ -106,8 +106,7 @@ class Employee(models.Model):
 
     def is_admin_charge(self):
         charge_secretary = Charge.objects.get(name='Secretaria')
-        charge_admin_junior = Charge.objects.get(name='Administrador Junior')
         charge_admin_senior = Charge.objects.get(name='Administrador Senior')
-        if self.charge == charge_admin_junior or self.charge == charge_secretary or self.charge == charge_admin_senior:
+        if self.charge == charge_secretary or self.charge == charge_admin_senior:
             return True
         return False

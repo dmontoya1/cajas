@@ -211,7 +211,7 @@
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box office d %}</td>
                         <td>
-                          {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
+                          {% if perms.movement.add_movementdailysquare %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
@@ -234,9 +234,11 @@
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box office d %}</td>
                         <td>
-                          {% if perms.movement.add_movementdailysquare and not d.related_daily_box.get.is_closed %}
+                          {% if perms.movement.add_movementdailysquare %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
-                                    data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                                    data-target="#addMovement">
+                              <i class="fas fa-plus mr-2"></i>
+                              Añadir Movimiento
                             </button>
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}

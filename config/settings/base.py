@@ -83,6 +83,7 @@ LOCAL_APPS = [
     'cajas.loans.apps.LoansConfig',
     'cajas.movement.apps.MovementConfig',
     'cajas.office.apps.OfficeConfig',
+    'cajas.reports.apps.ReportsConfig',
     'cajas.units.apps.UnitsConfig',
     'cajas.users.apps.UsersAppConfig',
 ]

@@ -60,7 +60,7 @@ class UserAdmin(auth_admin.UserAdmin):
         {"fields": ("document_type", 'document_id', 'is_abstract', 'is_daily_square')}),)
     list_display = ["email", "first_name", "last_name", "is_daily_square"]
     readonly_fields = ('last_login', 'date_joined')
-    search_fields = ["first_name", 'document_id', ]
+    search_fields = ["first_name", 'last_name', 'document_id', 'email', 'username']
     inlines = [EmployeeAdminInline, ]
 
 
