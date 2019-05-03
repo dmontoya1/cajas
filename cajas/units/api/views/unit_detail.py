@@ -28,11 +28,10 @@ class UnitDetail(generics.RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         pk = kwargs['pk']
-
         unit = Unit.objects.get(pk=pk)
-        unit.name = request.data["name"]
-        collector = User.objects.get(pk=request.data['collector'])
-        supervisor = User.objects.get(pk=request.data['supervisor'])
+        unit.name = request.data["form[form][name]"]
+        collector = get_object_or_none(User, pk=request.POST.get('form[form][collector]', None))
+        supervisor = get_object_or_none(User, pk=request.POST.get('form[form][supervisor]', None)),
         unit.collector = collector
         unit.supervisor = supervisor
         unit.save()

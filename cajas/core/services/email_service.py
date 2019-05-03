@@ -1,7 +1,11 @@
+from django.db.models import Q
+
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.shortcuts import reverse
+
+from concepts.models.concepts import Concept
 
 
 class EmailManager(object):
@@ -88,7 +92,7 @@ class EmailManager(object):
             "url": url,
             "action": "Ir a la plataforma"
         }
-        subject = "Notificación de cierre de cuadre diario"
+        subject = "Recodatorio de pagos"
         self.send_email(url, ctx, subject, email_to)
 
     def send_employee_salary_change_notification(self, employee, domain, email_to):
@@ -100,5 +104,23 @@ class EmailManager(object):
             "url": url,
             "action": "Ir a la plataforma"
         }
-        subject = "Notificación de cierre de cuadre diario"
+        subject = "Notificación de cambio de salario"
         self.send_email(url, ctx, subject, email_to)
+
+    def send_informative_top_notification(self, domain, user, concept):
+        users = Stop.objects.filter(
+            Q(concept=concept) &
+            Q(is_informative=True) &
+            (Q(charge=self.user.employee.get().charge) | Q(user=user))
+        )
+        url = 'http://{}{}'.format(domain, reverse('webclient:home'))
+        for u in users:
+            ctx = {
+                "title": "Tope informativo",
+                "content": "{} ha superado el tope informativo".format(self.user.employee)
+                ,
+                "url": url,
+                "action": "Ir a la plataforma"
+            }
+            subject = "Tope informativo"
+            self.send_email(url, ctx, subject, u.email)

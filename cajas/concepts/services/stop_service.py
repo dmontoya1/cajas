@@ -16,7 +16,7 @@ class StopManager(object):
         stop_value = self.get_stop_value(stop_user, stop_charge)
         return stop_value
 
-    def get_user_movements_top_informative_value_by_concept(self, concept):
+    def get_informative_user_top_value_movements_by_concept(self, concept):
         stop_user = self.get_user_stop(concept)
         stop_charge = self.get_charge_stop(concept)
         informative_stop_user, informative_stop_charge = self.get_informative_stop_params(stop_user, stop_charge)
@@ -58,14 +58,16 @@ class StopManager(object):
             return None
 
     def get_informative_stop(self, stops):
-        for stop in stops:
-            if stop.is_informative:
-                return stop
+        if stops is not None:
+            for stop in stops:
+                if stop.is_informative:
+                    return stop
 
     def get_non_informative_stop(self, stops):
-        for stop in stops:
-            if not stop.is_informative:
-                return stop
+        if stops is not None:
+            for stop in stops:
+                if not stop.is_informative:
+                    return stop
 
     def get_non_informative_stop_params(self, stop_user, stop_charge):
         stop_user = self.get_non_informative_stop(stop_user)
