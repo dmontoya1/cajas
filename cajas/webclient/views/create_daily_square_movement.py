@@ -1,5 +1,6 @@
 
 from django.contrib import messages
+from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
@@ -8,6 +9,7 @@ from boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
+from core.services.email_service import EmailManager
 from general_config.models.country import Country
 from movement.services.daily_square_service import MovementDailySquareManager
 from office.models.officeCountry import OfficeCountry
@@ -17,6 +19,7 @@ from .get_ip import get_ip
 from .utils import get_object_or_none
 
 daily_square_manager = MovementDailySquareManager()
+email_manager = EmailManager()
 
 
 class CreateDailySquareMovement(View):
@@ -58,7 +61,6 @@ class CreateDailySquareMovement(View):
             'loan': loan,
             'chain': chain,
         }
-
         total_movements = daily_square_manager.get_user_value(data)
         stop_manager = StopManager(user)
         stop = stop_manager.get_user_movements_top_value_by_concept(concept)

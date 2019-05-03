@@ -13,6 +13,7 @@ from api.CsrfExempt import CsrfExemptSessionAuthentication
 from ...models.units import Unit
 from ...models.unitItems import UnitItems
 from ..serializers.unit_serializer import UnitSerializer
+from webclient.views.utils import get_object_or_none
 
 
 User = get_user_model()
@@ -28,10 +29,15 @@ class UnitDetail(generics.RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         pk = kwargs['pk']
+        print(request.POST)
         unit = Unit.objects.get(pk=pk)
-        unit.name = request.data["form[form][name]"]
-        collector = get_object_or_none(User, pk=request.POST.get('form[form][collector]', None))
-        supervisor = get_object_or_none(User, pk=request.POST.get('form[form][supervisor]', None)),
+        unit.name = request.data["name"]
+        collector = None
+        supervisor = None
+        if 'supervisor' in request.data:
+            supervisor = User.objects.get(pk=request.data['supervisor'])
+        if 'collector' in request.data:
+            collector = User.objects.get(pk=request.data['collector'])
         unit.collector = collector
         unit.supervisor = supervisor
         unit.save()

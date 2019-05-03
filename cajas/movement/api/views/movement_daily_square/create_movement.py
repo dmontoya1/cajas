@@ -51,8 +51,6 @@ class CreateDailySquareMovement(APIView):
         loan = get_object_or_none(Loan, pk=request.POST.get('loan', None))
         chain = get_object_or_none(Chain, pk=request.POST.get('chain', None))
 
-        print(user)
-
         data = {
             'box': box_daily_square,
             'concept': concept,

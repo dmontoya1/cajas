@@ -1,17 +1,21 @@
 
 from datetime import datetime
 
+from django.contrib.sites.models import Site
 from django.db.models import Sum
 
 from boxes.models import BoxDailySquare
+from cajas.users.models.user import User
 from concepts.models.concepts import Concept
 from concepts.services.stop_service import StopManager
-from cajas.users.models.user import User
+from core.services.email_service import EmailManager
 from office.models.officeCountry import OfficeCountry
 from units.models.units import Unit
 from webclient.views.utils import get_object_or_none
 
 from ..models.movement_daily_square import MovementDailySquare
+
+email_manager = EmailManager()
 
 
 class MovementDailySquareManager(object):
@@ -220,6 +224,9 @@ class MovementDailySquareManager(object):
                     current_user_box_daily_square,
                     current_concept
                 )
+                informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(current_concept)
+                if informative_value != 0 and informative_value <= (user_movements_current_value + int(data['value'])):
+                    email_manager.send_informative_top_notification(Site.objects.get_current().domain, partner.user, concept)
                 if user_movements_top_value >= (user_movements_current_value + data['value']):
                     current_movement_daily_square.update(**object_data)
             else:

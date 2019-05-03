@@ -641,7 +641,7 @@
           var edit_dynamic_form = $("#edit_dynamic_form").dynamicForm("#edit_dynamic_form", "#plus5_edit", "#minus5_edit", {
             limit: 15,
             formPrefix: "form",
-            normalizeFullForm: true,
+            normalizeFullForm: false,
           });
 
           $("#edit_dynamic_form #minus5_edit").on('click', function () {
@@ -915,7 +915,7 @@
       var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
         formPrefix: "form",
-        normalizeFullForm: true,
+        normalizeFullForm: false,
       });
 
       $("#dynamic_form #minus5").on('click', function () {

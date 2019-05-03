@@ -5,7 +5,8 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.shortcuts import reverse
 
-from concepts.models.concepts import Concept
+# from cajas.users.models.employee import Employee
+# from concepts.models.stops import Stop
 
 
 class EmailManager(object):
@@ -114,13 +115,25 @@ class EmailManager(object):
             (Q(charge=self.user.employee.get().charge) | Q(user=user))
         )
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
-        for u in users:
+        for u in users.report_users:
             ctx = {
                 "title": "Tope informativo",
-                "content": "{} ha superado el tope informativo".format(self.user.employee)
+                "content": "{} ha superado el tope informativo".format(user)
                 ,
                 "url": url,
                 "action": "Ir a la plataforma"
             }
             subject = "Tope informativo"
             self.send_email(url, ctx, subject, u.email)
+
+        employees = Employee.objects.filter(charge=users.report_by_charge)
+        for e in employees:
+            ctx = {
+                "title": "Tope informativo",
+                "content": "{} ha superado el tope informativo".format(user)
+                ,
+                "url": url,
+                "action": "Ir a la plataforma"
+            }
+            subject = "Tope informativo"
+            self.send_email(url, ctx, subject, e.user.email)
