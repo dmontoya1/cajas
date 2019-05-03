@@ -295,9 +295,6 @@
                 <label for="superv">Supervisores</label>
                 <select class="supervisors form-control" id="edit_superv" name="supervisors[]"
                         style="width: 100%; height: 20px;" multiple="">
-                  {% for e in employees %}
-                    <option value="{{ e.pk }}">{{ e }}</option>
-                  {% endfor %}
                 </select>
               </div>
             </div>
@@ -438,6 +435,15 @@
     $(".edit-item").on("click", function () {
       var adm_group_pk = $(this).data("id")
       $("#admin_pk").val(adm_group_pk)
+      $("#edit_admin").empty()
+      $("#edit_superv").empty()
+      $("#edit_superv").append(
+        `
+          {% for e in employees %}
+            <option value="{{ e.pk }}">{{ e }}</option>
+          {% endfor %}
+        `
+      )
       axios.get(`/api/office/${adm_group_pk}/group-detail`)
         .then(function (response) {
           data = response.data
@@ -462,9 +468,7 @@
           console.log(error);
         })
     })
-    $('#editGroup').on('hidden.bs.modal', function (e) {
-      location.reload()
-    })
+
     $('.edit-group').on('submit', function (e) {
       e.preventDefault()
       var adm_group_pk = $("#admin_pk").val()

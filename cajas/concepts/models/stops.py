@@ -42,6 +42,19 @@ class Stop(models.Model):
         "Tope informativo?",
         default=False
     )
+    report_by_charge = models.ForeignKey(
+        Charge,
+        verbose_name='Informar por cargo',
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name="related_charge_report"
+    )
+    report_users = models.ManyToManyField(
+        User,
+        verbose_name='Informar usuarios',
+        related_name="related_users_report"
+    )
+
     def __str__(self):
         if self.user:
             return 'Tope de %s para %s' % (self.concept.name, self.user.get_full_name())
