@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class EmployeeList(LoginRequiredMixin, TemplateView):

@@ -1,6 +1,6 @@
 from django.db import models
 
-from boxes.models.box_office import BoxOffice
+from cajas.boxes.models.box_office import BoxOffice
 from .movement_mixin import MovementMixin
 
 

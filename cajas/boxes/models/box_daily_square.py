@@ -1,7 +1,7 @@
 from django.db import models
 
 from cajas.users.models.user import User
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class BoxDailySquare(models.Model):

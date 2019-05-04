@@ -1,13 +1,13 @@
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_colombia import BoxColombia
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from concepts.models.concepts import Concept, ConceptType
-from movement.models.movement_box_colombia import MovementBoxColombia
-from movement.models.movement_don_juan import MovementDonJuan
-from movement.models.movement_office import MovementOffice
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.movement.models.movement_box_colombia import MovementBoxColombia
+from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.movement.models.movement_office import MovementOffice
 
 from ..models.movement_box_colombia import MovementBoxColombia
 from ..services.don_juan_usd_service import DonJuanUSDManager

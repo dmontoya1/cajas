@@ -1,8 +1,8 @@
 from django.db import models
 
-from inventory.models.brand import Brand
+from cajas.inventory.models.brand import Brand
 from ..models.units import Unit
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class UnitItems(models.Model):

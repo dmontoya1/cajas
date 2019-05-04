@@ -1,9 +1,6 @@
 
 from django.db import models
 
-from boxes.models.box_daily_square import BoxDailySquare
-from boxes.models.box_office import BoxOffice
-from boxes.models.box_partner import BoxPartner
 from .movement_mixin import MovementMixin
 
 
@@ -12,7 +9,7 @@ class MovementBetweenOfficeRequest(MovementMixin):
     """
 
     box_office = models.ForeignKey(
-        BoxOffice,
+        'boxes.BoxOffice',
         verbose_name='Caja oficina',
         on_delete=models.SET_NULL,
         blank=True, null=True,

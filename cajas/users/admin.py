@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
-from units.admin import UnitInline
+from cajas.units.admin import UnitInline
 from cajas.users.forms import UserChangeForm, UserCreationForm
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner

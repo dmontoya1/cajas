@@ -5,7 +5,7 @@ from django.db.models import Sum
 from enumfields import EnumField
 from enumfields import Enum
 
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 

@@ -3,7 +3,7 @@
 from django.db import migrations, models
 import django.db.models.deletion
 import enumfields.fields
-import loans.models.loan
+import cajas.loans.models.loan
 
 
 class Migration(migrations.Migration):
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='Loan',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('loan_type', enumfields.fields.EnumField(enum=loans.models.loan.LoanType, max_length=3, verbose_name='Tipo de préstamo')),
+                ('loan_type', enumfields.fields.EnumField(enum=cajas.loans.models.loan.LoanType, max_length=3, verbose_name='Tipo de préstamo')),
                 ('value', models.FloatField(verbose_name='Valor del préstamo (Divisa local)')),
                 ('value_cop', models.FloatField(verbose_name='Valor del préstamo (En COP)')),
                 ('interest', models.FloatField(verbose_name='Porcentaje de interés')),

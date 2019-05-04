@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from cajas.users.models.partner import Partner
-from loans.models.loan import Loan
+from cajas.loans.models.loan import Loan
 
 
 class ValidatePartnerWithdraw(APIView):

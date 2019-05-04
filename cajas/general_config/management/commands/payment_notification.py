@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.sites.models import Site
 
 from cajas.users.models.employee import Employee
-from core.services.email_service import EmailManager
+from cajas.core.services.email_service import EmailManager
 
 email_manager = EmailManager()
 

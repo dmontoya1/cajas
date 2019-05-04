@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class UnitsConfig(AppConfig):
-    name = 'units'
+    name = 'cajas.units'
     verbose_name = 'Unidades'
     app_label = 'Unidades'
 

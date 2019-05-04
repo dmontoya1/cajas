@@ -1,10 +1,10 @@
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_colombia import BoxColombia
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from concepts.models.concepts import Concept, ConceptType
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.concepts.models.concepts import Concept, ConceptType
 
 from ..models.movement_office import MovementOffice
 from ..services.don_juan_service import DonJuanManager

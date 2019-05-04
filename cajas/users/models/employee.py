@@ -5,9 +5,9 @@ from django.contrib.sites.models import Site
 from django.db import models
 
 from cajas.users.models.charges import Charge
-from core.services.email_service import EmailManager
-from office.models.office import Office
-from office.models.officeCountry import OfficeCountry
+from cajas.core.services.email_service import EmailManager
+from cajas.office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 email_manager = EmailManager()

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from concepts.models.concepts import Concept
-from concepts.models.stops import Stop
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.models.stops import Stop
 
 
 class StopAdmin(admin.StackedInline):

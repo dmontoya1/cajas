@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from movement.models.movement_box_colombia import MovementBoxColombia
+from cajas.movement.models.movement_box_colombia import MovementBoxColombia
 
 
 class MovementBoxColombiaSerializer(serializers.ModelSerializer):

@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class ConceptsConfig(AppConfig):
-    name = 'concepts'
+    name = 'cajas.concepts'
     verbose_name = 'Conceptos'
     app_label = 'Conceptos'
 

@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from movement.models.movement_office import MovementOffice
+from cajas.movement.models.movement_office import MovementOffice
 
 
 class MovementOfficeSerializer(serializers.ModelSerializer):

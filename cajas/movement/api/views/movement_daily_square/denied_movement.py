@@ -6,13 +6,13 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
-from units.models.unitItems import UnitItems
-from units.models.units import Unit
+from cajas.units.models.unitItems import UnitItems
+from cajas.units.models.units import Unit
 
 class DeniedMovement(APIView):
     """

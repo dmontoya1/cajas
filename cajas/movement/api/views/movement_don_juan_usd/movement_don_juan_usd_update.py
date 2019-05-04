@@ -5,7 +5,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from webclient.views.get_ip import get_ip
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....services.don_juan_usd_service import DonJuanUSDManager

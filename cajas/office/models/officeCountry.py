@@ -2,7 +2,7 @@
 from django.db import models
 from django.utils.text import slugify
 
-from general_config.models.country import Country
+from cajas.general_config.models.country import Country
 
 from .office import Office
 

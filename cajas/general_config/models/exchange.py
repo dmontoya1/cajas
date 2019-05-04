@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from general_config.models.currency import Currency
+from .currency import Currency
 
 
 class Exchange(models.Model):

@@ -5,15 +5,15 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.services.box_daily_square_manager import BoxDailySquareManager
+from cajas.boxes.services.box_daily_square_manager import BoxDailySquareManager
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.partner_service import PartnerManager
-from movement.services.partner_service import MovementPartnerManager
-from movement.services.daily_square_service import MovementDailySquareManager
-from office.models.officeCountry import OfficeCountry
-from webclient.views.utils import get_object_or_none
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.movement.services.daily_square_service import MovementDailySquareManager
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.utils import get_object_or_none
 
 from .get_ip import get_ip
 

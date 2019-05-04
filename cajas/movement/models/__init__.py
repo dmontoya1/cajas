@@ -1,3 +1,4 @@
+from .movement_mixin import MovementMixin
 from .movement_between_office_request import MovementBetweenOfficeRequest
 from .movement_daily_square import MovementDailySquare
 from .movement_don_juan import MovementDonJuan
@@ -7,3 +8,4 @@ from .movement_partner import MovementPartner
 from .movement_provisioning import MovementProvisioning
 from .movement_request import MovementRequest
 from .movement_withdraw import MovementWithdraw
+from .movement_box_colombia import MovementBoxColombia

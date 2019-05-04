@@ -1,5 +1,5 @@
 
-from concepts.models.concepts import Concept
+from cajas.concepts.models.concepts import Concept
 
 from ..models.movement_don_juan_usd import MovementDonJuanUsd
 

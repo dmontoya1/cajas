@@ -8,18 +8,18 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_partner import BoxStatus
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_partner import BoxStatus
 from cajas.users.models.partner import Partner, PartnerType
-from chains.models.user_place import UserPlace
-from chains.models.chain_place import ChainPlace
-from concepts.models.concepts import Concept, ConceptType
-from investments.models.investment import Investment
-from loans.models.loan import Loan, LoanType
-from loans.models.loan_payments import LoanPayment
-from movement.models.movement_partner import MovementPartner
-from movement.models.movement_don_juan import MovementDonJuan
-from webclient.views.get_ip import get_ip
+from cajas.chains.models.user_place import UserPlace
+from cajas.chains.models.chain_place import ChainPlace
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.investments.models.investment import Investment
+from cajas.loans.models.loan import Loan, LoanType
+from cajas.loans.models.loan_payments import LoanPayment
+from cajas.movement.models.movement_partner import MovementPartner
+from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.webclient.views.get_ip import get_ip
 
 
 class PartnerCloseout(APIView):

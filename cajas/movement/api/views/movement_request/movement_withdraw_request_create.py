@@ -9,9 +9,9 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
-from core.services.email_service import EmailManager
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept
+from cajas.core.services.email_service import EmailManager
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_withdraw import MovementWithdraw
 

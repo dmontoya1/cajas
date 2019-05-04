@@ -5,11 +5,11 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from core.services.email_service import EmailManager
-from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
-from movement.services.don_juan_service import DonJuanManager
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.core.services.email_service import EmailManager
+from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
+from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.users.models.employee import Employee
 
 

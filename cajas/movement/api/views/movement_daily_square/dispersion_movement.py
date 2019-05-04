@@ -6,13 +6,13 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.partner import Partner
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from movement.models.movement_daily_square import MovementDailySquare
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.partner_service import MovementPartnerManager
-from webclient.views.get_ip import get_ip
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.movement.models.movement_daily_square import MovementDailySquare
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 

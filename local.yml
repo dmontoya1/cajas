@@ -5,7 +5,7 @@ volumes:
   local_postgres_data_backups: {}
 
 services:
-  django:
+  django: &django
     build:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
@@ -24,10 +24,29 @@ services:
   postgres:
     build:
       context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
+      dockerfile: ./compose/local/postgres/Dockerfile
     image: cajas_production_postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data
       - local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+
+  celery_worker:
+    <<: *django
+    depends_on:
+      - django
+      - postgres
+    ports: []
+    command: /start-celeryworker.sh
+
+  celery_beat:
+    <<: *django
+    depends_on:
+      - django
+      - postgres
+    ports: []
+    command: /start-celerybeat.sh
+
+  redis:
+    image: redis:3.2

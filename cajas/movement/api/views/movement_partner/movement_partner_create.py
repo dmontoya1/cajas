@@ -3,16 +3,16 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from inventory.models.brand import Brand
-from boxes.models.box_partner import BoxPartner
+from cajas.inventory.models.brand import Brand
+from cajas.boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from concepts.models.concepts import Concept, ConceptType
-from concepts.services.stop_service import StopManager
-from webclient.views.get_ip import get_ip
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.concepts.services.stop_service import StopManager
+from cajas.webclient.views.get_ip import get_ip
 from ....services.partner_service import MovementPartnerManager
-from units.models.units import Unit
-from units.models.unitItems import UnitItems
+from cajas.units.models.units import Unit
+from cajas.units.models.unitItems import UnitItems
 from django.shortcuts import get_object_or_404
 
 

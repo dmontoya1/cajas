@@ -6,8 +6,8 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from movement.services.partner_service import MovementPartnerManager
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.movement.services.partner_service import MovementPartnerManager
 
 from ....models.movement_request import MovementRequest
 

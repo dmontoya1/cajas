@@ -8,10 +8,10 @@ from django.views.generic import TemplateView
 
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
-from general_config.models.exchange import Exchange
-from loans.models.loan import Loan
-from office.models.officeCountry import OfficeCountry
-from webclient.views.utils import get_object_or_none
+from cajas.general_config.models.exchange import Exchange
+from cajas.loans.models.loan import Loan
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.utils import get_object_or_none
 
 User = get_user_model()
 

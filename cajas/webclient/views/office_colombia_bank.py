@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from boxes.models.box_colombia import BoxColombia
-from office.models.officeCountry import OfficeCountry
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class OfficeColombiaBank(LoginRequiredMixin, TemplateView):
