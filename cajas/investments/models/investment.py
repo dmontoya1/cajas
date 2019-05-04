@@ -58,6 +58,10 @@ class Investment(models.Model):
     def __str__(self):
         return "Inversión {}".format(self.partner)
 
+    def get_investment_pay(self):
+        if self.monthly_pay > 0:
+            return self.monthly_pay
+
     class Meta:
         verbose_name = 'Inversión Negocios'
         verbose_name_plural = 'Inversiones Negocios'

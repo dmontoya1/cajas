@@ -78,14 +78,14 @@ class Loan(models.Model):
 
     def __str__(self):
         if self.provider:
-            return "Préstamo de {} a {} por valor de {}".format(
+            return "Préstamo de {} a {} por valor de ${}".format(
                 self.provider.get_full_name(),
                 self.lender.get_full_name(),
-                self.value
+                self.balance
             )
         return "Préstamo de la oficina a {} por valor de {}".format(
             self.lender.get_full_name(),
-            self.value
+            self.balance
         )
 
     def save(self, *args, **kwargs):
@@ -95,6 +95,11 @@ class Loan(models.Model):
         else:
             self.balance = self.value
         super(Loan, self).save(*args, **kwargs)
+
+    def get_interest_payment(self):
+        """Obtiene el pago del interes mensual del prestamo
+        """
+        return (self.balance * self.interest) / 100
 
     class Meta:
         verbose_name = 'Préstamo'

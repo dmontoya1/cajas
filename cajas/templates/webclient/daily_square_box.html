@@ -197,7 +197,7 @@
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>
-                        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                        {% if request.user.is_superuser or request.user.is_secretary %}
                           {% if m.date|three_last_days %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                data-target="#addMovement">Editar</a>

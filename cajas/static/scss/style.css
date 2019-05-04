@@ -1205,7 +1205,9 @@ header .form-inline {
   padding: 0;
   border: 0px solid transparent;
   -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
-          box-shadow: 0 0 20px rgba(0, 0, 0, 0.08); }
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+  min-height: 400px;
+  }
   .card .box-title {
     font-weight: 600;
     font-size: 1em;
