@@ -309,7 +309,7 @@
             <div class="label-text">Añadir movimiento</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-        {% elif perms.movement.add_movementdailysquare and not box.is_closed %}
+        {% elif perms.movement.add_movementdailysquare and not box.is_closed and box.user == request.user %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
@@ -317,8 +317,6 @@
             <div class="label-text">Añadir movimiento</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-        {% endif %}
-        {% if not box.is_closed and request.user == box_user %}
           <a href="#" class="close-box float" style="bottom:110px;">
             <i class="fas fa-power-off my-float"></i>
           </a>
