@@ -477,24 +477,20 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text salary-type-icon">$</div>
                   </div>
-                  <input type="text" class="form-control" id="edit_salary" name="salary" required>
+                  <input type="text" class="form-control to-dec" id="edit_salary" name="salary" required>
                 </div>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="initial_value">Hoja de vida</label>
-                <div class="form-control">
-                  <a target="_blank" id="edit_cv" name="cv" href="">Ver hoja de vida</a>
-                </div>
-                <!--input type="file" class="form-control-file" id="edit_cv" name="cv" required-->
+                <input type="file" class="form-control-file" id="edit_cv" name="cv">
+                <label id="current_cv">Actualmente: <a id="current_cv_link" href="">Ver hoja de vida</a></label>
               </div>
               <div class="form-group col-md-6">
                 <label for="daily_square">Pasaporte</label><br>
-                <div class="form-control">
-                  <a target="_blank" id="edit_passport" name="passport" href="">Ver pasaporte</a>
-                </div>
-                <!--input type="file" class="form-control-file" id="edit_passport" name="passport" required-->
+                <input type="file" class="form-control-file" id="edit_passport" name="passport">
+                <label id="current_passport">Actualmente: <a id="current_passport_link" href="">Ver pasaporte</a></label>
               </div>
             </div>
             <button type="submit" class="btn btn-submit" id="btn-edit">Editar</button>
@@ -508,6 +504,18 @@
 {% block extra_js %}
 
   <script type="text/javascript">
+
+    $(document).on('blur', '.to-dec', function() {
+      var value = $(this).val();
+      if (isNaN(value)) {
+        $(this).val('');
+      } else if (!value) {
+        return;
+      } else {
+        value = parseFloat(value).toFixed(1);
+        $(this).val(value);
+      }
+    });
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
@@ -587,13 +595,24 @@
       axios.get(`/api/users/${employee_pk}/employee-detail`)
         .then(function (response) {
           data = response.data
+          console.log(data)
           $("#detail_first_name").val(data.user.first_name)
           $("#detail_last_name").val(data.user.last_name)
           $("#detail_salary").val(data.salary)
           $("#detail_charge").val(data.charge.name)
           $("#detail_charge").attr("data-id", data.charge.id)
-          $("#detail_cv").attr("href", data.cv)
-          $("#detail_passport").attr("href", data.passport)
+          if(data.cv != null){
+            $("#detail_cv").attr("href", data.cv)
+            $("#detail_cv").removeClass("d-none")
+          } else {
+            $("#detail_cv").addClass("d-none")
+          }
+          if(data.cv != null){
+            $("#detail_passport").attr("href", data.cv)
+            $("#detail_passport").removeClass("d-none")
+          } else {
+            $("#detail_passport").addClass("d-none")
+          }
         })
         .catch(function (error) {
           // handle error
@@ -631,13 +650,29 @@
           $("#edit_first_name").val(data.user.first_name)
           $("#edit_last_name").val(data.user.last_name)
           $("#edit_email").val(data.user.email)
-          $("#edit_salary").val(data.salary)
-          $("#edit_cv").attr("href", data.cv)
-          $("#edit_passport").attr("href", data.passport)
+          $("#edit_salary").val(parseFloat(data.salary).toFixed(1))
+
+          if(data.cv != null){
+            $("#current_cv").removeClass("d-none")
+            $("#current_cv_link").attr("href", data.cv)
+          } else {
+            $("#current_cv").addClass("d-none")
+          }
+
+          if(data.passport != null){
+            $("#current_passport").removeClass("d-none")
+            $("#current_passport_link").attr("href", data.passport)
+          } else {
+            $("#current_passport").addClass("d-none")
+          }
 
           $("#edit_charge").find('option:selected').remove()
           $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
           $("#edit_charge").trigger("click")
+
+          $("#edit_salary_type").find('option:selected').remove()
+          $("#edit_salary_type option[value='" + data.salary_type.id + "']").prop("selected", true);
+          $("#edit_salary_type").trigger("click")
 
         })
         .catch(function (error) {
@@ -650,7 +685,16 @@
     $('.edit_employee_form').on('submit', function (e) {
       e.preventDefault()
       $('#btn-edit').attr('disabled', true)
-      data = $(this).serialize()
+      var data = new FormData();
+
+      data.append("first_name", $(this).context.edit_first_name.value)
+      data.append("last_name", $(this).context.edit_last_name.value)
+      data.append("email", $(this).context.edit_email.value)
+      data.append("salary_type", $(this).context.edit_salary_type.value)
+      data.append("salary", $(this).context.edit_salary.value)
+      data.append("charge", $(this).context.edit_charge.value)
+      data.append("cv", $(this).context.edit_cv.files[0])
+      data.append("passport", $(this).context.edit_passport.files[0])
 
       axios.patch(`/api/users/${$("#employee_pk").val()}/employee-detail`, data)
         .then(function (response) {

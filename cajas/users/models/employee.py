@@ -5,12 +5,10 @@ from django.contrib.sites.models import Site
 from django.db import models
 
 from cajas.users.models.charges import Charge
-from cajas.core.services.email_service import EmailManager
 from cajas.office.models.office import Office
 from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
-email_manager = EmailManager()
 
 
 def user_passport_path(instance, filename):
@@ -91,13 +89,6 @@ class Employee(models.Model):
 
     def __str__(self):
         return '{}'.format(self.user.get_full_name())
-
-    def save(self, *args, **kwargs):
-        old = type(self).objects.get(pk=self.pk) if self.pk else None
-        super(Employee, self).save(*args, **kwargs)
-        if old and old.salary != self.salary:
-            domain = Site.objects.get_current().domain
-            email_manager.send_employee_salary_change_notification(self, domain, settings.ADMIN_EMAIL)
 
     def get_full_name(self):
         return '{}'.format(self.user.get_full_name())

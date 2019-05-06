@@ -348,7 +348,7 @@ Googel Fonts  */
   transition: all 0.3s ease; }
 
 body {
-  /*display: table;*/
+  /* display: table; */
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   width: 100%; }
