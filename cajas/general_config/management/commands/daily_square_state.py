@@ -2,8 +2,8 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 
-from boxes.models.box_daily_square import BoxDailySquare
-from core.services.email_service import EmailManager
+from cajas.boxes.models.box_daily_square import BoxDailySquare
+from cajas.core.services.email_service import EmailManager
 
 User = get_user_model()
 email_manager = EmailManager()

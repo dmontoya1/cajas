@@ -3,11 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from boxes.models.box_partner import BoxStatus
-from inventory.models.category import Category
+from cajas.boxes.models.box_partner import BoxStatus
+from cajas.inventory.models.category import Category
 from cajas.users.models.partner import Partner
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class PartnerList(LoginRequiredMixin, TemplateView):

@@ -5,15 +5,14 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.models.box_daily_square import BoxDailySquare
+from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
-from concepts.models.concepts import Concept
-from concepts.services.stop_service import StopManager
-from core.services.email_service import EmailManager
-from general_config.models.country import Country
-from movement.services.daily_square_service import MovementDailySquareManager
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.services.stop_service import StopManager
+from cajas.general_config.models.country import Country
+from cajas.movement.services.daily_square_service import MovementDailySquareManager
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 from .get_ip import get_ip
 from .utils import get_object_or_none

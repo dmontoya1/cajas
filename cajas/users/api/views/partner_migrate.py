@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cajas.users.services.partner_service import PartnerManager
-from webclient.views.get_ip import get_ip
+from cajas.webclient.views.get_ip import get_ip
 
 
 class PartnerMigrate(APIView):

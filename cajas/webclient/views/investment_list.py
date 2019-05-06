@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.users.models.partner import Partner
-from investments.models.investment import Investment
-from office.models.officeCountry import OfficeCountry
+from cajas.investments.models.investment import Investment
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class InvestmentList(LoginRequiredMixin, TemplateView):

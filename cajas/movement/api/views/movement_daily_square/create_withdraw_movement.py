@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept
+from cajas.webclient.views.get_ip import get_ip
 
 from ....services.daily_square_service import MovementDailySquareManager
 from ....services.partner_service import MovementPartnerManager

@@ -5,19 +5,19 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.models.box_colombia import BoxColombia
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.users.models.employee import Employee
-from concepts.models.concepts import Concept, ConceptType
-from core.services.email_service import EmailManager
-from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
-from movement.models.movement_office import MovementOffice
-from movement.services.box_colombia_service import MovementBoxColombiaManager
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.don_juan_usd_service import DonJuanUSDManager
-from office.models.notifications import Notifications
-from office.models.officeCountry import OfficeCountry
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.core.services.email_service import EmailManager
+from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
+from cajas.movement.models.movement_office import MovementOffice
+from cajas.movement.services.box_colombia_service import MovementBoxColombiaManager
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.don_juan_usd_service import DonJuanUSDManager
+from cajas.office.models.notifications import Notifications
+from cajas.office.models.officeCountry import OfficeCountry
 
 from .get_ip import get_ip
 

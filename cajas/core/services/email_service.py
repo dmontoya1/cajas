@@ -5,8 +5,7 @@ from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.shortcuts import reverse
 
-# from cajas.users.models.employee import Employee
-# from concepts.models.stops import Stop
+from cajas.concepts.models.concepts import Concept
 
 
 class EmailManager(object):

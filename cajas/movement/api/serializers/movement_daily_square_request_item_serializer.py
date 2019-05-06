@@ -2,7 +2,7 @@
 from rest_framework import serializers
 
 from ...models.movement_daily_square_request_item import MovementDailySquareRequestItem
-from inventory.api.serializer.brand_serializer import BrandSerializer
+from cajas.inventory.api.serializer.brand_serializer import BrandSerializer
 
 
 class MovementDailySquareRequestItemSerializer(serializers.ModelSerializer):

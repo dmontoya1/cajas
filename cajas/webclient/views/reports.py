@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from cajas.users.models.partner import Partner
-from office.models.office import Office
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Reports(LoginRequiredMixin, TemplateView):

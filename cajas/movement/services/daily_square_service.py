@@ -4,14 +4,13 @@ from datetime import datetime
 from django.contrib.sites.models import Site
 from django.db.models import Sum
 
-from boxes.models import BoxDailySquare
+from cajas.boxes.models import BoxDailySquare
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.services.stop_service import StopManager
 from cajas.users.models.user import User
-from concepts.models.concepts import Concept
-from concepts.services.stop_service import StopManager
-from core.services.email_service import EmailManager
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
-from webclient.views.utils import get_object_or_none
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_object_or_none
 
 from ..models.movement_daily_square import MovementDailySquare
 

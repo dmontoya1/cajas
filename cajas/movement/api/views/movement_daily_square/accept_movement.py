@@ -6,12 +6,12 @@ from rest_framework.response import Response
 
 from django.shortcuts import get_object_or_404
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from concepts.models.concepts import Concept, Relationship
-from movement.services.office_service import MovementOfficeManager
-from movement.services.partner_service import MovementPartnerManager
-from units.models.unitItems import UnitItems
-from webclient.views.get_ip import get_ip
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.concepts.models.concepts import Concept, Relationship
+from cajas.movement.services.office_service import MovementOfficeManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.units.models.unitItems import UnitItems
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem

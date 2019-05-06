@@ -6,21 +6,21 @@ from rest_framework.response import Response
 from django.contrib.sites.models import Site
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_daily_square import BoxDailySquare
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from inventory.models.brand import Brand
+from cajas.boxes.models.box_daily_square import BoxDailySquare
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.inventory.models.brand import Brand
 from cajas.users.models.user import User
-from chains.models.chain import Chain
-from concepts.models.concepts import Concept
-from concepts.services.stop_service import StopManager
-from core.services.email_service import EmailManager
-from general_config.models.country import Country
-from loans.models.loan import Loan
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
-from webclient.views.get_ip import get_ip
-from webclient.views.utils import get_object_or_none
+from cajas.chains.models.chain import Chain
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
+from cajas.general_config.models.country import Country
+from cajas.loans.models.loan import Loan
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
+from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_object_or_none
 
 from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd

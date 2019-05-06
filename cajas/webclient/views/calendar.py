@@ -7,8 +7,8 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.group_employee import GroupEmployee
 from cajas.users.models.group import Group
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class Calendar(LoginRequiredMixin, TemplateView):

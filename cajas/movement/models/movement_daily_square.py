@@ -1,13 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from boxes.models.box_daily_square import BoxDailySquare
-from movement.models.movement_don_juan import MovementDonJuan
-from movement.models.movement_don_juan_usd import MovementDonJuanUsd
-from movement.models.movement_office import MovementOffice
-from movement.models.movement_partner import MovementPartner
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.boxes.models.box_daily_square import BoxDailySquare
+from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.movement.models.movement_don_juan_usd import MovementDonJuanUsd
+from cajas.movement.models.movement_office import MovementOffice
+from cajas.movement.models.movement_partner import MovementPartner
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 from .movement_mixin import MovementMixin
 
 User = get_user_model()

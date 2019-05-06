@@ -1,6 +1,6 @@
 from django.db import models
 
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Chain(models.Model):

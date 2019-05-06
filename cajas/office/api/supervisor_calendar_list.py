@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import datetime
 
 from django.shortcuts import get_object_or_404
-from webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none
 
 from ..models.supervisorCalendar import SupervisorCalendar
 from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer

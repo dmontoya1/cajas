@@ -2,12 +2,12 @@
 
 from django.urls import path
 
-from office.api.create_office_item import CreateOfficeItem
+from cajas.office.api.create_office_item import CreateOfficeItem
 from .api.create_supervisor_calendar import CreateSupervisorCalendar
 from .api.create_group import CreateGroup
 from .api.group_detail import GroupDetail
-from office.api.office_item_delete import OfficeItemDelete
-from office.api.office_item_detail import OfficeItemDetail
+from cajas.office.api.office_item_delete import OfficeItemDelete
+from cajas.office.api.office_item_detail import OfficeItemDetail
 from .api.supervisor_calendar_list import SupervisorCalendarList
 from .api.supervisor_calendar_delete import SupervisorCalendarDelete
 

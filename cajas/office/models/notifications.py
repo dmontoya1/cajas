@@ -1,8 +1,8 @@
 
 from django.db import models
 
-from concepts.models.concepts import Concept
-from office.models.officeCountry import OfficeCountry
+from cajas.concepts.models.concepts import Concept
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Notifications(models.Model):

@@ -5,8 +5,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from webclient.views.get_ip import get_ip
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....services.daily_square_service import MovementDailySquareManager

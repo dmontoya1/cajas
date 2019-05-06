@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.group_employee import GroupEmployee
 from cajas.users.models.group import Group
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Groups(LoginRequiredMixin, TemplateView):

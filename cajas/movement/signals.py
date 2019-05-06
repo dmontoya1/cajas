@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-from boxes.models.box_partner import BoxStatus
+from cajas.boxes.models.box_partner import BoxStatus
 
 from .models.movement_box_colombia import MovementBoxColombia
 from .models.movement_daily_square import MovementDailySquare

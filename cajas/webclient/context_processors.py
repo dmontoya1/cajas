@@ -2,7 +2,7 @@
 from django.conf import settings
 
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
+from cajas.concepts.models.concepts import Concept
 
 
 def webclient_processor(request):

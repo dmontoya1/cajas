@@ -5,10 +5,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from concepts.models.concepts import Concept
-from webclient.views.get_ip import get_ip
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.concepts.models.concepts import Concept
+from cajas.webclient.views.get_ip import get_ip
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 

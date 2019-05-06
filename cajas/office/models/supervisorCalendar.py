@@ -2,8 +2,8 @@ from django.contrib.auth import get_user_model
 
 from django.db import models
 
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 User = get_user_model()
 

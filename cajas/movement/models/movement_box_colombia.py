@@ -1,7 +1,7 @@
 from django.db import models
 
-from boxes.models.box_colombia import BoxColombia
-from .movement_mixin import MovementMixin
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.movement.models.movement_mixin import MovementMixin
 
 
 class MovementBoxColombia(MovementMixin):

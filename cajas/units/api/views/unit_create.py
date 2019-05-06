@@ -5,11 +5,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from inventory.models.brand import Brand
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.inventory.models.brand import Brand
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.users.models.partner import Partner
-from units.models.units import Unit
-from webclient.views.utils import get_object_or_none
+from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_object_or_none
 
 from ...models.unitItems import UnitItems
 

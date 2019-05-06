@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class LoansConfig(AppConfig):
-    name = 'loans'
+    name = 'cajas.loans'
     verbose_name = 'Préstamos'
 
     def ready(self):

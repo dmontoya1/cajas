@@ -8,8 +8,8 @@ from django.shortcuts import get_object_or_404
 
 from cajas.users.models.employee import Employee
 
-from inventory.models.brand import Brand
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.inventory.models.brand import Brand
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from ...models.units import Unit
 from ...models.unitItems import UnitItems
 from ..serializers.unit_serializer import UnitSerializer

@@ -3,10 +3,10 @@ from datetime import datetime
 
 from django.db.models import Sum
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_partner import BoxPartner
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import PartnerType
-from concepts.models.concepts import Concept, ConceptType
+from cajas.concepts.models.concepts import Concept, ConceptType
 
 from ..models.movement_partner import MovementPartner
 from ..services.don_juan_service import DonJuanManager

@@ -1,6 +1,6 @@
 from django.db import models
 
-from office.models.office import Office
+from cajas.office.models.office import Office
 
 
 class OfficeCommitments(models.Model):

@@ -3,8 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from investments.models.investment import Investment
-from office.models.officeCountry import OfficeCountry
+from cajas.investments.models.investment import Investment
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class InvestmentPaymentList(LoginRequiredMixin, TemplateView):

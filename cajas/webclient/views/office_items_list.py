@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from inventory.models import Category
-from office.models.officeCountry import OfficeCountry
-from office.models.officeItems import OfficeItems
-from units.models.unitItems import UnitItems
+from cajas.inventory.models import Category
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeItems import OfficeItems
+from cajas.units.models.unitItems import UnitItems
 
 
 class OfficeItemsList(LoginRequiredMixin, TemplateView):
