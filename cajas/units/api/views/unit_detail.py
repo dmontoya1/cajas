@@ -13,7 +13,7 @@ from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from ...models.units import Unit
 from ...models.unitItems import UnitItems
 from ..serializers.unit_serializer import UnitSerializer
-from webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none
 
 
 User = get_user_model()
@@ -29,7 +29,6 @@ class UnitDetail(generics.RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         pk = kwargs['pk']
-        print(request.POST)
         unit = Unit.objects.get(pk=pk)
         unit.name = request.data["name"]
         collector = None

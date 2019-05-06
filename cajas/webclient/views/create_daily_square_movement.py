@@ -9,6 +9,7 @@ from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
 from cajas.concepts.models.concepts import Concept
 from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
 from cajas.general_config.models.country import Country
 from cajas.movement.services.daily_square_service import MovementDailySquareManager
 from cajas.office.models.officeCountry import OfficeCountry
@@ -65,7 +66,7 @@ class CreateDailySquareMovement(View):
         stop = stop_manager.get_user_movements_top_value_by_concept(concept)
         informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
         if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
-            email_manager.send_informative_top_notification(Site.objects.get_current().domain, user, concept)
+            email_manager.send_informative_top_notification(user, concept)
         if stop > total_movements['value__sum']:
             movement = daily_square_manager.create_movement(data)
             messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')

@@ -1,11 +1,13 @@
 from django.db.models import Q
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.shortcuts import reverse
 
-from cajas.concepts.models.concepts import Concept
+from cajas.concepts.models.stops import Stop
+from cajas.users.models.employee import Employee
 
 
 class EmailManager(object):
@@ -95,7 +97,8 @@ class EmailManager(object):
         subject = "Recodatorio de pagos"
         self.send_email(url, ctx, subject, email_to)
 
-    def send_employee_salary_change_notification(self, employee, domain, email_to):
+    def send_employee_salary_change_notification(self, employee):
+        domain = Site.objects.get_current().domain
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
         ctx = {
             "title": "Cambio de Salario",
@@ -105,34 +108,40 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Notificación de cambio de salario"
-        self.send_email(url, ctx, subject, email_to)
+        self.send_email(url, ctx, subject, self.email_to)
 
-    def send_informative_top_notification(self, domain, user, concept):
-        users = Stop.objects.filter(
+    def send_informative_top_notification(self, user, concept):
+        domain = Site.objects.get_current().domain
+        try:
+            charge = user.employee.get().charge
+        except:
+            charge = None
+        stops = Stop.objects.filter(
             Q(concept=concept) &
             Q(is_informative=True) &
-            (Q(charge=self.user.employee.get().charge) | Q(user=user))
+            (Q(charge=charge) | Q(user=user))
         )
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
-        for u in users.report_users:
-            ctx = {
-                "title": "Tope informativo",
-                "content": "{} ha superado el tope informativo".format(user)
-                ,
-                "url": url,
-                "action": "Ir a la plataforma"
-            }
-            subject = "Tope informativo"
-            self.send_email(url, ctx, subject, u.email)
+        for stop in stops:
+            for report_user in stop.report_users.all():
+                ctx = {
+                    "title": "Tope informativo",
+                    "content": "{} ha superado el tope informativo".format(user)
+                    ,
+                    "url": url,
+                    "action": "Ir a la plataforma"
+                }
+                subject = "Tope informativo"
+                self.send_email(url, ctx, subject, report_user.email)
 
-        employees = Employee.objects.filter(charge=users.report_by_charge)
-        for e in employees:
-            ctx = {
-                "title": "Tope informativo",
-                "content": "{} ha superado el tope informativo".format(user)
-                ,
-                "url": url,
-                "action": "Ir a la plataforma"
-            }
-            subject = "Tope informativo"
-            self.send_email(url, ctx, subject, e.user.email)
+            employees = Employee.objects.filter(charge=stop.report_by_charge)
+            for e in employees:
+                ctx = {
+                    "title": "Tope informativo",
+                    "content": "{} ha superado el tope informativo".format(user)
+                    ,
+                    "url": url,
+                    "action": "Ir a la plataforma"
+                }
+                subject = "Tope informativo"
+                self.send_email(url, ctx, subject, e.user.email)

@@ -9,6 +9,7 @@ from cajas.users.models.partner import Partner
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
 from cajas.webclient.views.get_ip import get_ip
 from ....services.partner_service import MovementPartnerManager
 from cajas.units.models.units import Unit
@@ -65,7 +66,7 @@ class MovementPartnerCreate(APIView):
             stop = stop_manager.get_user_movements_top_value_by_concept(concept)
             informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
             if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
-                email_manager.send_informative_top_notification(Site.objects.get_current().domain, partner.user, concept)
+                email_manager.send_informative_top_notification(partner.user, concept)
             if stop == 0 or(stop >= (total_movements['value__sum'] + int(data['value']))):
                 movement = MovementPartnerManager.create_simple(data)
             else:

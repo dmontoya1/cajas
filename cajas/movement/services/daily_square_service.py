@@ -7,11 +7,11 @@ from django.db.models import Sum
 from cajas.boxes.models import BoxDailySquare
 from cajas.concepts.models.concepts import Concept
 from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
 from cajas.users.models.user import User
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 from cajas.webclient.views.utils import get_object_or_none
-
 from ..models.movement_daily_square import MovementDailySquare
 
 email_manager = EmailManager()
@@ -225,7 +225,7 @@ class MovementDailySquareManager(object):
                 )
                 informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(current_concept)
                 if informative_value != 0 and informative_value <= (user_movements_current_value + int(data['value'])):
-                    email_manager.send_informative_top_notification(Site.objects.get_current().domain, partner.user, concept)
+                    email_manager.send_informative_top_notification(partner.user, concept)
                 if user_movements_top_value >= (user_movements_current_value + data['value']):
                     current_movement_daily_square.update(**object_data)
             else:
