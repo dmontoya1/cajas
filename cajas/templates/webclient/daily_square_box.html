@@ -180,62 +180,122 @@
                   </h3>
                   <h3 class="float-right">SALDO CAJA: $
                     {{ box.balance|intcomma }}{{ office.country.currency.abbr }}  </h3>
-                  <thead>
-                  <tr>
-                    <th>Responsable</th>
-                    <th>Fecha</th>
-                    <th>Concepto</th>
-                    <th>Detalle</th>
-                    <th>Entra</th>
-                    <th>Sale</th>
-                    <th></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for m in box.movements.all %}
+                  {% if request.user.is_superuser or request.user.is_secretary %}
+                    <thead>
                     <tr>
-                      <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y" }}</td>
-                      <td>{{ m.concept.name }}</td>
-                      <td>{{ m.detail }}</td>
-                      <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
-                      <td>
-                        {% if request.user.is_superuser or request.user.is_secretary %}
-                          {% if m.date|three_last_days %}
+                      <th></th>
+                      <th>Responsable</th>
+                      <th>Fecha</th>
+                      <th>Concepto</th>
+                      <th>Detalle</th>
+                      <th>Entra</th>
+                      <th>Sale</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for m in box.movements.all %}
+                      <tr>
+                        <td>
+                          {% if request.user.is_superuser or request.user.is_secretary %}
+                            {% if m.date|three_last_days %}
+                              <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                 data-target="#addMovement">Editar</a>
+                            {% endif %}
+                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
                             <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                data-target="#addMovement">Editar</a>
                           {% endif %}
-                        {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                             data-target="#addMovement">Editar</a>
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
-                        {% endif %}
-                        {% if not m.review %}
-                          {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
-                            <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
-                            <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
-                            <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
-                               data-toggle="modal"
-                               data-target="#dispersionMovement">
-                              Dispersión
-                            </a>
+                          {% if request.user.is_superuser %}
+                            <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
                           {% endif %}
-                        {% else %}
-                          <span
-                            class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
+                          {% if not m.review %}
+                            {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
+                              <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
+                              <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
+                              <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
+                                 data-toggle="modal"
+                                 data-target="#dispersionMovement">
+                                Dispersión
+                              </a>
+                            {% endif %}
+                          {% else %}
+                            <span
+                              class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
                             {{ m.get_status_display }}
                           </span>
 
-                        {% endif %}
-                      </td>
+                          {% endif %}
+                        </td>
+                        <td>{{ m.responsible.get_full_name }}</td>
+                        <td>{{ m.date|date:"d-M-Y" }}</td>
+                        <td>{{ m.concept.name }}</td>
+                        <td>{{ m.detail }}</td>
+                        <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
+                          {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
+                          {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  {% else %}
+                    <thead>
+                    <tr>
+                      <th>Responsable</th>
+                      <th>Fecha</th>
+                      <th>Concepto</th>
+                      <th>Detalle</th>
+                      <th>Entra</th>
+                      <th>Sale</th>
+                      <th></th>
                     </tr>
-                  {% endfor %}
-                  </tbody>
+                    </thead>
+                    <tbody>
+                    {% for m in box.movements.all %}
+                      <tr>
+                        <td>{{ m.responsible.get_full_name }}</td>
+                        <td>{{ m.date|date:"d-M-Y" }}</td>
+                        <td>{{ m.concept.name }}</td>
+                        <td>{{ m.detail }}</td>
+                        <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
+                          {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
+                          {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        <td>
+                          {% if request.user.is_superuser or request.user.is_secretary %}
+                            {% if m.date|three_last_days %}
+                              <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                 data-target="#addMovement">Editar</a>
+                            {% endif %}
+                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
+                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                               data-target="#addMovement">Editar</a>
+                          {% endif %}
+                          {% if request.user.is_superuser %}
+                            <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                          {% endif %}
+                          {% if not m.review %}
+                            {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
+                              <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
+                              <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
+                              <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
+                                 data-toggle="modal"
+                                 data-target="#dispersionMovement">
+                                Dispersión
+                              </a>
+                            {% endif %}
+                          {% else %}
+                            <span
+                              class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
+                            {{ m.get_status_display }}
+                          </span>
+
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                    </tbody>
+                  {% endif %}
+
                 </table>
               </div>
             </div>

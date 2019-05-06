@@ -2615,27 +2615,31 @@ button.add-movement, button.add-movement-button{
   background-color: var(--blue);
   color: #fff;
   border-radius: 10px;
-  padding: 5px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 
 .see-box {
   background-color: var(--aqua-box);
   color: #fff;
   border-radius: 10px;
-  padding: 10px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 
 .close-box-dq {
   background-color: #f16975;
   color: #fff;
   border-radius: 10px;
-  padding: 10px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 .open-box-dq {
   background-color: var(--green-box);
   color: #fff;
   border-radius: 10px;
-  padding: 10px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 
 .unit-tree {
@@ -2646,31 +2650,35 @@ button.add-movement, button.add-movement-button{
 }
 
 .accept-mv, .edit-item, .show-group {
-  background-color: var(--aqua-box);
-  color: #fff;
-  border-radius: 10px;
-  padding: 7px 20px;
+    background-color: var(--aqua-box);
+    color: #fff;
+    border-radius: 10px;
+    padding: 4px 8px;
+    font-size: 0.8em;
 }
 
 .decline-mv {
   background-color: #f3034b;
   color: #fff;
   border-radius: 10px;
-  padding: 7px 20px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 
 .delete-item {
   background-color: #f3034b;
   color: #fff;
   border-radius: 10px;
-  padding: 7px 20px;
+  padding: 4px 8px;
+  font-size: 0.8em;
 }
 
 .dispersion-mv {
   background-color: var(--green-box);
   color: #fff;
   border-radius: 10px;
-  padding: 7px 20px;
+  padding: 4px 8px;
+  font-size: 0.8em;
   margin-left: 5px;
 }
 
@@ -2832,4 +2840,7 @@ span.green {
 span.orange {
   color: orange !important;
   font-weight: bold !important;
+}
+.dtr-details li {
+    list-style-type: none;
 }
