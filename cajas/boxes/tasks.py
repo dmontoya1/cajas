@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 @periodic_task(
-    run_every=(crontab(minute=30, hour=3)),
+    run_every=(crontab(hour=8)),
     name="daily_square_state"
 )
 def daily_square_state():
