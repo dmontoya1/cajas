@@ -6,17 +6,17 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.employee import Employee
-from concepts.models.concepts import Concept
-from core.services.email_service import EmailManager
-from inventory.models.category import Category
-from inventory.models.brand import Brand
-from movement.models.movement_office import MovementOffice
-from movement.services.don_juan_service import DonJuanManager
-from office.models.notifications import Notifications
-from office.models.officeCountry import OfficeCountry
-from office.services.office_item_create import OfficeItemsManager
+from cajas.concepts.models.concepts import Concept
+from cajas.core.services.email_service import EmailManager
+from cajas.inventory.models.category import Category
+from cajas.inventory.models.brand import Brand
+from cajas.movement.models.movement_office import MovementOffice
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.office.models.notifications import Notifications
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.office.services.office_item_create import OfficeItemsManager
 
 from .get_ip import get_ip
 

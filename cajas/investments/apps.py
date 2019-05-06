@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class InvestmentsConfig(AppConfig):
-    name = 'investments'
+    name = 'cajas.investments'
     verbose_name = 'Inversiónes a negocios'

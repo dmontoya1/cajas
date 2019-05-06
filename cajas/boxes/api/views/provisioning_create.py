@@ -6,11 +6,11 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_provisioning import BoxProvisioning
+from cajas.boxes.models.box_provisioning import BoxProvisioning
 
-from movement.services.provisioning_service import MovemenProvisioningManager
-from webclient.views.get_ip import get_ip
-from concepts.models.concepts import Concept
+from cajas.movement.services.provisioning_service import MovemenProvisioningManager
+from cajas.webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept
 
 movement_provisioning_manager = MovemenProvisioningManager()
 

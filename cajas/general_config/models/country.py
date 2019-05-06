@@ -1,8 +1,6 @@
 
 from django.db import models
 
-from .currency import Currency
-
 
 class Country(models.Model):
     """Guarda los paises en donde el negocio tiene funcionamiento
@@ -18,7 +16,7 @@ class Country(models.Model):
         help_text='MXN, COL, HON, GUA'
     )
     currency = models.ForeignKey(
-        Currency,
+        'general_config.Currency',
         verbose_name='Divisa',
         on_delete=models.CASCADE
     )

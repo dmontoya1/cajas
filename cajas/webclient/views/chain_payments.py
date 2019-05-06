@@ -4,8 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from chains.models.chain import Chain
-from office.models.officeCountry import OfficeCountry
+from cajas.chains.models.chain import Chain
+from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 

@@ -2,14 +2,14 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
-from concepts.models.concepts import Concept
-from loans.models.loan import Loan, LoanType
-from loans.models.loan_payments import LoanPayment
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.partner_service import MovementPartnerManager
-from movement.services.office_service import MovementOfficeManager
-from webclient.views.get_ip import get_ip
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.concepts.models.concepts import Concept
+from cajas.loans.models.loan import Loan, LoanType
+from cajas.loans.models.loan_payments import LoanPayment
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.movement.services.office_service import MovementOfficeManager
+from cajas.webclient.views.get_ip import get_ip
 
 from ..models.loan import Loan
 

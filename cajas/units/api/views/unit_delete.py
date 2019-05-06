@@ -2,9 +2,9 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from ...models.units import Unit
-from units.api.serializers.unit_serializer import UnitSerializer
+from cajas.units.api.serializers.unit_serializer import UnitSerializer
 
 
 class UnitDelete(generics.DestroyAPIView):

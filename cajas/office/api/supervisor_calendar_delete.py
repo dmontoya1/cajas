@@ -1,6 +1,6 @@
 from rest_framework import generics 
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from ..models.supervisorCalendar import SupervisorCalendar
 from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 

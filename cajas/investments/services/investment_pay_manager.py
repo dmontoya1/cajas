@@ -2,9 +2,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from concepts.models.concepts import Concept, ConceptType
-from movement.services.partner_service import MovementPartnerManager
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.webclient.views.get_ip import get_ip
 
 from ..models.investment_pay import InvestmentPay
 from ..models.investment import Investment

@@ -6,9 +6,9 @@ from django.views.generic import TemplateView
 
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
-from inventory.models import Category
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.inventory.models import Category
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class UnitsList(LoginRequiredMixin, TemplateView):

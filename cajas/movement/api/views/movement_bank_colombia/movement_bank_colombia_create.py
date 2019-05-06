@@ -5,8 +5,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from office.models.officeCountry import OfficeCountry
-from webclient.views.get_ip import get_ip
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_box_colombia import MovementBoxColombia
 from ....services.box_colombia_service import MovementBoxColombiaManager
@@ -27,7 +27,7 @@ class MovementBankColombiaCreate(generics.CreateAPIView):
         data['ip'] = get_ip(request)
         data['responsible'] = request.user
         movement_box_colombia_manager = MovementBoxColombiaManager()
-        movement_box_colombia_manager.create_bank_colombia_movement(data)
+        movement_box_colombia_manager.create_box_bank_colombia_movement(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',

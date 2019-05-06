@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer

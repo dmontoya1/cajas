@@ -187,7 +187,7 @@
                       <td>{{ partner.user.last_name }}</td>
                       <td>{{ partner.code|default:"Sin Codigo" }}</td>
                       <td>{{ partner.user.email }}</td>
-                      <td>$ {% get_dq_box office partner.user %}</td>
+                      <td>$ {% get_dq_box_balance office partner.user %}</td>
                       <td>
                         {% if perms.movement.add_movementdailysquare %}
                           <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
@@ -209,12 +209,21 @@
                         <td>{{ d.last_name }}</td>
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
-                        <td>$ {% get_dq_box office d %}</td>
+                        <td>$ {% get_dq_box_balance office d %}</td>
                         <td>
                           {% if perms.movement.add_movementdailysquare %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
+                          {% endif %}
+                          {% get_dq_box_id office d as box_id %}
+                          {% get_dq_box_is_close office d as box_is_close %}
+                          {% if not box_is_close %}
+                            <a href="#" class="close-box-dq" data-id="{{ box_id }}">
+                              <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a>
+                          {% else %}
+                            <a href="#" class="open-box-dq" data-id="{{ box_id }}">
+                              <i class="fas fa-power-off mr-2"></i>Abrir Caja</a>
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
@@ -232,14 +241,20 @@
                         <td>{{ d.last_name }}</td>
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
-                        <td>$ {% get_dq_box office d %}</td>
+                        <td>$ {% get_dq_box_balance office d %}</td>
                         <td>
-                          {% if perms.movement.add_movementdailysquare %}
+                          {% get_dq_box_id office d as box_id %}
+                          {% get_dq_box_is_close office d as box_is_close %}
+                          {% if perms.movement.add_movementdailysquare and not box_is_close %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement">
                               <i class="fas fa-plus mr-2"></i>
                               Añadir Movimiento
                             </button>
+                            <a href="#" class="close-box-dq" data-id="{{ box_id }}">
+                              <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a>
+                            {% else %}
+                            <span style="color: #f16975;">La caja esta cerrada</span>
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
@@ -291,7 +306,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date" placeholder="yyyy-mm-dd"
+                <input type="text" class="form-control datetimepicker_dailysquare" id="date" name="date"
+                       placeholder="yyyy-mm-dd"
                        style="width: 100%;" required autocomplete="off">
               </div>
             </div>
@@ -460,7 +476,8 @@
                 </div>
               </div>
               <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input is_replacement_control" id="is_replacement" name="is_replacement">
+                <input type="checkbox" class="form-check-input is_replacement_control" id="is_replacement"
+                       name="is_replacement">
                 <label class="form-check-label" for="is_replacement">Repuesto</label>
               </div>
               <div class="form-row justify-content-center">
@@ -606,8 +623,8 @@
         })
     })
 
-    $("#plus5").on("click", function(){
-      if($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1){
+    $("#plus5").on("click", function () {
+      if ($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1) {
         $('.add-movement .dynamic_controller *').filter(':input').each(function () {
           $(this).prop("required", true)
         })
@@ -620,22 +637,22 @@
       if ($(this).hasClass("category_control")) {
         var select_category_id = $(this).attr('id');
         axios.get(`/api/inventory/${$(this).val()}/brand`)
-        .then(function (response) {
-          data = response.data
-          $("#brand" + select_category_id[select_category_id.length - 1]).empty()
-          $.each(data, function (k, v) {
-            $("#brand" + select_category_id[select_category_id.length - 1]).append(
-              `<option value=${v.id}>${v.name}</option>`
+          .then(function (response) {
+            data = response.data
+            $("#brand" + select_category_id[select_category_id.length - 1]).empty()
+            $.each(data, function (k, v) {
+              $("#brand" + select_category_id[select_category_id.length - 1]).append(
+                `<option value=${v.id}>${v.name}</option>`
+              )
+            })
+            $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
+              '<option value="" selected disabled>Selecciona una marca</option>'
             )
           })
-          $("#brand" + select_category_id[select_category_id.length - 1]).prepend(
-            '<option value="" selected disabled>Selecciona una marca</option>'
-          )
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
       }
     });
 
@@ -875,5 +892,83 @@
         timepicker: false,
       });
     {% endif %}
+
+    // Cerrar caja
+    $('.close-box-dq').on('click', function () {
+      pk = $(this).data('id')
+      const {value: text} = Swal.fire({
+        title: 'Cerrar Caja',
+        text: "¿Estás seguro de cerrar la caja?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, cerrar',
+        cancelButtonText: "No, Cancelar",
+        allowOutsideClick: false,
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          axios.patch(`/api/boxes/${pk}/close-box`,
+            {"is_closed": true}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: "La caja se ha cerrado exitosamente",
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
+            })
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
+      })
+    })
+
+    // Abrir caja
+    $('.open-box-dq').on('click', function () {
+      pk = $(this).data('id')
+      const {value: text} = Swal.fire({
+        title: 'Abrir Caja',
+        text: "¿Estás seguro de abrir la caja?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, abrir',
+        cancelButtonText: "No, Cancelar",
+        allowOutsideClick: false,
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          axios.patch(`/api/boxes/${pk}/close-box`,
+            {"is_closed": false}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: "La caja se ha abierto exitosamente. Los cuadres diarios podran crear sus movimientos",
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
+            })
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
+      })
+    })
   </script>
 {% endblock %}

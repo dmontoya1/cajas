@@ -5,15 +5,15 @@ from django.db.models import Sum
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
-from office.models.officeCountry import OfficeCountry
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.office_service import MovementOfficeManager
-from movement.services.partner_service import MovementPartnerManager
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.office_service import MovementOfficeManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.webclient.views.get_ip import get_ip
 
 from ..models.loan import Loan
 

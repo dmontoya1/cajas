@@ -2,8 +2,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from general_config.models.country import Country
-from concepts.models.concepts import Concept
+from cajas.general_config.models.country import Country
+from cajas.concepts.models.concepts import Concept
 from cajas.users.models.charges import Charge
 
 User = get_user_model()

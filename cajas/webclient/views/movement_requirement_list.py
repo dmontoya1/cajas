@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from movement.models.movement_request import MovementRequest
+from cajas.movement.models.movement_request import MovementRequest
 
 
 class MovementRequireList(LoginRequiredMixin, TemplateView):

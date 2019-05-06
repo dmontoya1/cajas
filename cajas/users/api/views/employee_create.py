@@ -6,11 +6,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from boxes.services.box_daily_square_manager import BoxDailySquareManager
+from cajas.boxes.services.box_daily_square_manager import BoxDailySquareManager
 from cajas.users.services.user_service import UserManager
 from cajas.users.services.employee_service import EmployeeManager
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
-from office.models.officeCountry import OfficeCountry
+from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.charges import Charge
 
 box_daily_square_manager = BoxDailySquareManager()

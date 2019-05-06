@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from .movement_mixin import MovementMixin
 
 

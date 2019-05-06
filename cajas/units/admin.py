@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_text
 
-from units.models.units import Unit
-from units.models.unitItems import UnitItems
+from cajas.units.models.units import Unit
+from cajas.units.models.unitItems import UnitItems
 
 
 class UnitItemsAdmin(admin.StackedInline):

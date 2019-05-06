@@ -1,6 +1,6 @@
 from django.db import models
 
-from boxes.models.box_provisioning import BoxProvisioning
+from cajas.boxes.models.box_provisioning import BoxProvisioning
 from .movement_mixin import MovementMixin
 
 

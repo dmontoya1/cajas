@@ -3,9 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from concepts.models.concepts import Concept
-from movement.models.movement_provisioning import MovementProvisioning
-from office.models.officeCountry import OfficeCountry
+from cajas.concepts.models.concepts import Concept
+from cajas.movement.models.movement_provisioning import MovementProvisioning
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Provisioning(LoginRequiredMixin, TemplateView):

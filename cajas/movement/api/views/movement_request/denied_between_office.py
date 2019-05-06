@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework import status
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from ....models.movement_between_office_request import MovementBetweenOfficeRequest
 from django.shortcuts import get_object_or_404

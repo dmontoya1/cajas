@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class InventoryConfig(AppConfig):
-    name = 'inventory'
+    name = 'cajas.inventory'
     verbose_name = 'Inventario'
     app_label = 'Inventario'
 

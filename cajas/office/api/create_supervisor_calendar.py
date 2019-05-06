@@ -7,8 +7,8 @@ from rest_framework import status
 from ..models.supervisorCalendar import SupervisorCalendar
 from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 from django.shortcuts import get_object_or_404
 

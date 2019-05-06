@@ -8,9 +8,9 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
-from movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept
+from cajas.movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
+from cajas.webclient.views.get_ip import get_ip
 
 from ...models.units import Unit
 

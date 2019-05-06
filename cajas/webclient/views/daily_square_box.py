@@ -5,13 +5,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from boxes.models.box_daily_square import BoxDailySquare
+from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
-from inventory.models import Category
-from movement.models.movement_daily_square import MovementDailySquare
-from office.models.officeCountry import OfficeCountry
-from units.models.units import Unit
+from cajas.inventory.models import Category
+from cajas.movement.models.movement_daily_square import MovementDailySquare
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):

@@ -3,12 +3,12 @@ from datetime import datetime
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_partner import BoxPartner
-from concepts.models.concepts import Concept
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.partner_service import MovementPartnerManager
-from office.models.officeCountry import OfficeCountry
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_partner import BoxPartner
+from cajas.concepts.models.concepts import Concept
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.office.models.officeCountry import OfficeCountry
 
 from ..models.partner import Partner
 

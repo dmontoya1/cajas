@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
 
-from .models.country import Country
-from .models.currency import Currency
+# from .models.country import Country
+# from .models.currency import Currency
 
 
 # @receiver(post_save, sender=Country)

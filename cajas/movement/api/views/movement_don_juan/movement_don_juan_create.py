@@ -9,21 +9,21 @@ from rest_framework import status
 from ....models.movement_don_juan import MovementDonJuan
 from ...serializers.movement_don_juan_serializer import MovementDonJuanSerializer
 
-from boxes.models.box_colombia import BoxColombia
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.users.models.employee import Employee
-from concepts.models.concepts import Concept, ConceptType
-from core.services.email_service import EmailManager
-from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
-from movement.models.movement_office import MovementOffice
-from movement.services.box_colombia_service import MovementBoxColombiaManager
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.don_juan_usd_service import DonJuanUSDManager
-from office.models.notifications import Notifications
-from office.models.officeCountry import OfficeCountry
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.core.services.email_service import EmailManager
+from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
+from cajas.movement.models.movement_office import MovementOffice
+from cajas.movement.services.box_colombia_service import MovementBoxColombiaManager
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.don_juan_usd_service import DonJuanUSDManager
+from cajas.office.models.notifications import Notifications
+from cajas.office.models.officeCountry import OfficeCountry
 
-from webclient.views.get_ip import get_ip
+from cajas.webclient.views.get_ip import get_ip
 
 donjuan_manager = DonJuanManager()
 email_manager = EmailManager()

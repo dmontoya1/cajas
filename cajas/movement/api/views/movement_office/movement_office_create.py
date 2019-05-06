@@ -5,8 +5,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from office.models.officeCountry import OfficeCountry
-from webclient.views.get_ip import get_ip
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_office import MovementOffice
 from ....services.office_service import MovementOfficeManager

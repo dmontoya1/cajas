@@ -1,7 +1,7 @@
 
 from rest_framework.generics import CreateAPIView
-from office.models.officeItems import OfficeItems
-from office.serializer.office_item_create_serializer import OfficeItemCreateSerializer
+from cajas.office.models.officeItems import OfficeItems
+from cajas.office.serializer.office_item_create_serializer import OfficeItemCreateSerializer
 
 
 class CreateOfficeItem(CreateAPIView):

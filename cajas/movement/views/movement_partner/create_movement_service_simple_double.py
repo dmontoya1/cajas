@@ -1,9 +1,9 @@
 
 from datetime import datetime
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_partner import BoxPartner
-from concepts.models.concepts import Concept
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_partner import BoxPartner
+from cajas.concepts.models.concepts import Concept
 from cajas.users.models.partner import PartnerType
 
 from ...services.don_juan_service import DonJuanManager

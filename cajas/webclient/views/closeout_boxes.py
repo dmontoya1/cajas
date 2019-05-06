@@ -4,8 +4,8 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from boxes.models.box_partner import BoxPartner, BoxStatus
-from office.models.officeCountry import OfficeCountry
+from cajas.boxes.models.box_partner import BoxPartner, BoxStatus
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class CloseoutBoxesList(LoginRequiredMixin, TemplateView):

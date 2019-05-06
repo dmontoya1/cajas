@@ -1,13 +1,13 @@
 
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_colombia import BoxColombia
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from concepts.models.concepts import Concept, ConceptType
-from movement.models.movement_box_colombia import MovementBoxColombia
-from movement.models.movement_don_juan import MovementDonJuan
-from movement.models.movement_office import MovementOffice
+from cajas.boxes.models.box_colombia import BoxColombia
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.movement.models.movement_box_colombia import MovementBoxColombia
+from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.movement.models.movement_office import MovementOffice
 
 from ..models.movement_box_colombia import MovementBoxColombia
 from ..services.don_juan_usd_service import DonJuanUSDManager
@@ -17,18 +17,22 @@ class MovementBoxColombiaManager(object):
 
     def create_box_colombia_movement(self, data):
 
-        transfer_concept = get_object_or_404(Concept, name='Traslado entre cajas Colombia', type=ConceptType.DOUBLE)
+        transfer_concept = get_object_or_404(
+            Concept,
+            name='Traslado entre cajas Colombia',
+            concept_type=ConceptType.DOUBLE
+        )
         concept = get_object_or_404(Concept, pk=data['concept'])
         self.create_colombia_movement(data)
-        if data['movement_type'] == MovementBoxColombia.IN:
-            data['movement_type'] = MovementBoxColombia.OUT
-        else:
-            data['movement_type'] = MovementBoxColombia.IN
         if concept == transfer_concept:
+            if data['movement_type'] == MovementBoxColombia.IN:
+                data['movement_type'] = MovementBoxColombia.OUT
+            else:
+                data['movement_type'] = MovementBoxColombia.IN
             if data['destine_box'] == 'CAJA_DON_JUAN':
                 movement = MovementDonJuan.objects.create(
                     box_don_juan=get_object_or_404(BoxDonJuan, office=data['office']),
-                    concept=data['concept'],
+                    concept=concept,
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
@@ -43,7 +47,7 @@ class MovementBoxColombiaManager(object):
             elif data['destine_box'] == 'CAJA_OFICINA':
                 movement = MovementOffice.objects.create(
                     box_office=data['office'].box,
-                    concept=data['concept'],
+                    concept=concept,
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
@@ -57,7 +61,7 @@ class MovementBoxColombiaManager(object):
     def create_colombia_movement(self, data):
         movement = MovementBoxColombia.objects.create(
             box_office=BoxColombia.objects.get(name='Caja Colombia'),
-            concept=data['concept'],
+            concept=get_object_or_404(Concept, pk=data['concept']),
             movement_type=data['movement_type'],
             value=data['value'],
             detail=data['detail'],
@@ -68,14 +72,22 @@ class MovementBoxColombiaManager(object):
         return movement
 
     def create_box_bank_colombia_movement(self, data):
-        transfer_concept = get_object_or_404(Concept, name='Traslado entre cajas Colombia', type=ConceptType.DOUBLE)
+        transfer_concept = get_object_or_404(
+            Concept,
+            name='Traslado entre cajas Colombia',
+            concept_type=ConceptType.DOUBLE
+        )
         concept = get_object_or_404(Concept, pk=data['concept'])
         self.create_bank_colombia_movement(data)
         if concept == transfer_concept:
+            if data['movement_type'] == MovementBoxColombia.IN:
+                data['movement_type'] = MovementBoxColombia.OUT
+            else:
+                data['movement_type'] = MovementBoxColombia.IN
             if data['destine_box'] == 'CAJA_DON_JUAN':
                 movement = MovementDonJuan.objects.create(
                     box_don_juan=get_object_or_404(BoxDonJuan, office=data['office']),
-                    concept=data['concept'],
+                    concept=concept,
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
@@ -96,7 +108,7 @@ class MovementBoxColombiaManager(object):
             elif data['destine_box'] == 'CAJA_OFICINA':
                 movement = MovementOffice.objects.create(
                     box_office=data['office'].box,
-                    concept=data['concept'],
+                    concept=concept,
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
@@ -108,7 +120,7 @@ class MovementBoxColombiaManager(object):
     def create_bank_colombia_movement(self, data):
         movement = MovementBoxColombia.objects.create(
             box_office=BoxColombia.objects.get(name="Caja Banco"),
-            concept=data['concept'],
+            concept=get_object_or_404(Concept, pk=data['concept']),
             movement_type=data['movement_type'],
             value=data['value'],
             detail=data['detail'],

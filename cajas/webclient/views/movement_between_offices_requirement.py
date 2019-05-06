@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from movement.models.movement_between_office_request import MovementBetweenOfficeRequest
+from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
 
 
 class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):

@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import View
 
-from loans.services.loan_service import LoanManager
-from office.models.officeCountry import OfficeCountry
+from cajas.loans.services.loan_service import LoanManager
+from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 loan_manager = LoanManager()

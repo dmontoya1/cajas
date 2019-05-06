@@ -5,10 +5,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from cajas.users.models.partner import Partner
-from boxes.models.box_office import BoxOffice
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from boxes.models.box_provisioning import BoxProvisioning
+from cajas.boxes.models.box_office import BoxOffice
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_provisioning import BoxProvisioning
 
 from .models.officeCountry import OfficeCountry
 

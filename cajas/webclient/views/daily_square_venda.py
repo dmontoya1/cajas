@@ -5,11 +5,11 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from boxes.models.box_daily_square import BoxDailySquare
+from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
-from concepts.models.concepts import Concept
-from movement.models.movement_daily_square import MovementDailySquare
-from office.models.officeCountry import OfficeCountry
+from cajas.concepts.models.concepts import Concept
+from cajas.movement.models.movement_daily_square import MovementDailySquare
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class DailySquareVenda(LoginRequiredMixin, TemplateView):

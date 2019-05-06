@@ -1,6 +1,6 @@
 from django.db import models
 
-from inventory.models.brand import Brand
+from cajas.inventory.models.brand import Brand
 
 from .officeCountry import OfficeCountry
 

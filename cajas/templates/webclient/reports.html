@@ -27,6 +27,7 @@
     .navbar .navbar-nav li.menu-item-has-children a {
       line-height: 25px !important;
     }
+
   </style>
 {% endblock %}
 
@@ -44,7 +45,7 @@
     </li>
     {% if request.user.is_superuser %}
       <li class="menu-item-has-children dropdown active">
-        <a href="#" data-toggle="modal" data-target="#migrate">
+        <a href="{% url 'webclient:reports' %}" data-toggle="modal" data-target="#migrate">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
         </a>
@@ -58,34 +59,69 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row country-row">
-      <div class="col-12">
-        <div class="country-name">
-          <span>Reportes</span>
+  <div class="row country-row">
+    <div class="col-12">
+      <div class="country-name">
+        <span>Reportes</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Informe de endeudamiento</h3>
+          <p class="card-text">El cálculo del nivel de endeudamiento se realiza con la siguiente formula: ENDEUDAMIENTO
+            = SALDO CAJA SOCIEDAD+SALDO UNIDAD+BASERUTA/DEUDA DE LA SOCIEDAD. Dependiendo del resultado, se debe
+            presentar un semáforo de colores, de la siguiente manera: 0-50 VERDE 51-79 AMARILLO 80-100 NARANJA MAYOR DE
+            100 ROJO"</p>
+          <a href="#" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-4 col-xlg-4 col-md-6">
-        <div class="card blog-widget">
-          <div class="card-body">
-            <a href="#">
-              <div class="blog-image">
-                <img
-                  src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
-                  alt="img" class="img-responsive">
-              </div>
-              <span class="office-name">{{ office }}</span>
-            </a><br>
-            <h2></h2>
-            <label class="label label-rounded label-success">Notificaciones </label>
-            <i class="fas fa-bell" style="color: #60d3b0"></i>
-
-
-          </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Informe de activos</h3>
+          <p class="card-text">Informe de activos, que corresponde al inventario. Se puede filtrar por país, oficina,
+            tipo de elemento, marca</p>
+          <a href="{% url 'webclient:report_actives' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
     </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Ranking de oficinas</h3>
+          <p class="card-text">Ranking de oficinas</p>
+          <a href="#" class="card-link btn-dynamic">Ver informe</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Obligaciones mensuales por pagar</h3>
+          <p class="card-text">Obligaciones mensuales por pagar: Pago de intereses de prestámos. Cobro intereses
+            prestámos.
+            Pago de cadena. Cobro de cadena. Pago de inversiones Negocios </p>
+          <a href="{% url 'webclient:report_account_payable' %}" class="card-link btn-dynamic">Ver informe</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Calculo de pagos de salarios</h3>
+          <p class="card-text">cálculo de pago de salarios de los empleados de la unidades; el sistema cargará del
+            informe de Venda+ el recaudo de la semana de cada cobrador y el sistema realizará el cálculo del salario de
+            acuerdo al porcentaje de comisión que gana cada cobrador, para que la secretaria verifique de forma manual,
+            que el pago que recibió cada cobrador sea el pactado</p>
+          <a href="#" class="card-link btn-dynamic">Ver informe</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
 

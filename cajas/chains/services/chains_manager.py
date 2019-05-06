@@ -4,14 +4,14 @@ from datetime import datetime, date
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
-from boxes.models.box_partner import BoxStatus
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_partner import BoxStatus
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept, ConceptType
-from office.models.officeCountry import OfficeCountry
-from movement.models.movement_partner import MovementPartner
-from movement.models.movement_don_juan import MovementDonJuan
-from webclient.views.get_ip import get_ip
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.movement.models.movement_partner import MovementPartner
+from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.webclient.views.get_ip import get_ip
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
 from ..models.user_place import UserPlace

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from movement.admin import (
+from cajas.movement.admin import (
     MovementColombiaInline,
     MovementDonJuanUSDInline,
     MovementDailySquareInline,
