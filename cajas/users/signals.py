@@ -1,10 +1,11 @@
 from allauth.account.signals import user_logged_in, user_logged_out
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.boxes.models.box_partner import BoxPartner
+from cajas.core.services.email_service import EmailManager
 from cajas.users.models.auth_logs import AuthLogs
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
@@ -12,6 +13,7 @@ from cajas.users.models.employee import Employee
 from cajas.users.models.group import Group
 
 from cajas.webclient.views.get_ip import get_ip
+email_manager = EmailManager()
 
 
 @receiver(user_logged_in)
@@ -54,3 +56,14 @@ def create_employee_admin_group(sender, instance, **kwargs):
         if str(instance.charge) == "Administrador de Grupo":
             group = Group(admin=instance)
             group.save()
+
+
+@receiver(pre_save, sender=Employee)
+def send_mail_when_salary_value_changes(sender, instance, **kwargs):
+    try:
+        old = Employee.objects.get(pk=instance.pk)
+    except:
+        old = None
+    if old is not None:
+        if float(old.salary) != float(instance.salary):
+            email_manager.send_employee_salary_change_notification(instance)
