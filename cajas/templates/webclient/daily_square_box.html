@@ -171,7 +171,13 @@
                        cellspacing="0" style="width:100%">
                   <h3 class="mb-4">Cuadre Diario de {{ box_user.get_full_name }} ({{ box_user.pk }})
                     {% if box.is_closed %}
-                      <span style="color:red">Cerrada</span> {% endif %}</h3>
+                      <span style="color:red">Cerrada</span>
+                      {% if request.user.is_superuser or request.user.is_secretary %}
+                        <a href="#" class="open-box" data-id="{{ box_id }}">
+                          <i class="fas fa-power-off mr-2"></i>Abrir Caja</a>
+                      {% endif %}
+                    {% endif %}
+                  </h3>
                   <h3 class="float-right">SALDO CAJA: $
                     {{ box.balance|intcomma }}{{ office.country.currency.abbr }}  </h3>
                   <thead>
@@ -243,7 +249,7 @@
             <div class="label-text">Añadir movimiento</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-        {% elif perms.movement.add_movementdailysquare and not box.is_closed and not past_mvments %}
+        {% elif perms.movement.add_movementdailysquare and not box.is_closed %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
@@ -1151,6 +1157,45 @@
               Swal.fire({
                 title: 'Exitoso!',
                 text: "La caja se ha cerrado exitosamente",
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
+            })
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
+      })
+    })
+
+    // Abrir Caja
+    $('.open-box').on('click', function () {
+      pk = '{{ box.pk }}'
+      const {value: text} = Swal.fire({
+        title: 'Abrir Caja',
+        text: "¿Estás seguro de abrir la caja?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, abrir',
+        cancelButtonText: "No, Cancelar",
+        allowOutsideClick: false,
+        reverseButtons: true
+      }).then((result) => {
+        if (result.value) {
+          axios.patch(`/api/boxes/${pk}/close-box`,
+            {"is_closed": false}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: "La caja se ha abierto exitosamente. Los cuadres diarios podran crear sus movimientos",
                 type: 'success',
                 allowOutsideClick: false
               }).then((result) => {

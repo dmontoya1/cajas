@@ -4,10 +4,10 @@ from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from chains.models.chain import Chain
-from chains.models.chain_place import ChainPlace
-from investments.models.investment import Investment
-from loans.models.loan import Loan
+from cajas.chains.models.chain import Chain
+from cajas.chains.models.chain_place import ChainPlace
+from cajas.investments.models.investment import Investment
+from cajas.loans.models.loan import Loan
 
 
 class ReportAccountPayable(LoginRequiredMixin, TemplateView):

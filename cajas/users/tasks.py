@@ -9,7 +9,6 @@ from celery.task import periodic_task
 from cajas.users.models.employee import Employee
 from cajas.core.services.email_service import EmailManager
 
-
 logger = logging.getLogger(__name__)
 
 

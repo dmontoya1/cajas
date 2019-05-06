@@ -2625,6 +2625,19 @@ button.add-movement, button.add-movement-button{
   padding: 10px;
 }
 
+.close-box-dq {
+  background-color: #f16975;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+}
+.open-box-dq {
+  background-color: var(--green-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+}
+
 .unit-tree {
   background-color: #bbb;
   color: #fff;
