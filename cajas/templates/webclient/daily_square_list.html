@@ -189,11 +189,15 @@
                       <td>{{ partner.user.email }}</td>
                       <td>$ {% get_dq_box_balance office partner.user %}</td>
                       <td>
-                        {% if perms.movement.add_movementdailysquare %}
+                        {% get_dq_box_id office partner.user as box_id %}
+                        {% get_dq_box_is_close office partner.user as box_is_close %}
+                        {% if perms.movement.add_movementdailysquare and not box_is_close %}
                           <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
                                   data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
                             Movimiento
                           </button>
+                        {% else %}
+                          la caja esta cerrada
                         {% endif %}
                         {% if perms.boxes.change_boxdailysquare %}
                           <a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
@@ -217,19 +221,20 @@
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
-                          {% elif d == request.user and not box_is_close %}
+                            {% if not box_is_close %}
+                              <a href="#" class="close-box-dq" data-id="{{ box_id }}">
+                                <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a>
+                            {% else %}
+                              <a href="#" class="open-box-dq" data-id="{{ box_id }}">
+                                <i class="fas fa-power-off mr-2"></i>Abrir Caja</a>
+                            {% endif %}
+                          {% endif %}
+                          {% if d == request.user and not box_is_close %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
                           {% else %}
                             La caja esta cerrada
-                          {% endif %}
-                          {% if not box_is_close %}
-                            <a href="#" class="close-box-dq" data-id="{{ box_id }}">
-                              <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a>
-                          {% else %}
-                            <a href="#" class="open-box-dq" data-id="{{ box_id }}">
-                              <i class="fas fa-power-off mr-2"></i>Abrir Caja</a>
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
