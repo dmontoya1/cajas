@@ -55,12 +55,7 @@
           Requerimiento de retiro de socio
         </a>
       </li>
-      <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:movement_between_offices_require' %}">
-          <i class="fas fa-building mr-3"></i>
-          Requerimiento entre oficinas
-        </a>
-      </li>
+
       <li class="menu-item-has-children dropdown">
         <a href="#" data-toggle="modal" data-target="#migrate">
           <i class="fas fa-retweet mr-3"></i>
@@ -71,6 +66,14 @@
         <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
+        </a>
+      </li>
+    {% endif %}
+    {% if request.user.is_superuser or request.user.is_secretary %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:movement_between_offices_require' %}">
+          <i class="fas fa-building mr-3"></i>
+          Requerimiento entre oficinas
         </a>
       </li>
     {% endif %}
@@ -104,10 +107,10 @@
                 <span class="office-name">{{ p.office }}</span>
               </a><br>
 
-              </div>
             </div>
           </div>
         </div>
+      </div>
       </div>
     {% endfor %}
   {% else %}
@@ -122,17 +125,20 @@
         </div>
         <div class="row">
           {% for o in office.related_office_country.all %}
-
             <div class="col-lg-4 col-xlg-4 col-md-6">
               <div class="card blog-widget">
                 <div class="card-body">
-                  <a href="{% url 'webclient:office' o.slug %}">
-                    <div class="blog-image">
-                      <img
-                        src="{% if o.image %} {{ o.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
-                        alt="img" class="img-responsive">
-                    </div>
-                    <span class="office-name">{{ o }}</span>
+                  {% if request.user.is_superuser or request.user.is_secretary %}
+                    <a href="{% url 'webclient:office' o.slug %}">
+                  {% else %}
+                    <a href="{% url 'webclient:employee_list' o.slug %}">
+                  {% endif %}
+                  <div class="blog-image">
+                    <img
+                      src="{% if o.image %} {{ o.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
+                      alt="img" class="img-responsive">
+                  </div>
+                  <span class="office-name">{{ o }}</span>
                   </a><br>
                   <label class="label label-rounded label-success">Notificaciones </label> <i class="fas fa-bell"
                                                                                               style="color: #60d3b0"></i>

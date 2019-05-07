@@ -27,7 +27,7 @@ class MovementBankColombiaCreate(generics.CreateAPIView):
         data['ip'] = get_ip(request)
         data['responsible'] = request.user
         movement_box_colombia_manager = MovementBoxColombiaManager()
-        movement_box_colombia_manager.create_bank_colombia_movement(data)
+        movement_box_colombia_manager.create_box_bank_colombia_movement(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',

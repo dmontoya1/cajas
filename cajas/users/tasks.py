@@ -9,12 +9,11 @@ from celery.task import periodic_task
 from cajas.users.models.employee import Employee
 from cajas.core.services.email_service import EmailManager
 
-
 logger = logging.getLogger(__name__)
 
 
 @periodic_task(
-    run_every=(crontab(minute=30, hour=3)),
+    run_every=(crontab(day_of_month="1-3", hour=8)),
     name="payment_notification"
 )
 def payment_notification():

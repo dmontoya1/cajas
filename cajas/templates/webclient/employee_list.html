@@ -11,7 +11,7 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or request.user.is_secretary %}
           {% url 'webclient:office' office.slug %}
         {% elif request.user.is_employee %}
           {% url 'webclient:employee_list' office.slug %}

@@ -34,6 +34,9 @@ class UnitsList(LoginRequiredMixin, TemplateView):
                 )
                 context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
                 context['categories'] = Category.objects.all()
+            else:
+                partner = Partner.objects.get(user=self.request.user, office=office)
+                context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
         except Exception as e:
             partner = Partner.objects.get(user=self.request.user, office=office)
             context['units'] = Unit.objects.filter(partner__office=office, partner=partner)

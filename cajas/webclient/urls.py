@@ -37,6 +37,8 @@ from .views.partner_list import PartnerList
 from .views.partner_unit import PartnerUnitsList
 from .views.provisioning import Provisioning
 from .views.reports import Reports
+from .views.report_accounts_payable import ReportAccountPayable
+from .views.report_actives import ReportActives
 from .views.units_list import UnitsList
 
 app_name = 'webclient'
@@ -44,10 +46,15 @@ app_name = 'webclient'
 urlpatterns = [
     path("", Home.as_view(), name='home'),
     path("arqueo/", ArcRequest.as_view(), name='arc_request'),
-    path("reports/", Reports.as_view(), name='reports'),
+
     path("movement-require/", MovementRequireList.as_view(), name='movement_required'),
     path("movement-withdraw-require/", MovementWithdrawRequireList.as_view(), name='movement_withdraw_required'),
     path("movement-between-offices-require/", MovementBetweenOfficesRequire.as_view(), name='movement_between_offices_require'),
+
+    # Reports
+    path("reports/", Reports.as_view(), name='reports'),
+    path("report-account-payable/", ReportAccountPayable.as_view(), name='report_account_payable'),
+    path("report-actives/", ReportActives.as_view(), name='report_actives'),
 
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),

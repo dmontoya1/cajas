@@ -9,12 +9,11 @@ from django.shortcuts import reverse
 from cajas.concepts.models.stops import Stop
 from cajas.users.models.employee import Employee
 
-
 class EmailManager(object):
     template = 'email/email.html'
     email_to = settings.ADMIN_EMAIL
 
-    def send_email(self, url, ctx, subject, email_to):
+    def send_email(self, ctx, subject, email_to):
         body = get_template(self.template).render(ctx)
         message = EmailMessage(subject, body, settings.EMAIL_USER,
                                [email_to])
@@ -33,7 +32,7 @@ class EmailManager(object):
             "action": "Ver solicitud"
         }
         subject = "Nueva solicitud de aprobación de movimiento"
-        self.send_email(url, ctx, subject, self.email_to)
+        self.send_email(ctx, subject, self.email_to)
 
     def send_withdraw_email(self, request):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:movement_withdraw_required'))
@@ -46,7 +45,7 @@ class EmailManager(object):
             "action": "Ver solicitud"
         }
         subject = "Nueva solicitud de retiro de socio"
-        self.send_email(url, ctx, subject, self.email_to)
+        self.send_email(ctx, subject, self.email_to)
 
     def send_withdraw_accept_email(self, request, email_to):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
@@ -59,7 +58,7 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Nueva solicitud de retiro de socio"
-        self.send_email(url, ctx, subject, email_to)
+        self.send_email(ctx, subject, email_to)
 
     def send_office_mail(self, request, email_to):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
@@ -71,7 +70,7 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Has recibido una transferencia de otra oficina"
-        self.send_email(url, ctx, subject, email_to)
+        self.send_email(ctx, subject, email_to)
 
     def send_close_box_mail(self, domain, email_to):
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
@@ -83,7 +82,7 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Notificación de cierre de cuadre diario"
-        self.send_email(url, ctx, subject, email_to)
+        self.send_email(ctx, subject, email_to)
 
     def send_payment_notification(self, domain, email_to):
         url = 'http://{}{}'.format(domain, reverse('webclient:home'))
@@ -95,7 +94,7 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Recodatorio de pagos"
-        self.send_email(url, ctx, subject, email_to)
+        self.send_email(ctx, subject, email_to)
 
     def send_employee_salary_change_notification(self, employee):
         domain = Site.objects.get_current().domain
