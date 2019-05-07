@@ -267,7 +267,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
+          <form method="POST" class="add-partner">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
@@ -524,7 +524,7 @@
 
   <script type="text/javascript">
     //detail modal script
-    $(".partner_detail").on("click", function () {
+    $('#table tbody').on('click', '.partner_detail', function () {
       var partner_pk = $(this).data("id")
       axios.get(`/api/users/${partner_pk}/partner-list`)
         .then(function (response) {
@@ -609,7 +609,7 @@
     })
 
     // Add movement script
-    $(".add-movement").on("click", function () {
+    $('#table tbody').on('click', '.add-movement', function () {
       pk = $(this).data('id')
       slug = "{{ office.slug }}"
       $("#partner_id").val(pk)
