@@ -543,6 +543,78 @@
               <br>
             </div>
             <!-- end replication -->
+
+            <!-- Appears if concept is Employee loan-->
+            <div class="loan-employee d-none">
+              <div class="form-row">
+                <div class="form-group col-md-6 box-select">
+                  <label for="box_from">Selecciona desde donde sale el préstamo</label>
+                  <select class="form-control" id="box_from" name="box_from" style="width: 100%; height: 20px;">
+                    <option selected disabled value="">Selecciona desde donde sale el préstamo</option>
+                    <option value="partner">Caja Socio</option>
+                    <option value="office">Caja oficina</option>
+                    <option value="donjuan">Caja Don Juan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row d-none partner-select-row">
+                <div class="form-group col-md-12">
+                  <label for="partner_provider">Selecciona el socio fondeador</label>
+                  <select class="form-control" id="partner_provider" style="width: 100%; height: 20px;"
+                          name="partner_provider">
+                    <option selected disabled value="">Selecciona el socio fondeador</option>
+                    {% for p in partners %}
+                      <option value="{{ p.pk }}">{{ p }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12 lender_employee">
+                  <label for="lender_employee">Selecciona el empleado Deudor</label>
+                  <select class="form-control" id="lender_employee" name="lender_employee"
+                          style="width: 100%; height: 20px;">
+                    <option selected disabled value="">Selecciona el socio deudor</option>
+                    {% for e in office_employees %}
+                      <option value="{{ e.pk }}">{{ e }} - {{ e.charge }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <hr>
+              <div class="loan-fields">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="loan_value">Monto del préstamo ({{ office.country.currency.abbr }})</label>
+                    <input class="form-control" type="number" name="value_loan" id="loan_value"
+                           placeholder="Ingresa el monto del préstamo">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="value_cop">Monto del préstamo (COP)</label>
+                    <input class="form-control" type="number" name="value_cop" id="value_cop" value="0"
+                           readonly>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="interest">Porcentaje de interes (%)</label>
+                    <input class="form-control" type="number" name="interest" id="interest"
+                           placeholder="Ingresa el porcetaje">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="time">Plazo (En meses)</label>
+                    <input class="form-control" type="number" name="time" id="time"
+                           placeholder="Ingresa el plazo en meses (opcional)">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="exchange">Tasa de cambio</label>
+                    <input class="form-control" type="text" name="exchange" id="exchange"
+                           value="{{ exchange.exchange_cop }}" data-value="{{ exchange.exchange_cop }}"
+                           placeholder="Ingresa el plazo en meses" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button type="submit" class="btn btn-submit btn-add-movement">Agregar</button>
           </form>
         </div>
@@ -665,6 +737,15 @@
       $('#chain').select2({
         language: "es"
       });
+      $('#box_from').select2({
+        language: "es"
+      });
+      $('#partner_provider').select2({
+        language: "es"
+      });
+      $('#lender_employee').select2({
+        language: "es"
+      });
 
       $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
@@ -699,7 +780,7 @@
 
     });
 
-    $('#concept').on('change', function () {
+    $("#concept").on("change", function () {
       relationship = $("option:selected", this).data('relationship')
       switch (relationship) {
         case 'Oficina':
@@ -768,32 +849,95 @@
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {
           data = response.data
-          if (data['name'] == 'Compra Dólares') {
-            $('#usd-buy').removeClass('d-none')
-            $('#usd-sell').addClass('d-none')
-            $('#regular-value').addClass('d-none')
-            $('#dq-select-div').addClass('d-none')
-          } else if (data['name'] == 'Venta Dólares') {
-            $('#usd-sell').removeClass('d-none')
-            $('#usd-buy').addClass('d-none')
-            $('#regular-value').addClass('d-none')
-            $('#dq-select-div').addClass('d-none')
-          } else if (data['name'] == 'Entrega de Efectivo a CD') {
-            $('#dq-select-div').removeClass('d-none')
-            $('#regular-value').removeClass('d-none')
-            $('#usd-sell').addClass('d-none')
-            $('#usd-buy').addClass('d-none')
-          } else {
-            $('#usd-sell').addClass('d-none')
-            $('#usd-buy').addClass('d-none')
-            $('#regular-value').removeClass('d-none')
-            $('#dq-select-div').addClass('d-none')
+          switch (data['name']) {
+            case 'Compra Dólares':
+              $('#usd-buy').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              break;
+            case 'Venta Dólares':
+              $('#usd-sell').removeClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              break;
+            case 'Entrega de Efectivo a CD':
+              $('#dq-select-').removeClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              break;
+            case 'Préstamo Personal Empleado':
+              $('.loan-employee').removeClass("d-none")
+              $('#regular-value').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('#dq-select-').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              break;
+            case 'Compra de Inventario Unidad':
+              $('.loan-employee').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $(".dynamic_controller").removeClass("d-none")
+              $("#unit_select").removeClass("d-none")
+              $("#plus5").on("click", function () {
+                if ($("#method_modal").val() === "add") {
+                  if ($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1) {
+                    $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+                      $(this).prop("required", true)
+                    })
+                  }
+                }
+              })
+              break;
+            default:
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('.loan-employee').addClass('d-none')
+              $("#unity").val("")
+              $("#unity").prop("required", false)
+
+              // deactivate required prop and clean inputs beacause these are going to be hidden
+              $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+                $(this).prop("required", false)
+                $(this).val("")
+              })
+              /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
+              *  in this way we grant if user don't want to create unit items we send one empty form
+              */
+              $(".add-movement .dynamic_controller").find("#minus5").each(function () {
+                if ($(this).css("display") != "none") {
+                  $(this).trigger("click")
+                }
+              })
+              break;
           }
         })
         .catch(function (error) {
           // handle error
           console.log(error);
         })
+    })
+
+    $('#loan_value').keyup(function () {
+      value = parseInt($(this).val())
+      exchange = parseInt($('#exchange').data('value'))
+      $('#value_cop').val(value * exchange)
+    })
+
+    $('#box_from').on('change', function () {
+      if ($(this).val() === 'partner') {
+        $('.partner-select-row').removeClass('d-none')
+      } else {
+        $('.partner-select-row').addClass('d-none')
+      }
     })
 
     $('#partner').on('change', function () {
@@ -835,7 +979,7 @@
       $("#unit_select").removeClass("d-none")
     })
 
-    $('.accept-mv').on('click', function () {
+    $('#table tbody').on('click', '.accept-mv', function () {
       id = $(this).data('id')
       Swal.fire({
         title: 'Estas Seguro?',
@@ -887,7 +1031,7 @@
       })
     })
 
-    $('.decline-mv').on('click', function () {
+    $('#table tbody').on('click', '.decline-mv', function () {
       id = $(this).data('id')
       const {value: text} = Swal.fire({
         title: 'Escribe el motivo del rechazo del movimiento',
@@ -923,7 +1067,7 @@
       })
     })
 
-    $('.dispersion-mv').on('click', function () {
+    $('#table tbody').on('click', '.dispersion-mv', function () {
       id = $(this).data('pk')
       value = $(this).data('value')
       $('.movement-id').val(id)
@@ -1360,42 +1504,6 @@
           // handle error
           console.log(error);
         })
-    })
-
-    $("#concept").on("change", function () {
-      if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-        $(".dynamic_controller").removeClass("d-none")
-        $("#unit_select").removeClass("d-none")
-        $("#plus5").on("click", function () {
-          if ($("#method_modal").val() === "add") {
-            if ($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1) {
-              $('.add-movement .dynamic_controller *').filter(':input').each(function () {
-                $(this).prop("required", true)
-              })
-            }
-          }
-        })
-        if ($("#method_modal").val() === "edit") {
-          $('.add-movement .dynamic_controller *').filter(':input').each(function () {
-            $(this).prop("required", true)
-          })
-          $(".is_replacement_control").prop("required", false)
-        }
-      } else {
-        $(".dynamic_controller").addClass("d-none")
-        $("#unit_select").addClass("d-none")
-        $("#unity").val("")
-        $("#unity").prop("required", false)
-        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
-          $(this).prop("required", false)
-          $(this).val("")
-        })
-        $(".add-movement .dynamic_controller").find("#minus5").each(function () {
-          if ($(this).css("display") != "none") {
-            $(this).trigger("click")
-          }
-        })
-      }
     })
 
     $(document).on('change', '.category_edit_control', function () {
