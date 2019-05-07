@@ -49,7 +49,10 @@ urlpatterns = [
 
     path("movement-require/", MovementRequireList.as_view(), name='movement_required'),
     path("movement-withdraw-require/", MovementWithdrawRequireList.as_view(), name='movement_withdraw_required'),
-    path("movement-between-offices-require/", MovementBetweenOfficesRequire.as_view(), name='movement_between_offices_require'),
+    path("movement-between-offices-require/",
+         MovementBetweenOfficesRequire.as_view(),
+         name='movement_between_offices_require'
+         ),
 
     # Reports
     path("reports/", Reports.as_view(), name='reports'),
@@ -107,5 +110,6 @@ urlpatterns = [
 
     # Investment
     path("office/<slug:slug>/investments-list/", InvestmentList.as_view(), name='investment_list'),
-    path("office/<slug:slug>/investment/<int:pk>/payments/", InvestmentPaymentList.as_view(), name='investment_pay_list'),
+    path("office/<slug:slug>/investment/<int:pk>/payments/", InvestmentPaymentList.as_view(),
+         name='investment_pay_list'),
 ]
