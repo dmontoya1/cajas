@@ -261,35 +261,37 @@
                         <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                           {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                         <td>
-                          {% if request.user.is_superuser or request.user.is_secretary %}
-                            {% if m.date|three_last_days %}
-                              <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                                 data-target="#addMovement">Editar</a>
+                          <ul class="ul-buttons">
+                            {% if request.user.is_superuser or request.user.is_secretary %}
+                              {% if m.date|three_last_days %}
+                                <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                       data-target="#addMovement">Editar</a></li>
+                              {% endif %}
+                            {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
+                              <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                     data-target="#addMovement">Editar</a></li>
                             {% endif %}
-                          {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
-                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                               data-target="#addMovement">Editar</a>
-                          {% endif %}
-                          {% if request.user.is_superuser %}
-                            <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
-                          {% endif %}
-                          {% if not m.review %}
-                            {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
-                              <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
-                              <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
-                              <a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
-                                 data-toggle="modal"
-                                 data-target="#dispersionMovement">
-                                Dispersión
-                              </a>
+                            {% if request.user.is_superuser %}
+                              <li><a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a></li>
                             {% endif %}
-                          {% else %}
-                            <span
-                              class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
+                            {% if not m.review %}
+                              {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
+                                <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
+                                <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
+                                <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
+                                       data-toggle="modal"
+                                       data-target="#dispersionMovement">
+                                  Dispersión
+                                </a></li>
+                              {% endif %}
+                            {% else %}
+                              <li><span
+                                class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
                             {{ m.get_status_display }}
-                          </span>
+                          </span></li>
 
-                          {% endif %}
+                            {% endif %}
+                          </ul>
                         </td>
                       </tr>
                     {% endfor %}

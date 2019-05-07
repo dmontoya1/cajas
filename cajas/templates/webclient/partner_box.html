@@ -209,15 +209,16 @@
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>
-                        {% if perms.movement.add_movementpartner %}
+                        <ul class="ul-buttons">
+                          {% if perms.movement.add_movementpartner %}
+                            <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                   data-target="#addMovement">Editar</a></li>
 
-                            <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                               data-target="#addMovement">Editar</a>
-
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                              <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
-                            {% endif %}
+                          {% endif %}
+                          {% if request.user.is_superuser %}
+                            <li><a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a></li>
+                          {% endif %}
+                        </ul>
                       </td>
                     </tr>
                   {% endfor %}

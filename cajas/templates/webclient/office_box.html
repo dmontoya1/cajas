@@ -3,11 +3,11 @@
 {% load static humanize %}
 
 {% block extra_css %}
-<style>
-.dtr-details{
-  max-width: 60vw;
-}
-</style>
+  <style>
+    .dtr-details {
+      max-width: 60vw;
+    }
+  </style>
 
 {% endblock %}
 
@@ -212,13 +212,17 @@
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
                       <td>
-                        {% if perms.movement.change_movementoffice %}
-                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                             data-target="#addMovement">Editar</a>
-                        {% endif %}
-                        {% if request.user.is_superuser %}
-                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
-                        {% endif %}
+                        <ul class="ul-buttons">
+                          {% if perms.movement.change_movementoffice %}
+                            <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                   data-target="#addMovement">Editar</a></li>
+                          {% endif %}
+                          {% if request.user.is_superuser %}
+                            <li><a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a></li>
+                          {% endif %}
+
+                        </ul>
+
                       </td>
                     </tr>
                   {% endfor %}
@@ -383,7 +387,7 @@
         $("#brand").prop('required', false);
         $("#price").prop('required', false);
         $("#description").prop('required', false);
-      }else {
+      } else {
         $("#inventory_form").addClass("d-none");
         $("#name").prop('required', false);
         $("#category").prop('required', false);
