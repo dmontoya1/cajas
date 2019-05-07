@@ -193,20 +193,23 @@
                                data-target="#modalDetail">Detalle</a></td>
                         <td>$ {{ p.box.balance|intcomma }} {{ p.office.country.currency.abbr }}</td>
                         <td>
+                        <ul class="ul-buttons-partner">
                           {% if perms.movement.add_movementpartner %}
-                            <button type="button" data-id="{{ p.id }}" class="add-movement" data-toggle="modal"
+                            <li><button type="button" data-id="{{ p.id }}" class="add-movement" data-toggle="modal"
                                     data-target="#addMovementModal"><i class="fas fa-plus"></i>Añadir Movimiento
-                            </button>
+                            </button></li>
                           {% endif %}
                           {% if perms.boxes.change_boxpartner %}
-                            <a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box">
+                            <li><a href="{% url 'webclient:partner_box' office.slug p.pk %}" class="see-box">
                               <i class="fas fa-eye"></i>Ver Caja
-                            </a>
+                            </a></li>
                           {% endif %}
                           {% if perms.units.change_unit %}
-                            <a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol
-                              de unidades</a>
+                            <li><a href="{% url 'webclient:partner_units_list' office.slug p.pk %}" class="unit-tree">Árbol
+                              de unidades</a></li>
                           {% endif %}
+                        </ul>
+
                         </td>
                       </tr>
                     {% endfor %}
