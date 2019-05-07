@@ -477,7 +477,7 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text salary-type-icon">$</div>
                   </div>
-                  <input type="text" class="form-control to-dec" id="edit_salary" name="salary" required>
+                  <input type="number" class="form-control to-dec" id="edit_salary" name="salary" required>
                 </div>
               </div>
             </div>
@@ -607,8 +607,8 @@
           } else {
             $("#detail_cv").addClass("d-none")
           }
-          if(data.cv != null){
-            $("#detail_passport").attr("href", data.cv)
+          if(data.passport != null){
+            $("#detail_passport").attr("href", data.passport)
             $("#detail_passport").removeClass("d-none")
           } else {
             $("#detail_passport").addClass("d-none")
@@ -666,13 +666,18 @@
             $("#current_passport").addClass("d-none")
           }
 
-          $("#edit_charge").find('option:selected').remove()
+          $("#edit_charge option").prop("selected", false);
           $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
-          $("#edit_charge").trigger("click")
+          $("#edit_charge").trigger("change")
 
-          $("#edit_salary_type").find('option:selected').remove()
-          $("#edit_salary_type option[value='" + data.salary_type.id + "']").prop("selected", true);
-          $("#edit_salary_type").trigger("click")
+          $("#edit_salary_type option").prop("selected", false);
+          $("#edit_salary_type option[value='" + data.salary_type + "']").prop("selected", true);
+          $("#edit_salary_type").trigger("change")
+
+          if(data.salary_type == "PE")
+            $(".salary-type-icon").text("%")
+          if(data.salary_type == "FX")
+            $(".salary-type-icon").text("$")
 
         })
         .catch(function (error) {
