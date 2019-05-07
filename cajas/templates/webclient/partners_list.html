@@ -272,7 +272,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-partner">
+          <form method="POST" class="add-partner" action="{% url 'webclient:partner_add' %}">
             {% csrf_token %}
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
@@ -338,7 +338,7 @@
                 <input type="checkbox" name="daily_square" id="daily_square">
               </div>
             </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
+            <button type="submit" class="btn btn-submit btn-add-partner">Añadir</button>
           </form>
         </div>
       </div>
@@ -528,6 +528,10 @@
 {% block extra_js %}
 
   <script type="text/javascript">
+    $('.btn-add-partner').on('click', function(){
+      $('.btn-add-partner').attr('disabled', true)
+      $('.add-partner').submit()
+    })
     //detail modal script
     $('#table tbody').on('click', '.partner_detail', function () {
       var partner_pk = $(this).data("id")

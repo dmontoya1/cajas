@@ -79,31 +79,6 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for loan in loans %}
-                    <tr class="td-loans">
-                      <td>Pago interés {{ loan }}</td>
-                      <td>${{ loan.get_interest_payment|intcomma }}</td>
-                      <td>{% now "F Y" %}</td>
-                    </tr>
-                  {% endfor %}
-                  {% for chain in chains %}
-                    {% for place in chain.related_places.all %}
-                      {% for user in place.related_users.all %}
-                        <tr class="td-chain">
-                          <td>Pago {{ user }}</td>
-                          <td>${{ user.get_user_value|intcomma }}</td>
-                          <td>{% now "F Y" %}</td>
-                        </tr>
-                      {% endfor %}
-                    {% endfor %}
-                  {% endfor %}
-                  {% for i in investments %}
-                    <tr class="td-investment">
-                      <td>Pago cuota {{ i }}</td>
-                      <td>${{ i.monthly_pay|intcomma }}</td>
-                      <td>{% now "F Y" %}</td>
-                    </tr>
-                  {% endfor %}
                   </tbody>
                 </table>
               </div>
