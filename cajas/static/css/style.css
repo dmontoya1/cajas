@@ -2820,6 +2820,10 @@ span.investment-element span {
   font-weight: normal;
 }
 
+tr, td {
+  font-size: 0.9em !important;
+}
+
 td.red {
   color: red;
   font-weight: bold !important;
@@ -2845,3 +2849,4 @@ span.orange {
 .dtr-details li {
     list-style-type: none;
 }
+

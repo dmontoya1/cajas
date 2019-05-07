@@ -8,5 +8,5 @@ IPYTHONDIR=/app/.ipython
 REDIS_URL=redis://redis:6379/0
 CELERY_BROKER_URL=redis://redis:6379/0
 
-API_KEY=0b90a87f44636ea7f7eac82986d081933cca2d08
+API_KEY=c366a7e22005fce0ad899a607e19f62f3b90a8d7
 ADMIN_EMAIL=dmontoya@apptitud.com.co

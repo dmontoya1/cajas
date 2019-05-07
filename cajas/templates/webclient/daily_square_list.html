@@ -236,7 +236,7 @@
                             {% else %}
                               La caja esta cerrada
                             {% endif %}
-                        {% endif %}
+                          {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
                             <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
                               class="fas fa-eye mr-2"></i>Ver cuadre diario</a>
@@ -254,7 +254,7 @@
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box_balance office d %}</td>
-                        <td>
+                        <td style="max-width: 100%">
                           {% get_dq_box_id office d as box_id %}
                           {% get_dq_box_is_close office d as box_is_close %}
                           {% if perms.movement.add_movementdailysquare and not box_is_close %}
@@ -304,6 +304,7 @@
             {% csrf_token %}
             <input type="hidden" name="office_slug" value="{{ office.slug }}">
             <input type="hidden" name="office" value="{{ office.pk }}">
+            <input type="hidden" name="user_id" id="user_id" value="">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto </label>
@@ -503,7 +504,8 @@
             </div>
             <!--end Replication-->
 
-            {% comment %}<div class="loan-employee d-none">
+            <!-- Appears if concept is Employee loan-->
+            <div class="loan-employee d-none">
               <div class="form-row">
                 <div class="form-group col-md-6 box-select">
                   <label for="box_from">Selecciona desde donde sale el préstamo</label>
@@ -515,9 +517,8 @@
                   </select>
                 </div>
               </div>
-              <hr>
               <div class="form-row d-none partner-select-row">
-                <div class="form-group col-md-12 partner-select">
+                <div class="form-group col-md-12">
                   <label for="partner_provider">Selecciona el socio fondeador</label>
                   <select class="form-control" id="partner_provider" style="width: 100%; height: 20px;"
                           name="partner_provider">
@@ -529,36 +530,36 @@
                 </div>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-12 lender_employee d-none">
+                <div class="form-group col-md-12 lender_employee">
                   <label for="lender_employee">Selecciona el empleado Deudor</label>
                   <select class="form-control" id="lender_employee" name="lender_employee"
                           style="width: 100%; height: 20px;">
                     <option selected disabled value="">Selecciona el socio deudor</option>
-                    {% for e in employees %}
+                    {% for e in office_employees %}
                       <option value="{{ e.pk }}">{{ e }} - {{ e.charge }}</option>
                     {% endfor %}
                   </select>
                 </div>
               </div>
               <hr>
-              <div class="loan-fields d-none">
+              <div class="loan-fields">
                 <div class="form-row">
                   <div class="form-group col-md-6">
-                    <label for="value">Monto del préstamo ({{ office.country.currency.abbr }})</label>
-                    <input class="form-control" type="number" name="value" id="value"
-                           placeholder="Ingresa el monto del préstamo" required>
+                    <label for="loan_value">Monto del préstamo ({{ office.country.currency.abbr }})</label>
+                    <input class="form-control" type="number" name="value_loan" id="loan_value"
+                           placeholder="Ingresa el monto del préstamo">
                   </div>
                   <div class="form-group col-md-6">
                     <label for="value_cop">Monto del préstamo (COP)</label>
                     <input class="form-control" type="number" name="value_cop" id="value_cop" value="0"
-                           placeholder="Ingresa el monto del préstamo en COP" readonly>
+                           readonly>
                   </div>
                 </div>
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="interest">Porcentaje de interes (%)</label>
                     <input class="form-control" type="number" name="interest" id="interest"
-                           placeholder="Ingresa el porcetaje" required>
+                           placeholder="Ingresa el porcetaje">
                   </div>
                   <div class="form-group col-md-6">
                     <label for="time">Plazo (En meses)</label>
@@ -573,7 +574,7 @@
                   </div>
                 </div>
               </div>
-            </div>{% endcomment %}
+            </div>
             <button type="submit" class="btn btn-submit">Añadir</button>
           </form>
         </div>
@@ -588,29 +589,6 @@
   <script type="text/javascript">
     //Displays unit_form if concept equals to Compra de Inventario Unidades
     $("#concept").on("change", function () {
-      if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-        $(".dynamic_controller").removeClass("d-none")
-        $("#unit_select").removeClass("d-none")
-      } else {
-        $(".dynamic_controller").addClass("d-none")
-        $("#unit_select").addClass("d-none")
-        $("#unity").val("")
-        $("#unity").prop("required", false)
-
-        // deactivate required prop and clean inputs beacause these are going to be hidden
-        $('.add-movement .dynamic_controller *').filter(':input').each(function () {
-          $(this).prop("required", false)
-          $(this).val("")
-        })
-        /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
-        *  in this way we grant if user don't want to create unit items we send one empty form
-        */
-        $(".add-movement .dynamic_controller").find("#minus5").each(function () {
-          if ($(this).css("display") != "none") {
-            $(this).trigger("click")
-          }
-        })
-      }
       relationship = $("option:selected", this).data('relationship')
       switch (relationship) {
         case 'Oficina':
@@ -679,32 +657,78 @@
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {
           data = response.data
-          if (data['name'] == 'Compra Dólares') {
-            $('#usd-buy').removeClass('d-none')
-            $('#usd-sell').addClass('d-none')
-            $('#regular-value').addClass('d-none')
-            $('#dq-select-').addClass('d-none')
-          } else if (data['name'] == 'Venta Dólares') {
-            $('#usd-sell').removeClass('d-none')
-            $('#usd-buy').addClass('d-none')
-            $('#regular-value').addClass('d-none')
-            $('#dq-select-').addClass('d-none')
-          } else if (data['name'] == 'Entrega de Efectivo a CD') {
-            $('#dq-select-').removeClass('d-none')
-            $('#regular-value').removeClass('d-none')
-            $('#usd-sell').addClass('d-none')
-            $('#usd-buy').addClass('d-none')
-          } else {
-            $('#usd-sell').addClass('d-none')
-            $('#usd-buy').addClass('d-none')
-            $('#regular-value').removeClass('d-none')
-            $('#dq-select-').addClass('d-none')
+          switch (data['name']) {
+            case 'Compra Dólares':
+              $('#usd-buy').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              break;
+            case 'Venta Dólares':
+              $('#usd-sell').removeClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              break;
+            case 'Entrega de Efectivo a CD':
+              $('#dq-select-').removeClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              break;
+            case 'Préstamo Personal Empleado':
+              $('.loan-employee').removeClass("d-none")
+              $('#regular-value').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('#dq-select-').addClass('d-none')
+              $('#regular-value').addClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              break;
+            case 'Compra de Inventario Unidad':
+              $(".dynamic_controller").removeClass("d-none")
+              $("#unit_select").removeClass("d-none")
+              $('.loan-employee').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              break;
+            default:
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#dq-select-').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('.loan-employee').addClass('d-none')
+              $("#unity").val("")
+              $("#unity").prop("required", false)
+
+              // deactivate required prop and clean inputs beacause these are going to be hidden
+              $('.add-movement .dynamic_controller *').filter(':input').each(function () {
+                $(this).prop("required", false)
+                $(this).val("")
+              })
+              /* and jquery press "eliminar" button beacause we don't want to have a lot of dynamic form hidden, just one.
+              *  in this way we grant if user don't want to create unit items we send one empty form
+              */
+              $(".add-movement .dynamic_controller").find("#minus5").each(function () {
+                if ($(this).css("display") != "none") {
+                  $(this).trigger("click")
+                }
+              })
+              break;
           }
         })
         .catch(function (error) {
           // handle error
           console.log(error);
         })
+    })
+
+    $('#loan_value').keyup(function () {
+      value = parseInt($(this).val())
+      exchange = parseInt($('#exchange').data('value'))
+      $('#value_cop').val(value * exchange)
     })
 
     $('#box_from').on('change', function () {
@@ -749,7 +773,7 @@
     });
 
     $(document).ready(function () {
-      $('#table').DataTable({
+      var table = $('#table').DataTable({
         responsive: {
           details: true
         },
@@ -784,12 +808,6 @@
           }
         }
       });
-
-      // $('.add-movement select').each(function () {
-      //   $(this).select2({
-      //     language: "es"
-      //   });
-      // });
 
       var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
@@ -838,6 +856,19 @@
       $('#chain').select2({
         language: "es"
       });
+      $('#box_from').select2({
+        language: "es"
+      });
+      $('#partner_provider').select2({
+        language: "es"
+      });
+      $('#lender_employee').select2({
+        language: "es"
+      });
+    });
+
+    $('#table tbody').on('click', '.add-movement-button', function () {
+      $('#user_id').val($(this).data("id"))
     });
 
     $('#partner').on('change', function () {
@@ -860,113 +891,109 @@
         })
     })
 
-    $(".add-movement-button").on("click", function () {
-      partner_pk = $(this).data("id")
-      $('.add-movement').on('submit', function (ev) {
-        ev.preventDefault()
-        axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
-        if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-          var elemts = []
-          $('.add-movement .dynamic_controller *').filter('.category_control').each(function () {
-            id_form = $(this).attr("id")
-            id_form = id_form[id_form.length - 1]
-            elemts.push(id_form)
-          });
-          $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
-        }
-        $(this).append('<input type="hidden" name="user_id" value="' + partner_pk + '" >')
-        data_send = $(this).serialize()
-        axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
-          .then(function (response) {
-            msg = response.data
-            if (response.status === 204) {
-              Swal.fire({
-                title: 'Oops! Has llegado al tope',
-                text: msg + " Deseas pedir autorización para generar este movimiento?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#60d3b0',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, pedir autorización',
-                cancelButtonText: "No, Cancelar",
-                allowOutsideClick: false,
-              }).then((result) => {
-                if (result.value) {
-                  const {value: text} = Swal.fire({
-                    title: 'Escribe el motivo para pedir la autorización',
-                    input: 'textarea',
-                    inputPlaceholder: 'Se debe autorizar el movimiento porque ...',
-                    showCancelButton: true,
-                    inputValidator: (value) => {
-                      return !value && 'Debes escribir el motivo para pedir la autorización'
-                    },
-                    allowOutsideClick: false,
-                    showCloseButton: true
-                  }).then((result) => {
-                    if (result.value) {
-                      data_stop = movement.serialize()
-                      data_stop += `&observation=${result.value}`
-                      axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
-                        .then(function (response) {
-                          Swal.fire({
-                            title: 'Exitoso!',
-                            text: response.data,
-                            type: 'success',
-                            allowOutsideClick: false
-                          }).then((result) => {
-                            if (result.value) {
-                              location.reload()
-                            }
-                          })
-                        })
-                        .catch(function (error) {
-                          console.log(error);
-                          console.log(error.response)
-                        });
-                    }
-                  })
-                } else {
-                  Swal.fire(
-                    'Cancelado',
-                    'El movimiento se ha cancelado',
-                    'info'
-                  ).then((result) => {
-                    location.reload()
-                  })
-                }
-              })
-            } else {
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: msg,
-              }).then((result) => {
-                if (result.value) {
-                  location.reload()
-                }
-              })
-            }
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error)
+    $('.add-movement').on('submit', function (ev) {
+      ev.preventDefault()
+      $('.btn-submit').attr('disabled', true)
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
+        var elemts = []
+        $('.add-movement .dynamic_controller *').filter('.category_control').each(function () {
+          id_form = $(this).attr("id")
+          id_form = id_form[id_form.length - 1]
+          elemts.push(id_form)
+        });
+        $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
+      }
+      data_send = $(this).serialize()
+      axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
+        .then(function (response) {
+          msg = response.data
+          if (response.status === 204) {
             Swal.fire({
-              title: 'Ha ocurrido un error',
-              text: error,
-              type: 'error',
-              showCancelButton: false,
-              confirmButtonColor: '#3085d6',
-              confirmButtonText: 'Aceptar'
+              title: 'Oops! Has llegado al tope',
+              text: msg + " Deseas pedir autorización para generar este movimiento?",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#60d3b0',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si, pedir autorización',
+              cancelButtonText: "No, Cancelar",
+              allowOutsideClick: false,
+            }).then((result) => {
+              if (result.value) {
+                const {value: text} = Swal.fire({
+                  title: 'Escribe el motivo para pedir la autorización',
+                  input: 'textarea',
+                  inputPlaceholder: 'Se debe autorizar el movimiento porque ...',
+                  showCancelButton: true,
+                  inputValidator: (value) => {
+                    return !value && 'Debes escribir el motivo para pedir la autorización'
+                  },
+                  allowOutsideClick: false,
+                  showCloseButton: true
+                }).then((result) => {
+                  if (result.value) {
+                    data_stop = movement.serialize()
+                    data_stop += `&observation=${result.value}`
+                    axios.post('{% url "api:movements:movement_request_create" %}', data_stop)
+                      .then(function (response) {
+                        Swal.fire({
+                          title: 'Exitoso!',
+                          text: response.data,
+                          type: 'success',
+                          allowOutsideClick: false
+                        }).then((result) => {
+                          if (result.value) {
+                            location.reload()
+                          }
+                        })
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                        console.log(error.response)
+                      });
+                  }
+                })
+              } else {
+                Swal.fire(
+                  'Cancelado',
+                  'El movimiento se ha cancelado',
+                  'info'
+                ).then((result) => {
+                  location.reload()
+                })
+              }
+            })
+          } else {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: msg,
             }).then((result) => {
               if (result.value) {
                 location.reload()
               }
             })
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
           })
-      })
-
-
+        })
     })
+
     {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
       $('.datetimepicker_dailysquare').datetimepicker({
         format: 'Y-m-d',
@@ -984,7 +1011,7 @@
     {% endif %}
 
     // Cerrar caja
-    $('.close-box-dq').on('click', function () {
+    $('#table tbody').on('click', '.close-box-dq', function () {
       pk = $(this).data('id')
       const {value: text} = Swal.fire({
         title: 'Cerrar Caja',
@@ -1023,7 +1050,7 @@
     })
 
     // Abrir caja
-    $('.open-box-dq').on('click', function () {
+    $('#table tbody').on('click', '.open-box-dq', function () {
       pk = $(this).data('id')
       const {value: text} = Swal.fire({
         title: 'Abrir Caja',

@@ -478,7 +478,7 @@
       $('.btn-add-movement').text('Agregar')
     })
 
-    $('.edit-item').on('click', function () {
+    $('#table tbody').on('click', '.edit-item', function () {
       var mov_pk = $(this).data("id")
       $("#method_modal").val("edit")
       $("#method_modal").data("id", mov_pk)
@@ -575,7 +575,7 @@
       }
     })
 
-    $('.delete-item').on('click', function () {
+    $('#table tbody').on('click', '.delete-item', function () {
       mov_pk = $(this).data('id')
       Swal.fire({
         title: 'Estas segura?',

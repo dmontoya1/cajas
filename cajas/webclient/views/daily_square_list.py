@@ -1,15 +1,17 @@
-from django.db.models import Q
 
+from datetime import datetime
+
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from cajas.users.models.employee import Employee
-from cajas.users.models.partner import Partner
-from cajas.users.models.user import User
+from cajas.general_config.models.exchange import Exchange
 from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.users.models.user import User
+from cajas.webclient.views.utils import get_object_or_none
 
 
 class DailySquareList(LoginRequiredMixin, TemplateView):
@@ -47,6 +49,12 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
             Q(partner__office=office) | Q(related_employee__office_country=office) |
             Q(related_employee__office=office.office) &
             Q(is_daily_square=True))
+        now = datetime.now()
+        context['exchange'] = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=now.month,
+        )
         context['dq_list'] = dq_list
         context['categories'] = Category.objects.all()
         context['offices'] = offices

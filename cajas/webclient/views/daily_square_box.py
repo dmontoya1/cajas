@@ -6,12 +6,14 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.boxes.models.box_daily_square import BoxDailySquare
+from cajas.general_config.models.exchange import Exchange
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 from cajas.inventory.models import Category
 from cajas.movement.models.movement_daily_square import MovementDailySquare
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_object_or_none
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -45,6 +47,12 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
             review=False
         ).exclude(
             date=date.today()
+        )
+        now = datetime.now()
+        context['exchange'] = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=now.month,
         )
         context['box'] = box_daily_square
         context['offices'] = offices
