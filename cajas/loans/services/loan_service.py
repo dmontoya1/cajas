@@ -85,7 +85,7 @@ class LoanManager(object):
         lender = lender_employee.user
         old_loan = Loan.objects.filter(lender=lender).last()
         office = get_object_or_404(OfficeCountry, pk=data['office'])
-        concept = get_object_or_404(Concept, name='Préstamo empleados')
+        concept = get_object_or_404(Concept, name='Préstamo Personal Empleado')
 
         data_mov = {
             'concept': concept,
