@@ -3838,3 +3838,35 @@ span.orange {
   }
 }
 
+.ul-buttons-partner {
+  list-style-type: none;
+  display: flex;
+}
+
+.ul-buttons-partner li {
+  margin: 0px 3px;
+}
+
+@media only screen and (min-width: 686px) and (max-width: 1568px) {
+  .ul-buttons-partner {
+    list-style-type: none;
+    display: grid;
+  }
+
+  .ul-buttons-partner li {
+    margin: 2px 0px;
+    width: 130px;
+  }
+}
+
+@media (max-width: 685px) {
+  .ul-buttons-partner {
+    list-style-type: none;
+    display: list-item;
+  }
+
+  .ul-buttons-partner li {
+    margin: 10px 0px;
+  }
+}
+
