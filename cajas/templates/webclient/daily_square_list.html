@@ -211,13 +211,19 @@
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box_balance office d %}</td>
                         <td>
-                          {% if request.user.is_superuser or request.user.is_secretary or d == request.user %}
+                          {% get_dq_box_id office d as box_id %}
+                          {% get_dq_box_is_close office d as box_is_close %}
+                          {% if request.user.is_superuser or request.user.is_secretary %}
                             <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
                                     data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                             </button>
+                          {% elif d == request.user and not box_is_close %}
+                            <button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
+                                    data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                            </button>
+                          {% else %}
+                            La caja esta cerrada
                           {% endif %}
-                          {% get_dq_box_id office d as box_id %}
-                          {% get_dq_box_is_close office d as box_is_close %}
                           {% if not box_is_close %}
                             <a href="#" class="close-box-dq" data-id="{{ box_id }}">
                               <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a>
