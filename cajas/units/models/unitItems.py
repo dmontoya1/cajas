@@ -1,8 +1,8 @@
 from django.db import models
 
 from cajas.inventory.models.brand import Brand
-from ..models.units import Unit
 from cajas.office.models.officeCountry import OfficeCountry
+from ..models.units import Unit
 
 
 class UnitItems(models.Model):
@@ -56,7 +56,9 @@ class UnitItems(models.Model):
     )
 
     def __str__(self):
-        return  self.name #' de la unidad ' # % (self.name, self.unit.name)
+        if self.unit:
+            return '{} de la unidad {}'.format(self.name, self.unit.name)
+        return self.name
 
     class Meta:
         verbose_name = 'Inventario unidad'

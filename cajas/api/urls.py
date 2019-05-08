@@ -10,6 +10,7 @@ urlpatterns = [
     path('loans/', include('cajas.loans.urls', namespace='loans'), name='loans'),
     path('movements/', include('cajas.movement.urls', namespace='movements'), name='movements'),
     path('office/', include('cajas.office.urls', namespace='office'), name='office'),
+    path('reports/', include('cajas.reports.urls', namespace='reports'), name='reports'),
     path('units/', include('cajas.units.urls', namespace='units'), name='units'),
     path('users/', include('cajas.users.urls', namespace='users'), name='users'),
 ]
