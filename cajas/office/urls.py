@@ -1,15 +1,15 @@
 
-
 from django.urls import path
 
-from cajas.office.api.create_office_item import CreateOfficeItem
-from .api.create_supervisor_calendar import CreateSupervisorCalendar
-from .api.create_group import CreateGroup
-from .api.group_detail import GroupDetail
-from cajas.office.api.office_item_delete import OfficeItemDelete
-from cajas.office.api.office_item_detail import OfficeItemDetail
-from .api.supervisor_calendar_list import SupervisorCalendarList
-from .api.supervisor_calendar_delete import SupervisorCalendarDelete
+from cajas.office.api.views.create_office_item import CreateOfficeItem
+from cajas.office.api.views.office_item_delete import OfficeItemDelete
+from cajas.office.api.views.office_item_detail import OfficeItemDetail
+
+from cajas.office.api.views.create_supervisor_calendar import CreateSupervisorCalendar
+from cajas.office.api.views.create_group import CreateGroup
+from cajas.office.api.views.group_detail import GroupDetail
+from cajas.office.api.views.supervisor_calendar_list import SupervisorCalendarList
+from cajas.office.api.views.supervisor_calendar_delete import SupervisorCalendarDelete
 
 app_name = 'office'
 urlpatterns = [

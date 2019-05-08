@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 
 
-from ..models.supervisorCalendar import SupervisorCalendar
+from cajas.office.models.supervisorCalendar import SupervisorCalendar
 
 
 class SupervisorCalendarSerializer(serializers.ModelSerializer):

@@ -4,13 +4,11 @@ from django.http import JsonResponse
 import datetime
 
 from django.shortcuts import get_object_or_404
-from cajas.webclient.views.utils import get_object_or_none
 
-from ..models.supervisorCalendar import SupervisorCalendar
-from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
+from cajas.office.models.supervisorCalendar import SupervisorCalendar
+from cajas.office.api.serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 from cajas.users.models.group_employee import GroupEmployee
 from cajas.users.models.group import Group
-from cajas.users.models.employee import Employee
 
 
 def get_calendar(super_calendar):

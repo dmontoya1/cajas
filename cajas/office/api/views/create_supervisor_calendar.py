@@ -4,8 +4,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models.supervisorCalendar import SupervisorCalendar
-from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
+from cajas.office.models.supervisorCalendar import SupervisorCalendar
+from cajas.office.api.serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit

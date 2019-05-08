@@ -8,7 +8,7 @@ from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from cajas.inventory.models.brand import Brand
 from cajas.office.models.officeItems import OfficeItems
-from cajas.office.serializer.office_item_serializer import OfficeItemSerializer
+from cajas.office.api.serializer.office_item_serializer import OfficeItemSerializer
 
 
 class OfficeItemDetail(generics.RetrieveUpdateAPIView):

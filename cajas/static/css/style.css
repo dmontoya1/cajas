@@ -3633,6 +3633,14 @@ button.add-movement, button.add-movement-button {
   margin-left: 5px;
 }
 
+.filter-report {
+  background-color: var(--aqua-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 25px;
+  margin-top: 10px;
+}
+
 
 div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   justify-content: center !important;
