@@ -205,9 +205,9 @@
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        {% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                        {% else %}-{% endif %}</td>
                       <td>
                         {% if perms.movement.change_movementoffice %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
