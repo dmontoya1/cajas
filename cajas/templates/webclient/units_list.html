@@ -166,8 +166,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
                     <th>Unidad</th>
@@ -190,9 +190,11 @@
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
                         <td>
-                          <a href="#" class="edit-item" data-id="{{ u.id }}" data-toggle="modal"
-                             data-target="#editUnit">Editar</a>
-                          <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
+                          {% if request.user.is_secretary or request.user.is_superuser %}
+                            <a href="#" class="edit-item" data-id="{{ u.id }}" data-toggle="modal"
+                               data-target="#editUnit">Editar</a>
+                            <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>
+                          {% endif %}
                         </td>
                       </tr>
                     {% endif %}
@@ -301,7 +303,7 @@
               <div class="form-group col-md-6">
                 <label for="collector">Cobrador</label>
                 <select class="form-control" id="edit_collector" name="collector" style="width: 100%; height: 20px;"
-                        >
+                >
                   <option disabled value="" selected>Selecciona un cobrador</option>
                   {% for c in employees %}
                     <option value="{{ c.user.pk }}">{{ c }} ({{ c.charge }})</option>
@@ -313,7 +315,7 @@
               <div class="form-group col-md-6">
                 <label for="edit_supervisor">Supervisor</label>
                 <select class="form-control" id="edit_supervisor" name="supervisor" style="width: 100%; height: 20px;"
-                        >
+                >
                   <option disabled value="" selected>Selecciona un supervisor</option>
                   {% for s in employees %}
                     <option value="{{ s.user.pk }}">{{ s }} ({{ s.charge }})</option>
@@ -524,7 +526,7 @@
             )
           })
           $(`#edit_inventory_brand${index_pk}`).prepend(
-              '<option value="" selected disabled>Selecciona una unidad</option>'
+            '<option value="" selected disabled>Selecciona una unidad</option>'
           )
           $(`#edit_inventory_brand${index_pk} option`).prop("selected", false);
           $(`#edit_inventory_brand${index_pk} option[value=${brand_pk}]`).prop("selected", true);
@@ -547,22 +549,22 @@
           $("#edit_partner").val(data.partner.user.first_name + " " + data.partner.user.last_name)
           $('#total_price').val(data.unit_price)
 
-          if(data.collector != null){
+          if (data.collector != null) {
             $("#edit_collector option").prop("selected", false);
             $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
             $("#edit_collector").trigger("change")
           } else {
             $("#edit_collector option").prop("selected", false);
-            $("#edit_collector option[value='"+""+"']").prop("selected", true);
+            $("#edit_collector option[value='" + "" + "']").prop("selected", true);
             $("#edit_collector").trigger("change")
           }
-          if(data.supervisor != null){
+          if (data.supervisor != null) {
             $("#edit_supervisor option").prop("selected", false);
             $("#edit_supervisor option[value='" + data.supervisor + "']").prop("selected", true);
             $("#edit_supervisor").trigger("change")
           } else {
             $("#edit_supervisor option").prop("selected", false);
-            $("#edit_supervisor option[value='"+""+"']").prop("selected", true);
+            $("#edit_supervisor option[value='" + "" + "']").prop("selected", true);
             $("#edit_supervisor").trigger("change")
           }
           var index_pk = 0
@@ -651,7 +653,7 @@
             }
             $(this).closest('#edit_dynamic_form').remove();
           });
-          if(items_lenght == 0){
+          if (items_lenght == 0) {
             $("#edit_option0").attr("disabled", true)
             $("#delete_option0").attr("disabled", true)
           }
@@ -681,7 +683,7 @@
             }
           })
 
-          $(".plus5_edit_control").on("click", function(){
+          $(".plus5_edit_control").on("click", function () {
             id = $(".category_edit_control")[$(".category_edit_control").length - 1].id
             id = id[id.length - 1]
             $(`#edit_option${id}`).attr("disabled", true)
@@ -691,7 +693,7 @@
         .catch(function (error) {
           console.log(error);
         })
-      })
+    })
 
     //and then update unit
     $('.edit_unit_form').on('submit', function (e) {
@@ -747,22 +749,22 @@
           axios.delete(`/api/units/${pk}/delete`,
             {data: {description: result.value}}
           )
-          .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
             })
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log(error.response)
-          });
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
         }
       })
     })
@@ -925,7 +927,6 @@
         }
         $(this).closest('#dynamic_form').remove();
       });
-
 
 
       $('.edit_unit_form select').each(function () {
