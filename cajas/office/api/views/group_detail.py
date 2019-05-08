@@ -1,6 +1,3 @@
-from rest_framework.views import APIView
-from rest_framework import generics
-
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
@@ -12,7 +9,7 @@ from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.users.models.employee import Employee
 from cajas.users.models.group import Group
 from cajas.users.models.group_employee import GroupEmployee
-from ..serializer.group_employee_serializer import GroupEmployeeSerializer
+from cajas.office.api.serializer.group_employee_serializer import GroupEmployeeSerializer
 
 
 class GroupDetail(generics.RetrieveUpdateAPIView):

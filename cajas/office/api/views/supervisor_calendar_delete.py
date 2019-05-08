@@ -1,8 +1,8 @@
 from rest_framework import generics 
 
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
-from ..models.supervisorCalendar import SupervisorCalendar
-from ..serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
+from cajas.office.models.supervisorCalendar import SupervisorCalendar
+from cajas.office.api.serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 
 
 class SupervisorCalendarDelete(generics.DestroyAPIView):

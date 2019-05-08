@@ -4,7 +4,7 @@ from rest_framework import status
 
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.office.models.officeItems import OfficeItems
-from cajas.office.serializer.office_item_serializer import OfficeItemSerializer
+from cajas.office.api.serializer.office_item_serializer import OfficeItemSerializer
 
 
 class OfficeItemDelete(generics.DestroyAPIView):

@@ -181,8 +181,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h3 class="mb-3">Caja Banco</h3>
                   <h3 class="float-right">SALDO CAJA: $
                     {{ box.balance|intcomma }} COP </h3>
@@ -201,7 +201,7 @@
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y" }}</td>
+                      <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
