@@ -217,7 +217,7 @@
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box_balance office d %}</td>
                         <td>
-                          <ul class="ul-buttons">
+                          <ul class="ul-buttons-partner">
                             {% get_dq_box_id office d as box_id %}
                             {% get_dq_box_is_close office d as box_is_close %}
                             {% if request.user.is_superuser or request.user.is_secretary %}
