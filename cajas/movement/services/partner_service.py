@@ -6,10 +6,11 @@ from django.db.models import Sum
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import PartnerType
-from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.concepts.models.concepts import Concept, ConceptType, CrossoverType, Relationship
 
 from ..models.movement_partner import MovementPartner
 from ..services.don_juan_service import DonJuanManager
+from ..services.office_service import MovementOfficeManager
 
 donjuan_manager = DonJuanManager()
 
@@ -52,32 +53,38 @@ class MovementPartnerManager(object):
             contrapart = 'OUT'
         else:
             contrapart = 'IN'
-        if data['partner'].partner_type == PartnerType.DIRECTO:
-            box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
-            data2 = {
-                'box': box_don_juan,
-                'concept': data['concept'].counterpart,
-                'movement_type': contrapart,
-                'value': data['value'],
-                'detail': data['detail'],
-                'date': data['date'],
-                'responsible': data['responsible'],
-                'ip': data['ip']
-            }
-            movement2 = donjuan_manager.create_movement(data2)
-        elif data['partner'].partner_type == PartnerType.INDIRECTO:
-            box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
-            data2 = {
-                'box': box_direct_partner,
-                'concept': data['concept'].counterpart,
-                'movement_type': contrapart,
-                'value': data['value'],
-                'detail': data['detail'],
-                'date': data['date'],
-                'responsible': data['responsible'],
-                'ip': data['ip']
-            }
-            movement2 = self.create_simple(data2)
+        if data['concept'].relationship == Relationship.OFFICE or \
+           data['concept'].crossover_type == CrossoverType.OFFICE:
+            office_manager = MovementOfficeManager()
+            data['box_office'] = data['partner'].office.box
+            office_manager.create_movement(data)
+        else:
+            if data['partner'].partner_type == PartnerType.DIRECTO:
+                box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
+                data2 = {
+                    'box': box_don_juan,
+                    'concept': data['concept'].counterpart,
+                    'movement_type': contrapart,
+                    'value': data['value'],
+                    'detail': data['detail'],
+                    'date': data['date'],
+                    'responsible': data['responsible'],
+                    'ip': data['ip']
+                }
+                movement2 = donjuan_manager.create_movement(data2)
+            elif data['partner'].partner_type == PartnerType.INDIRECTO:
+                box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
+                data2 = {
+                    'box': box_direct_partner,
+                    'concept': data['concept'].counterpart,
+                    'movement_type': contrapart,
+                    'value': data['value'],
+                    'detail': data['detail'],
+                    'date': data['date'],
+                    'responsible': data['responsible'],
+                    'ip': data['ip']
+                }
+                movement2 = self.create_simple(data2)
         return movement1
 
     def create_simple_double(self, data):
