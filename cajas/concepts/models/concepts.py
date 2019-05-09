@@ -95,3 +95,4 @@ class Concept(models.Model):
 
     class Meta:
         verbose_name = 'Concepto'
+        ordering = ['name']
