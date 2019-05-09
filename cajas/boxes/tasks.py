@@ -24,13 +24,15 @@ def daily_square_state():
     domain = Site.objects.get_current().domain
     daily_squares = User.objects.filter(is_daily_square=True)
     for user in daily_squares:
-        if not user.related_daily_box.get().is_closed:
-            email_manager.send_close_box_mail(domain, user.email)
-            logger.info(
-                'Open daily square box "%s"' % user.related_daily_box.get()
-            )
-        else:
-            BoxDailySquare.objects.filter(pk=user.related_daily_box.get().pk).update(is_closed=False)
-            logger.info(
-                'Reseted daily square box "%s"' % user.related_daily_box.get()
-            )
+        daily_box_user = user.related_daily_box.all()
+        for box in daily_box_user:
+            if not box.is_closed:
+                email_manager.send_close_box_mail(domain, user.email)
+                logger.info(
+                    'Open daily square box "%s"' % box
+                )
+            else:
+                BoxDailySquare.objects.filter(pk=user.related_daily_box.get().pk).update(is_closed=False)
+                logger.info(
+                    'Reseted daily square box "%s"' % box
+                )
