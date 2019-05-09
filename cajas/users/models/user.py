@@ -54,6 +54,3 @@ class User(AbstractUser):
         if self.related_employee.get().charge == secretary:
             return True
         return False
-
-    def is_super_user(self):
-        return self.is_superuser

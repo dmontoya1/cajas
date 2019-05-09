@@ -16,12 +16,12 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(MovementBetweenOfficesRequire, self).get_context_data(**kwargs)
         user = self.request.user
-        if user.is_secretary:
+        if user.is_superuser:
+            movements = MovementBetweenOfficeRequest.objects.all()
+        elif user.is_secretary:
             for office in user.related_employee.get().office.all():
                 movements = MovementBetweenOfficeRequest.objects.filter(
                     box_office__office__office=office
                 )
-        elif user.is_superuser:
-            movements = MovementBetweenOfficeRequest.objects.all()
         context['movements'] = movements
         return context

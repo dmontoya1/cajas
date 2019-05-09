@@ -189,7 +189,7 @@
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_super_user %}
+                        {% if request.user.is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}
@@ -209,7 +209,7 @@
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_super_user %}
+                        {% if request.user.is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}
