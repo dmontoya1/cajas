@@ -24,6 +24,7 @@ class MovementOfficeCreate(generics.CreateAPIView):
         data = request.POST.copy()
         office = get_object_or_404(OfficeCountry, slug=self.kwargs['slug'])
         data['office'] = office
+        data['box_office'] = office.box
         data['ip'] = get_ip(request)
         data['responsible'] = request.user
         movement_office_manager = MovementOfficeManager()

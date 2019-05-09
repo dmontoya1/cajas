@@ -66,7 +66,7 @@ class MovementOfficeManager(object):
     def create_movement(self, data):
         self.__validate_data(data)
         movement = MovementOffice.objects.create(
-            box_office=data['office'].box,
+            box_office=data['box_office'],
             concept=data['concept'],
             movement_type=data['movement_type'],
             value=data['value'],
