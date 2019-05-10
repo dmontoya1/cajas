@@ -27,7 +27,6 @@ def daily_square_state():
         daily_box_user = user.related_daily_box.all()
         for box in daily_box_user:
             if not box.is_closed:
-                email_manager.send_close_box_mail(domain, user.email)
                 logger.info(
                     'Open daily square box "%s"' % box
                 )
