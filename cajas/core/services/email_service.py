@@ -111,7 +111,7 @@ class EmailManager(object):
             "action": "Ir a la plataforma"
         }
         subject = "Notificación de cambio de salario"
-        self.send_email(url, ctx, subject, self.email_to)
+        self.send_email(ctx, subject, self.email_to)
 
     def send_informative_top_notification(self, user, concept):
         domain = Site.objects.get_current().domain
@@ -135,7 +135,7 @@ class EmailManager(object):
                     "action": "Ir a la plataforma"
                 }
                 subject = "Tope informativo"
-                self.send_email(url, ctx, subject, report_user.email)
+                self.send_email(ctx, subject, report_user.email)
 
             employees = Employee.objects.filter(charge=stop.report_by_charge)
             for e in employees:
@@ -147,4 +147,4 @@ class EmailManager(object):
                     "action": "Ir a la plataforma"
                 }
                 subject = "Tope informativo"
-                self.send_email(url, ctx, subject, e.user.email)
+                self.send_email(ctx, subject, e.user.email)
