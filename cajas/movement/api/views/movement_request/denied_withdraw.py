@@ -21,7 +21,6 @@ class DeclineWithdrawMovement(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, format=None):
-        print(request.data)
         movement = get_object_or_404(MovementWithdraw, pk=request.data['movement_id'])
         movement.delete()
 

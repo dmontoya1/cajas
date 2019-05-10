@@ -9,6 +9,7 @@ from django.shortcuts import reverse
 from cajas.concepts.models.stops import Stop
 from cajas.users.models.employee import Employee
 
+
 class EmailManager(object):
     template = 'email/email.html'
     email_to = settings.ADMIN_EMAIL
@@ -18,7 +19,10 @@ class EmailManager(object):
         message = EmailMessage(subject, body, settings.EMAIL_USER,
                                [email_to])
         message.content_subtype = 'html'
-        message.send()
+        try:
+            message.send()
+        except Exception as e:
+            print(e)
 
     def send_stop_email(self, request):
 

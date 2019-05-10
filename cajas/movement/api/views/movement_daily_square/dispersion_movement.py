@@ -25,7 +25,6 @@ class DispersionMovement(APIView):
 
     def post(self, request, format=None):
         try:
-            print("DISPERSION", request.data)
             movement = get_object_or_404(MovementDailySquare, pk=request.data['id'])
             counter = request.data['counter'] / 2
             counter = int(counter)

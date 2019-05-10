@@ -27,7 +27,7 @@ class ReportDebt(APIView):
                 loan_value = loans['value__sum']
                 units = partner.related_units.all()
                 for u in units:
-
+                    pass
         if office_country:
             pass
         elif office:
