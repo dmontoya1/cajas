@@ -38,6 +38,7 @@ from .views.partner_unit import PartnerUnitsList
 from .views.provisioning import Provisioning
 from .views.reports import Reports
 from .views.report_accounts_payable import ReportAccountPayable
+from .views.report_debt import ReportDebt
 from .views.report_actives import ReportActives
 from .views.units_list import UnitsList
 
@@ -58,6 +59,7 @@ urlpatterns = [
     path("reports/", Reports.as_view(), name='reports'),
     path("report-account-payable/", ReportAccountPayable.as_view(), name='report_account_payable'),
     path("report-actives/", ReportActives.as_view(), name='report_actives'),
+    path("report-debt/", ReportDebt.as_view(), name='report_debt'),
 
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),

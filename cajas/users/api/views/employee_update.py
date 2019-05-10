@@ -18,7 +18,6 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         charge = Charge.objects.get(pk=request.data["charge"])
         item = Employee.objects.get(pk=kwargs['pk'])
         user = User.objects.get(pk=item.user.pk)

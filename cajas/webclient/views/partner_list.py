@@ -44,5 +44,4 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
-        print(context)
         return context

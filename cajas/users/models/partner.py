@@ -73,9 +73,10 @@ class Partner(models.Model):
     class Meta:
         verbose_name = 'Socio'
         verbose_name_plural = 'Socios'
+        ordering = ['user__first_name']
 
     def __str__(self):
-        return 'Socio {} ({})'.format(self.get_full_name(), self.code)
+        return '{} ({})'.format(self.get_full_name(), self.code)
 
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
