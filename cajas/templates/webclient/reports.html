@@ -7,23 +7,6 @@
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
   <style>
 
-    .label {
-      padding: 3px 10px;
-      line-height: 13px;
-      color: #ffffff;
-      font-weight: 400;
-      border-radius: 4px;
-      font-size: 75%;
-    }
-
-    .label-success {
-      background-color: #60d3b0;
-    }
-
-    .label-rounded {
-      border-radius: 60px;
-    }
-
     .navbar .navbar-nav li.menu-item-has-children a {
       line-height: 25px !important;
     }
@@ -75,7 +58,7 @@
             = SALDO CAJA SOCIEDAD+SALDO UNIDAD+BASERUTA/DEUDA DE LA SOCIEDAD. Dependiendo del resultado, se debe
             presentar un semáforo de colores, de la siguiente manera: 0-50 VERDE 51-79 AMARILLO 80-100 NARANJA MAYOR DE
             100 ROJO"</p>
-          <a href="#" class="card-link btn-dynamic">Ver informe</a>
+          <a href="{% url 'webclient:report_debt' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
     </div>
