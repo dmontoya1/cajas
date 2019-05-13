@@ -226,6 +226,7 @@
 
     $('.filter-report').on('click', function (e) {
       e.preventDefault()
+      $('.chart-row').empty()
       filter = $(this)
       filter.removeClass('filter-report')
       filter.text('')

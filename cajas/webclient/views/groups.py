@@ -31,8 +31,8 @@ class Groups(LoginRequiredMixin, TemplateView):
             office_country=office
         )
         existing_admins = Group.objects.filter(
-            ~Q(related_group=None),
-            admin__office=office.office
+            Q(admin__office=office.office) |
+            Q(admin__office_country=office)
         )
         context['office'] = office
         context['admins'] = admin
