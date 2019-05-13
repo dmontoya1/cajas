@@ -26,12 +26,12 @@ class Groups(LoginRequiredMixin, TemplateView):
             Q(related_group_supervisor=None) &
             (Q(office_country=office) |
              Q(office=office.office))
-        )
+        ).order_by('user__first_name')
         admin = Employee.objects.filter(
             Q(group=None) &
             (Q(office_country=office) |
              Q(office=office.office))
-        )
+        ).order_by('user__first_name')
         existing_admins = Group.objects.filter(
             Q(admin__office=office.office) |
             Q(admin__office_country=office)
