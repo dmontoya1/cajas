@@ -21,4 +21,6 @@ class OfficeColombia(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['box'] = get_object_or_404(BoxColombia, name='Caja Colombia')
         context['office'] = office
+        context['offices'] = OfficeCountry.objects.all()
+
         return context
