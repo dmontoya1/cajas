@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Sum
 
 from enumfields import EnumField
 from enumfields import Enum
@@ -87,14 +86,6 @@ class Loan(models.Model):
             self.lender.get_full_name(),
             self.balance
         )
-
-    def save(self, *args, **kwargs):
-        if self.pk:
-            loans = self.related_payments.all().aggregate(Sum('value'))
-            self.balance = self.value - loans['value__sum']
-        else:
-            self.balance = self.value
-        super(Loan, self).save(*args, **kwargs)
 
     def get_interest_payment(self):
         """Obtiene el pago del interes mensual del prestamo

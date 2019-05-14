@@ -3576,6 +3576,14 @@ button.add-movement, button.add-movement-button {
   font-size: 0.8em;
 }
 
+button.add-loan {
+  background-color: var(--green-box);
+  color: #fff;
+  border-radius: 10px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+}
+
 .close-box-dq {
   background-color: #f16975;
   color: #fff;

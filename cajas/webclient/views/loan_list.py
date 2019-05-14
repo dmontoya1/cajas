@@ -1,6 +1,7 @@
 
 from datetime import datetime
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -33,7 +34,10 @@ class LoanList(LoginRequiredMixin, TemplateView):
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['loans'] = Loan.objects.filter(office=office)
                 context['partners'] = Partner.objects.filter(office=office)
-                context['employees'] = Employee.objects.filter(office_country=office, office=office.office)
+                context['employees'] = Employee.objects.filter(
+                    Q(user__is_active=True) &
+                    (Q(office_country=office) | Q(office=office.office))
+                )
                 now = datetime.now()
                 context['exchange'] = get_object_or_none(
                     Exchange,

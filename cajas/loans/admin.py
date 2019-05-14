@@ -1,14 +1,13 @@
 from django.contrib import admin
 
-from .models.loan import Loan
-from .models.loan_payments import LoanPayment
+from .models import Loan, LoanHistory
 
 
-class LoanPaymentStacked(admin.StackedInline):
+class LoanHistoryStacked(admin.StackedInline):
     """
     """
 
-    model = LoanPayment
+    model = LoanHistory
     extra = 0
 
 
@@ -20,4 +19,4 @@ class LoanAdmin(admin.ModelAdmin):
     list_display = ('provider', 'lender', 'value', 'balance')
     search_list = ('provider', 'lender')
     search_fields = ('provider__first_name', 'provider__last_name', 'lender__first_name', 'lender__last_name')
-    inlines = [LoanPaymentStacked, ]
+    inlines = [LoanHistoryStacked, ]
