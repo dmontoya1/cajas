@@ -55,7 +55,7 @@ class LoanManager(object):
                 interest=data['interest'],
                 time=time,
                 exchange=data['exchange'],
-                balance=data['value']
+                balance=0
             )
             LoanHistory.objects.create(
                 loan=loan,
@@ -123,7 +123,7 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=data['value']
+                    balance=0
                 )
                 data_mov['box'] = provider.box
                 data_mov['partner'] = provider
@@ -140,7 +140,7 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=data['value']
+                    balance=0
                 )
                 data_mov['box'] = BoxDonJuan.objects.get(office=office)
                 movement = donjuan_manager.create_movement(data_mov)
@@ -154,7 +154,7 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=data['value']
+                    balance=0
                 )
                 data_mov['box_office'] = office.box
                 movement = movement_office_manager.create_movement(data_mov)
@@ -202,7 +202,7 @@ class LoanManager(object):
                 interest=data['interest'],
                 time=data['time'],
                 exchange=data['exchange'],
-                balance=data['value']
+                balance=0
             )
             LoanHistory.objects.create(
                 loan=loan,
