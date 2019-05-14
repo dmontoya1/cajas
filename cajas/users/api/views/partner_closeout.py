@@ -16,7 +16,7 @@ from cajas.chains.models.chain_place import ChainPlace
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.investments.models.investment import Investment
 from cajas.loans.models.loan import Loan, LoanType
-from cajas.loans.models.loan_payments import LoanPayment
+from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
 from cajas.webclient.views.get_ip import get_ip
@@ -190,7 +190,7 @@ class PartnerCloseout(APIView):
                             responsible=request.user,
                             ip=get_ip(request)
                         )
-                    LoanPayment.objects.create(
+                    LoanHistory.objects.create(
                         loan=loan,
                         value=loan.balance,
                         date=datetime.now()
@@ -230,7 +230,7 @@ class PartnerCloseout(APIView):
                             responsible=request.user,
                             ip=get_ip(request)
                         )
-                    LoanPayment.objects.create(
+                    LoanHistory.objects.create(
                         loan=loan,
                         value=loan.balance,
                         date=datetime.now()

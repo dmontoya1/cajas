@@ -426,7 +426,6 @@
       $('.btn-add-movement').attr('disabled', true)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
-      console.log(data_send)
       if ($("#method_modal").val() === "add") {
         axios.post(`/api/movements/${'{{office.slug}}'}/movement-don-juan-create/`, data_send)
           .then(function (response) {
