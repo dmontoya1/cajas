@@ -26,7 +26,10 @@ class Home(LoginRequiredMixin, TemplateView):
         if not self.request.user.is_superuser:
             try:
                 if user.related_employee.get().is_admin_charge():
-                    context['offices'] = user.related_employee.get().office.all()
+                    if user.related_employee.get().office.all().exists():
+                        context['offices'] = user.related_employee.get().office.all()
+                    else:
+                        context['offices_country'] = user.related_employee.get().office_country.all()
                 else:
                     context['offices'] = user.related_employee.get().office_country.all()
             except Exception as e:
@@ -36,4 +39,5 @@ class Home(LoginRequiredMixin, TemplateView):
             context['offices'] = Office.objects.all()
             context['all_offices'] = OfficeCountry.objects.all().order_by('office')
             context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        print("Contexto -->", context)
         return context
