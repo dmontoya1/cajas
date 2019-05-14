@@ -16,6 +16,7 @@ from cajas.movement.models.movement_office import MovementOffice
 from cajas.movement.services.box_colombia_service import MovementBoxColombiaManager
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.don_juan_usd_service import DonJuanUSDManager
+from cajas.movement.services.movement_between_office_service import MovementBetweenOfficesManager
 from cajas.office.models.notifications import Notifications
 from cajas.office.models.officeCountry import OfficeCountry
 
@@ -52,21 +53,10 @@ class CreateDonJuanMovement(View):
         movement = donjuan_manager.create_movement(data)
         if "destine_office" in request.POST:
             destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
-            if request.POST['movement_type'] == 'OUT':
-                contrapart = 'IN'
-            else:
-                contrapart = 'OUT'
-            mv = MovementBetweenOfficeRequest.objects.create(
-                box_office=destine_office.box,
-                observation=request.POST['detail'],
-                detail=request.POST['detail'],
-                concept=concept,
-                movement_type=contrapart,
-                date=request.POST['date'],
-                value=request.POST['value'],
-                responsible=request.user,
-                ip=ip,
-            )
+            data['destine_office'] = destine_office
+            data['concept'] = concept
+            movement_between_office_manager = MovementBetweenOfficesManager()
+            movement_between_office_manager.create_between_offices_movement_request(data)
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
                 email_manager.send_office_mail(request, secretary.user.email)
