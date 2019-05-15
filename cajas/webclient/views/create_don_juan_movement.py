@@ -55,6 +55,7 @@ class CreateDonJuanMovement(View):
             destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
             data['destine_office'] = destine_office
             data['concept'] = concept
+            data['office'] = office
             movement_between_office_manager = MovementBetweenOfficesManager()
             movement_between_office_manager.create_between_offices_movement_request(data)
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()

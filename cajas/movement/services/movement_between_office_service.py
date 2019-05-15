@@ -28,7 +28,7 @@ class MovementBetweenOfficesManager(object):
         self, origin_value,
         origin_office, destine_office
     ):
-        if origin_office.country == destine_office.country:
+        if origin_office.country.abbr == destine_office.country.abbr:
             return origin_value
         ex_destine = Exchange.objects.get(currency=destine_office.country.currency)
         if destine_office.country.abbr == "COL":
