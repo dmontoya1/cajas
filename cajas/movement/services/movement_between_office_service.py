@@ -15,30 +15,11 @@ class MovementBetweenOfficesManager(object):
             contrapart = 'IN'
         else:
             contrapart = 'OUT'
-        converted_value = self.movement_currency_value_convertion(
-            data['value'], data['office'],
-            data['destine_office']
-        )
+
         self.create_between_offices_movement_request_instance(
             data, concept, contrapart,
-            converted_value, data['destine_office']
+            data['value'], data['destine_office']
         )
-
-    def movement_currency_value_convertion(
-        self, origin_value,
-        origin_office, destine_office
-    ):
-        if origin_office.country.abbr == destine_office.country.abbr:
-            return origin_value
-        ex_destine = Exchange.objects.get(currency=destine_office.country.currency)
-        if destine_office.country.abbr == "COL":
-            return float(ex_destine.exchange_cop)*float(origin_value)
-        elif origin_office.country.abbr != "COL":
-            ex_origin = Exchange.objects.get(currency=origin_office.country.currency)
-            origin_to_cop = float(ex_origin.exchange_cop)*float(origin_value)
-            return float(origin_to_cop)/float(ex_destine.exchange_cop)
-        else:
-            return float(origin_value)/float(ex_destine.exchange_cop)
 
     def create_between_offices_movement_request_instance(
         self, data, concept, contrapart,
