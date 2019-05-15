@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -5,6 +7,7 @@ from enumfields import EnumField
 from enumfields import Enum
 
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.users.models import Partner
 
 User = get_user_model()
 
@@ -90,7 +93,24 @@ class Loan(models.Model):
     def get_interest_payment(self):
         """Obtiene el pago del interes mensual del prestamo
         """
-        return (self.balance * self.interest) / 100
+        return int((self.balance * self.interest) / 100)
+
+    def get_interest_actual_month_payment(self):
+        month = datetime.now().month
+        interest = self.related_payments.filter(date__month=month, history_type='IN')
+        if interest.exists():
+            return True
+        return False
+
+    def get_lender_box_balance_positive(self):
+        partner = Partner.objects.filter(user=self.lender, office=self.office).first()
+        if partner:
+            if partner.box.balance > 0:
+                return True
+            else:
+                return False
+        else:
+            return True
 
     class Meta:
         verbose_name = 'Préstamo'
