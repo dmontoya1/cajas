@@ -98,7 +98,7 @@
                       <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
                       <td>{{ m.box_partner.partner }}</td>
                       <td>{{ m.detail }}</td>
-                      <td>{{ m.value }}</td>
+                      <td id="value{{ m.pk }}">{{ m.value }}</td>
                       <td>{{ m.observation }}</td>
                       <td>{{ m.withdraw_reason }}</td>
                       <td>
@@ -161,21 +161,23 @@
 
     $('.accept-mv').on('click', function () {
       id = $(this).data('id')
-      Swal.fire({
-        title: 'Estas Seguro?',
-        text: "Seguro quieres aprobar este retiro?",
-        type: 'warning',
+      
+      const {value: text} = Swal.fire({
+        title: 'Se han recibido \n $ ' + $(`#value${id}`).text(),
+        text: 'escribe el valor en la moneda de tu país',
+        input: 'number',
+        inputPlaceholder: '$',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Si, Aprobar',
-        cancelButtonText: 'Cancelar',
-        reverseButtons: true,
-        allowOutsideClick: false
+        inputValidator: (value) => {
+          return !value && 'Debes escribir el valor en la moneda de tu país'
+        },
+        allowOutsideClick: false,
+        showCloseButton: true
       }).then((result) => {
         if (result.value) {
           axios.post('{% url "api:movements:accept_between_office_request" %}', {
             movement_id: id,
+            value: result.value
           })
             .then(function (response) {
               Swal.fire({
