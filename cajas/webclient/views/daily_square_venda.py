@@ -1,4 +1,4 @@
-from datetime import datetime, time, timedelta
+from datetime import datetime, time, timedelta, timezone
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
@@ -28,7 +28,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         withdraw_concept = get_object_or_404(Concept, name="Retiro unidad")
         investment_concept = get_object_or_404(Concept, name="Inversión Unidad")
-        today = datetime.now().date()
+        today = datetime.now().date() - timedelta(days=1)
         tomorrow = today + timedelta(1)
         today_start = datetime.combine(today, time())
         today_end = datetime.combine(tomorrow, time())
