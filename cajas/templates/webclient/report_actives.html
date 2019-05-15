@@ -226,7 +226,7 @@
                 `
               )
             });
-            var table = $('#table').DataTable({
+            $('#table').DataTable({
               responsive: {
                 details: true
               },
@@ -262,7 +262,6 @@
                 }
               }
             })
-            $('#table').removeClass('d-none')
           })
           .catch(function (error) {
             // handle error
