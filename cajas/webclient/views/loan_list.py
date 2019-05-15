@@ -33,7 +33,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
                 context['loans'] = Loan.objects.filter(office=office)
-                context['partners'] = Partner.objects.filter(office=office)
+                context['partners'] = Partner.objects.filter(office=office, is_active=True)
                 context['employees'] = Employee.objects.filter(
                     Q(user__is_active=True) &
                     (Q(office_country=office) | Q(office=office.office))
