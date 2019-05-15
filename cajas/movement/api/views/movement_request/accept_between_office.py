@@ -31,7 +31,7 @@ class AcceptBetweenOfficeMovement(APIView):
             'concept': movement.concept.counterpart,
             'date': movement.date,
             'movement_type': movement.movement_type,
-            'value': movement.value,
+            'value': request.data['value'],
             'detail': movement.detail,
             'responsible': movement.responsible,
             'ip': movement.ip,
