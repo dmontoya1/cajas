@@ -10,19 +10,44 @@
       line-height: 25px !important;
     }
 
-    tr.td-investment {
-      color: #7dd1af !important;
-      font-weight: bold;
+    .outer .chart-container {
+      width: 300px;
+      float: left;
+      height: 200px;
     }
 
-    tr.td-loans {
-      color: #49afa0 !important;
-      font-weight: bold;
+    .highcharts-yaxis-grid .highcharts-grid-line {
+      display: none;
     }
 
-    tr.td-chain {
-      color: #3b5f48;
-      font-weight: bold;
+    @media (max-width: 600px) {
+      .outer {
+        width: 100%;
+        height: 400px;
+      }
+
+      .outer .chart-container {
+        width: 300px;
+        float: none;
+        margin: 0 auto;
+      }
+    }
+
+    .loader {
+      border-radius: 50%;
+      width: 65px;
+      height: 65px;
+      animation: spin 2s linear infinite;
+      margin-top: 15px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   </style>
 {% endblock %}
@@ -41,7 +66,7 @@
     </li>
     {% if request.user.is_superuser %}
       <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:reports' %}" >
+        <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
         </a>
@@ -100,11 +125,11 @@
                       </select>
                     </div>
                     <div class="col">
-                      <label for="brand">Marca</label>
-                      <select id="brand" class="form-control">
-                        <option selected disabled>Selecciona una marca</option>
-                        {% for b in brands %}
-                          <option value="{{ b.pk }}">{{ b }}</option>
+                      <label for="employee">Empleado</label>
+                      <select id="employee" class="form-control">
+                        <option selected disabled>Selecciona un empleado</option>
+                        {% for e in employees %}
+                          <option value="{{ e.pk }}">{{ e }} ({{ e.charge }})</option>
                         {% endfor %}
                       </select>
                     </div>
@@ -116,9 +141,10 @@
                   <thead>
                   <tr>
                     <th>Nombre</th>
-                    <th>Marca</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
+                    <th>Fecha Inicial</th>
+                    <th>Fecha Final</th>
+                    <th>Recaudo Total</th>
+                    <th>Sueldo</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -136,11 +162,15 @@
 
 
 {% block extra_js %}
-
+  <script src="{% static 'js/jquery.priceformat.min.js' %}"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('.filter-report').on('click', function (e) {
         e.preventDefault()
+        filter = $(this)
+        filter.removeClass('filter-report')
+        filter.text('')
+        filter.addClass('loader')
         params = {}
         if ($('#country').val()) {
           params['country'] = $('#country').val()
@@ -151,10 +181,10 @@
         if ($('#office_country').val()) {
           params['office_country'] = $('#office_country').val()
         }
-        if ($('#brand').val()) {
-          params['brand'] = $('#brand').val()
+        if ($('#employee').val()) {
+          params['employee'] = $('#employee').val()
         }
-        axios.get("{% url 'api:reports:report_active' %}", {
+        axios.get("{% url 'api:reports:report_employee_salary' %}", {
           params
         })
           .then(function (response) {
@@ -169,7 +199,7 @@
               buttons: [
                 'excel', 'print'
               ],
-              "order": [[1, "asc"]],
+              "order": [[0, "asc"]],
               language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -198,30 +228,18 @@
             try {
               table.clear()
               table.destroy();
-            }
-            catch (e) {
+            } catch (e) {
               console.log(e)
             }
-            $.each(data.office_items, function (index, value) {
-              $('tbody').append(
+            $.each(data, function (index, value) {
+              $('#table tbody').append(
                 `
                   <tr>
-                    <td>${value.name}</td>
-                    <td>${value.brand.category.name} ${value.brand.name}</td>
-                    <td>$${value.price}</td>
-                    <td>${value.description}</td>
-                  </tr>
-                `
-              )
-            });
-            $.each(data.unit_items, function (index, value) {
-              $('tbody').append(
-                `
-                  <tr>
-                    <td>${value.name}</td>
-                    <td>${value.brand.category.name} ${value.brand.name}</td>
-                    <td>$${value.price}</td>
-                    <td>${value.description}</td>
+                    <td>${value.employee}</td>
+                    <td>${value.init_date}</td>
+                    <td>${value.end_date}</td>
+                    <td>$ <span class="price-format">${value.total_collection}</span></td>
+                    <td>$ <span class="price-format">${value.value}</span></td>
                   </tr>
                 `
               )
@@ -236,7 +254,7 @@
               buttons: [
                 'excel', 'print'
               ],
-              "order": [[1, "asc"]],
+              "order": [[0, "asc"]],
               language: {
                 "sProcessing": "Procesando...",
                 "sLengthMenu": "Mostrar _MENU_ registros",
@@ -262,10 +280,22 @@
                 }
               }
             })
+            $('#table').removeClass('d-none')
+            filter.removeClass('loader')
+            filter.text('Filtrar')
+            filter.addClass('filter-report')
+            $('.price-format').priceFormat({
+                centsLimit: 2,
+                prefix: '',
+                thousandsSeparator: '.',
+            });
           })
           .catch(function (error) {
             // handle error
             console.log(error);
+            filter.removeClass('loader')
+            filter.text('Filtrar')
+            filter.addClass('filter-report')
           })
       })
     });

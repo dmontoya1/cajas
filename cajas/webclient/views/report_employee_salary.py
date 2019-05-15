@@ -2,10 +2,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from cajas.inventory.models.brand import Brand
 from cajas.general_config.models.country import Country
 from cajas.office.models.office import Office
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.users.models import Employee
 
 
 class ReportEmployeeSalary(LoginRequiredMixin, TemplateView):
@@ -20,7 +20,7 @@ class ReportEmployeeSalary(LoginRequiredMixin, TemplateView):
         context['countries'] = Country.objects.all()
         context['offices'] = Office.objects.all()
         context['offices_country'] = OfficeCountry.objects.all()
-        context['brands'] = Brand.objects.all()
+        context['employees'] = Employee.objects.filter(user__related_collector_units__isnull=False).distinct()
         return context
 
 
