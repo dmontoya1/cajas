@@ -36,13 +36,13 @@ services:
     ports: []
     command: /start-celeryworker.sh
 
-    celery_beat:
-      <<: *django
-      depends_on:
-        - django
-        - nginx
-      ports: []
-      command: /start-celerybeat.sh
+  celery_beat:
+    <<: *django
+    depends_on:
+      - django
+      - nginx
+    ports: []
+    command: /start-celerybeat.sh
 
-    redis:
-      image: redis:3.2
+  redis:
+    image: redis:3.2
