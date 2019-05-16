@@ -1,4 +1,6 @@
-from datetime import datetime, time, timedelta, timezone
+import requests
+
+from datetime import datetime, time, timedelta, date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
@@ -34,20 +36,22 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         today_end = datetime.combine(tomorrow, time())
         total_withdraws = 0
         total_investments = 0
-        withdraws = MovementDailySquare.objects.filter(
+        withdraws_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=withdraw_concept,
             date__lte=today_end,
             date__gte=today_start
         )
-        investments = MovementDailySquare.objects.filter(
+        investments_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=investment_concept,
             date__lte=today_end,
             date__gte=today_start
         )
-        withdraws_total = withdraws.aggregate(Sum('value'))
-        investments_total = investments.aggregate(Sum('value'))
+        withdraws_list = self.get_venda_withdraws(withdraws_movements, user)
+        investments_list = self.get_venda_investments(investments_movements, user)
+        withdraws_total = withdraws_movements.aggregate(Sum('value'))
+        investments_total = investments_movements.aggregate(Sum('value'))
         if withdraws_total['value__sum']:
             total_withdraws = withdraws_total['value__sum']
         if investments_total['value__sum']:
@@ -55,8 +59,92 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         context['box'] = box_daily_square
         context['office'] = office
         context['box_user'] = user
-        context['withdraws'] = withdraws
-        context['investments'] = investments
+        context['withdraws'] = withdraws_movements
+        context['investments'] = investments_movements
+        context['withdraws_list'] = withdraws_list
+        context['withdraws_list_total'] = self.get_venda_withdraws_total(withdraws_list)
+        context['investments_list'] = investments_list
+        context['investments_list_total'] = self.get_venda_investments_total(investments_list)
         context['withdraws_total'] = total_withdraws
         context['investments_total'] = total_investments
         return context
+
+    def login(self):
+        login = requests.get('http://external.vnmas.net/api/Session/Login/c184Ext/Gj7uQU')
+        login = login.json()
+        return login[0]['data'][0]['user']['token']
+
+    def get_venda_withdraws(self, withdraws_movements, user):
+        withdraws_list = list()
+        now = date.today()
+        today = now.strftime('%Y%m%d')
+        yesterday = now - timedelta(days=1)
+        yesterday = yesterday.strftime('%Y%m%d')
+        token = self.login()
+        for w in withdraws_movements:
+            withdraws = requests.get(
+                'http://external.vnmas.net/api/Vmas/GetWithdraws/{}/{}/{}/{}'.format(
+                    token,
+                    yesterday,
+                    today,
+                    w.unit.name,
+                )
+            )
+            try:
+                withdraws = withdraws.json()
+                if len(withdraws) > 0:
+                    withdraws_values = withdraws[0]['data']
+                    for i in withdraws_values:
+                        withdraw = i['withdrawal']
+                        if user.pk == int(withdraw['comment']):
+                            values = dict()
+                            values['route'] = withdraw['route']
+                            values['date'] = withdraw['date']
+                            values['comment'] = withdraw['comment']
+                            values['value'] = withdraw['value']
+                            withdraws_list.append(values)
+            except:
+                pass
+        return withdraws_list
+
+    def get_venda_investments(self, investments_movements, user):
+        investments_list = list()
+        now = date.today()
+        today = now.strftime('%Y%m%d')
+        yesterday = now - timedelta(days=1)
+        yesterday = yesterday.strftime('%Y%m%d')
+        token = self.login()
+        for i in investments_movements:
+            investments = requests.get(
+                'http://external.vnmas.net/api/Vmas/GetInvestments/{}/{}/{}/{}'.format(
+                    token,
+                    yesterday,
+                    today,
+                    i.unit.name,
+                )
+            )
+            investments = investments.json()
+            if len(investments) > 0:
+                investments_values = investments[0]['data']
+                for j in investments_values:
+                    investment = j['investment']
+                    if user.pk == int(investment['comment']):
+                        values = dict()
+                        values['route'] = investment['route']
+                        values['date'] = investment['date']
+                        values['comment'] = investment['comment']
+                        values['value'] = investment['value']
+                        investments_list.append(values)
+        return investments_list
+
+    def get_venda_withdraws_total(self, withdraws):
+        total_withdraws = 0
+        for w in withdraws:
+            total_withdraws += int(w['value'])
+        return total_withdraws
+
+    def get_venda_investments_total(self, investments):
+        total_investments = 0
+        for i in investments:
+            total_investments += int(i['value'])
+        return total_investments
