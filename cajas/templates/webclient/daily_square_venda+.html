@@ -313,6 +313,7 @@
     let today = d.getFullYear() + '' +
       (month<10 ? '0' : '') + month + '' +
       (day<10 ? '0' : '') + day;
+    let yesterday = today - 1
 
     function get_investments(route) {
       let token;
@@ -320,15 +321,16 @@
         .then((response) => {
           data = response.data
           token = data[0].data[0].user.token
-          axios.get(`${api_venda_url}/api/Vmas/GetInvestments/${token}/${today}/${today}/${route}/`)
+          axios.get(`${api_venda_url}/api/Vmas/GetInvestments/${token}/${yesterday}/${today}/${route}/`)
             .then((response) => {
-              data = response.data
+              data = response.data[0]['data']
               if (data.length > 0){
                 let total = parseInt($('#total-investment').text())
-                let investments = data[0].data
-                $.each(investments, function( k, v ) {
+                $.each(data, function( k, v ) {
                   let value = v.investment
-                  if (value.comment === '{{ box_user.pk }}'){
+                  console.log(value.comment, '{{ box_user.pk }}')
+                  if (value.comment === 'box_user.pk'){
+                    console.log("Comment es igual")
                     total += parseInt(value.value)
                     $('.venda_investments').prepend(
                       `
@@ -340,6 +342,9 @@
                         </tr>
                       `
                     )
+                  }
+                  else{
+                    console.log("Coment no es igual")
                   }
                 });
                 $('#total-investment').text(total)
