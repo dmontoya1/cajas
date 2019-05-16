@@ -21,9 +21,7 @@ class ReportDebt(APIView):
         office_country_pk = request.query_params.get('office_country', None)
         office_pk = request.query_params.get('office', None)
         partner_pk = request.query_params.get('partner', None)
-        login = requests.get('http://external.vnmas.net/api/Session/Login/c184Ext/Gj7uQU')
-        login = login.json()
-        token = login[0]['data'][0]['user']['token']
+        token = self.login()
         now = date.today()
         today = now.strftime('%Y%m%d')
         if partner_pk:
@@ -155,3 +153,8 @@ class ReportDebt(APIView):
             data,
             safe=False
         )
+
+    def login(self):
+        login = requests.get('http://external.vnmas.net/api/Session/Login/c184Ext/Gj7uQU')
+        login = login.json()
+        return login[0]['data'][0]['user']['token']
