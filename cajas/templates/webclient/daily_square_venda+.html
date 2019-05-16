@@ -404,6 +404,7 @@
     }
 
     $(document).ready(function () {
+
       {% for i in investments %}
         get_investments('{{ i.unit.name }}')
       {% endfor %}
