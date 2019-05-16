@@ -329,7 +329,7 @@
                 $.each(data, function( k, v ) {
                   let value = v.investment
                   console.log(value.comment, '{{ box_user.pk }}')
-                  if (value.comment === 'box_user.pk'){
+                  if (value.comment == 'box_user.pk'){
                     console.log("Comment es igual")
                     total += parseInt(value.value)
                     $('.venda_investments').prepend(
