@@ -57,6 +57,7 @@ class MovementPartnerManager(object):
            data['concept'].crossover_type == CrossoverType.OFFICE:
             office_manager = MovementOfficeManager()
             data['box_office'] = data['partner'].office.box
+            data['movement_type'] = contrapart
             office_manager.create_movement(data)
         else:
             if data['partner'].partner_type == PartnerType.DIRECTO:
@@ -71,7 +72,7 @@ class MovementPartnerManager(object):
                     'responsible': data['responsible'],
                     'ip': data['ip']
                 }
-                movement2 = donjuan_manager.create_movement(data2)
+                donjuan_manager.create_movement(data2)
             elif data['partner'].partner_type == PartnerType.INDIRECTO:
                 box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
                 data2 = {
@@ -84,7 +85,7 @@ class MovementPartnerManager(object):
                     'responsible': data['responsible'],
                     'ip': data['ip']
                 }
-                movement2 = self.create_simple(data2)
+                self.create_simple(data2)
         return movement1
 
     def create_simple_double(self, data):
