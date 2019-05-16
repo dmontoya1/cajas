@@ -41,7 +41,7 @@ class CreateWithdrawMovement(APIView):
         }
         if request.user.related_daily_box and request.user.is_daily_square:
             office = get_object_or_404(OfficeCountry, pk=self.request.session['office'])
-            box_daily_square = BoxDailySquare.objects.ge(user=request.user, office=office)
+            box_daily_square = BoxDailySquare.objects.get(user=request.user, office=office)
             data['box'] = box_daily_square
             daily_square_manager = MovementDailySquareManager()
             daily_square_manager.create_movement(data)

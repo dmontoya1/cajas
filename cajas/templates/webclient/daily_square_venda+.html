@@ -188,7 +188,7 @@
 
                   {% for w in withdraws %}
                     <tr>
-                      <td>{{ w.unit }}</td>
+                      <td>{{ w.unit.name }}</td>
                       <td>{{ w.date }}</td>
                       <td>$ {{ w.value|intcomma }}</td>
                     </tr>
@@ -220,7 +220,7 @@
 
                   {% for i in investments %}
                     <tr>
-                      <td>{{ i.unit }}</td>
+                      <td>{{ i.unit.name }}</td>
                       <td>{{ i.date }}</td>
                       <td>$ {{ i.value|intcomma }}</td>
                     </tr>
