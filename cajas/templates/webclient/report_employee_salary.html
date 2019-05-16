@@ -165,139 +165,146 @@
   <script src="{% static 'js/jquery.priceformat.min.js' %}"></script>
   <script type="text/javascript">
     $(document).ready(function () {
-      $('.filter-report').on('click', function (e) {
-        e.preventDefault()
-        filter = $(this)
-        filter.removeClass('filter-report')
-        filter.text('')
-        filter.addClass('loader')
-        params = {}
-        if ($('#country').val()) {
-          params['country'] = $('#country').val()
-        }
-        if ($('#office').val()) {
-          params['office'] = $('#office').val()
-        }
-        if ($('#office_country').val()) {
-          params['office_country'] = $('#office_country').val()
-        }
-        if ($('#employee').val()) {
-          params['employee'] = $('#employee').val()
-        }
-        axios.get("{% url 'api:reports:report_employee_salary' %}", {
-          params
-        })
-          .then(function (response) {
-            data = response.data
-            var table = $('#table').DataTable({
-              responsive: {
-                details: true
+      $('.filter select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+    });
+    $('.filter-report').on('click', function (e) {
+      e.preventDefault()
+      filter = $(this)
+      filter.removeClass('filter-report')
+      filter.text('')
+      filter.addClass('loader')
+      params = {}
+      if ($('#country').val()) {
+        params['country'] = $('#country').val()
+      }
+      if ($('#office').val()) {
+        params['office'] = $('#office').val()
+      }
+      if ($('#office_country').val()) {
+        params['office_country'] = $('#office_country').val()
+      }
+      if ($('#employee').val()) {
+        params['employee'] = $('#employee').val()
+      }
+      axios.get("{% url 'api:reports:report_employee_salary' %}", {
+        params
+      })
+        .then(function (response) {
+          data = response.data
+          var table = $('#table').DataTable({
+            responsive: {
+              details: true
+            },
+            destroy: true,
+            dom: 'lBfrtip',
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            buttons: [
+              'excel', 'print'
+            ],
+            "order": [[0, "asc"]],
+            language: {
+              "sProcessing": "Procesando...",
+              "sLengthMenu": "Mostrar _MENU_ registros",
+              "sZeroRecords": "No se encontraron resultados",
+              "sEmptyTable": "Ningún dato disponible en esta tabla",
+              "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+              "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+              "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+              "sInfoPostFix": "",
+              "sSearch": "Buscar:",
+              "sUrl": "",
+              "sInfoThousands": ",",
+              "sLoadingRecords": "Cargando...",
+              "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
               },
-              destroy: true,
-              dom: 'lBfrtip',
-              lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-              buttons: [
-                'excel', 'print'
-              ],
-              "order": [[0, "asc"]],
-              language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                  "sFirst": "Primero",
-                  "sLast": "Último",
-                  "sNext": "Siguiente",
-                  "sPrevious": "Anterior"
-                },
-                "oAria": {
-                  "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                  "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                }
+              "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
               }
-            })
-            try {
-              table.clear()
-              table.destroy();
-            } catch (e) {
-              console.log(e)
             }
-            $.each(data, function (index, value) {
-              $('#table tbody').append(
-                `
+          })
+          try {
+            table.clear()
+            table.destroy();
+          } catch (e) {
+            console.log(e)
+          }
+          $.each(data, function (index, value) {
+            $('#table tbody').append(
+              `
                   <tr>
                     <td>${value.employee}</td>
                     <td>${value.init_date}</td>
                     <td>${value.end_date}</td>
                     <td>$ <span class="price-format">${value.total_collection}</span></td>
-                    <td>$ <span class="price-format">${value.value}</span></td>
+                    <td>$ <span">${value.value}</span></td>
                   </tr>
                 `
-              )
-            });
-            $('#table').DataTable({
-              responsive: {
-                details: true
+            )
+          });
+          $('#table').DataTable({
+            responsive: {
+              details: true
+            },
+            destroy: true,
+            dom: 'lBfrtip',
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            buttons: [
+              'excel', 'print'
+            ],
+            "order": [[0, "asc"]],
+            language: {
+              "sProcessing": "Procesando...",
+              "sLengthMenu": "Mostrar _MENU_ registros",
+              "sZeroRecords": "No se encontraron resultados",
+              "sEmptyTable": "Ningún dato disponible en esta tabla",
+              "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+              "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+              "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+              "sInfoPostFix": "",
+              "sSearch": "Buscar:",
+              "sUrl": "",
+              "sInfoThousands": ",",
+              "sLoadingRecords": "Cargando...",
+              "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
               },
-              destroy: true,
-              dom: 'lBfrtip',
-              lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-              buttons: [
-                'excel', 'print'
-              ],
-              "order": [[0, "asc"]],
-              language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix": "",
-                "sSearch": "Buscar:",
-                "sUrl": "",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                  "sFirst": "Primero",
-                  "sLast": "Último",
-                  "sNext": "Siguiente",
-                  "sPrevious": "Anterior"
-                },
-                "oAria": {
-                  "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                  "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                }
+              "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
               }
-            })
-            $('#table').removeClass('d-none')
-            filter.removeClass('loader')
-            filter.text('Filtrar')
-            filter.addClass('filter-report')
-            $('.price-format').priceFormat({
-                centsLimit: 2,
-                prefix: '',
-                thousandsSeparator: '.',
-            });
+            }
           })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-            filter.removeClass('loader')
-            filter.text('Filtrar')
-            filter.addClass('filter-report')
-          })
-      })
-    });
+          $('#table').removeClass('d-none')
+          filter.removeClass('loader')
+          filter.text('Filtrar')
+          filter.addClass('filter-report')
+          $('.price-format').priceFormat({
+            centsLimit: 0,
+            prefix: '',
+            thousandsSeparator: '.',
+
+          });
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+          filter.removeClass('loader')
+          filter.text('Filtrar')
+          filter.addClass('filter-report')
+        })
+    })
+
   </script>
 {% endblock %}
