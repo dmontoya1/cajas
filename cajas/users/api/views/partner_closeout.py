@@ -254,7 +254,7 @@ class PartnerCloseout(APIView):
             )
             if partner.partner_type == PartnerType.DIRECTO:
                 MovementDonJuan.objects.create(
-                    box_partner=BoxDonJuan.objects.filter(office=partner.office),
+                    box_don_juan=BoxDonJuan.objects.filter(office=partner.office),
                     concept=concept.counterpart,
                     movement_type='IN',
                     value=(balance / 3) * 2,

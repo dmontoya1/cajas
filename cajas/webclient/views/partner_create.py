@@ -31,7 +31,6 @@ class PartnerCreate(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         office = OfficeCountry.objects.get(pk=request.POST['office'])
-        # admin_senior = get_object_or_none(Employee, office=office.office, charge__name='Administrador Senior')
         admin_senior = Employee.objects.filter(
             Q(charge__name='Administrador Senior') &
             (Q(office_country=office) |
