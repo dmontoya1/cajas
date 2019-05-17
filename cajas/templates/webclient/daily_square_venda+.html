@@ -173,8 +173,8 @@
             <div class="card">
 
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h1 class="mb-4">Movimientos SAC</h1>
                   <h3 class="mb-4">Retiros</h3>
                   <thead>
@@ -188,7 +188,7 @@
 
                   {% for w in withdraws %}
                     <tr>
-                      <td>{{ w.unit }}</td>
+                      <td>{{ w.unit.name }}</td>
                       <td>{{ w.date }}</td>
                       <td>$ {{ w.value|intcomma }}</td>
                     </tr>
@@ -206,8 +206,8 @@
                 </table>
               </div>
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h3 class="mb-4">Inversiones</h3>
                   <thead>
                   <tr>
@@ -220,7 +220,7 @@
 
                   {% for i in investments %}
                     <tr>
-                      <td>{{ i.unit }}</td>
+                      <td>{{ i.unit.name }}</td>
                       <td>{{ i.date }}</td>
                       <td>$ {{ i.value|intcomma }}</td>
                     </tr>
@@ -241,8 +241,8 @@
           <div class="col-xl-6">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h1 class="mb-4">Movimientos Venda+</h1>
                   <h3 class="mb-4">Retiros</h3>
                   <thead>
@@ -254,12 +254,20 @@
                   </tr>
                   </thead>
                   <tbody class="venda_withdraws">
+                  {% for w in withdraws_list %}
+                    <tr>
+                      <td>{{ w.route }}</td>
+                      <td>{{ w.date }}</td>
+                      <td>{{ w.comment }}</td>
+                      <td>{{ w.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
                   <tr>
                     <td colspan="3">
                       <strong>TOTAL</strong>
                     </td>
                     <td>
-                      <strong>$ <span id="total-withdraws">0</span></strong>
+                      <strong>$ <span id="total-withdraws">{{ withdraws_list_total|intcomma }}</span></strong>
                     </td>
 
                   </tr>
@@ -267,8 +275,8 @@
                 </table>
               </div>
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h3 class="mb-4">Inversiones</h3>
                   <thead>
                   <tr>
@@ -279,13 +287,20 @@
                   </tr>
                   </thead>
                   <tbody class="venda_investments">
-
+                  {% for i in investments_list %}
+                    <tr>
+                      <td>{{ i.route }}</td>
+                      <td>{{ i.date }}</td>
+                      <td>{{ i.comment }}</td>
+                      <td>$ {{ i.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
                   <tr>
                     <td colspan="3">
                       <strong>TOTAL</strong>
                     </td>
                     <td>
-                      <strong>$ <span id="total-investment">0</span></strong>
+                      <strong>$ <span id="total-investment">{{ investments_list_total|intcomma }}</span></strong>
                     </td>
                   </tr>
                   </tbody>
@@ -306,107 +321,6 @@
 
   <script type="text/javascript">
 
-    api_venda_url = 'http://external.vnmas.net'
-    let d = new Date();
-    let month = d.getMonth()+1;
-    let day = d.getDate();
-    let today = d.getFullYear() + '' +
-      (month<10 ? '0' : '') + month + '' +
-      (day<10 ? '0' : '') + day;
-
-    function get_investments(route) {
-      let token;
-      axios.get(`${api_venda_url}/api/Session/Login/c184Ext/Gj7uQU`)
-        .then((response) => {
-          data = response.data
-          token = data[0].data[0].user.token
-          axios.get(`${api_venda_url}/api/Vmas/GetInvestments/${token}/${today}/${today}/${route}/`)
-            .then((response) => {
-              data = response.data
-              if (data.length > 0){
-                let total = parseInt($('#total-investment').text())
-                let investments = data[0].data
-                $.each(investments, function( k, v ) {
-                  let value = v.investment
-                  if (value.comment === '{{ box_user.pk }}'){
-                    total += parseInt(value.value)
-                    $('.venda_investments').prepend(
-                      `
-                        <tr>
-                          <td>${value.route}</td>
-                          <td>${value.date}</td>
-                          <td>${value.comment}</td>
-                          <td>$ ${value.value}</td>
-                        </tr>
-                      `
-                    )
-                  }
-                });
-                $('#total-investment').text(total)
-              }
-            })
-            .catch(function (error) {
-              // handle error
-              console.log(error);
-            })
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    }
-
-    function get_withdraws(route) {
-      let token;
-      axios.get(`${api_venda_url}/api/Session/Login/c184Ext/Gj7uQU`)
-        .then((response) => {
-          data = response.data
-          token = data[0].data[0].user.token
-          axios.get(`${api_venda_url}/api/Vmas/GetWithdrawals/${token}/${today}/${today}/${route}/`)
-            .then((response) => {
-              data = response.data
-              if (data.length > 0){
-                let total = parseInt($('#total-withdraws').text())
-                let withdraw = data[0].data
-                $.each(withdraw, function( k, v ) {
-                  let value = v.withdrawal
-                  if (value.comment === '{{ box_user.pk }}'){
-                    total += parseInt(value.value)
-                    $('.venda_withdraws').prepend(
-                      `
-                        <tr>
-                          <td>${value.route}</td>
-                          <td>${value.date}</td>
-                          <td>${value.comment}</td>
-                          <td>$ ${value.value}</td>
-                        </tr>
-                      `
-                    )
-                  }
-                });
-                $('#total-withdraws').text(total)
-              }
-            })
-            .catch(function (error) {
-              // handle error
-              console.log(error);
-            })
-        })
-        .catch(function (error) {
-          // handle error
-          console.log(error);
-        })
-    }
-
-    $(document).ready(function () {
-      {% for i in investments %}
-        get_investments('{{ i.unit.name }}')
-      {% endfor %}
-      {% for w in withdraws %}
-        get_withdraws('{{ w.unit.name }}')
-      {% endfor %}
-    })
-
-
   </script>
+
 {% endblock %}

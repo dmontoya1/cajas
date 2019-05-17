@@ -20,11 +20,11 @@ class Exchange(models.Model):
         auto_now_add=False,
         help_text='Ingresa el mes en el que tienen validez estas tasas de cambio'
     )
-    exchange_dolar = models.IntegerField(
+    exchange_dolar = models.FloatField(
         'Cambio divisa a Dolar',
         help_text='Tasa de cambio para prestamos, abonos e intereses de la divisa a dolar'
     )
-    exchange_cop = models.IntegerField(
+    exchange_cop = models.FloatField(
         'Factor divisa a Peso Colombiano',
         help_text='Factor de cambio para prestamos, abonos e intereses de la divisa a peso colombiano'
     )

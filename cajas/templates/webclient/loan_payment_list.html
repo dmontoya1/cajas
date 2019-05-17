@@ -166,21 +166,46 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
+                  <div class="row">
+                    <div class="col-md-8">
+                      <h3 class="mb-4">{{ loan }}</h3>
+                    </div>
+                    <div class="col-md-4">
+                      <h3 class="float-right">Balance Prestamo: $
+                        {{ loan.balance }}</h3>
+                      <h4 class="float-right">Porcentaje de Interes:
+                        {{ loan.interest }}%</h4>
+                    </div>
+                  </div>
                   <thead>
-                  <h3 class="mb-4">{{ loan }}</h3>
-                  <h4 class="mb-4">Lista de abonos</h4>
                   <tr>
                     <th>Fecha</th>
-                    <th>Valor del abono</th>
+                    <th>Tipo</th>
+                    <th>Valor Prestamo</th>
+                    <th>Valor Abono/Interes</th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for p in loan.related_payments.all %}
                     <tr>
-                      <td>{{ p.date }}</td>
-                      <td>$ {{ p.value|intcomma }}</td>
+                      <td><span class="d-none">{{ p.date|date:"YMd" }}</span>{{ p.date|date:"d-M-Y" }}</td>
+                      <td>{{ p.get_history_type_display }}</td>
+                      <td>
+                        {% if p.movement_type == 'OUT' %}
+                        -
+                        {% else %}
+                          $ {{ p.value|intcomma }}
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if p.movement_type == 'IN' %}
+                          -
+                        {% else %}
+                          $ {{ p.value|intcomma }}
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -370,15 +395,52 @@
           <form method="POST" class="add-loan-payment">
             {% csrf_token %}
             <input type="hidden" name="loan" id="loan" value="">
+            <input type="hidden" name="history_type" id="history_type" value="AB">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="value">Valor del abono</label>
-                <input class="form-control" type="number" name="value" id="value" value=""
+                <label for="abono_value">Valor del abono</label>
+                <input class="form-control" type="number" name="value" id="abono_value" value=""
                        placeholder="Ingresa el valor a abonar" placeholder="$">
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del abono</label>
-                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;" autocomplete="off">
+                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
+                       style="width: 100%;" autocomplete="off">
+              </div>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-submit">Abonar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Interes -->
+  <div class="modal fade" id="modalAddPayment" role="dialog" aria-labelledby="modalAddPaymentTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Pagar interes</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="add-interest-payment">
+            {% csrf_token %}
+            <input type="hidden" name="loan" id="loan" value="">
+            <input type="hidden" name="history_type" id="history_type" value="IN">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="interest_value">Valor del interes</label>
+                <input class="form-control" type="number" name="value" id="interest_value" value=""
+                       placeholder="Ingresa el valor del interes" placeholder="$">
+              </div>
+              <div class="form-group col-md-6 box-select">
+                <label for="date">Fecha del pago</label>
+                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
+                       style="width: 100%;" autocomplete="off">
               </div>
             </div>
             <hr>
@@ -403,7 +465,7 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "asc"]],
+        "order": [[0, "des"]],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",

@@ -7,15 +7,14 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from cajas.users.models.partner import Partner
+from cajas.boxes.models import BoxDailySquare
 from cajas.concepts.models.concepts import Concept
+from cajas.office.models import OfficeCountry
+from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
 
 from ....services.daily_square_service import MovementDailySquareManager
 from ....services.partner_service import MovementPartnerManager
-
-daily_square_manager = MovementDailySquareManager()
-movement_partner_manager = MovementPartnerManager()
 
 
 class CreateWithdrawMovement(APIView):
@@ -41,13 +40,16 @@ class CreateWithdrawMovement(APIView):
             'chain': None,
         }
         if request.user.related_daily_box and request.user.is_daily_square:
-            box_daily_square = request.user.related_daily_box.get()
+            office = get_object_or_404(OfficeCountry, pk=self.request.session['office'])
+            box_daily_square = BoxDailySquare.objects.get(user=request.user, office=office)
             data['box'] = box_daily_square
-            movement = daily_square_manager.create_movement(data)
+            daily_square_manager = MovementDailySquareManager()
+            daily_square_manager.create_movement(data)
         else:
             data['box'] = partner.box
             data['partner'] = partner
-            movement = movement_partner_manager.create_withdraw_movement_full(data)
+            movement_partner_manager = MovementPartnerManager()
+            movement_partner_manager.create_withdraw_movement_full(data)
 
         return Response(
             'Se ha creado el movimiento exitosamente',

@@ -706,7 +706,11 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[2, "desc"]],
+        {% if request.user.is_superuser or request.user.is_secretary %}
+          "order": [[2, "desc"]],
+        {% else %}
+          "order": [[1, "desc"]],
+        {% endif %}
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
@@ -814,6 +818,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').removeClass('d-none')
+          $("#unit").prop('required', false);
           break;
         case 'Unidad':
           $('.unit-select').removeClass('d-none')
@@ -823,6 +828,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', true);
           break;
         case 'Persona':
           $('.unit-select').addClass('d-none')
@@ -832,6 +838,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', false);
           break;
         case 'País':
           $('.unit-select').addClass('d-none')
@@ -841,6 +848,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', false);
           break;
         case 'Préstamo':
           $('.unit-select').addClass('d-none')
@@ -850,6 +858,7 @@
           $('.loan-select').removeClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', false);
           break;
         case 'Cadena':
           $('.unit-select').addClass('d-none')
@@ -859,6 +868,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').removeClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', false);
           break;
         default:
           $('.unit-select').addClass('d-none')
@@ -868,6 +878,7 @@
           $('.loan-select').addClass('d-none')
           $('.chain-select').addClass('d-none')
           $('.office-select').addClass('d-none')
+          $("#unit").prop('required', false);
       }
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {

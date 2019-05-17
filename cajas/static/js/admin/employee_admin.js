@@ -3,7 +3,11 @@
 
         $('#id_charge').change(function(){
             cargo = $(this).val()
-            if(cargo == '4' || cargo == '6'){
+            if(cargo == '4'){
+                $(".field-office").show();
+                $(".field-office_country").show();
+            }
+            else if (cargo == '6') {
                 $(".field-office").show();
                 $(".field-office_country").hide();
             }
@@ -13,6 +17,10 @@
             }
         })
         if ($('#id_charge').val() == 4 || $('#id_charge').val() == 6){
+            $(".field-office").show();
+            $(".field-office_country").show();
+        }
+        else if ($('#id_charge').val() == 6) {
             $(".field-office").show();
             $(".field-office_country").hide();
         }

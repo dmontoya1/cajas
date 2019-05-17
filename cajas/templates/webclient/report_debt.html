@@ -10,20 +10,46 @@
       line-height: 25px !important;
     }
 
-    tr.td-investment {
-      color: #7dd1af !important;
-      font-weight: bold;
+    .outer .chart-container {
+      width: 300px;
+      float: left;
+      height: 200px;
     }
 
-    tr.td-loans {
-      color: #49afa0 !important;
-      font-weight: bold;
+    .highcharts-yaxis-grid .highcharts-grid-line {
+      display: none;
     }
 
-    tr.td-chain {
-      color: #3b5f48;
-      font-weight: bold;
+    @media (max-width: 600px) {
+      .outer {
+        width: 100%;
+        height: 400px;
+      }
+
+      .outer .chart-container {
+        width: 300px;
+        float: none;
+        margin: 0 auto;
+      }
     }
+
+    .loader {
+      border-radius: 50%;
+      width: 65px;
+      height: 65px;
+      animation: spin 2s linear infinite;
+      margin-top: 15px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
   </style>
 {% endblock %}
 
@@ -41,7 +67,7 @@
     </li>
     {% if request.user.is_superuser %}
       <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:reports' %}" data-toggle="modal" data-target="#migrate">
+        <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
         </a>
@@ -111,19 +137,23 @@
                   </div>
                   <button type="submit" class="filter-report">Filtrar</button>
                 </form>
-                <table id="table" class="table table-striped table-bordered responsive display d-none"
-                       cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%;">
                   <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>Marca</th>
-                    <th>Precio</th>
-                    <th>Descripción</th>
-                  </tr>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Nivel Endeudamiento</th>
+                    </tr>
                   </thead>
                   <tbody>
+
                   </tbody>
                 </table>
+                <div class="container">
+                  <div class="row chart-row">
+
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -136,7 +166,9 @@
 
 
 {% block extra_js %}
-
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/highcharts-more.js"></script>
+  <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
 
@@ -145,35 +177,186 @@
           language: "es"
         });
       });
-
-      $('.filter-report').on('click', function (e) {
-        e.preventDefault()
-        params = {}
-        if ($('#country').val()) {
-          params['country'] = $('#country').val()
-        }
-        if ($('#office').val()) {
-          params['office'] = $('#office').val()
-        }
-        if ($('#office_country').val()) {
-          params['office_country'] = $('#office_country').val()
-        }
-        if ($('#partner').val()) {
-          params['brand'] = $('#brand').val()
-        }
-        axios.get("{% url 'api:reports:report_debt' %}", {
-          params
-        })
-          .then(function (response) {
-            data = response.data
-            console.log(data)
-
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+      $('#table').wrap('<div id="hide" style="display:none"/>');
     });
+
+    var gaugeOptions = {
+      chart: {
+        type: 'solidgauge'
+      },
+      title: null,
+      pane: {
+        center: ['50%', '85%'],
+        size: '140%',
+        startAngle: -90,
+        endAngle: 90,
+        background: {
+          backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || '#EEE',
+          innerRadius: '60%',
+          outerRadius: '100%',
+          shape: 'arc'
+        }
+      },
+
+      tooltip: {
+        enabled: false
+      },
+
+      // the value axis
+      yAxis: {
+        stops: [
+          [0.5, '#55BF3B'], // green
+          [0.79, '#fff400'], // yellow
+          [0.99, '#ff8100'], // orange
+          [1.5, '#ff0000']
+        ],
+        lineWidth: 3,
+        minorTickInterval: null,
+        tickAmount: 2,
+        title: {
+          y: -70
+        },
+        labels: {
+          y: 16
+        }
+      },
+
+      plotOptions: {
+        solidgauge: {
+          dataLabels: {
+            y: 1,
+            borderWidth: 0,
+            useHTML: true
+          }
+        }
+      }
+    };
+
+    $('.filter-report').on('click', function (e) {
+      e.preventDefault()
+      $('.chart-row').empty()
+      filter = $(this)
+      filter.removeClass('filter-report')
+      filter.text('')
+      filter.addClass('loader')
+      params = {}
+      if ($('#country').val()) {
+        params['country'] = $('#country').val()
+      }
+      if ($('#office').val()) {
+        params['office'] = $('#office').val()
+      }
+      if ($('#office_country').val()) {
+        params['office_country'] = $('#office_country').val()
+      }
+      if ($('#partner').val()) {
+        params['partner'] = $('#partner').val()
+      }
+      axios.get("{% url 'api:reports:report_debt' %}", {
+        params
+      })
+        .then(function (response) {
+          data = response.data
+          $('tbody').empty()
+          $.each(data, function (index, value) {
+            $('.chart-row').append(
+              `
+                <div class="col-md-4">
+                  <div class="outer">
+                    <div id="container-chart-${index}" class="chart-container"></div>
+                  </div>
+                </div>
+              `
+            )
+            var chartSpeed = Highcharts.chart(`container-chart-${index}`, Highcharts.merge(gaugeOptions, {
+              yAxis: {
+                min: 0,
+                max: 100,
+                title: {
+                  text: value['partner']
+                }
+              },
+              credits: {
+                enabled: false
+              },
+              series: [{
+                name: 'Deuda',
+                data: [parseInt(value['level'])],
+                dataLabels: {
+                  format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
+                    '<span style="font-size:12px;color:silver">%</span></div>'
+                },
+                tooltip: {
+                  valueSuffix: ' %'
+                }
+              }]
+
+            }));
+            $('tbody').append(
+              `
+                <tr>
+                  <td>${value.partner}</td>
+                  <td>${value.level}%</td>
+                </tr>
+
+              `
+            )
+          })
+          $('#table').DataTable({
+            responsive: {
+              details: true
+            },
+            destroy: true,
+            dom: 'lBfrtip',
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            buttons: [
+              'excel', 'print'
+            ],
+            "order": [[1, "asc"]],
+            language: {
+              "sProcessing": "Procesando...",
+              "sLengthMenu": "Mostrar _MENU_ registros",
+              "sZeroRecords": "No se encontraron resultados",
+              "sEmptyTable": "Ningún dato disponible en esta tabla",
+              "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+              "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+              "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+              "sInfoPostFix": "",
+              "sSearch": "Buscar:",
+              "sUrl": "",
+              "sInfoThousands": ",",
+              "sLoadingRecords": "Cargando...",
+              "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+              },
+              "oAria": {
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+              }
+            }
+          })
+          $('#hide').css( 'display', 'block' );
+          $('div#table_length').addClass('d-none')
+          $('div#table_filter').addClass('d-none')
+          $('div#table_info').addClass('d-none')
+          $('ul.pagination').addClass('d-none')
+          filter.removeClass('loader')
+          filter.text('Filtrar')
+          filter.addClass('filter-report')
+          $('#table').css( 'display', 'table-column' );
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+          filter.removeClass('loader')
+          filter.text('Filtrar')
+          filter.addClass('filter-report')
+        })
+    })
+
   </script>
 {% endblock %}

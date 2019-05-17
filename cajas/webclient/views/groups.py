@@ -23,16 +23,18 @@ class Groups(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         employees = Employee.objects.filter(
-            Q(related_group_supervisor=None),
-            office_country=office
-        )
+            Q(related_group_supervisor=None) &
+            (Q(office_country=office) |
+             Q(office=office.office))
+        ).order_by('user__first_name')
         admin = Employee.objects.filter(
-            Q(group=None),
-            office_country=office
-        )
+            Q(group=None) &
+            (Q(office_country=office) |
+             Q(office=office.office))
+        ).order_by('user__first_name')
         existing_admins = Group.objects.filter(
-            ~Q(related_group=None),
-            admin__office=office.office
+            Q(admin__office=office.office) |
+            Q(admin__office_country=office)
         )
         context['office'] = office
         context['admins'] = admin
