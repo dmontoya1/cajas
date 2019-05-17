@@ -82,8 +82,8 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         yesterday = yesterday.strftime('%Y%m%d')
         token = self.login()
         for w in withdraws_movements:
-            withdraws = requests.get(
-                'http://external.vnmas.net/api/Vmas/GetWithdraws/{}/{}/{}/{}'.format(
+            withdraws_venda = requests.get(
+                'http://external.vnmas.net/api/Vmas/GetWithdrawals/{}/{}/{}/{}'.format(
                     token,
                     yesterday,
                     today,
@@ -91,7 +91,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                 )
             )
             try:
-                withdraws = withdraws.json()
+                withdraws = withdraws_venda.json()
                 if len(withdraws) > 0:
                     withdraws_values = withdraws[0]['data']
                     for i in withdraws_values:
@@ -103,8 +103,8 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                             values['comment'] = withdraw['comment']
                             values['value'] = withdraw['value']
                             withdraws_list.append(values)
-            except:
-                pass
+            except Exception as e:
+                print(e)
         return withdraws_list
 
     def get_venda_investments(self, investments_movements, user):
