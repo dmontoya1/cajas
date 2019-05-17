@@ -77,16 +77,16 @@
               <div class="card-body">
                   <table id="table" class="table table-striped table-bordered responsive display"
                   cellspacing="0" style="width:100%">
-                  <h3 class="mb-4">Requerimientos de retiro de socio </h3>
+                  <h3 class="mb-4">Requerimiento entre oficinas</h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
+                    <th>País de Origen</th>
                     <th>Fecha</th>
                     <th>Socio</th>
                     <th>Detalle</th>
                     <th>Valor</th>
                     <th>Observación</th>
-                    <th>Motivo solicitud</th>
                     <th></th>
                     <!-- <th></th> -->
                   </tr>
@@ -95,12 +95,12 @@
                   {% for m in movements %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
+                      <td>{{ m.origin_office }}</td>
                       <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
                       <td>{{ m.box_partner.partner }}</td>
                       <td>{{ m.detail }}</td>
                       <td id="value{{ m.pk }}">{{ m.value }}</td>
                       <td>{{ m.observation }}</td>
-                      <td>{{ m.withdraw_reason }}</td>
                       <td>
                         <a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a>
                         <a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a>
@@ -117,7 +117,51 @@
       </div>
     </div>
   </div>
-
+ <!-- Modal MIgracion de socios -->
+ <div class="modal fade" id="migrate" role="dialog" aria-labelledby="migrateLabel"
+ aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title text-center" id="migrateLabel">Migracion de socios</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="migrate">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="partner_migrate">Socios</label>
+                <select class="form-control" id="partner_migrate" name="partners[]" style="width: 100%; height: 20px;"
+                        multiple="multiple" required>
+                  <option value="" disabled>Selecciona los socios a migrar</option>
+                  {% for p in partners_offices %}
+                    <option value="{{ p.pk }}">{{ p }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="office">Oficina de destino</label>
+                <select class="form-control" id="office" name="office" style="width: 100%; height: 20px;"
+                        required>
+                  <option value="" selected disabled>Selecciona la oficina de destino</option>
+                  {% for o in all_offices %}
+                    <option value="{{ o.pk }}">{{ o }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-migrate">Migrar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+ </div>
 {% endblock %}
 
 {% block extra_js %}
@@ -156,6 +200,12 @@
             "sSortDescending": ": Activar para ordenar la columna de manera descendente"
           }
         }
+      });
+      $('#partner_migrate').select2({
+        language: "es"
+      });
+      $('#office').select2({
+        language: "es"
       });
     });
 
@@ -243,6 +293,41 @@
             });
         }
       })
+    })
+    $('.migrate').on('submit', function (ev) {
+      ev.preventDefault()
+      //$('.btn-migrate').attr('disabled', true)
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data_send = $(this).serialize()
+      axios.post('{% url 'api:users:migrate' %}', data_send)
+        .then(function (response) {
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: 'Se ha migrado el socio exisotamente',
+            //allowOutsideClick: false
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
     })
   </script>
 {% endblock %}

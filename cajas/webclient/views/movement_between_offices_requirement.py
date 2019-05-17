@@ -3,6 +3,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
+from cajas.users.models.partner import Partner
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
@@ -24,4 +26,6 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
                     box_office__office__office=office
                 )
         context['movements'] = movements
+        context['all_offices'] = OfficeCountry.objects.all().order_by('office')
+        context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
         return context
