@@ -437,7 +437,7 @@
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
       data_send = $(this).serialize()
       if ($("#method_modal").val() === "add") {
-        axios.post('{% url 'api:movements:box_colombia_create' 'col0' %}', data_send)
+        axios.post('{% url 'api:movements:box_colombia_create' 'col1' %}', data_send)
           .then(function (response) {
             Swal.fire({
               type: 'success',
