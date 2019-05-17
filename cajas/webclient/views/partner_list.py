@@ -1,4 +1,5 @@
 
+from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
@@ -40,7 +41,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         except Exception as e:
             context['partner'] = Partner.objects.get(office=office, user=self.request.user)
-
+        context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
