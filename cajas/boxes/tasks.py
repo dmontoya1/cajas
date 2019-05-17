@@ -4,10 +4,6 @@ from celery.schedules import crontab
 from celery.task import periodic_task
 
 from django.contrib.auth import get_user_model
-from django.contrib.sites.models import Site
-
-from cajas.boxes.models.box_daily_square import BoxDailySquare
-from cajas.core.services.email_service import EmailManager
 
 
 logger = logging.getLogger(__name__)
@@ -19,9 +15,7 @@ logger = logging.getLogger(__name__)
 )
 def daily_square_state():
     User = get_user_model()
-    email_manager = EmailManager()
 
-    domain = Site.objects.get_current().domain
     daily_squares = User.objects.filter(is_daily_square=True)
     for user in daily_squares:
         daily_box_user = user.related_daily_box.all()
@@ -31,7 +25,8 @@ def daily_square_state():
                     'Open daily square box "%s"' % box
                 )
             else:
-                BoxDailySquare.objects.filter(pk=user.related_daily_box.get().pk).update(is_closed=False)
+                box.is_closed = False
+                box.save()
                 logger.info(
                     'Reseted daily square box "%s"' % box
                 )
