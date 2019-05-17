@@ -28,7 +28,7 @@ class MovementBetweenOfficesManager(object):
     ):
         mv = MovementBetweenOfficeRequest.objects.create(
             box_office=destine_office.box,
-            origin_office=office.box,
+            origin_office=origin_office.box,
             observation=data['detail'],
             detail=data['detail'],
             concept=concept,
