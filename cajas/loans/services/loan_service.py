@@ -62,6 +62,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
         else:
@@ -70,6 +71,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
             loan.interest = data['interest']
@@ -163,6 +165,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
         else:
@@ -171,6 +174,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
             old_loan.interest = data['interest']
@@ -209,6 +213,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
         else:
@@ -217,6 +222,7 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
+                value_cop=data['value_cop'],
                 date=datetime.now()
             )
             old_loan.interest = data['interest']

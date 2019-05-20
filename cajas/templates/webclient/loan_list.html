@@ -174,8 +174,8 @@
                     <th>Fondeador</th>
                     <th>Tipo de préstamo</th>
                     <th>% Interes</th>
-                    <th>Plazo</th>
                     <th>Saldo</th>
+                    <th>Saldo COP</th>
                     <th>Historial</th>
                     <th></th>
                   </tr>
@@ -187,8 +187,8 @@
                       <td>{{ l.provider|default:"Oficina" }}</td>
                       <td>{{ l.loan_type }}</td>
                       <td>{{ l.interest }}%</td>
-                      <td>{{ l.time }}</td>
-                      <td>{{ l.balance }}</td>
+                      <td>${{ l.balance|intcomma }}</td>
+                      <td>${{ l.balance_cop|intcomma }}</td>
                       <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Historial</a></td>
                       <td>
                         {% if perms.loans.add_loanpayment %}
@@ -425,6 +425,16 @@
                 <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
                        style="width: 100%;" autocomplete="off">
               </div>
+              <div class="form-group col-md-6">
+                <label for="value_cop_abono">Monto del abono (COP)</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop_abono" value="0" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="exchange_abono">Tasa de cambio</label>
+                <input class="form-control" type="text" name="exchange" id="exchange_abono"
+                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}"
+                       placeholder="Ingresa el plazo en meses" readonly>
+              </div>
             </div>
             <hr>
             <button type="submit" class="btn btn-submit btn-add-pay">Abonar</button>
@@ -453,7 +463,7 @@
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="interest_value">Valor del interes</label>
+                <label for="interest_value">Valor del interés</label>
                 <input class="form-control" type="text" name="value" id="interest_value" value=""
                        placeholder="Ingresa el valor del interes">
               </div>
@@ -461,6 +471,15 @@
                 <label for="date">Fecha del pago</label>
                 <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
                        style="width: 100%;" autocomplete="off">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value_cop_interes">Monto del interés (COP)</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop_interes" value="0" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="exchange_abono">Tasa de cambio</label>
+                <input class="form-control" type="text" name="exchange" id="exchange_abono"
+                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}" readonly>
               </div>
             </div>
             <hr>
@@ -569,15 +588,13 @@
           title: 'Oops...',
           text: 'Parece que no se ha pagado el interés de éste préstamo. Paga el interés antes de realizar un abono',
         })
-      }
-      else if (!box_balance_positive === 'False'){
+      } else if (!box_balance_positive === 'False') {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'Parece que el socio no tiene saldo para realizar el abono al préstamo. Revisa su caja para revisar el saldo del socio',
         })
-      }
-      else{
+      } else {
         $('#loan').val($(this).data('id'))
         $('#modalAddPayment').modal('show')
       }

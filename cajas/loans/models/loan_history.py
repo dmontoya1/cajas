@@ -45,6 +45,10 @@ class LoanHistory(models.Model):
     value = models.FloatField(
         'Valor'
     )
+    value_cop = models.FloatField(
+        'Valor en COP',
+        default=0
+    )
     date = models.DateField(
         'Fecha del pago',
 
@@ -59,8 +63,10 @@ class LoanHistory(models.Model):
         loan = self.loan
         if self.history_type == self.ABONO:
             loan.balance -= float(self.value)
+            loan.balance_cop -= float(self.value_cop)
         elif self.history_type == self.LOAN:
             loan.balance += float(self.value)
+            loan.balance_cop += float(loan.value_cop)
         loan.save()
         super(LoanHistory, self).save(*args, **kwargs)
 
