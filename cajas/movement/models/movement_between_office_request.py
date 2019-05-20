@@ -15,6 +15,13 @@ class MovementBetweenOfficeRequest(MovementMixin):
         blank=True, null=True,
         related_name='movements_between_office'
     )
+    origin_office = models.ForeignKey(
+        'boxes.BoxOffice',
+        verbose_name='Caja oficina',
+        on_delete=models.SET_NULL,
+        blank=True, null=True,
+        related_name='movements_between_office_origin'
+    )
     observation = models.TextField(
         'Observación',
         help_text='Observación por la cual se debería de aceptar el movimiento'

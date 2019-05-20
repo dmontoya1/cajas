@@ -330,6 +330,14 @@
                   {% endfor %}
                 </select>
               </div>
+              <div class="form-group col-md-12">
+                <label for="groups">Grupos (Permisos)</label>
+                <select class="form-control" id="groups" name="groups[]" multiple="" style="width: 100%; height: 20px;">
+                  {% for g in groups %}
+                    <option value="{{ g.pk }}">{{ g }}</option>
+                  {% endfor %}
+                </select>
+              </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -749,6 +757,9 @@
       });
 
       $('#concept').select2({
+        language: "es"
+      });
+      $('#groups').select2({
         language: "es"
       });
 

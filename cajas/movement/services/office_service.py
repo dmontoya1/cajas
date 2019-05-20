@@ -32,7 +32,7 @@ class MovementOfficeManager(object):
         if concept == transfer_concept:
             if data['destine_box'] == 'CAJA_DON_JUAN':
                 don_juan_manager = DonJuanManager()
-                data['box'] = get_object_or_404(BoxDonJuan, office=data['office']),
+                data['box'] = BoxDonJuan.objects.get(office=data['office']),
                 if data['movement_type'] == MovementOffice.IN:
                     data['movement_type'] = MovementOffice.OUT
                 else:
@@ -40,7 +40,7 @@ class MovementOfficeManager(object):
                 don_juan_manager.create_movement(data)
             elif data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
-                data['box'] = get_object_or_404(BoxDonJuanUSD, office=data['office']),
+                data['box'] = BoxDonJuanUSD.objects.get(office=data['office']),
                 if data['movement_type'] == MovementOffice.IN:
                     data['movement_type'] = MovementOffice.OUT
                 else:
@@ -48,7 +48,7 @@ class MovementOfficeManager(object):
                 don_juan_usd_manager.create_movement(data)
             elif data['destine_box'] == 'CAJA_COLOMBIA':
                 box_colombia_manager = MovementBoxColombiaManager()
-                data['box'] = get_object_or_404(BoxColombia, name="Caja Colombia"),
+                data['box'] = BoxColombia.objects.get(name="Caja Colombia"),
                 if data['movement_type'] == MovementOffice.IN:
                     data['movement_type'] = MovementOffice.OUT
                 else:
@@ -56,7 +56,7 @@ class MovementOfficeManager(object):
                 box_colombia_manager.create_colombia_movement(data)
             elif data['destine_box'] == 'CAJA_BANCO':
                 box_colombia_manager = MovementBoxColombiaManager()
-                data['box'] = get_object_or_404(BoxColombia, name="Caja Banco"),
+                data['box'] = BoxColombia.objects.get(name="Caja Banco"),
                 if data['movement_type'] == 'IN':
                     data['movement_type'] = 'OUT'
                 else:
