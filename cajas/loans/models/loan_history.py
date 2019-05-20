@@ -1,4 +1,10 @@
+
+from datetime import datetime
+
 from django.db import models
+
+from cajas.general_config.models.exchange import Exchange
+from cajas.webclient.views.utils import get_object_or_none
 
 from .loan import Loan
 
@@ -61,12 +67,18 @@ class LoanHistory(models.Model):
 
     def save(self, *args, **kwargs):
         loan = self.loan
+        office = self.loan.office
+        exchange = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=datetime.now().month,
+        )
         if self.history_type == self.ABONO:
-            loan.balance -= float(self.value)
             loan.balance_cop -= float(self.value_cop)
+            loan.balance = loan.balance_cop / exchange.exchange_cop_abono
         elif self.history_type == self.LOAN:
             loan.balance += float(self.value)
-            loan.balance_cop += float(loan.value_cop)
+            loan.balance_cop += float(self.value_cop)
         loan.save()
         super(LoanHistory, self).save(*args, **kwargs)
 
