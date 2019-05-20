@@ -14,12 +14,14 @@ from cajas.users.models.partner import Partner, PartnerType
 from cajas.chains.models.user_place import UserPlace
 from cajas.chains.models.chain_place import ChainPlace
 from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.general_config.models.exchange import Exchange
 from cajas.investments.models.investment import Investment
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_object_or_none
 
 
 class PartnerCloseout(APIView):
@@ -154,6 +156,11 @@ class PartnerCloseout(APIView):
         partner = get_object_or_404(Partner, pk=data['partner'])
         office = partner.office
         loans = Loan.objects.filter(lender=partner.user)
+        exchange = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=datetime.now().month,
+        )
         for loan in loans:
             if loan.loan_type == LoanType.EMPLEADO:
                 if loan.balance > 0:
@@ -198,11 +205,12 @@ class PartnerCloseout(APIView):
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 if loan.balance > 0:
                     concept = Concept.objects.get(name='Pago Abono préstamo socio')
+                    total_loan = loan.balance_cop / exchange.exchange_cop_abono
                     MovementPartner.objects.create(
                         box_partner=partner.box,
                         concept=concept,
                         movement_type='OUT',
-                        value=loan.balance,
+                        value=total_loan,
                         detail='Pago préstamo por ${}'.format(loan.balance),
                         date=datetime.now(),
                         responsible=request.user,
@@ -213,7 +221,7 @@ class PartnerCloseout(APIView):
                             box_partner=BoxDonJuan.objects.filter(office=office),
                             concept=concept.counterpart,
                             movement_type='IN',
-                            value=loan.balance,
+                            value=total_loan,
                             detail='Pago préstamo por ${}'.format(loan.balance),
                             date=datetime.now(),
                             responsible=request.user,
@@ -224,7 +232,7 @@ class PartnerCloseout(APIView):
                             box_partner=partner.direct_partner.box,
                             concept=concept.counterpart,
                             movement_type='IN',
-                            value=loan.balance,
+                            value=total_loan,
                             detail='Pago préstamo por ${}'.format(loan.balance),
                             date=datetime.now(),
                             responsible=request.user,
@@ -232,7 +240,8 @@ class PartnerCloseout(APIView):
                         )
                     LoanHistory.objects.create(
                         loan=loan,
-                        value=loan.balance,
+                        value=total_loan,
+                        value_cop=loan.balance_cop,
                         date=datetime.now()
                     )
 

@@ -174,8 +174,8 @@
                     <th>Fondeador</th>
                     <th>Tipo de préstamo</th>
                     <th>% Interes</th>
-                    <th>Plazo</th>
                     <th>Saldo</th>
+                    <th>Saldo COP</th>
                     <th>Historial</th>
                     <th></th>
                   </tr>
@@ -187,8 +187,8 @@
                       <td>{{ l.provider|default:"Oficina" }}</td>
                       <td>{{ l.loan_type }}</td>
                       <td>{{ l.interest }}%</td>
-                      <td>{{ l.time }}</td>
-                      <td>{{ l.balance }}</td>
+                      <td>${{ l.balance|floatformat:2|intcomma }}</td>
+                      <td>${{ l.balance_cop|intcomma }}</td>
                       <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Historial</a></td>
                       <td>
                         {% if perms.loans.add_loanpayment %}
@@ -416,14 +416,24 @@
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="value">Valor del abono</label>
-                <input class="form-control" type="number" name="value" id="value" value=""
-                       placeholder="Ingresa el valor a abonar" placeholder="$">
+                <label for="abono_value">Valor del abono</label>
+                <input class="form-control" type="number" name="value" id="abono_value" value=""
+                       placeholder="Ingresa el valor a abonar" placeholder="$" required>
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del abono</label>
                 <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
-                       style="width: 100%;" autocomplete="off">
+                       style="width: 100%;" autocomplete="off" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value_cop_abono">Monto del abono (COP)</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop_abono" value="0" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="exchange_abono">Tasa de cambio</label>
+                <input class="form-control" type="text" name="exchange" id="exchange_abono"
+                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}"
+                       placeholder="Ingresa el plazo en meses" readonly>
               </div>
             </div>
             <hr>
@@ -453,14 +463,23 @@
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="interest_value">Valor del interes</label>
+                <label for="interest_value">Valor del interés</label>
                 <input class="form-control" type="text" name="value" id="interest_value" value=""
-                       placeholder="Ingresa el valor del interes">
+                       placeholder="Ingresa el valor del interes" required>
               </div>
               <div class="form-group col-md-6 box-select">
                 <label for="date">Fecha del pago</label>
                 <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
-                       style="width: 100%;" autocomplete="off">
+                       style="width: 100%;" autocomplete="off" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value_cop_interes">Monto del interés (COP)</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop_interes" value="0" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="exchange_abono">Tasa de cambio</label>
+                <input class="form-control" type="text" name="exchange" id="exchange_abono"
+                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}" readonly>
               </div>
             </div>
             <hr>
@@ -560,6 +579,18 @@
       $('#value_cop').val(value * exchange)
     })
 
+    $('#interest_value').keyup(function () {
+      value = parseInt($(this).val())
+      exchange = parseInt($('#exchange_abono').data('value'))
+      $('#value_cop_interes').val(value * exchange)
+    })
+
+    $('#abono_value').keyup(function () {
+      value = parseInt($(this).val())
+      exchange = parseInt($('#exchange_abono').data('value'))
+      $('#value_cop_abono').val(value * exchange)
+    })
+
     $('.add-pay').on('click', function () {
       let interest_has_pay = $(this).data('interest-pay')
       let box_balance_positive = $(this).data('box-balance-positive')
@@ -569,15 +600,13 @@
           title: 'Oops...',
           text: 'Parece que no se ha pagado el interés de éste préstamo. Paga el interés antes de realizar un abono',
         })
-      }
-      else if (!box_balance_positive === 'False'){
+      } else if (box_balance_positive === 'False') {
         Swal.fire({
           type: 'error',
           title: 'Oops...',
           text: 'Parece que el socio no tiene saldo para realizar el abono al préstamo. Revisa su caja para revisar el saldo del socio',
         })
-      }
-      else{
+      } else {
         $('#loan').val($(this).data('id'))
         $('#modalAddPayment').modal('show')
       }
@@ -586,6 +615,9 @@
     $('.add-interest').on('click', function () {
       $('#loan_interest').val($(this).data('id'))
       $('#interest_value').val($(this).data('interest'))
+      value = parseInt($('#interest_value').val())
+      exchange = parseInt($('#exchange_abono').data('value'))
+      $('#value_cop_interes').val(value * exchange)
     })
 
     $('.add-new-loan').on('click', function () {

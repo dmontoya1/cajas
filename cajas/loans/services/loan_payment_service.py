@@ -6,13 +6,16 @@ from django.shortcuts import get_object_or_404
 
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.concepts.models.concepts import Concept
+from cajas.general_config.models.exchange import Exchange
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.movement.services.office_service import MovementOfficeManager
+from cajas.office.models import OfficeCountry
 from cajas.users.models import Partner
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_object_or_none
 
 from ..models.loan import Loan
 
@@ -124,6 +127,7 @@ class LoanPaymentManager(object):
             history_type=LoanHistory.ABONO,
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
+            value_cop=request.data['value_cop'],
             date=request.data['date']
         )
 
@@ -134,5 +138,6 @@ class LoanPaymentManager(object):
             history_type=LoanHistory.INTEREST,
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
+            value_cop=request.data['value_cop'],
             date=datetime.now()
         )

@@ -66,7 +66,11 @@ class Loan(models.Model):
         null=True
     )
     balance = models.FloatField(
-        'Saldo a la fecha'
+        'Saldo a la fecha',
+    )
+    balance_cop = models.FloatField(
+        'Saldo a la fecha',
+        default=0
     )
     exchange = models.FloatField(
         'Tasa de cambio',
@@ -80,14 +84,12 @@ class Loan(models.Model):
 
     def __str__(self):
         if self.provider:
-            return "Préstamo de {} a {} por valor de ${}".format(
+            return "Préstamo de {} a {}".format(
                 self.provider.get_full_name(),
                 self.lender.get_full_name(),
-                self.balance
             )
-        return "Préstamo de la oficina a {} por valor de {}".format(
+        return "Préstamo de la oficina a {}".format(
             self.lender.get_full_name(),
-            self.balance
         )
 
     def get_interest_payment(self):
