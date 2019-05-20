@@ -579,6 +579,12 @@
       $('#value_cop').val(value * exchange)
     })
 
+    $('#interest_value').keyup(function () {
+      value = parseInt($(this).val())
+      exchange = parseInt($('#exchange_abono').data('value'))
+      $('#value_cop_interes').val(value * exchange)
+    })
+
     $('.add-pay').on('click', function () {
       let interest_has_pay = $(this).data('interest-pay')
       let box_balance_positive = $(this).data('box-balance-positive')
@@ -603,6 +609,9 @@
     $('.add-interest').on('click', function () {
       $('#loan_interest').val($(this).data('id'))
       $('#interest_value').val($(this).data('interest'))
+      value = parseInt($('#interest_value').val())
+      exchange = parseInt($('#exchange_abono').data('value'))
+      $('#value_cop_interes').val(value * exchange)
     })
 
     $('.add-new-loan').on('click', function () {
