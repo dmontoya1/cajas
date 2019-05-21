@@ -64,7 +64,7 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             data['concept'] = concept
             data['office'] = office
             movement_between_office_manager = MovementBetweenOfficesManager()
-            movement_between_office_manager.create_between_offices_movement_request(data)
+            movement_between_office_manager.create_between_offices_movement_request(data, movement.pk, 'BDJ')
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
                 email_manager.send_office_mail(request, secretary.user.email)

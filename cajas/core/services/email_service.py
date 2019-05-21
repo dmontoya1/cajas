@@ -64,6 +64,22 @@ class EmailManager(object):
         subject = "Nueva solicitud de retiro de socio"
         self.send_email(ctx, subject, email_to)
 
+    def send_denied_between_office_movement_email(self, request, movement, email_to):
+        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+        ctx = {
+            "title": "Movimiento entre oficinas rechazado",
+            "content": "Se ha rechazado el movimiento por concepto de {}: {}, del dia {}. \
+                       Entra a la plataforma para que lo revises".format(
+                movement.concept,
+                movement.detail,
+                movement.date
+            ),
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Movimiento entre oficinas rechazado"
+        self.send_email(ctx, subject, email_to)
+
     def send_office_mail(self, request, email_to):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
         ctx = {

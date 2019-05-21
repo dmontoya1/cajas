@@ -9,7 +9,6 @@ from .views.chain_payments import ChainPayments
 from .views.chain_places_list import ChainPlacesList
 from .views.closeout_boxes import CloseoutBoxesList
 from .views.create_daily_square_movement import CreateDailySquareMovement
-from .views.create_don_juan_movement import CreateDonJuanMovement
 from .views.create_office_movement import CreateOfficeMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
@@ -77,8 +76,6 @@ urlpatterns = [
 
     # DonJuan
     path("office/<slug:slug>/donjuan/", BoxDonJuanOffice.as_view(), name='box_don_juan'),
-    path("office/<slug:slug>/create-donjuan-movement/", CreateDonJuanMovement.as_view(),
-         name='create_donjuan_movement'),
 
     # Partners
     path("office/<slug:slug>/partner/<int:pk>/box/", PartnerBox.as_view(), name='partner_box'),

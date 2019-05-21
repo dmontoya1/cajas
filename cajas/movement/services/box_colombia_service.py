@@ -22,7 +22,7 @@ class MovementBoxColombiaManager(object):
             concept_type=ConceptType.DOUBLE
         )
         concept = get_object_or_404(Concept, pk=data['concept'])
-        self.create_colombia_movement(data)
+        movement_colombia = self.create_colombia_movement(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
                 data['movement_type'] = MovementBoxColombia.OUT
@@ -56,6 +56,7 @@ class MovementBoxColombiaManager(object):
                 )
             elif data['destine_box'] == 'CAJA_BANCO':
                 self.create_bank_colombia_movement(data)
+        return movement_colombia
 
     def create_colombia_movement(self, data):
         movement = MovementBoxColombia.objects.create(
