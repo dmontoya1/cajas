@@ -84,7 +84,7 @@ class ChainManager(object):
                     )
                     if data['code'] == 'DONJUAN':
                         MovementDonJuan.objects.create(
-                            box_partner=BoxDonJuan.objects.filter(office=office),
+                            box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept.counterpart,
                             movement_type='OUT',
                             value=total,
@@ -124,7 +124,7 @@ class ChainManager(object):
                 )
                 if data['code'] == 'DONJUAN':
                     MovementDonJuan.objects.create(
-                        box_partner=BoxDonJuan.objects.filter(office=office),
+                        box_don_juan=BoxDonJuan.objects.get(office=office),
                         concept=concept2.counterpart,
                         movement_type='IN',
                         value=chain.place_value * total_places,

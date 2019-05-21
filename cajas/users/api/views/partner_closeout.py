@@ -67,7 +67,7 @@ class PartnerCloseout(APIView):
                     )
                     if partner_destiny.code == 'DONJUAN':
                         MovementDonJuan.objects.create(
-                            box_partner=BoxDonJuan.objects.filter(office=office),
+                            box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept1.counterpart,
                             movement_type='OUT',
                             value=total,
@@ -106,7 +106,7 @@ class PartnerCloseout(APIView):
                     ip=get_ip(request)
                 )
                 MovementDonJuan.objects.create(
-                    box_partner=BoxDonJuan.objects.filter(office=office),
+                    box_don_juan=BoxDonJuan.objects.get(office=office),
                     concept=concept2.counterpart,
                     movement_type='IN',
                     value=chain.place_value * total_places,
@@ -141,7 +141,7 @@ class PartnerCloseout(APIView):
 
                     )
                     MovementDonJuan.objects.create(
-                        box_partner=BoxDonJuan.objects.filter(office=office),
+                        box_don_juan=BoxDonJuan.objects.get(office=office),
                         concept=concept.counterpart,
                         movement_type='OUT',
                         value=pays['value__sum'],
@@ -177,7 +177,7 @@ class PartnerCloseout(APIView):
                     )
                     if partner.partner_type == PartnerType.DIRECTO:
                         MovementDonJuan.objects.create(
-                            box_partner=BoxDonJuan.objects.filter(office=office),
+                            box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept.counterpart,
                             movement_type='IN',
                             value=loan.balance * 3,
@@ -218,7 +218,7 @@ class PartnerCloseout(APIView):
                     )
                     if partner.partner_type == PartnerType.DIRECTO:
                         MovementDonJuan.objects.create(
-                            box_don_juan=BoxDonJuan.objects.filter(office=office),
+                            box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept.counterpart,
                             movement_type='IN',
                             value=total_loan,
