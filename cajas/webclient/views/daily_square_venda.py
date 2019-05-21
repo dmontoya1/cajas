@@ -1,7 +1,5 @@
 import requests
 
-from datetime import datetime, time, timedelta, date
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
@@ -27,29 +25,27 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         user = User.objects.get(pk=self.kwargs['pk'])
+        start_date = self.request.GET.get('date_start', '')
+        end_date = self.request.GET.get('date_end', '')
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         withdraw_concept = get_object_or_404(Concept, name="Retiro unidad")
         investment_concept = get_object_or_404(Concept, name="Inversión Unidad")
-        today = datetime.now().date() - timedelta(days=1)
-        tomorrow = today + timedelta(1)
-        today_start = datetime.combine(today, time())
-        today_end = datetime.combine(tomorrow, time())
         total_withdraws = 0
         total_investments = 0
         withdraws_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=withdraw_concept,
-            date__lte=today_end,
-            date__gte=today_start
+            date__lte=end_date,
+            date__gte=start_date
         )
         investments_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=investment_concept,
-            date__lte=today_end,
-            date__gte=today_start
+            date__lte=end_date,
+            date__gte=start_date
         )
-        withdraws_list = self.get_venda_withdraws(withdraws_movements, user)
-        investments_list = self.get_venda_investments(investments_movements, user)
+        withdraws_list = self.get_venda_withdraws(withdraws_movements, user, start_date, end_date)
+        investments_list = self.get_venda_investments(investments_movements, user, start_date, end_date)
         withdraws_total = withdraws_movements.aggregate(Sum('value'))
         investments_total = investments_movements.aggregate(Sum('value'))
         if withdraws_total['value__sum']:
@@ -67,6 +63,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         context['investments_list_total'] = self.get_venda_investments_total(investments_list)
         context['withdraws_total'] = total_withdraws
         context['investments_total'] = total_investments
+        print(context)
         return context
 
     def login(self):
@@ -74,19 +71,17 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         login = login.json()
         return login[0]['data'][0]['user']['token']
 
-    def get_venda_withdraws(self, withdraws_movements, user):
+    def get_venda_withdraws(self, withdraws_movements, user, start_date, end_date):
         withdraws_list = list()
-        now = date.today()
-        today = now.strftime('%Y%m%d')
-        yesterday = now - timedelta(days=1)
-        yesterday = yesterday.strftime('%Y%m%d')
+        start = start_date.replace('-', '')
+        end = end_date.replace('-', '')
         token = self.login()
         for w in withdraws_movements:
             withdraws_venda = requests.get(
                 'http://external.vnmas.net/api/Vmas/GetWithdrawals/{}/{}/{}/{}'.format(
                     token,
-                    yesterday,
-                    today,
+                    start,
+                    end,
                     w.unit.name,
                 )
             )
@@ -107,19 +102,17 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                 print(e)
         return withdraws_list
 
-    def get_venda_investments(self, investments_movements, user):
+    def get_venda_investments(self, investments_movements, user, start_date, end_date):
         investments_list = list()
-        now = date.today()
-        today = now.strftime('%Y%m%d')
-        yesterday = now - timedelta(days=1)
-        yesterday = yesterday.strftime('%Y%m%d')
+        start = start_date.replace('-', '')
+        end = end_date.replace('-', '')
         token = self.login()
         for i in investments_movements:
             investments = requests.get(
                 'http://external.vnmas.net/api/Vmas/GetInvestments/{}/{}/{}/{}'.format(
                     token,
-                    yesterday,
-                    today,
+                    start,
+                    end,
                     i.unit.name,
                 )
             )
