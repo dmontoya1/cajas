@@ -8,6 +8,14 @@ class MovementBetweenOfficeRequest(MovementMixin):
     """
     """
 
+    BOX_DON_JUAN = "BDJ"
+    BOX_COLOMBIA = 'BCO'
+
+    FROM_BOX_TYPE = (
+        (BOX_DON_JUAN, 'Caja de Don Juan'),
+        (BOX_COLOMBIA, 'Caja Colombia')
+    )
+
     box_office = models.ForeignKey(
         'boxes.BoxOffice',
         verbose_name='Caja oficina',
@@ -21,6 +29,16 @@ class MovementBetweenOfficeRequest(MovementMixin):
         on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='movements_between_office_origin'
+    )
+    from_box_type = models.CharField(
+        'Origen del movimiento',
+        max_length=3,
+        default=BOX_DON_JUAN,
+        choices=FROM_BOX_TYPE
+    )
+    origin_movement_pk = models.IntegerField(
+        'PK movimiento origen',
+        null=True, blank=True
     )
     observation = models.TextField(
         'Observación',

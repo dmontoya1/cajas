@@ -34,7 +34,7 @@ class MovementBoxColombiaCreate(generics.CreateAPIView):
         concept = get_object_or_404(Concept, pk=request.POST['concept'])
 
         movement_box_colombia_manager = MovementBoxColombiaManager()
-        movement_box_colombia_manager.create_box_colombia_movement(data)
+        movement = movement_box_colombia_manager.create_box_colombia_movement(data)
 
         if "destine_office" in request.POST:
             destine_office = get_object_or_404(
@@ -43,7 +43,7 @@ class MovementBoxColombiaCreate(generics.CreateAPIView):
             data['destine_office'] = destine_office
             data['concept'] = concept
             movement_between_office_manager = MovementBetweenOfficesManager()
-            movement_between_office_manager.create_between_offices_movement_request(data)
+            movement_between_office_manager.create_between_offices_movement_request(data, movement.pk, 'BCO')
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
                 email_manager = EmailManager()
