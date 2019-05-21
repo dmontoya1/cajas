@@ -14,16 +14,30 @@ class DonJuanManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        movement = MovementDonJuan.objects.create(
-            box_don_juan=data['box'][0],
-            concept=data['concept'],
-            movement_type=data['movement_type'],
-            value=data['value'],
-            detail=data['detail'],
-            date=data['date'],
-            responsible=data['responsible'],
-            ip=data['ip']
-        )
+        try:
+            print("TRY")
+            movement = MovementDonJuan.objects.create(
+                box_don_juan=data['box'][0],
+                concept=data['concept'],
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip']
+            )
+        except Exception as e:
+            print("EXCEPTION", e)
+            movement = MovementDonJuan.objects.create(
+                box_don_juan=data['box'],
+                concept=data['concept'],
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip']
+            )
         return movement
 
     def __get_movement_by_pk(self, pk):
