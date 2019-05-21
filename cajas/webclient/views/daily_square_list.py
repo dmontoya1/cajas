@@ -1,11 +1,12 @@
 
 from datetime import datetime
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
+from cajas.boxes.models import BoxDailySquare
 from cajas.general_config.models.exchange import Exchange
 from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
@@ -46,15 +47,20 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
             print(e)
             context['partner'] = self.request.user.partner.get()
         dq_list = User.objects.filter(
-            Q(partner__office=office) | Q(related_employee__office_country=office) |
-            Q(related_employee__office=office.office) &
-            Q(is_daily_square=True))
+            (Q(partner__office=office) | Q(related_employee__office_country=office) |
+             Q(related_employee__office=office.office)) &
+            Q(is_daily_square=True)).distinct()
         now = datetime.now()
         context['exchange'] = get_object_or_none(
             Exchange,
             currency=office.country.currency,
             month__month=now.month,
         )
+        dq_total = 0
+        for dq in dq_list:
+            box = BoxDailySquare.objects.get(user=dq, office=office)
+            dq_total += box.balance
+        context['dq_total'] = dq_total
         context['dq_list'] = dq_list
         context['categories'] = Category.objects.all()
         context['offices'] = offices

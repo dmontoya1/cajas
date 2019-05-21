@@ -167,8 +167,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h3 class="mb-4">Lista de Cuadres Diarios</h3>
                   <thead>
                   <tr>
@@ -189,23 +189,25 @@
                       <td>{{ partner.user.email }}</td>
                       <td>$ {% get_dq_box_balance office partner.user %}</td>
                       <td>
-                      <ul class="ul-buttons">
-                        {% get_dq_box_id office partner.user as box_id %}
-                        {% get_dq_box_is_close office partner.user as box_is_close %}
-                        {% if perms.movement.add_movementdailysquare and not box_is_close %}
-                          <li><button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
-                                  data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
-                            Movimiento
-                          </button></li>
-                        {% else %}
-                          la caja esta cerrada
-                        {% endif %}
-                        {% if perms.boxes.change_boxdailysquare %}
-                          <li><a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
-                             class="see-box"><i
-                            class="fas fa-eye mr-2"></i>Ver cuadre diario</a></li>
-                        {% endif %}
-                      </ul>
+                        <ul class="ul-buttons">
+                          {% get_dq_box_id office partner.user as box_id %}
+                          {% get_dq_box_is_close office partner.user as box_is_close %}
+                          {% if perms.movement.add_movementdailysquare and not box_is_close %}
+                            <li>
+                              <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
+                                      data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
+                                Movimiento
+                              </button>
+                            </li>
+                          {% else %}
+                            la caja esta cerrada
+                          {% endif %}
+                          {% if perms.boxes.change_boxdailysquare %}
+                            <li><a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
+                                   class="see-box"><i
+                              class="fas fa-eye mr-2"></i>Ver cuadre diario</a></li>
+                          {% endif %}
+                        </ul>
                       </td>
                     </tr>
                   {% elif request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
@@ -221,9 +223,12 @@
                             {% get_dq_box_id office d as box_id %}
                             {% get_dq_box_is_close office d as box_is_close %}
                             {% if request.user.is_superuser or request.user.is_secretary %}
-                              <li><button type="button" class="add-movement-button" data-id="{{ d.pk }}" data-toggle="modal"
-                                      data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                              </button></li>
+                              <li>
+                                <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                        data-toggle="modal"
+                                        data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                                </button>
+                              </li>
                               {% if not box_is_close %}
                                 <li><a href="#" class="close-box-dq" data-id="{{ box_id }}">
                                   <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a></li>
@@ -233,10 +238,12 @@
                               {% endif %}
                             {% else %}
                               {% if d == request.user and not box_is_close %}
-                                <li><button type="button" class="add-movement-button" data-id="{{ d.pk }}"
-                                        data-toggle="modal"
-                                        data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                                </button></li>
+                                <li>
+                                  <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                          data-toggle="modal"
+                                          data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                                  </button>
+                                </li>
                               {% else %}
                                 <li>La caja esta cerrada</li>
                               {% endif %}
@@ -301,6 +308,9 @@
                   {% endif %}
                   </tbody>
                 </table>
+                {% if request.user.is_superuser or request.user.is_secretary %}
+                  <h2 class="float-right">Saldo total de Cuadres diarios: ${{ dq_total|default:0|intcomma }}</h2>
+                {% endif %}
               </div>
             </div>
           </div>
