@@ -16,7 +16,6 @@ from ..services.don_juan_usd_service import DonJuanUSDManager
 class MovementBoxColombiaManager(object):
 
     def create_box_colombia_movement(self, data):
-
         transfer_concept = get_object_or_404(
             Concept,
             name='Traslado entre cajas Colombia',
