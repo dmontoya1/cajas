@@ -1,5 +1,7 @@
 import requests
 
+from datetime import date
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
@@ -25,8 +27,8 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         user = User.objects.get(pk=self.kwargs['pk'])
-        start_date = self.request.GET.get('date_start', '')
-        end_date = self.request.GET.get('date_end', '')
+        start_date = self.request.GET.get('date_start', str(date.today()))
+        end_date = self.request.GET.get('date_end', str(date.today()))
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         withdraw_concept = get_object_or_404(Concept, name="Retiro unidad")
         investment_concept = get_object_or_404(Concept, name="Inversión Unidad")
@@ -63,7 +65,6 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         context['investments_list_total'] = self.get_venda_investments_total(investments_list)
         context['withdraws_total'] = total_withdraws
         context['investments_total'] = total_investments
-        print(context)
         return context
 
     def login(self):
