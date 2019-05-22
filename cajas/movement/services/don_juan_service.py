@@ -15,7 +15,6 @@ class DonJuanManager(object):
     def create_movement(self, data):
         self.__validate_data(data)
         try:
-            print("TRY")
             movement = MovementDonJuan.objects.create(
                 box_don_juan=data['box'][0],
                 concept=data['concept'],

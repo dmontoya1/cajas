@@ -69,7 +69,7 @@ class Loan(models.Model):
         'Saldo a la fecha',
     )
     balance_cop = models.FloatField(
-        'Saldo a la fecha',
+        'Saldo a la fecha (En COP)',
         default=0
     )
     exchange = models.FloatField(

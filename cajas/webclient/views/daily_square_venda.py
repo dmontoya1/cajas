@@ -77,30 +77,33 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         start = start_date.replace('-', '')
         end = end_date.replace('-', '')
         token = self.login()
+        visited = list()
         for w in withdraws_movements:
-            withdraws_venda = requests.get(
-                'http://external.vnmas.net/api/Vmas/GetWithdrawals/{}/{}/{}/{}'.format(
-                    token,
-                    start,
-                    end,
-                    w.unit.name,
+            if w.unit.name not in visited:
+                withdraws_venda = requests.get(
+                    'http://external.vnmas.net/api/Vmas/GetWithdrawals/{}/{}/{}/{}'.format(
+                        token,
+                        start,
+                        end,
+                        w.unit.name,
+                    )
                 )
-            )
-            try:
-                withdraws = withdraws_venda.json()
-                if len(withdraws) > 0:
-                    withdraws_values = withdraws[0]['data']
-                    for i in withdraws_values:
-                        withdraw = i['withdrawal']
-                        if user.pk == int(withdraw['comment']):
-                            values = dict()
-                            values['route'] = withdraw['route']
-                            values['date'] = withdraw['date']
-                            values['comment'] = withdraw['comment']
-                            values['value'] = withdraw['value']
-                            withdraws_list.append(values)
-            except Exception as e:
-                print(e)
+                try:
+                    withdraws = withdraws_venda.json()
+                    if len(withdraws) > 0:
+                        withdraws_values = withdraws[0]['data']
+                        for i in withdraws_values:
+                            withdraw = i['withdrawal']
+                            if user.pk == 36:
+                                values = dict()
+                                values['route'] = withdraw['route']
+                                values['date'] = withdraw['date']
+                                values['comment'] = withdraw['comment']
+                                values['value'] = withdraw['value']
+                                withdraws_list.append(values)
+                except Exception as e:
+                    print(e)
+                visited.append(w.unit.name)
         return withdraws_list
 
     def get_venda_investments(self, investments_movements, user, start_date, end_date):
@@ -108,27 +111,30 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         start = start_date.replace('-', '')
         end = end_date.replace('-', '')
         token = self.login()
+        visited = list()
         for i in investments_movements:
-            investments = requests.get(
-                'http://external.vnmas.net/api/Vmas/GetInvestments/{}/{}/{}/{}'.format(
-                    token,
-                    start,
-                    end,
-                    i.unit.name,
+            if i.unit.name not in visited:
+                investments = requests.get(
+                    'http://external.vnmas.net/api/Vmas/GetInvestments/{}/{}/{}/{}'.format(
+                        token,
+                        start,
+                        end,
+                        i.unit.name,
+                    )
                 )
-            )
-            investments = investments.json()
-            if len(investments) > 0:
-                investments_values = investments[0]['data']
-                for j in investments_values:
-                    investment = j['investment']
-                    if user.pk == int(investment['comment']):
-                        values = dict()
-                        values['route'] = investment['route']
-                        values['date'] = investment['date']
-                        values['comment'] = investment['comment']
-                        values['value'] = investment['value']
-                        investments_list.append(values)
+                investments = investments.json()
+                if len(investments) > 0:
+                    investments_values = investments[0]['data']
+                    for j in investments_values:
+                        investment = j['investment']
+                        if user.pk == int(investment['comment']):
+                            values = dict()
+                            values['route'] = investment['route']
+                            values['date'] = investment['date']
+                            values['comment'] = investment['comment']
+                            values['value'] = investment['value']
+                            investments_list.append(values)
+                visited.append(i.unit.name)
         return investments_list
 
     def get_venda_withdraws_total(self, withdraws):

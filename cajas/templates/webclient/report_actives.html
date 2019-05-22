@@ -39,9 +39,9 @@
         Inicio
       </a>
     </li>
-    {% if request.user.is_superuser %}
+    {% if request.user.is_superuser or request.user.is_secretary %}
       <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:reports' %}" >
+        <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
         </a>
@@ -72,15 +72,18 @@
                 <h3 class="mb-3">Filtros</h3>
                 <form class="filter mb-4">
                   <div class="row">
-                    <div class="col">
-                      <label for="country">Pais</label>
-                      <select id="country" class="form-control">
-                        <option selected disabled>Selecciona un pais</option>
-                        {% for c in countries %}
-                          <option value="{{ c.pk }}">{{ c }}</option>
-                        {% endfor %}
-                      </select>
-                    </div>
+                    {% if request.user.is_superuser %}
+
+                      <div class="col">
+                        <label for="country">Pais</label>
+                        <select id="country" class="form-control">
+                          <option selected disabled>Selecciona un pais</option>
+                          {% for c in countries %}
+                            <option value="{{ c.pk }}">{{ c }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    {% endif %}
                     <div class="col">
                       <label for="office">Oficina</label>
                       <select id="office" class="form-control">
@@ -198,8 +201,7 @@
             try {
               table.clear()
               table.destroy();
-            }
-            catch (e) {
+            } catch (e) {
               console.log(e)
             }
             $.each(data.office_items, function (index, value) {

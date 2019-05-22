@@ -39,7 +39,7 @@
         Inicio
       </a>
     </li>
-    {% if request.user.is_superuser %}
+    {% if request.user.is_superuser or request.user.is_secretary %}
       <li class="menu-item-has-children dropdown active">
         <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>

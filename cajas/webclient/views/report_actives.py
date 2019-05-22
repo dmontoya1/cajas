@@ -17,10 +17,21 @@ class ReportActives(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportActives, self).get_context_data(**kwargs)
-        context['countries'] = Country.objects.all()
-        context['offices'] = Office.objects.all()
-        context['offices_country'] = OfficeCountry.objects.all()
+        if self.request.user.is_secretary:
+            employee = self.request.user.related_employee.get()
+            offices = employee.office.all()
+            offices_country = list()
+            for o in offices:
+                for oc in o.related_office_country.all():
+                    offices_country.append(oc)
+            context['offices_country'] = offices_country
+            context['offices'] = offices
+        else:
+            context['countries'] = Country.objects.all()
+            context['offices'] = Office.objects.all()
+            context['offices_country'] = OfficeCountry.objects.all()
         context['brands'] = Brand.objects.all()
         return context
+
 
 

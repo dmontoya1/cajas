@@ -46,14 +46,14 @@
           Migracion de socios
         </a>
       </li>
+    {% endif %}
+    {% if request.user.is_superuser or request.user.is_secretary %}
       <li class="menu-item-has-children dropdown active">
         <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>
           Informes
         </a>
       </li>
-    {% endif %}
-    {% if request.user.is_superuser or request.user.is_secretary %}
       <li class="menu-item-has-children dropdown">
         <a href="{% url 'webclient:movement_between_offices_require' %}">
           <i class="fas fa-building mr-3"></i>
@@ -133,9 +133,9 @@
     </div>
   </div>
 
- <!-- Modal MIgracion de socios -->
- <div class="modal fade" id="migrate" role="dialog" aria-labelledby="migrateLabel"
- aria-hidden="true">
+  <!-- Modal MIgracion de socios -->
+  <div class="modal fade" id="migrate" role="dialog" aria-labelledby="migrateLabel"
+       aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -177,7 +177,7 @@
         </div>
       </div>
     </div>
- </div>
+  </div>
 {% endblock %}
 
 
@@ -192,7 +192,7 @@
         language: "es"
       });
     })
-  $('.migrate').on('submit', function (ev) {
+    $('.migrate').on('submit', function (ev) {
       ev.preventDefault()
       //$('.btn-migrate').attr('disabled', true)
       axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
