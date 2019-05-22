@@ -1257,29 +1257,6 @@
       }
       if ($("#method_modal").val() === "edit") {
         mvment_id = $("#method_modal").data("id")
-        if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-          axios.patch(`/api/movements/${$("#concept_id").val()}/dq-detail/`, data_send)
-            .then(function (response) {
-              data = response.data
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: data,
-              }).then(function () {
-                location.reload()
-              })
-            })
-            .catch(function (error) {
-              // handle error
-              Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: error,
-              }).then(function () {
-                location.reload()
-              })
-            })
-        } else {
           axios.patch(`/api/movements/${mvment_id}/dq-detail/`, data_send)
             .then(function (response) {
               msg = response.data
@@ -1367,7 +1344,6 @@
                 }
               })
             })
-        }
       }
     })
 
@@ -1489,9 +1465,9 @@
           $("#value").val(data.value)
           $("#detail").val(data.detail)
           if (data.unit) {
-            $("#unit option").prop("selected", false);
-            $("#unit option[value='" + data.unit + "']").prop("selected", true);
-            $("#unit").trigger("change")
+            $("#unity option").prop("selected", false);
+            $("#unity option[value='" + data.unit + "']").prop("selected", true);
+            $("#unity").trigger("change")
           } else if (data.office) {
             $("#office option").prop("selected", false);
             $("#office option[value='" + data.office + "']").prop("selected", true);
