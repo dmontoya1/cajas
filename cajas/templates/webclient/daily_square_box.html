@@ -788,7 +788,7 @@
         $(this).closest('#dynamic_form').remove();
       });
 
-      var unit_inventory_edit = $("#unit_inventory_edit").dynamicForm("#unit_inventory_edit", "#plus5_edit", "#minus5_edit", {
+      $("#unit_inventory_edit").dynamicForm("#unit_inventory_edit", "#plus5_edit", "#minus5_edit", {
         limit: 15,
         formPrefix: "form",
         normalizeFullForm: true,
@@ -1258,7 +1258,7 @@
       if ($("#method_modal").val() === "edit") {
         mvment_id = $("#method_modal").data("id")
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
-          axios.patch(`/api/movements/${$("#concept_id").val()}/dq-request-item-detail/`, data_send)
+          axios.patch(`/api/movements/${$("#concept_id").val()}/dq-detail/`, data_send)
             .then(function (response) {
               data = response.data
               Swal.fire({
@@ -1562,9 +1562,6 @@
           })
       }
     });
-    $('#addMovement').on('hidden.bs.modal', function (e) {
-      location.reload()
-    })
     $('.delete-item').on('click', function () {
       mov_pk = $(this).data('id')
       Swal.fire({

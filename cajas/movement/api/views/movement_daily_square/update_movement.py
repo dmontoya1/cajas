@@ -27,7 +27,6 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
         data['ip'] = get_ip(request)
 
         try:
-
             daily_square_manager.update_daily_square_movement(data)
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
