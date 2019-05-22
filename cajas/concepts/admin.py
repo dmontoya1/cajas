@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from concepts.models.concepts import Concept
-from concepts.models.stops import Stop
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.models.stops import Stop
 
 
 class StopAdmin(admin.StackedInline):
@@ -14,5 +14,10 @@ class StopAdmin(admin.StackedInline):
 class ConceptAdmin(admin.ModelAdmin):
 
     list_display = ['name', 'concept_type', 'counterpart']
-    search_fields = ['name', 'counterpart__name, relationship']
+    search_fields = ['name', 'counterpart__name']
     inlines = [StopAdmin, ]
+
+    class Media:
+        js = (
+            'js/admin/concept_admin.js',
+        )

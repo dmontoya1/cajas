@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class WebclientConfig(AppConfig):
-    name = 'webclient'
+    name = 'cajas.webclient'

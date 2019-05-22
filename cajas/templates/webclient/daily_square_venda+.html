@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+{% load office_dailysquare_box %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="
+        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
+    </li>
+    {% if perms.office %}
+      <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+      {% if perms.office.change_office %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.boxes.change_boxdonjuan %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_don_juan' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Don Juan
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_officeitems %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office_items_list' office.slug %}">
+            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inventario Oficina
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario Supervisor
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_partner %}
+      <li class="menu-title">Socios</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de socios
+        </a>
+      </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:investment_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de inversiones
+        </a>
+      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_employee %}
+      <li class="menu-title">Empleados</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de empleados
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+    {% if perms.units.change_unit %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:units_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Árbol de unidades
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.boxes.change_boxdailysquare %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cuadres diarios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.office.change_officecommitments %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
+          <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Aprovisionamiento
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.loans.change_loan %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:loan_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Préstamos
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.chains.change_chain %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:chain_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cadenas
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="p-4">{{ box_user.get_full_name }} - Código {{ box_user.pk }}</h1>
+
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="mb-3">Filtros</h3>
+                <form class="filter mb-4" action="." method="get">
+                  <div class="row">
+                    <div class="col">
+                      <label for="date_start">Fecha de inicio</label>
+                      <input type="text" class="form-control datetimepicker" id="date_start" name="date_start"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                    <div class="col">
+                      <label for="date_end">Fecha de finalizacion</label>
+                      <input type="text" class="form-control datetimepicker" id="date_end" name="date_end"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                  </div>
+                  <button type="submit" class="filter-report">Filtrar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="card">
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
+                  <h1 class="mb-4">Movimientos SAC</h1>
+                  <h3 class="mb-4">Retiros</h3>
+                  <thead>
+                  <tr>
+                    <th>Ruta</th>
+                    <th>Fecha</th>
+                    <th>Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  {% for w in withdraws %}
+                    <tr>
+                      <td>{{ w.unit.name }}</td>
+                      <td>{{ w.date }}</td>
+                      <td>$ {{ w.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="2">
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>
+                      <strong>$ {{ withdraws_total|intcomma }}</strong>
+                    </td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
+                  <h3 class="mb-4">Inversiones</h3>
+                  <thead>
+                  <tr>
+                    <th>Ruta</th>
+                    <th>Fecha</th>
+                    <th>Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  {% for i in investments %}
+                    <tr>
+                      <td>{{ i.unit.name }}</td>
+                      <td>{{ i.date }}</td>
+                      <td>$ {{ i.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="2">
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>
+                      <strong>$ {{ investments_total|intcomma|default:"0" }}</strong>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="card">
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
+                  <h1 class="mb-4">Movimientos Venda+</h1>
+                  <h3 class="mb-4">Retiros</h3>
+                  <thead>
+                  <tr>
+                    <th>Ruta</th>
+                    <th>Fecha</th>
+                    <th>Comentarios</th>
+                    <th>Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody class="venda_withdraws">
+                  {% for w in withdraws_list %}
+                    <tr>
+                      <td>{{ w.route }}</td>
+                      <td>{{ w.date }}</td>
+                      <td>{{ w.comment }}</td>
+                      <td>{{ w.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="3">
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>
+                      <strong>$ <span id="total-withdraws">{{ withdraws_list_total|intcomma }}</span></strong>
+                    </td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card-body">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
+                  <h3 class="mb-4">Inversiones</h3>
+                  <thead>
+                  <tr>
+                    <th>Ruta</th>
+                    <th>Fecha</th>
+                    <th>Comentario</th>
+                    <th>Valor</th>
+                  </tr>
+                  </thead>
+                  <tbody class="venda_investments">
+                  {% for i in investments_list %}
+                    <tr>
+                      <td>{{ i.route }}</td>
+                      <td>{{ i.date }}</td>
+                      <td>{{ i.comment }}</td>
+                      <td>$ {{ i.value|intcomma }}</td>
+                    </tr>
+                  {% endfor %}
+                  <tr>
+                    <td colspan="3">
+                      <strong>TOTAL</strong>
+                    </td>
+                    <td>
+                      <strong>$ <span id="total-investment">{{ investments_list_total|intcomma }}</span></strong>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+  <script type="text/javascript">
+    $('.datetimepicker').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+      maxDate: '0',//tomorrow is maximum date calendar
+      timepicker: false,
+    });
+
+
+  </script>
+
+{% endblock %}

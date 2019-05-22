@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class ChainsConfig(AppConfig):
-    name = 'chains'
+    name = 'cajas.chains'
     verbose_name = 'Cadenas'
 
     def ready(self):

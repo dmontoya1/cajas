@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from concepts.models.concepts import Concept
+from cajas.concepts.models.concepts import Concept
 
 User = get_user_model()
 

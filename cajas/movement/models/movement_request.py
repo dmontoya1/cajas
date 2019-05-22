@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from boxes.models.box_partner import BoxPartner
+from cajas.boxes.models.box_partner import BoxPartner
 from .movement_mixin import MovementMixin
 
 
@@ -26,7 +26,23 @@ class MovementRequest(MovementMixin):
     )
 
     def __str__(self):
-        return "Solicitud de movimiento del {}".format(self.box_partner.partner)
+        if self.box_partner:
+            return "Solicitud de movimiento del {}".format(self.box_partner.partner)
+        return "Solicitud"
+
+    def __init__(self, *args, **kwargs):
+        super(MovementRequest, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
+
+    def save(self, *args, **kwargs):
+        if self.__movement_type != self.movement_type:
+            box = self.box_partner
+            if self.movement_type == 'IN':
+                box.balance = box.balance + (int(self.value) * 2)
+            else:
+                box.balance = box.balance - (int(self.value) * 2)
+            box.save()
+        super(MovementRequest, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Requerimiento de Movimiento'

@@ -1,5 +1,9 @@
 
+import logging
+
 from ..models.employee import Employee
+
+logger = logging.getLogger(__name__)
 
 
 class EmployeeManager:
@@ -17,15 +21,20 @@ class EmployeeManager:
         try:
             employee = Employee.objects.create(
                 user=data['user'],
-                office=data['office'],
                 charge=data['charge'],
                 salary_type=data['salary_type'],
-                salary=data['salary'],
+                salary=float(data['salary']),
                 cv=data['cv'],
                 passport=data['passport'],
             )
-        except:
-            raise Exception('Ha ocurrido un error al crear el usuario')
+            employee.save()
+            if data['user'].related_employee.get().is_admin_charge():
+                employee.office.add(data['office'].office)
+            else:
+                employee.office_country.add(data['office'])
+        except Exception as e:
+            logger.exception(str(e))
+            raise Exception(e)
         return employee
 
 

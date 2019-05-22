@@ -1,6 +1,6 @@
 from django.db import models
 
-from boxes.models.box_provisioning import BoxProvisioning
+from cajas.boxes.models.box_provisioning import BoxProvisioning
 from .movement_mixin import MovementMixin
 
 
@@ -19,21 +19,19 @@ class MovementProvisioning(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_provisioning.office)
 
+    def __init__(self, *args, **kwargs):
+        super(MovementProvisioning, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
+
     def save(self, *args, **kwargs):
-        if self.box_provisioning.balance:
-            l_balance = self.box_provisioning.balance
-        else:
-            l_balance = 0
-
-        if self.movement_type == MovementProvisioning.IN:
-            self.balance = int(l_balance) + int(self.value)
-        else:
-            self.balance = int(l_balance) - int(self.value)
-
+        if self.__movement_type != self.movement_type:
+            box = self.box_daily_square
+            if self.movement_type == 'IN':
+                box.balance = box.balance + (int(self.value) * 2)
+            else:
+                box.balance = box.balance - (int(self.value) * 2)
+            box.save()
         super(MovementProvisioning, self).save(*args, **kwargs)
-        self.box_provisioning.balance = self.balance
-        self.box_provisioning.last_movement_id = self.pk
-        self.box_provisioning.save()
 
     class Meta:
         verbose_name = 'Movimiento de aprovisionamiento'

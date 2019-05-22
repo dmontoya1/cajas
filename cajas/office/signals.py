@@ -5,27 +5,30 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from cajas.users.models.partner import Partner
-from boxes.models.box_office import BoxOffice
-from boxes.models.box_don_juan import BoxDonJuan
-from office.models.office import Office
-from boxes.models.box_provisioning import BoxProvisioning
+from cajas.boxes.models.box_office import BoxOffice
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_provisioning import BoxProvisioning
+
+from .models.officeCountry import OfficeCountry
 
 
-@receiver(post_save, sender=Office)
-def create_office_box(sender, **kwargs):
+@receiver(post_save, sender=OfficeCountry)
+def create_office_country_box(sender, **kwargs):
     if kwargs.get('created'):
         instance = kwargs.get('instance')
-        box1 = BoxOffice(
+        box1 = BoxOffice.objects.create(
             office=instance,
         )
-        box1.save()
         donjuan = Partner.objects.get(code='DONJUAN')
-        box_don_juan = BoxDonJuan(
+        box_don_juan = BoxDonJuan.objects.create(
             partner=donjuan,
             office=instance
         )
-        box_don_juan.save()
-        box_provisioning = BoxProvisioning(
+        box_don_juan_usd = BoxDonJuanUSD.objects.create(
+            partner=donjuan,
+            office=instance
+        )
+        box_provisioning = BoxProvisioning.objects.create(
             office=instance,
         )
-        box_provisioning.save()

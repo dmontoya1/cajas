@@ -1,22 +1,25 @@
 
 from django.contrib import messages
+from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
 
-from boxes.models.box_daily_square import BoxDailySquare
+from cajas.boxes.models.box_daily_square import BoxDailySquare
 from cajas.users.models.user import User
-from concepts.models.concepts import Concept
-from concepts.services.stop_service import StopManager
-from general_config.models.country import Country
-from movement.services.daily_square_service import MovementDailySquareManager
-from office.models.office import Office
-from units.models.units import Unit
+from cajas.concepts.models.concepts import Concept
+from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
+from cajas.general_config.models.country import Country
+from cajas.movement.services.daily_square_service import MovementDailySquareManager
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 from .get_ip import get_ip
 from .utils import get_object_or_none
 
 daily_square_manager = MovementDailySquareManager()
+email_manager = EmailManager()
 
 
 class CreateDailySquareMovement(View):
@@ -25,7 +28,7 @@ class CreateDailySquareMovement(View):
 
     def post(self, request, *args, **kwargs):
         office_pk = request.session['office']
-        office_session = Office.objects.get(pk=office_pk)
+        office_session = OfficeCountry.objects.get(pk=office_pk)
         user = User.objects.get(pk=request.POST['user_id'])
         box_daily_square = BoxDailySquare.objects.get(user=user)
         concept = Concept.objects.get(pk=request.POST['concept'])
@@ -38,7 +41,7 @@ class CreateDailySquareMovement(View):
         unit = get_object_or_none(Unit, pk=request.POST.get('unit', None))
         user = get_object_or_none(User, pk=request.POST.get('user', None))
         country = get_object_or_none(Country, pk=request.POST.get('country', None))
-        office = get_object_or_none(Office, pk=request.POST.get('office', None))
+        office = get_object_or_none(OfficeCountry, pk=request.POST.get('office', None))
         loan = request.POST.get('loan', None)
         chain = request.POST.get('chain', None)
 
@@ -58,9 +61,13 @@ class CreateDailySquareMovement(View):
             'loan': loan,
             'chain': chain,
         }
-
         total_movements = daily_square_manager.get_user_value(data)
-        if StopManager.validate_stop(data) > total_movements['value__sum']:
+        stop_manager = StopManager(user)
+        stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+        informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
+        if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
+            email_manager.send_informative_top_notification(user, concept)
+        if stop > total_movements['value__sum']:
             movement = daily_square_manager.create_movement(data)
             messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         else:

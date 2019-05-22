@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from movement.admin import (
-    MovementCountryInline,
+from cajas.movement.admin import (
+    MovementColombiaInline,
+    MovementDonJuanUSDInline,
     MovementDailySquareInline,
     MovementDonJuanInline,
     MovementOfficeInline,
@@ -9,24 +10,25 @@ from movement.admin import (
     MovementProvisioningInline
 )
 
-from .models.box_country import BoxCountry
+from .models.box_colombia import BoxColombia
 from .models.box_daily_square import BoxDailySquare
 from .models.box_don_juan import BoxDonJuan
+from .models.box_don_juan_usd import BoxDonJuanUSD
 from .models.box_office import BoxOffice
 from .models.box_partner import BoxPartner
 from .models.box_provisioning import BoxProvisioning
 
 
-@admin.register(BoxCountry)
-class BoxCountryAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de un país
+@admin.register(BoxColombia)
+class BoxColombiaAdmin(admin.ModelAdmin):
+    """Administrador de las cajas colombia
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('country', 'balance', 'currency', 'is_active')
-    inlines = [MovementCountryInline, ]
-    search_fields = ('country__name', 'currency__name', 'currency__abbr' )
-    exclude = ('last_movement_id', )
+    list_display = ('office', 'name', 'balance', 'is_active')
+    inlines = [MovementColombiaInline, ]
+    search_fields = ('office__name',)
+    exclude = ('last_movement_id',)
 
 
 @admin.register(BoxDailySquare)
@@ -35,7 +37,7 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('user', 'balance', 'is_active')
+    list_display = ('user', 'office', 'balance', 'is_active')
     inlines = [MovementDailySquareInline, ]
     search_fields = ('user__first_name', 'user__last_name', 'user__document_id' )
     exclude = ('last_movement_id', )
@@ -49,6 +51,18 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
 
     list_display = ('office', 'balance', 'is_active')
     inlines = [MovementDonJuanInline, ]
+    search_fields = ('office__country__abbr', 'office__number', )
+    exclude = ('last_movement_id', )
+
+
+@admin.register(BoxDonJuanUSD)
+class BoxDonJuanUSDAdmin(admin.ModelAdmin):
+    """Administrador de las cajas de don Juan por oficina
+        Se agrega INLINE con los movimientos
+    """
+
+    list_display = ('office', 'balance', 'is_active')
+    inlines = [MovementDonJuanUSDInline, ]
     search_fields = ('office__country__abbr', 'office__number', )
     exclude = ('last_movement_id', )
 
@@ -71,8 +85,8 @@ class BoxPartnerAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('partner', 'balance', 'is_active')
-    list_filter = ('partner__office', 'partner__office__country')
+    list_display = ('partner', 'balance', 'box_status')
+    list_filter = ('partner__office', 'box_status')
     inlines = [MovementPartnerInline, ]
     search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
                      'partner__user__document_id')

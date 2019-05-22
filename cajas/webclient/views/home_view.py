@@ -1,9 +1,10 @@
 
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from general_config.models.country import Country
+from cajas.users.models.partner import Partner
+from cajas.office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -20,11 +21,23 @@ class Home(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
+        user = self.request.user
+
         if not self.request.user.is_superuser:
             try:
-                context['office'] = self.request.user.employee.office
-            except:
-                context['office'] = self.request.user.partner.get().office
+                if user.related_employee.get().is_admin_charge():
+                    if user.related_employee.get().office.all().exists():
+                        context['offices'] = user.related_employee.get().office.all()
+                    else:
+                        context['offices_country'] = user.related_employee.get().office_country.all()
+                else:
+                    context['offices'] = user.related_employee.get().office_country.all()
+            except Exception as e:
+                print(e)
+                context['actual_partners'] = Partner.objects.filter(user=user)
         else:
-            context['countries'] = Country.objects.all()
+            context['offices'] = Office.objects.all()
+            context['all_offices'] = OfficeCountry.objects.all().order_by('office')
+            context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        print("Contexto -->", context)
         return context

@@ -2,11 +2,11 @@ from django.apps import AppConfig
 
 
 class MovementConfig(AppConfig):
-    name = 'movement'
+    name = 'cajas.movement'
     verbose_name = 'Movimientos'
 
     def ready(self):
         try:
-            import movement.signals  # noqa F401
+            import cajas.movement.signals  # noqa F401
         except ImportError:
             pass

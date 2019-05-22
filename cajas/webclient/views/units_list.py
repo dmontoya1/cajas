@@ -1,13 +1,14 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from inventory.models import Category
 from cajas.users.models.employee import Employee
-from units.models.units import Unit
-from office.models.office import Office
 from cajas.users.models.partner import Partner
+from cajas.inventory.models import Category
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class UnitsList(LoginRequiredMixin, TemplateView):
@@ -21,18 +22,25 @@ class UnitsList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(UnitsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(Office, slug=slug)
-        units = Unit.objects.filter(partner__office=office)
-        supervisor = Employee.objects.filter(office__pk=office.pk, charge__name="Supervisor", user__is_active=True)
-        collectors = Employee.objects.filter(office__pk=office.pk, charge__name="Cobrador", user__is_active=True)
-        partners = Partner.objects.filter(office__pk=office.pk, user__is_active=True).exclude(partner_type='DJ')
-        categories = Category.objects.all()
+        office = get_object_or_404(OfficeCountry, slug=slug)
+
+        try:
+            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+                context['units'] = Unit.objects.filter(partner__office=office)
+                context['employees'] = Employee.objects.filter(
+                    Q(office_country=office) |
+                    Q(office=office.office) &
+                    Q(user__is_active=True)
+                )
+                context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+                context['categories'] = Category.objects.all()
+            else:
+                partner = Partner.objects.get(user=self.request.user, office=office)
+                context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
+        except Exception as e:
+            partner = Partner.objects.get(user=self.request.user, office=office)
+            context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
 
         context['office'] = office
-        context['units'] = units
-        context['supervisor'] = supervisor
-        context['collectors'] = collectors
-        context['partners'] = partners
-        context['categories'] = categories
 
         return context

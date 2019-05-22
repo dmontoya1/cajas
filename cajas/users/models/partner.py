@@ -5,7 +5,7 @@ from django.db import models
 from enumfields import EnumField
 from enumfields import Enum
 
-from office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
 
@@ -38,11 +38,11 @@ class Partner(models.Model):
         related_name='partner'
     )
     office = models.ForeignKey(
-        Office,
-        verbose_name='Oficina',
+        OfficeCountry,
+        verbose_name='Oficina por País',
+        related_name='partners',
         on_delete=models.SET_NULL,
-        blank=True,
-        null=True
+        blank=True, null=True
     )
     code = models.CharField(
         'Código',
@@ -65,21 +65,25 @@ class Partner(models.Model):
         'Consecutivo Mini-Socios',
         default=1
     )
+    is_active = models.BooleanField(
+        'Socio activo?',
+        default=True
+    )
 
-    def get_full_name(self):
-        return '{}'.format(self.user.get_full_name())
-
-    get_full_name.short_description = 'Nombres'
+    class Meta:
+        verbose_name = 'Socio'
+        verbose_name_plural = 'Socios'
+        ordering = ['user__first_name']
 
     def __str__(self):
-        return 'Socio {} ({})'.format(self.get_full_name(), self.code)
+        return '{} ({})'.format(self.get_full_name(), self.code)
 
     def save(self, *args, **kwargs):
         "Funcion para generar el código del socio"
         if not self.code:
             if self.partner_type != PartnerType.DONJUAN:
                 if self.partner_type == PartnerType.DIRECTO:
-                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.number, self.office.consecutive)
+                    self.code = '{}{}-{}'.format(self.office.country.abbr, self.office.office.number, self.office.consecutive)
                     self.office.consecutive += 1
                     self.office.save()
                 else:
@@ -90,7 +94,7 @@ class Partner(models.Model):
                 self.code = 'DONJUAN'
         super(Partner, self).save(*args, **kwargs)
 
-    class Meta:
-        verbose_name = 'Socio'
-        verbose_name_plural = 'Socios'
-        unique_together = ("office", "user")
+    def get_full_name(self):
+        return '{}'.format(self.user.get_full_name())
+
+    get_full_name.short_description = 'Nombres'

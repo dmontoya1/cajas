@@ -3,20 +3,22 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from inventory.models.brand import Brand
-from boxes.models.box_partner import BoxPartner
+from cajas.inventory.models.brand import Brand
+from cajas.boxes.models.box_partner import BoxPartner
 from cajas.users.models.partner import Partner
-from api.CsrfExempt import CsrfExemptSessionAuthentication
-from concepts.models.concepts import Concept, ConceptType
-from concepts.services.stop_service import StopManager
-from webclient.views.get_ip import get_ip
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.concepts.services.stop_service import StopManager
+from cajas.core.services.email_service import EmailManager
+from cajas.webclient.views.get_ip import get_ip
 from ....services.partner_service import MovementPartnerManager
-from units.models.units import Unit
-from units.models.unitItems import UnitItems
+from cajas.units.models.units import Unit
+from cajas.units.models.unitItems import UnitItems
 from django.shortcuts import get_object_or_404
 
-StopManager = StopManager()
+
 MovementPartnerManager = MovementPartnerManager()
+email_manager = EmailManager()
 
 
 class MovementPartnerCreate(APIView):
@@ -33,18 +35,19 @@ class MovementPartnerCreate(APIView):
         movement_type = request.POST['movement_type']
         value = request.POST['value']
         detail = request.POST['detail']
-
         ip = get_ip(request)
-        values = request.data["elemts"].split(",")
-        if request.data["form[form]["+str(values[0])+"][name]"] != '':
-            unit = Unit.objects.get(pk=request.data["unity"])
-            for value in values:
-                UnitItems.objects.create(
-                    unit=unit,
-                    name=request.data["form[form]["+value+"][name]"],
-                    brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
-                    price=request.data["form[form]["+value+"][price]"]
-                )
+
+        if concept.name == "Compra de Inventario Unidad":
+            values = request.data["elemts"].split(",")
+            if request.data["form[form]["+str(values[0])+"][name]"] != '':
+                unit = Unit.objects.get(pk=request.data["unity"])
+                for value in values:
+                    UnitItems.objects.create(
+                        unit=unit,
+                        name=request.data["form[form]["+value+"][name]"],
+                        brand=get_object_or_404(Brand, pk=request.data["form[form]["+value+"][brand]"]),
+                        price=request.data["form[form]["+value+"][price]"]
+                    )
 
         if concept.concept_type == ConceptType.SIMPLE:
             data = {
@@ -59,7 +62,11 @@ class MovementPartnerCreate(APIView):
                 '_user': partner.user,
             }
             total_movements = MovementPartnerManager.get_user_value(data)
-            stop = StopManager.validate_stop(data)
+            stop_manager = StopManager(partner.user)
+            stop = stop_manager.get_user_movements_top_value_by_concept(concept)
+            informative_value = stop_manager.get_informative_user_top_value_movements_by_concept(concept)
+            if informative_value != 0 and informative_value <= (total_movements['value__sum'] + int(data['value'])):
+                email_manager.send_informative_top_notification(partner.user, concept)
             if stop == 0 or(stop >= (total_movements['value__sum'] + int(data['value']))):
                 movement = MovementPartnerManager.create_simple(data)
             else:
@@ -98,4 +105,3 @@ class MovementPartnerCreate(APIView):
             'Se ha añadido el movimiento exitosamente.',
             status=status.HTTP_201_CREATED
         )
-

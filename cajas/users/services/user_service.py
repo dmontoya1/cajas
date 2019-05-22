@@ -15,35 +15,33 @@ class UserManager:
 
     def create_user(self, data):
         self.__validate_data(data)
-        if "password1" in data:
-            try:
-                user = User.objects.create(
-                    email=data['email'],
-                    username=data['email'],
-                    first_name=data['first_name'],
-                    last_name=data['last_name'],
-                    document_type=data['document_type'],
-                    document_id=data['document_id'],
-                    password=make_password(data['password1']),
-                    is_daily_square=data['is_daily_square'],
-                    is_abstract=True,
-                    is_active=True
-                )
-            except:
-                raise Exception('Ha ocurrido un error al crear el usuario')
-        else:
-            try:
-                user = User.objects.create(
-                    email=data['email'],
-                    username=data['email'],
-                    first_name=data['first_name'],
-                    last_name=data['last_name'],
-                    document_type=data['document_type'],
-                    document_id=data['document_id'],
-                    is_abstract=False,
-                    is_active=True,
-                    is_daily_square=data['is_daily_square'],
-                )
-            except:
-                raise Exception('Ha ocurrido un error al crear el usuario')
+        daily_square = False
+        email = ""
+        try:
+            user = User.objects.get(email=data['email'])
+        except Exception as e:
+            if data['is_daily_square'] == "true":
+                daily_square = True
+            if data['email']:
+                email = data['email']
+                username = email
+            else:
+                username = data['document_id']
+            user = User.objects.create(
+                email=email,
+                username=username,
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                document_type=data['document_type'],
+                document_id=data['document_id'],
+                is_active=True,
+                is_daily_square=daily_square
+            )
+            if "password1" in data:
+                user.password = make_password(data['password1'])
+                user.is_abstract = True
+            else:
+                user.is_abstract = False
+
+            user.save()
         return user

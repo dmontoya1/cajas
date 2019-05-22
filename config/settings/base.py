@@ -31,7 +31,7 @@ SITE_ID = 1
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
-USE_L10N = True
+USE_L10N = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
 
@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'django_celery_beat',
 ]
 LOCAL_APPS = [
     'cajas.api.apps.ApiConfig',
@@ -79,9 +80,11 @@ LOCAL_APPS = [
     'cajas.concepts.apps.ConceptsConfig',
     'cajas.general_config.apps.GeneralConfigConfig',
     'cajas.inventory.apps.InventoryConfig',
+    'cajas.investments.apps.InvestmentsConfig',
     'cajas.loans.apps.LoansConfig',
     'cajas.movement.apps.MovementConfig',
     'cajas.office.apps.OfficeConfig',
+    'cajas.reports.apps.ReportsConfig',
     'cajas.units.apps.UnitsConfig',
     'cajas.users.apps.UsersAppConfig',
 ]
@@ -108,6 +111,32 @@ AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = '/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = 'account_login'
+
+
+# Celery
+# ------------------------------------------------------------------------------
+INSTALLED_APPS += ['cajas.taskapp.celery.CeleryAppConfig']
+if USE_TZ:
+    # http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-timezone
+    CELERY_TIMEZONE = TIME_ZONE
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-broker_url
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_backend
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-accept_content
+CELERY_ACCEPT_CONTENT = ['json']
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-task_serializer
+CELERY_TASK_SERIALIZER = 'json'
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#std:setting-result_serializer
+CELERY_RESULT_SERIALIZER = 'json'
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-time-limit
+# TODO: set to whatever value is adequate in your circumstances
+CELERYD_TASK_TIME_LIMIT = 5 * 60
+# http://docs.celeryproject.org/en/latest/userguide/configuration.html#task-soft-time-limit
+# TODO: set to whatever value is adequate in your circumstances
+CELERYD_TASK_SOFT_TIME_LIMIT = 60
+
+
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -275,7 +304,7 @@ SOCIALACCOUNT_ADAPTER = 'cajas.users.adapters.SocialAccountAdapter'
 # DRF Config
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
-        'api.permissions.HasAPIAccess',
+        'cajas.api.permissions.HasAPIAccess',
     ),
     # 'DEFAULT_AUTHENTICATION_CLASSES': (
     #     'rest_framework.authentication.TokenAuthentication',

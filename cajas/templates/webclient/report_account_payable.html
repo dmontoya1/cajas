@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <style>
+    .navbar .navbar-nav li.menu-item-has-children a {
+      line-height: 25px !important;
+    }
+
+    tr.td-investment {
+      color: #7dd1af !important;
+      font-weight: bold;
+    }
+
+    tr.td-loans {
+      color: #49afa0 !important;
+      font-weight: bold;
+    }
+
+    tr.td-chain {
+      color: #3b5f48;
+      font-weight: bold;
+    }
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
+    </li>
+    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+    <li class="menu-item-has-children dropdown">
+      <a href="{% url 'webclient:home' %}">
+        <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+        Inicio
+      </a>
+    </li>
+    {% if request.user.is_superuser or request.user.is_secretary %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:reports' %}">
+          <i class="fas fa-chart-line mr-3"></i>
+          Informes
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+{% endblock %}
+
+{% block index_actions %}
+{% endblock %}
+
+{% block content %}
+  <div class="row country-row">
+    <div class="col-12">
+      <div class="country-name">
+        <span>Obligaciones mensuales por pagar</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                  <table id="table" class="table table-striped table-bordered responsive display"
+                  cellspacing="0" style="width:100%">
+                  <thead>
+                  <tr>
+                    <th>Compromiso</th>
+                    <th>Valor</th>
+                    <th>Fecha</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for loan in loans %}
+                    <tr class="td-loans">
+                      <td>Pago interés {{ loan }}</td>
+                      <td>${{ loan.get_interest_payment|intcomma }}</td>
+                      <td>{% now "F Y" %}</td>
+                    </tr>
+                  {% endfor %}
+                  {% for chain in chains %}
+                    {% for place in chain.related_places.all %}
+                      {% for user in place.related_users.all %}
+                        <tr class="td-chain">
+                          <td>Pago {{ user }}</td>
+                          <td>${{ user.get_user_value|intcomma }}</td>
+                          <td>{% now "F Y" %}</td>
+                        </tr>
+                      {% endfor %}
+                    {% endfor %}
+                  {% endfor %}
+                  {% for i in investments %}
+                    <tr class="td-investment">
+                      <td>Pago cuota {{ i }}</td>
+                      <td>${{ i.monthly_pay|intcomma }}</td>
+                      <td>{% now "F Y" %}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#table').DataTable({
+        responsive: {
+          details: true
+        },
+        dom: 'lBfrtip',
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        buttons: [
+          'excel', 'print'
+        ],
+        "order": [[1, "asc"]],
+        language: {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+        }
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 
-from boxes.models.box_office import BoxOffice
+from cajas.boxes.models.box_office import BoxOffice
 from .movement_mixin import MovementMixin
 
 
@@ -19,21 +19,9 @@ class MovementOffice(MovementMixin):
     def __str__(self):
         return "Movimiento de {}".format(self.box_office.office)
 
-    def save(self, *args, **kwargs):
-        if self.box_office.balance:
-            l_balance = self.box_office.balance
-        else:
-            l_balance = 0
-
-        if self.movement_type == MovementOffice.IN:
-            self.balance = int(l_balance) + int(self.value)
-        else:
-            self.balance = int(l_balance) - int(self.value)
-
-        super(MovementOffice, self).save(*args, **kwargs)
-        self.box_office.balance = self.balance
-        self.box_office.last_movement_id = self.pk
-        self.box_office.save()
+    def __init__(self, *args, **kwargs):
+        super(MovementOffice, self).__init__(*args, **kwargs)
+        self.__movement_type = self.movement_type
 
     class Meta:
         verbose_name = 'Movimiento de la oficina'

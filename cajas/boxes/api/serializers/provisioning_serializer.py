@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 
-from movement.models.movement_provisioning import MovementProvisioning
+from cajas.movement.models.movement_provisioning import MovementProvisioning
 
 
 class ProvisioningSerializer(serializers.ModelSerializer):

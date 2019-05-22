@@ -1,7 +1,8 @@
 from django.db import models
 
-from inventory.models.brand import Brand
-from office.models.office import Office
+from cajas.inventory.models.brand import Brand
+
+from .officeCountry import OfficeCountry
 
 
 class OfficeItems(models.Model):
@@ -9,7 +10,7 @@ class OfficeItems(models.Model):
     """
 
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         on_delete=models.CASCADE,
         related_name='related_items'
@@ -44,7 +45,7 @@ class OfficeItems(models.Model):
     )
 
     def __str__(self):
-        return '{} de la oficina {}{}'.format(self.name, self.office.country.abbr, self.office.number)
+        return 'Item de la oficina'
 
     class Meta:
         verbose_name = 'Inventario oficina'

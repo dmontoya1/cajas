@@ -1,16 +1,20 @@
 from django.contrib import admin
 
-from office.models.office import Office
-from office.models.officeItems import OfficeItems
-from office.models.officeCommitments import OfficeCommitments
+from .models.office import Office
+from .models.officeItems import OfficeItems
+from .models.officeCommitments import OfficeCommitments
+from .models.officeCountry import OfficeCountry
+from .models.supervisorCalendar import SupervisorCalendar
+from .models.notifications import Notifications
 
 
-class OfficeItemsAdmin(admin.StackedInline):
+@admin.register(OfficeItems)
+class OfficeItemsAdmin(admin.ModelAdmin):
     """
     """
 
-    model = OfficeItems
-    extra = 0
+    list_display = ('office', 'name', 'price', 'brand')
+    list_filter = ('office', 'office__country', 'office__office')
 
 
 class OfficeCommitmentsAdmin(admin.StackedInline):
@@ -21,12 +25,38 @@ class OfficeCommitmentsAdmin(admin.StackedInline):
     extra = 1
 
 
+class OfficeCountryInline(admin.StackedInline):
+    """
+    """
+
+    model = OfficeCountry
+    extra = 0
+    readonly_fields = ('slug', 'consecutive',)
+
+
 @admin.register(Office)
 class OfficeAdmin(admin.ModelAdmin):
     """
     """
 
-    list_display = ('country', 'number', )
-    search_fields = ('number', 'country__name')
-    readonly_fields = ('slug', 'consecutive')
-    inlines = [OfficeItemsAdmin, OfficeCommitmentsAdmin]
+    list_display = ('__str__', )
+    search_fields = ('number', )
+    inlines = [OfficeCountryInline, OfficeCommitmentsAdmin]
+
+
+@admin.register(SupervisorCalendar)
+class SupervisorCalendarAdmin(admin.ModelAdmin):
+    """
+    """
+
+    model = SupervisorCalendar
+    extra = 0
+
+
+@admin.register(Notifications)
+class NotificationsAdmin(admin.ModelAdmin):
+    """
+    """
+
+    model = Notifications
+    extra = 0

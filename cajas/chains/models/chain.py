@@ -1,6 +1,6 @@
 from django.db import models
 
-from office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class Chain(models.Model):
@@ -16,7 +16,7 @@ class Chain(models.Model):
     )
 
     office = models.ForeignKey(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         related_name='related_chaines',
         on_delete=models.CASCADE,

@@ -1,7 +1,7 @@
 
 from django.db import models
 
-from general_config.models.currency import Currency
+from .currency import Currency
 
 
 class Exchange(models.Model):
@@ -20,13 +20,21 @@ class Exchange(models.Model):
         auto_now_add=False,
         help_text='Ingresa el mes en el que tienen validez estas tasas de cambio'
     )
-    exchange_dolar = models.IntegerField(
-        'Cambio divisa a Dolar',
-        help_text='Tasa de cambio para prestamos, abonos e intereses de la divisa a dolar'
+    exchange_dolar = models.FloatField(
+        'Cambio divisa a Dolar (Prestamo)',
+        help_text='Tasa de cambio para prestamos de la divisa a dolar'
     )
-    exchange_cop = models.IntegerField(
-        'Factor divisa a Peso Colombiano',
-        help_text='Factor de cambio para prestamos, abonos e intereses de la divisa a peso colombiano'
+    exchange_cop = models.FloatField(
+        'Factor divisa a Peso Colombiano (Prestamo)',
+        help_text='Factor de cambio para prestamos de la divisa a peso colombiano'
+    )
+    exchange_dolar_abono = models.FloatField(
+        'Cambio divisa a Dolar (Abonos)',
+        help_text='Tasa de cambio para abonos e intereses de la divisa a dolar'
+    )
+    exchange_cop_abono = models.FloatField(
+        'Factor divisa a Peso Colombiano (Abono)',
+        help_text='Factor de cambio para abonos e intereses de la divisa a peso colombiano'
     )
 
     def __str__(self):

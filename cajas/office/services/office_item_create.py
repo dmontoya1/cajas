@@ -1,5 +1,5 @@
 
-from office.models.officeItems import OfficeItems
+from cajas.office.models.officeItems import OfficeItems
 
 
 class OfficeItemsManager(object):

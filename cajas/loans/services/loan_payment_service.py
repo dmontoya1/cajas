@@ -4,14 +4,18 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from boxes.models.box_don_juan import BoxDonJuan
-from concepts.models.concepts import Concept
-from loans.models.loan import Loan, LoanType
-from loans.models.loan_payments import LoanPayment
-from movement.services.don_juan_service import DonJuanManager
-from movement.services.partner_service import MovementPartnerManager
-from movement.services.office_service import MovementOfficeManager
-from webclient.views.get_ip import get_ip
+from cajas.boxes.models.box_don_juan import BoxDonJuan
+from cajas.concepts.models.concepts import Concept
+from cajas.general_config.models.exchange import Exchange
+from cajas.loans.models.loan import Loan, LoanType
+from cajas.loans.models.loan_history import LoanHistory
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.movement.services.office_service import MovementOfficeManager
+from cajas.office.models import OfficeCountry
+from cajas.users.models import Partner
+from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_object_or_none
 
 from ..models.loan import Loan
 
@@ -25,62 +29,115 @@ class LoanPaymentManager(object):
 
     def add_payment(self, request):
         loan = get_object_or_404(Loan, pk=request.data['loan'])
-        self.create_payment(request)
-        loan.balance -= int(request.data['value'])
-        loan.save()
-
-        if loan.loan_type == LoanType.EMPLEADO:
-            if loan.provider:
-                concept = get_object_or_404(Concept, name='Pago Abono préstamo empleado')
+        if request.data['history_type'] == LoanHistory.ABONO:
+            self.create_payment(request)
+            if loan.loan_type == LoanType.EMPLEADO:
+                if loan.provider:
+                    concept = get_object_or_404(Concept, name='Pago Abono préstamo empleado')
+                    data = {
+                        'box_office': loan.office.box,
+                        'concept': concept,
+                        'movement_type': 'IN',
+                        'value': request.data['value'],
+                        'detail': 'Pago abono {}'.format(loan),
+                        'date': request.data['date'],
+                        'responsible': request.user,
+                        'ip': get_ip(request)
+                    }
+                    return movement_office_manager.create_movement(data)
+            elif loan.loan_type == LoanType.SOCIO_DIRECTO:
+                concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
+                partner = Partner.objects.get(user=loan.lender, office__pk=request.data['office'])
                 data = {
-                    'box': loan.office.get().box,
+                    'partner': partner,
+                    'box': partner.box,
                     'concept': concept,
-                    'movement_type': 'IN',
+                    'movement_type': 'OUT',
                     'value': request.data['value'],
                     'detail': 'Pago abono {}'.format(loan),
                     'date': request.data['date'],
                     'responsible': request.user,
                     'ip': get_ip(request)
                 }
-                return movement_office_manager.create_movement(data)
-        elif loan.loan_type == LoanType.SOCIO_DIRECTO:
-            concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
-            data = {
-                'partner': loan.lender.partner.get(),
-                'box': loan.lender.partner.get().box,
-                'concept': concept,
-                'movement_type': 'OUT',
-                'value': request.data['value'],
-                'detail': 'Pago abono {}'.format(loan),
-                'date': request.data['date'],
-                'responsible': request.user,
-                'ip': get_ip(request)
-            }
-
-            return movement_partner_manager.create_double(data)
-        else:
-            concept = get_object_or_404(Concept, name='Pago Abono préstamo terceros')
-            box_donjuan = get_object_or_404(BoxDonJuan, office=request.session['office'])
-            data = {
-                'box': box_donjuan,
-                'concept': concept,
-                'movement_type': 'OUT',
-                'value': request.data['value'],
-                'detail': 'Pago abono {}'.format(loan),
-                'date': request.data['date'],
-                'responsible': request.user,
-                'ip': get_ip(request)
-            }
-            return movement_don_juan_manager.create_movement(data)
+                return movement_partner_manager.create_double(data)
+            else:
+                concept = get_object_or_404(Concept, name='Pago Abono préstamo terceros')
+                box_donjuan = get_object_or_404(BoxDonJuan, office=request.session['office'])
+                data = {
+                    'box': box_donjuan,
+                    'concept': concept,
+                    'movement_type': 'OUT',
+                    'value': request.data['value'],
+                    'detail': 'Pago abono {}'.format(loan),
+                    'date': request.data['date'],
+                    'responsible': request.user,
+                    'ip': get_ip(request)
+                }
+                return movement_don_juan_manager.create_movement(data)
+        elif request.data['history_type'] == LoanHistory.INTEREST:
+            self.interest_load_payment(request)
+            if loan.loan_type == LoanType.EMPLEADO:
+                if loan.provider:
+                    concept = get_object_or_404(Concept, name='Pago Interés préstamo empleado')
+                    data = {
+                        'box_office': loan.office.box,
+                        'concept': concept,
+                        'movement_type': 'IN',
+                        'value': request.data['value'],
+                        'detail': 'Pago interes {}'.format(loan),
+                        'date': request.data['date'],
+                        'responsible': request.user,
+                        'ip': get_ip(request)
+                    }
+                    return movement_office_manager.create_movement(data)
+            elif loan.loan_type == LoanType.SOCIO_DIRECTO:
+                concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
+                partner = Partner.objects.get(user=loan.lender, office__pk=request.data['office'])
+                data = {
+                    'partner': partner,
+                    'box': partner.box,
+                    'concept': concept,
+                    'movement_type': 'OUT',
+                    'value': request.data['value'],
+                    'detail': 'Pago interés prestamo socio directo',
+                    'date': request.data['date'],
+                    'responsible': request.user,
+                    'ip': get_ip(request)
+                }
+                return movement_partner_manager.create_double(data)
+            else:
+                concept = get_object_or_404(Concept, name='Pago Interés Préstamo')
+                box_donjuan = get_object_or_404(BoxDonJuan, office=request.session['office'])
+                data = {
+                    'box': box_donjuan,
+                    'concept': concept,
+                    'movement_type': 'OUT',
+                    'value': request.data['value'],
+                    'detail': 'Pago interes {}'.format(loan),
+                    'date': request.data['date'],
+                    'responsible': request.user,
+                    'ip': get_ip(request)
+                }
+                return movement_don_juan_manager.create_movement(data)
 
     def create_payment(self, request):
         loan = get_object_or_404(Loan, pk=request.data['loan'])
-        loan_payment = LoanPayment.objects.create(
+        LoanHistory.objects.create(
             loan=loan,
+            history_type=LoanHistory.ABONO,
+            movement_type=LoanHistory.OUT,
             value=request.data['value'],
+            value_cop=request.data['value_cop'],
             date=request.data['date']
         )
-        loan_payment.save()
 
-
-loan_payment_manager = LoanPaymentManager()
+    def interest_load_payment(self, request):
+        loan = get_object_or_404(Loan, pk=request.data['loan'])
+        LoanHistory.objects.create(
+            loan=loan,
+            history_type=LoanHistory.INTEREST,
+            movement_type=LoanHistory.OUT,
+            value=request.data['value'],
+            value_cop=request.data['value_cop'],
+            date=datetime.now()
+        )

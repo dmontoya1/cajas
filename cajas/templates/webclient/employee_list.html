@@ -10,7 +10,18 @@
 {% block navbar %}
   <ul class="nav navbar-nav">
     <li class="active">
-      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+      <a href="
+        {% if request.user.is_superuser or request.user.is_secretary %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
     </li>
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
@@ -19,6 +30,12 @@
           <a href="{% url 'webclient:office' office.slug %}">
             <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja oficina
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
           </a>
         </li>
       {% endif %}
@@ -38,6 +55,30 @@
           </a>
         </li>
       {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario Supervisor
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_partner %}
       <li class="menu-title">Socios</li><!-- /.menu-title -->
@@ -47,11 +88,25 @@
           Lista de socios
         </a>
       </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:investment_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de inversiones
+        </a>
+      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown active">
-        <a href="{% url 'webclient:employee-list' office.slug %}">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -111,8 +166,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
-                       cellspacing="0" style="width:100%">
+                  <table id="table" class="table table-striped table-bordered responsive display"
+                  cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
                     <th>Nombre</th>
@@ -125,26 +180,44 @@
                   </thead>
                   <tbody>
                   {% for e in employees %}
-                    {% if e.user.is_active and e.user.is_abstract %}
-                      <tr>
-                        <td>{{ e.user.first_name }}</td>
-                        <td>{{ e.user.last_name }}</td>
-                        <td>{{ e.charge }}</td>
-                        <td>{{ e.salary }}</td>
-                        <td>
-                          <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
-                               data-target="#modalDetail">Ver detalle</a></td>
-                        <td>
-                          {% if perms.users.change_employee %}
-                            <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
-                               data-target="#editEmployee">Editar</a>
-                          {% endif %}
-                          {% if perms.users.delete_employee %}
-                            <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
-                          {% endif %}
-                        </td>
-                      </tr>
-                    {% endif %}
+                    <tr>
+                      <td>{{ e.user.first_name }}</td>
+                      <td>{{ e.user.last_name }}</td>
+                      <td>{{ e.charge }}</td>
+                      <td>{% if e.salary_type == 'FX' %}${% else %}%{% endif %} {{ e.salary }}</td>
+                      <td>
+                        <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
+                           data-target="#modalDetail">Ver detalle</a></td>
+                      <td>
+                        {% if request.user.is_secretary or request.user.is_superuser %}
+                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#editEmployee">Editar</a>
+                        {% endif %}
+                        {% if perms.users.delete_employee %}
+                          <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for e in employees1 %}
+                    <tr>
+                      <td>{{ e.user.first_name }}</td>
+                      <td>{{ e.user.last_name }}</td>
+                      <td>{{ e.charge }}</td>
+                      <td>{% if e.salary_type == 'FX' %}${% else %}%{% endif %} {{ e.salary }}</td>
+                      <td>
+                        <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
+                           data-target="#modalDetail">Ver detalle</a></td>
+                      <td>
+                        {% if request.user.is_secretary or request.user.is_superuser %}
+                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#editEmployee">Editar</a>
+                        {% endif %}
+                        {% if perms.users.delete_employee %}
+                          <a href="#" class="decline-mv" data-id="{{ e.id }}">Inhabilitar</a>
+                        {% endif %}
+                      </td>
+                    </tr>
                   {% endfor %}
                   </tbody>
                 </table>
@@ -160,13 +233,13 @@
             <div class="label-text">Añadir empleado</div>
             <i class="fa fa-play label-arrow"></i>
           </div>
-      {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
 
   <!-- Modal add employee -->
-  <div class="modal fade" id="_submit" role="dialog" aria-labelledby="_submitTitle" aria-hidden="true">
+  <div class="modal fade" id="addEmployee" role="dialog" aria-labelledby="_submitTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -209,24 +282,23 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                  <label for="charge">Cargo</label>
-                  <select class="form-control" id="charge" name="charge" required>
-                      <option selected disabled value="">Selecciona el cargo</option>
-                      {% for c in charges %}
-                        <option value="{{ c.pk }}">{{ c }}</option>
-                      {% endfor %}
-                  </select>
+                <label for="charge">Cargo</label>
+                <select class="form-control" id="charge" name="charge" required>
+                  <option selected disabled value="">Selecciona el cargo</option>
+                  {% for c in charges %}
+                    <option value="{{ c.pk }}">{{ c }}</option>
+                  {% endfor %}
+                </select>
               </div>
               <div class="form-group col-md-6">
                 <label for="email">Correo electrónico</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com"
-                       required>
+                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com" required>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="salary_type">Tipo de Salario</label>
-                <select class="form-control" id="salary_type" name="salary_type" required>
+                <select class="form-control salary_type" id="salary_type" name="salary_type" required>
                   <option selected disabled value="">Selecciona el tipo de salario</option>
                   <option value="FX">Salario Fijo</option>
                   <option value="PE">Porcentaje de comisión</option>
@@ -238,24 +310,24 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text" id="type_icon">$</div>
                   </div>
-                  <input type="number" class="form-control" id="salary" name="salary" required>
+                  <input type="text" class="form-control" id="salary" name="salary" required>
                 </div>
               </div>
             </div>
-            
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="cv">Hoja de vida</label>
-                  <input type="file" class="form-control-file" id="cv" name="cv">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="passport">Pasaporte</label>
-                  <input type="file" class="form-control-file" id="passport" name="passport">
-                </div>
-              </div>
-            
+
             <div class="form-row">
-              <div class="form-group col-md-12">
+              <div class="form-group col-md-6">
+                <label for="cv">Hoja de vida</label>
+                <input type="file" class="form-control-file" id="cv" name="cv" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="passport">Pasaporte</label>
+                <input type="file" class="form-control-file" id="passport" name="passport" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="false" id="is_abstract" name="is_abstract">
                   <label class="form-check-label" for="is_abstract">
@@ -263,11 +335,9 @@
                   </label>
                 </div>
               </div>
-            </div> 
-            <div class="form-row d-none" id="username_input">
-              <div class="form-group col-md-12">
-                <label for="username">Nombre de Usuario</label>
-                <input type="text" class="form-control d-none" id="username" name="username" placeholder="Username">
+              <div class="form-group col-md-6 form-check">
+                <input type="checkbox" class="form-check-input" id="is_daily_square" name="is_daily_square">
+                <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
               </div>
             </div>
             <div class="form-row d-none" id="password_inputs">
@@ -360,6 +430,7 @@
         <div class="modal-body">
           <form method="POST" class="edit_employee_form">
             {% csrf_token %}
+            <input type="hidden" id="employee_pk" value="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -375,37 +446,54 @@
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label for="initial_value">Sueldo</label>
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                  </div>
-                  <input type="number" class="form-control" id="edit_salary" name="salary" required>
-                </div>
+                <label for="edit_email">Correo Electronico</label>
+                <input type="email" class="form-control" id="edit_email" name="email" placeholder="Email"
+                       required>
               </div>
               <div class="form-group col-md-6">
-                <label for="daily_square">Cargo</label><br>
+                <label for="edit_charge">Cargo</label>
                 <select class="form-control" id="edit_charge" name="charge" style="width: 100%; height: 20px;" required>
+                  <option selected disabled value="">Selecciona el cargo</option>
+                  {% for c in charges %}
+                    <option value="{{ c.pk }}">{{ c }}</option>
+                  {% endfor %}
                 </select>
+              </div>
+
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="edit_salary_type">Tipo de sueldo</label><br>
+                <select class="form-control salary_type" id="edit_salary_type" name="salary_type" style="width: 100%; height: 20px;"
+                        required>
+                  <option selected disabled value="">Selecciona el tipo de salario</option>
+                  <option value="FX">Salario Fijo</option>
+                  <option value="PE">Porcentaje de comisión</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="edit_salary">Sueldo</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text salary-type-icon">$</div>
+                  </div>
+                  <input type="number" class="form-control to-dec" id="edit_salary" name="salary" required>
+                </div>
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="initial_value">Hoja de vida</label>
-                <div class="form-control">
-                  <a target="_blank" id="edit_cv" name="cv" href="">Ver hoja de vida</a>
-                </div>
-                <!--input type="file" class="form-control-file" id="edit_cv" name="cv" required-->
+                <input type="file" class="form-control-file" id="edit_cv" name="cv">
+                <label id="current_cv">Actualmente: <a id="current_cv_link" href="">Ver hoja de vida</a></label>
               </div>
               <div class="form-group col-md-6">
                 <label for="daily_square">Pasaporte</label><br>
-                <div class="form-control">
-                  <a target="_blank" id="edit_passport" name="passport" href="">Ver pasaporte</a>
-                </div>
-                <!--input type="file" class="form-control-file" id="edit_passport" name="passport" required-->
+                <input type="file" class="form-control-file" id="edit_passport" name="passport">
+                <label id="current_passport">Actualmente: <a id="current_passport_link" href="">Ver pasaporte</a></label>
               </div>
             </div>
-            <button type="submit" class="btn btn-submit">Editar</button>
+            <button type="submit" class="btn btn-submit" id="btn-edit">Editar</button>
           </form>
         </div>
       </div>
@@ -415,27 +503,24 @@
 
 {% block extra_js %}
 
-  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
-  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
   <script type="text/javascript">
-    axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+
+    $(document).on('blur', '.to-dec', function() {
+      var value = $(this).val();
+      if (isNaN(value)) {
+        $(this).val('');
+      } else if (!value) {
+        return;
+      } else {
+        value = parseFloat(value).toFixed(1);
+        $(this).val(value);
+      }
+    });
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
-      axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
+      $('#addEmployee_submit').attr('disabled', true )
       var bodyFormData = new FormData();
-
-      data = $(this).serialize()
 
       bodyFormData.append("office", $(this).context.office.value)
       bodyFormData.append("first_name", $(this).context.first_name.value)
@@ -446,11 +531,11 @@
       bodyFormData.append("salary_type", $(this).context.salary_type.value)
       bodyFormData.append("salary", $(this).context.salary.value)
       bodyFormData.append("charge", $(this).context.charge.value)
-      bodyFormData.append("username", $(this).context.username.value)
       bodyFormData.append("password1", $(this).context.password1.value)
       bodyFormData.append("password2", $(this).context.password2.value)
       bodyFormData.append("cv", $(this).context.cv.files[0])
       bodyFormData.append("passport", $(this).context.passport.files[0])
+      bodyFormData.append("is_daily_square", $("#is_daily_square").is(":checked") ? true : false)
 
       axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
@@ -458,7 +543,7 @@
           Swal.fire({
             type: 'success',
             title: 'Exitoso',
-            text: data.name,
+            text: data,
           }).then(function () {
             location.reload()
           })
@@ -476,7 +561,7 @@
     })
 
     //changes icon depending salary type
-    $("#salary_type").on("change", function () {
+    $(".salary_type").on("change", function () {
       if ($(this).find(":selected").val() == "PE") {
         $("#type_icon").text("%")
       } else {
@@ -488,21 +573,17 @@
     $('#is_abstract').click(function () {
       if ($(this).is(':checked')) {
         $("#password_inputs").removeClass("d-none");
-        $("#username_input").removeClass("d-none");
         $("#password1").prop('required', true);
         $("#password2").prop('required', true);
         $("#password1").removeClass("d-none");
         $("#password2").removeClass("d-none");
-        $("#username").removeClass("d-none");
         $('#is_abstract').prop('checked', true);
       } else {
         $("#password_inputs").addClass("d-none");
-        $("#username_input").addClass("d-none");
         $("#password1").prop('required', false);
         $("#password2").prop('required', false);
         $("#password2").addClass("d-none");
         $("#password1").addClass("d-none");
-        $("#username").addClass("d-none");
         $('#is_abstract').prop('checked', false);
       }
     });
@@ -510,107 +591,202 @@
     //"Ver detalles" modal functionality
     $('.employee_detail').on('click', function () {
       var employee_pk = $(this).data("id")
-      $('#modalDetail').on('show.bs.modal', function (event) {
-        var modal = $(this)
-        //get employee data depending <a> data-id
-        axios.get(`/api/users/${employee_pk}/employee-detail`)
-          .then(function (response) {
-            data = response.data
-            $("#detail_first_name").val(data.user.first_name)
-            $("#detail_last_name").val(data.user.last_name)
-            $("#detail_salary").val(data.salary)
-            $("#detail_charge").val(data.charge.name)
-            $("#detail_charge").attr("data-id", data.charge.id)
+      //get employee data depending <a> data-id
+      axios.get(`/api/users/${employee_pk}/employee-detail`)
+        .then(function (response) {
+          data = response.data
+          console.log(data)
+          $("#detail_first_name").val(data.user.first_name)
+          $("#detail_last_name").val(data.user.last_name)
+          $("#detail_salary").val(data.salary)
+          $("#detail_charge").val(data.charge.name)
+          $("#detail_charge").attr("data-id", data.charge.id)
+          if(data.cv != null){
             $("#detail_cv").attr("href", data.cv)
+            $("#detail_cv").removeClass("d-none")
+          } else {
+            $("#detail_cv").addClass("d-none")
+          }
+          if(data.passport != null){
             $("#detail_passport").attr("href", data.passport)
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-      })
+            $("#detail_passport").removeClass("d-none")
+          } else {
+            $("#detail_passport").addClass("d-none")
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
     })
+
+    $('#table tbody').on('click', '.edit-item', function () {
+      var employee_pk = $(this).data("id")
+      $("#employee_pk").val(employee_pk)
+      //fill charges select input
+      axios.get("{% url 'api:users:charge-list' %}")
+        .then(function (response) {
+          data = response.data
+          $('#edit_charge').empty()
+          $.each(data, function (k, v) {
+            $('#edit_charge').append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $('#edit_charge').prepend(
+            '<option value="" selected disabled>Selecciona un cargo</option>'
+          )
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+
+      //get employee data
+      axios.get(`/api/users/${employee_pk}/employee-detail`)
+        .then(function (response) {
+          data = response.data
+          $("#edit_first_name").val(data.user.first_name)
+          $("#edit_last_name").val(data.user.last_name)
+          $("#edit_email").val(data.user.email)
+          $("#edit_salary").val(parseFloat(data.salary).toFixed(1))
+
+          if(data.cv != null){
+            $("#current_cv").removeClass("d-none")
+            $("#current_cv_link").attr("href", data.cv)
+          } else {
+            $("#current_cv").addClass("d-none")
+          }
+
+          if(data.passport != null){
+            $("#current_passport").removeClass("d-none")
+            $("#current_passport_link").attr("href", data.passport)
+          } else {
+            $("#current_passport").addClass("d-none")
+          }
+
+          $("#edit_charge option").prop("selected", false);
+          $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
+          $("#edit_charge").trigger("change")
+
+          $("#edit_salary_type option").prop("selected", false);
+          $("#edit_salary_type option[value='" + data.salary_type + "']").prop("selected", true);
+          $("#edit_salary_type").trigger("change")
+
+          if(data.salary_type == "PE")
+            $(".salary-type-icon").text("%")
+          if(data.salary_type == "FX")
+            $(".salary-type-icon").text("$")
+
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+      });
 
     //Edit an employee
     $('.edit-item').on('click', function () {
-      var employee_pk = $(this).data("id")
-      $('#editEmployee').on('show.bs.modal', function (event) {
-        var modal = $(this)
+      // var employee_pk = $(this).data("id")
+      // $("#employee_pk").val(employee_pk)
+      // //fill charges select input
+      // axios.get("{% url 'api:users:charge-list' %}")
+      //   .then(function (response) {
+      //     data = response.data
+      //     $('#edit_charge').empty()
+      //     $.each(data, function (k, v) {
+      //       $('#edit_charge').append(
+      //         `<option value=${v.id}>${v.name}</option>`
+      //       )
+      //     })
+      //     $('#edit_charge').prepend(
+      //       '<option value="" selected disabled>Selecciona un cargo</option>'
+      //     )
+      //   })
+      //   .catch(function (error) {
+      //     // handle error
+      //     console.log(error);
+      //   })
 
-        //fill charges select input
-        axios.get("{% url 'api:users:charge-list' %}")
-          .then(function (response) {
-            data = response.data
+      // //get employee data
+      // axios.get(`/api/users/${employee_pk}/employee-detail`)
+      //   .then(function (response) {
+      //     data = response.data
+      //     $("#edit_first_name").val(data.user.first_name)
+      //     $("#edit_last_name").val(data.user.last_name)
+      //     $("#edit_email").val(data.user.email)
+      //     $("#edit_salary").val(parseFloat(data.salary).toFixed(1))
 
-            $('#edit_charge').empty()
-            $.each(data, function (k, v) {
-              $('#edit_charge').append(
-                `<option value=${v.id}>${v.name}</option>`
-              )
-            })
-            $('#edit_charge').prepend(
-              '<option value="" selected disabled>Selecciona un cargo</option>'
-            )
+      //     if(data.cv != null){
+      //       $("#current_cv").removeClass("d-none")
+      //       $("#current_cv_link").attr("href", data.cv)
+      //     } else {
+      //       $("#current_cv").addClass("d-none")
+      //     }
+
+      //     if(data.passport != null){
+      //       $("#current_passport").removeClass("d-none")
+      //       $("#current_passport_link").attr("href", data.passport)
+      //     } else {
+      //       $("#current_passport").addClass("d-none")
+      //     }
+
+      //     $("#edit_charge option").prop("selected", false);
+      //     $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
+      //     $("#edit_charge").trigger("change")
+
+      //     $("#edit_salary_type option").prop("selected", false);
+      //     $("#edit_salary_type option[value='" + data.salary_type + "']").prop("selected", true);
+      //     $("#edit_salary_type").trigger("change")
+
+      //     if(data.salary_type == "PE")
+      //       $(".salary-type-icon").text("%")
+      //     if(data.salary_type == "FX")
+      //       $(".salary-type-icon").text("$")
+
+      //   })
+      //   .catch(function (error) {
+      //     // handle error
+      //     console.log(error);
+      //   })
+    })
+
+    //and then submit the form
+    $('.edit_employee_form').on('submit', function (e) {
+      e.preventDefault()
+      $('#btn-edit').attr('disabled', true)
+      var data = new FormData();
+
+      data.append("first_name", $(this).context.edit_first_name.value)
+      data.append("last_name", $(this).context.edit_last_name.value)
+      data.append("email", $(this).context.edit_email.value)
+      data.append("salary_type", $(this).context.edit_salary_type.value)
+      data.append("salary", $(this).context.edit_salary.value)
+      data.append("charge", $(this).context.edit_charge.value)
+      data.append("cv", $(this).context.edit_cv.files[0])
+      data.append("passport", $(this).context.edit_passport.files[0])
+
+      axios.patch(`/api/users/${$("#employee_pk").val()}/employee-detail`, data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
           })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-
-        //get employee data
-        axios.get(`/api/users/${employee_pk}/employee-detail`)
-          .then(function (response) {
-            data = response.data
-            $("#edit_first_name").val(data.user.first_name)
-            $("#edit_last_name").val(data.user.last_name)
-            $("#edit_salary").val(data.salary)
-            $("#edit_cv").attr("href", data.cv)
-            $("#edit_passport").attr("href", data.passport)
-
-            $("#edit_charge").find('option:selected').remove()
-            $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
-            $("#edit_charge").trigger("click")
-
-          })
-          .catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-
-        //and then submit the form
-        $('.edit_employee_form').on('submit', function (e) {
-          e.preventDefault()
-          axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-          data = $(this).serialize()
-
-          axios.patch(`/api/users/${employee_pk}/employee-detail`, data)
-            .then(function (response) {
-              data = response.data
-              Swal.fire({
-                type: 'success',
-                title: 'Exitoso',
-                text: data,
-              }).then(function () {
-                location.reload()
-              })
-            })
-            .catch(function (error) {
-              // handle error
-              Swal.fire({
-                type: 'error',
-                title: 'Error',
-                text: error,
-              }).then(function () {
-                location.reload()
-              })
-            })
         })
-        $('#modalDetail').on('hidden.bs.modal', function () {
-            $(this).data('bs.modal', null);
+        .catch(function (error) {
+          // handle error
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
         })
-
-
-      })
     })
 
     //delete items
@@ -628,33 +804,35 @@
         allowOutsideClick: false,
         showCloseButton: true
       }).then((result) => {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
-        axios.delete(`/api/users/${pk}/employee-delete`,
-          {data: {description: result.value}}
-        )
-          .then(function (response) {
-            Swal.fire({
-              title: 'Exitoso!',
-              text: response.data,
-              type: 'success',
-              allowOutsideClick: false
-            }).then((result) => {
-              if (result.value) {
-                location.reload()
-              }
+        if (result.value) {
+          axios.delete(`/api/users/${pk}/employee-delete`,
+            {data: {description: result.value}}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
             })
-          })
-          .catch(function (error) {
-            console.log(error);
-            console.log(error.response)
-          });
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
       })
     })
 
     $(document).ready(function () {
-      $('#table').DataTable({
+
+    var table = $('#table').DataTable({
         responsive: {
-          details: true
+          details: true,
         },
         dom: 'lBfrtip',
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
@@ -687,7 +865,6 @@
           }
         }
       });
-
       $('#concept').select2({
         language: "es"
       });

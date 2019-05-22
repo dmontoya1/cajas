@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet'
+        media='print'/>
+  <link href='{% static "css/fullcalendar.css" %}' rel='stylesheet'/>
+  <style>
+    tr.fc-list-item:hover {
+      background: lightblue !important;
+      cursor: pointer;
+    }
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="
+        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
+    </li>
+    {% if perms.office %}
+      <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+      {% if perms.office.change_office %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.boxes.change_boxdonjuan %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_don_juan' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Don Juan
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_officeitems %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:office_items_list' office.slug %}">
+            <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Inventario Oficina
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown active">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario Supervisor
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
+          </a>
+        </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_partner %}
+      <li class="menu-title">Socios</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:partners_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de socios
+        </a>
+      </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:investment_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de inversiones
+        </a>
+      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
+    {% endif %}
+    {% if perms.users.change_employee %}
+      <li class="menu-title">Empleados</li><!-- /.menu-title -->
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de empleados
+        </a>
+      </li>
+    {% endif %}
+
+    <li class="menu-title">Secretaria</li><!-- /.menu-title -->
+    {% if perms.units.change_unit %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:units_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Árbol de unidades
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.boxes.change_boxdailysquare %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:daily_square_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cuadres diarios
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.office.change_officecommitments %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
+          <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Aprovisionamiento
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.loans.change_loan %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:loan_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-09.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Préstamos
+        </a>
+      </li>
+    {% endif %}
+    {% if perms.chains.change_chain %}
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:chain_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-10.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Cadenas
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+{% endblock %}
+
+{% block content %}
+  <div id="calendar"></div>
+
+  <div>
+    <a href="" style="z-index: 999;" class="float" data-toggle="modal" data-target="#supervisorCalendar">
+      <i class="fa fa-plus my-float"></i>
+    </a>
+    <i class="fa fa-play label-arrow"></i>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="supervisorCalendar" role="dialog" aria-labelledby="supervisorCalendarTitle"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Calendario Supervisor</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="supervisor_calendar">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="supervisor">Supervisor</label>
+                <select class="form-control" id="supervisor" name="supervisor" style="width: 100%; height: 20px;"
+                        required>
+                  <option disabled value="" selected>Selecciona un supervisor</option>
+                  {% if request.user.related_employee.get.charge|stringformat:"s" == 'Administrador de Grupo' %}
+                    {% for s in supervisors %}
+                      <option value="{{ s.supervisor.user.pk }}">{{ s.supervisor }} ({{ s.supervisor.charge }})</option>
+                    {% endfor %}
+                  {% else %}
+                    {% for s in supervisors %}
+                      <option value="{{ s.user.pk }}">{{ s }} ({{ s.charge }})</option>
+                    {% endfor %}
+                  {% endif %}
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="unit">Unidad</label>
+                <select class="form-control" id="unit" name="unit" style="width: 100%; height: 20px;">
+                  <option disabled value="" selected>Selecciona una unidad</option>
+                  {% for unit in units %}
+                    <option value={{ unit.pk }}>{{ unit.name }} - {{ unit.collector|default:"Sin Cobrador" }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="detail">Detalle</label>
+              <textarea style="resize: none" class="form-control" id="detail" rows="3" name="detail"
+                        placeholder="Ingresa el detalle"
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-submit">Añadir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+  <!-- Calendario -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.0/moment.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/locale/es.js"></script>
+  <script type="text/javascript">
+
+
+    //create items
+    $('.supervisor_calendar').on('submit', function (e) {
+      e.preventDefault()
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data = $(this).serialize()
+      axios.post("{% url 'api:office:supervisor_calendar_create' %}", data)
+        .then(function (response) {
+          data = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: data,
+          }).then(function () {
+            location.reload()
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error.response)
+          Swal.fire({
+            type: 'error',
+            title: 'Error',
+            text: error,
+          }).then(function () {
+            location.reload()
+          })
+        })
+    })
+
+
+    $(document).ready(function () {
+      var replication = 1;
+
+      $('.supervisor_calendar select').each(function () {
+        $(this).select2({
+          language: "es"
+        });
+      });
+      $.ajaxSetup({
+        headers: {'Api-Key': '{{API_KEY}}'}
+      });
+
+      sources = [
+        {
+          url: "{% url 'api:office:supervisor_calendar_list' %}?office={{office.slug}}",
+          currentTimezone: 'America/Bogota',
+          className: "font-weight: bold",
+        }
+      ]
+
+      $("#calendar").fullCalendar({
+        plugins: ['interaction', 'dayGrid'],
+        defaultView: 'agendaDay',
+        eventSources: sources,
+        allDayDefault: true,
+        disableDragging: true,
+        eventBackgroundColor: "#7DD1AF",
+        eventBorderColor: "#7DD1AF",
+        eventTextColor: "#FFFFFF",
+        views: {
+          basic: {
+            timeFormat: 'h(:mm)t',
+            slotLabelFormat: 'h(:mm)a'
+          },
+          agenda: {
+            timeFormat: 'h(:mm)t',
+            slotLabelFormat: 'h(:mm)a'
+          },
+          day: {
+            timeFormat: 'h(:mm)t',
+            slotLabelFormat: 'h(:mm)a'
+          }
+        },
+        header: {
+          left: 'prev,next, today, ResumenButton',
+          center: 'title',
+          right: 'agendaDay,listWeek',
+        },
+        eventRender: function (event, element, view) {
+          element.css('padding-top', "10px");
+          element.css('padding-left', "20px");
+          element.css('padding-bottom', "10px");
+        },
+        eventClick: function (calEvent, jsEvent, view) {
+          super_calendar_pk = calEvent.pk
+          if (calEvent.editable) {
+            Swal.fire({
+              title: '¿Estás Seguro?',
+              text: "¿Quieres eliminar este agendamiento?",
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Si',
+              cancelButtonText: 'Cancelar',
+              reverseButtons: true,
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.value) {
+                axios.delete(`/api/office/${super_calendar_pk}/supervisor-calendar-delete`)
+                  .then(function (response) {
+                    Swal.fire({
+                      title: 'Exitoso!',
+                      text: response.data,
+                      type: 'success',
+                      allowOutsideClick: false
+                    }).then((result) => {
+                      if (result.value) {
+                        location.reload()
+                      }
+                    })
+                  })
+                  .catch(function (error) {
+                    Swal.fire({
+                      title: 'Error!',
+                      text: error.response,
+                      type: 'error',
+                      allowOutsideClick: false
+                    })
+                  });
+              }
+            })
+          }
+        }
+      })
+
+      $('.fc-agendaDay-button').click(function () {
+        $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display", "none")
+      });
+      $("#calendar").find(".fc-scroller.fc-time-grid-container").first().css("display", "none")
+
+    }) //end document ready
+
+
+  </script>
+{% endblock %}

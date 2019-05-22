@@ -3,47 +3,46 @@ version: '3'
 volumes:
   production_postgres_data: {}
   production_postgres_data_backups: {}
-  production_caddy: {}
+  production_nginx: {}
 
 services:
-  django:
+  django: &django
     build:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     image: cajas_production_django
     depends_on:
-      - postgres
       - redis
-    env_file:
-      - ./.envs/.production/.django
-      - ./.envs/.production/.postgres
     command: /start
 
-  postgres:
+  nginx:
     build:
       context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: cajas_production_postgres
-    volumes:
-      - production_postgres_data:/var/lib/postgresql/data
-      - production_postgres_data_backups:/backups
-    env_file:
-      - ./.envs/.production/.postgres
-
-  caddy:
-    build:
-      context: .
-      dockerfile: ./compose/production/caddy/Dockerfile
-    image: cajas_production_caddy
+      dockerfile: ./compose/production/nginx/Dockerfile
+    image: cajas_production_nginx
     depends_on:
       - django
     volumes:
-      - production_caddy:/root/.caddy
-    env_file:
-      - ./.envs/.production/.caddy
+      - production_nginx:/root/.nginx
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
+
+  celery_worker:
+    <<: *django
+    depends_on:
+      - django
+      - nginx
+    ports: []
+    command: /start-celeryworker.sh
+
+  celery_beat:
+    <<: *django
+    depends_on:
+      - django
+      - nginx
+    ports: []
+    command: /start-celerybeat.sh
 
   redis:
     image: redis:3.2

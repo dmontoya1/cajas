@@ -10,7 +10,18 @@
 {% block navbar %}
   <ul class="nav navbar-nav">
     <li class="active">
-      <a href="{% url 'webclient:office' office.slug %}"><i class="menu-icon fa fa-laptop"></i>{{ office }}</a>
+      <a href="
+        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+          {% url 'webclient:office' office.slug %}
+        {% elif request.user.is_employee %}
+          {% url 'webclient:employee_list' office.slug %}
+        {% else %}
+          {% url 'webclient:partners_list' office.slug %}
+        {% endif %}
+        ">
+        <i class="menu-icon fa fa-laptop"></i>
+        {{ office }}
+      </a>
     </li>
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
@@ -19,6 +30,12 @@
           <a href="{% url 'webclient:office' office.slug %}">
             <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja oficina
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_usd' office.slug %}">
+            <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja oficina Dólares
           </a>
         </li>
       {% endif %}
@@ -30,11 +47,49 @@
           </a>
         </li>
       {% endif %}
+      {% if request.user.is_superuser %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_colombia' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Colombia
+          </a>
+        </li>
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:box_bank' office.slug %}">
+            <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Caja Banco
+          </a>
+        </li>
+      {% endif %}
       {% if perms.office.change_officeitems %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:office_items_list' office.slug %}">
             <img src="{% static 'icons/ICONOS-03.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Inventario Oficina
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:calendar' office.slug %}">
+            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Calendario Supervisor
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_supervisorcalendar %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:groups' office.slug %}">
+            <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Grupos
+          </a>
+        </li>
+      {% endif %}
+      {% if perms.office.change_notifications %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:notifications' office.slug %}">
+            <i class="fas fa-bell mr-4 ml-1"></i>
+            Notificaciones
           </a>
         </li>
       {% endif %}
@@ -47,11 +102,25 @@
           Lista de socios
         </a>
       </li>
+      <li class="menu-item-has-children dropdown">
+        <a href="{% url 'webclient:investment_list' office.slug %}">
+          <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+          Lista de inversiones
+        </a>
+      </li>
+      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        <li class="menu-item-has-children dropdown">
+          <a href="{% url 'webclient:closeout_boxes' office.slug %}">
+            <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+            Cajas Liquidadas
+          </a>
+        </li>
+      {% endif %}
     {% endif %}
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="{% url 'webclient:employee-list' office.slug %}">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -111,10 +180,11 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
+                <table id="table" class="table table-striped table-bordered responsive display"
                        cellspacing="0" style="width:100%">
                   <h3 class="mb-3">Caja Don Juan</h3>
-                  <h3 class="float-right">SALDO CAJA: $ {{ box.balance|intcomma }}{{ box.office.country.currency.abbr }} </h3>
+                  <h3 class="float-right">SALDO CAJA: $
+                    {{ box.balance|intcomma }}{{ box.office.country.currency.abbr }} </h3>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -123,19 +193,29 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td>{{ m.date|date:"d-M-Y" }}</td>
+                      <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      {% else %}-{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {{ office.country.currency.abbr }}{% else %}-{% endif %}</td>
+                      {% else %}-{% endif %}</td>
+                      <td>
+                        {% if perms.movement.change_movementdonjuan %}
+                          <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                             data-target="#addMovement">Editar</a>
+                        {% endif %}
+                        {% if request.user.is_superuser %}
+                          <a href="#" class="delete-item" data-id="{{ m.id }}">Eliminar</a>
+                        {% endif %}
+                      </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -144,7 +224,7 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" data-toggle="modal" data-target="#exampleModalCenter">
+        <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
           <i class="fa fa-plus my-float"></i>
         </a>
         <div class="label-container">
@@ -156,7 +236,7 @@
   </div>
 
   <!-- Modal add movement -->
-  <div class="modal fade" id="exampleModalCenter" role="dialog" aria-labelledby="exampleModalCenterTitle"
+  <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle"
        aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
@@ -167,9 +247,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <form method="POST" class="add-movement" action="{% url 'webclient:create_donjuan_movement' office.slug %} ">
+          <form method="POST" class="add-movement">
             {% csrf_token %}
-            <input type="hidden" name="box_office" value="{{ office.box.pk }}">
+            <input type="hidden" name="box_don_juan" value="{{ box.pk }}">
+            <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
+            <input type="hidden" name="responsible" value="{{ request.user.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="concept">Concepto</label>
@@ -183,14 +265,15 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date">Fecha</label>
-                <input type="date" class="form-control date-picker" id="date" name="date" placeholder="yyyy-mm-dd"
-                       required>
+                <input type="text" class="form-control datetimepicker" id="date" name="date" placeholder="yyyy-mm-dd"
+                       style="width: 100%;" required autocomplete="off">
               </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="movement_type">Entra / Sale</label>
-                <select class="form-control" id="movement_type" name="movement_type" required>
+                <select class="form-control" id="movement_type" name="movement_type" style="width: 100%; height: 20px;"
+                        required>
                   <option selected disabled value="">Selecciona el tipo de movimiento</option>
                   <option value="IN">Entra</option>
                   <option value="OUT">Sale</option>
@@ -202,12 +285,33 @@
                        required>
               </div>
             </div>
+            <div class="form-group destine-office d-none">
+              <label for="office">Oficina de destino</label>
+              <select class="form-control" id="office" name="destine_office" style="width: 100%; height: 20px;">
+                <option selected disabled value="">Selecciona la oficina de destino</option>
+                {% for office in offices %}
+                  <option value="{{ office.pk }}">{{ office }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            {% if request.user.is_superuser %}
+              <div class="form-group destine-box d-none">
+                <label for="box">Caja de destino</label>
+                <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
+                  <option selected disabled value="">Selecciona la oficina de destino</option>
+                  <option value="CAJA_OFICINA">Caja Oficina</option>
+                  <option value="CAJA_COLOMBIA">Caja Colombia</option>
+                  <option value="CAJA_BANCO">Caja Banco</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                </select>
+              </div>
+            {% endif %}
             <div class="form-group">
               <label for="detail">Detalle</label>
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
                         required></textarea>
             </div>
-            <button type="submit" class="btn btn-submit">Añadir</button>
+            <button type="submit" class="btn btn-submit btn-add-movement">Añadir</button>
           </form>
         </div>
       </div>
@@ -216,18 +320,6 @@
 {% endblock %}
 
 {% block extra_js %}
-
-  <script src="{% static 'js/data-table/datatables.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/dataTables.buttons.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.bootstrap.min.js' %}"></script>
-  <script src="{% static 'js/data-table/jszip.min.js' %}"></script>
-  <script src="{% static 'js/data-table/vfs_fonts.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.html5.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.print.min.js' %}"></script>
-  <script src="{% static 'js/data-table/buttons.colVis.min.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
   <script type="text/javascript">
     $(document).ready(function () {
@@ -240,7 +332,7 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "asc"]],
+        "order": [[1, "des"]],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
@@ -266,10 +358,182 @@
           }
         }
       });
+    });
 
-      $('#concept').select2({
+    $('.add-movement select').each(function () {
+      $(this).select2({
         language: "es"
       });
     });
+
+    $("#concept").on("change", function () {
+      if ($("#concept option:selected").text() == "Traslado entre cajas Colombia de tipo Doble") {
+        $(".destine-box").removeClass("d-none");
+      } else {
+        $(".destine-box").addClass("d-none");
+      }
+      axios.get(`/api/concepts/${$(this).val()}/`)
+        .then(function (response) {
+          data = response.data
+          if (data['relationship'] == 'Entre oficinas') {
+            $('.destine-office').removeClass('d-none')
+          } else {
+            $('.destine-office').addClass('d-none')
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    $("#add-movement-btn").on("click", function () {
+      $('.add-movement')[0].reset();
+      $("#method_modal").val("add")
+      $("#method_modal").data("id", "")
+      $('.modal-title').text("Añadir Movimiento")
+      $('.btn-add-movement').text('Agregar')
+    })
+    $('#table tbody').on('click', '.edit-item', function () {
+      var mov_pk = $(this).data("id")
+      $("#method_modal").val("edit")
+      $("#method_modal").data("id", mov_pk)
+      $('.modal-title').text("Editar Movimiento")
+      $('.btn-add-movement').text('Guardar')
+
+      //get movement data
+      axios.get(`/api/movements/${mov_pk}/movement-don-juan-update/`)
+        .then(function (response) {
+          data = response.data
+          $("#concept option").prop("selected", false);
+          $("#concept option[value='" + data.concept + "']").prop("selected", true);
+          $("#concept").trigger("change")
+          $("#date").val(data.date)
+          $("#movement_type").prop("selected", false);
+          $("#movement_type option[value='" + data.movement_type + "']").prop("selected", true);
+          $("#movement_type").trigger("change")
+          $("#value").val(data.value)
+          $("#detail").val(data.detail)
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    $('.add-movement').on('submit', function (ev) {
+      ev.preventDefault()
+      $('.btn-add-movement').attr('disabled', true)
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data_send = $(this).serialize()
+      if ($("#method_modal").val() === "add") {
+        axios.post(`/api/movements/${'{{office.slug}}'}/movement-don-juan-create/`, data_send)
+          .then(function (response) {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: 'Se ha añadido el movimiento exitosamente',
+              allowOutsideClick: false,
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+      }
+      if ($("#method_modal").val() === "edit") {
+        mov_pk = $("#method_modal").data("id")
+        axios.patch(`/api/movements/${mov_pk}/movement-don-juan-update/`, data_send)
+          .then(function (response) {
+            Swal.fire({
+              type: 'success',
+              title: 'Exitoso',
+              text: "Se ha actualizado el movimiento correctamente",
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error)
+            Swal.fire({
+              title: 'Ha ocurrido un error',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            }).then((result) => {
+              if (result.value) {
+                location.reload()
+              }
+            })
+          })
+
+      }
+    })
+
+    $('#table tbody').on('click', '.delete-item', function () {
+      mov_pk = $(this).data('id')
+      Swal.fire({
+        title: 'Estas segura?',
+        text: "Vas a eliminar este movimiento. Esta acción no se puede revertir",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, borrar',
+        cancelButtonText: 'No, cancelar!',
+        confirmButtonColor: '#60d3b0',
+        cancelButtonColor: '#d33',
+        reverseButtons: true,
+        allowOutsideClick: false
+      }).then((result) => {
+        if (result.value) {
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+          axios.delete(`/api/movements/${mov_pk}/movement-don-juan-update/`)
+            .then(function (response) {
+              data = response.data
+              console.log(data)
+              Swal.fire(
+                'Eliminado',
+                'El movimiento se ha eliminado correctamente',
+                'success'
+              ).then((result) => {
+                location.reload()
+              })
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            })
+        } else if (
+          // Read more about handling dismissals
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          Swal.fire(
+            'Cancelado',
+            'Se ha cancelado. El movimiento no fue eliminado',
+            'error'
+          )
+        }
+      })
+    })
   </script>
 {% endblock %}

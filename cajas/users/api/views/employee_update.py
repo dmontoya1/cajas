@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
-from api.CsrfExempt import CsrfExemptSessionAuthentication
+from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.users.api.serializers.employee_serilizer import EmployeeSerializer
@@ -27,8 +27,12 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         item.user = user
         item.salary = request.data["salary"]
         item.charge = charge
+        if request.data["cv"] != 'undefined':
+            item.cv = request.data["cv"]
+        if request.data["passport"] != 'undefined':
+            item.passport = request.data["passport"]
         item.save()
         return Response(
-            'El item se ha actualizado correctamente',
+            'El empleado se ha actualizado correctamente',
             status=status.HTTP_200_OK
         )

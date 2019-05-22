@@ -7,13 +7,14 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from cajas.boxes.models import BoxDailySquare
+from cajas.concepts.models.concepts import Concept
+from cajas.office.models import OfficeCountry
 from cajas.users.models.partner import Partner
-from concepts.models.concepts import Concept
-from webclient.views.get_ip import get_ip
+from cajas.webclient.views.get_ip import get_ip
 
 from ....services.daily_square_service import MovementDailySquareManager
-
-daily_square_manager = MovementDailySquareManager()
+from ....services.partner_service import MovementPartnerManager
 
 
 class CreateWithdrawMovement(APIView):
@@ -21,18 +22,9 @@ class CreateWithdrawMovement(APIView):
     """
 
     def post(self, request, format=None):
-        if request.user.related_daily_box:
-            box_daily_square = request.user.related_daily_box.get()
-        else:
-            return Response(
-                'No tienes permisos para realizar el retiro. Solo el cuadre diario puede hacer el retiro',
-                status=status.HTTP_400_BAD_REQUEST
-            )
         concept = Concept.objects.get(name='Retiro de Socio')
         partner = get_object_or_404(Partner, pk=request.POST['partner'])
-
         data = {
-            'box': box_daily_square,
             'concept': concept,
             'date': datetime.now(),
             'movement_type': 'OUT',
@@ -47,7 +39,18 @@ class CreateWithdrawMovement(APIView):
             'loan': None,
             'chain': None,
         }
-        movement = daily_square_manager.create_movement(data)
+        if request.user.related_daily_box and request.user.is_daily_square:
+            office = get_object_or_404(OfficeCountry, pk=self.request.session['office'])
+            box_daily_square = BoxDailySquare.objects.get(user=request.user, office=office)
+            data['box'] = box_daily_square
+            daily_square_manager = MovementDailySquareManager()
+            daily_square_manager.create_movement(data)
+        else:
+            data['box'] = partner.box
+            data['partner'] = partner
+            movement_partner_manager = MovementPartnerManager()
+            movement_partner_manager.create_withdraw_movement_full(data)
+
         return Response(
             'Se ha creado el movimiento exitosamente',
             status=status.HTTP_201_CREATED

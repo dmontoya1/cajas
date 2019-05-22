@@ -1,6 +1,6 @@
 from django.db import models
 
-from office.models.office import Office
+from cajas.office.models.officeCountry import OfficeCountry
 
 
 class BoxProvisioning(models.Model):
@@ -8,7 +8,7 @@ class BoxProvisioning(models.Model):
     """
 
     office = models.OneToOneField(
-        Office,
+        OfficeCountry,
         verbose_name='Oficina',
         on_delete=models.SET_NULL,
         blank=True, null=True,

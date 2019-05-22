@@ -27,6 +27,16 @@ COPY ./compose/local/django/start /start
 RUN sed -i 's/\r//' /start
 RUN chmod +x /start
 
+
+COPY ./compose/local/django/celery/worker/start.sh /start-celeryworker.sh
+RUN sed -i 's/\r//' /start-celeryworker.sh
+RUN chmod +x /start-celeryworker.sh
+
+COPY ./compose/local/django/celery/beat/start.sh /start-celerybeat.sh
+RUN sed -i 's/\r//' /start-celerybeat.sh
+RUN chmod +x /start-celerybeat.sh
+
+
 WORKDIR /app
 
 ENTRYPOINT ["/entrypoint"]

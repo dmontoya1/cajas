@@ -2,7 +2,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from movement.models.movement_withdraw import MovementWithdraw
+from cajas.movement.models.movement_withdraw import MovementWithdraw
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.users.models.partner import Partner
 
 
 class MovementWithdrawRequireList(LoginRequiredMixin, TemplateView):
@@ -17,4 +19,6 @@ class MovementWithdrawRequireList(LoginRequiredMixin, TemplateView):
         context = super(MovementWithdrawRequireList, self).get_context_data(**kwargs)
         movements = MovementWithdraw.objects.all()
         context['movements'] = movements
+        context['all_offices'] = OfficeCountry.objects.all().order_by('office')
+        context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
         return context
