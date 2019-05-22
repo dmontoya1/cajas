@@ -20,12 +20,28 @@ class ReportAccountPayable(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportAccountPayable, self).get_context_data(**kwargs)
         today = date.today()
-        context['loans'] = Loan.objects.filter(balance__gt=0)
-        chains = []
-        for c in Chain.objects.all():
-            last_place = ChainPlace.objects.get(chain=c, name="Puesto {}".format(c.places))
-            if last_place.pay_date >= today:
-                chains.append(c)
-        context['chains'] = chains
-        context['investments'] = Investment.objects.filter(balance__gt=0)
+        if self.request.user.is_secretary:
+            employee = self.request.user.related_employee.get()
+            offices = employee.office.all()
+            offices_country = list()
+            for o in offices:
+                for oc in o.related_office_country.all():
+                    offices_country.append(oc)
+            context['loans'] = Loan.objects.filter(office__in=offices_country, balance__gt=0)
+            chains = []
+            for c in Chain.objects.filter(office__in=offices_country):
+                last_place = ChainPlace.objects.get(chain=c, name="Puesto {}".format(c.places))
+                if last_place.pay_date >= today:
+                    chains.append(c)
+            context['chains'] = chains
+            context['investments'] = Investment.objects.filter(partner__office__in=offices_country, balance__gt=0)
+        else:
+            context['loans'] = Loan.objects.filter(balance__gt=0)
+            chains = []
+            for c in Chain.objects.all():
+                last_place = ChainPlace.objects.get(chain=c, name="Puesto {}".format(c.places))
+                if last_place.pay_date >= today:
+                    chains.append(c)
+            context['chains'] = chains
+            context['investments'] = Investment.objects.filter(balance__gt=0)
         return context
