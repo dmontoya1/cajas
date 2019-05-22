@@ -24,7 +24,7 @@ class EmployeeCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
-        aux = copy.deepcopy(request.data)
+        aux = request.data.copy()
         user = user_manager.create_user(request.data)
         office = OfficeCountry.objects.get(pk=request.data["office"])
         charge = Charge.objects.get(pk=request.data["charge"])
