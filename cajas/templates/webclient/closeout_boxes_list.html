@@ -27,7 +27,7 @@
     {% if perms.office %}
       <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
       {% if perms.office.change_office %}
-        <li class="menu-item-has-children dropdown active">
+        <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:office' office.slug %}">
             <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Caja oficina
@@ -96,7 +96,7 @@
         </a>
       </li>
       {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
-        <li class="menu-item-has-children dropdown">
+        <li class="menu-item-has-children dropdown active">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Cajas Liquidadas
