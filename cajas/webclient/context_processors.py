@@ -1,4 +1,3 @@
-
 from django.conf import settings
 from django.db.models import Q
 
@@ -11,7 +10,11 @@ from cajas.office.models.officeCountry import OfficeCountry
 def webclient_processor(request):
     if 'office' in request.session:
         office_country = OfficeCountry.objects.get(pk=request.session['office'])
-        partners = Partner.objects.filter(office__pk=request.session['office'], is_active=True)
+        partners = Partner.objects.filter(
+            (Q(office__pk=request.session['office']) |
+             Q(code='DONJUAN'))
+            & Q(is_active=True)
+        )
         employees = Employee.objects.filter(
             Q(office_country=office_country) or
             Q(office=office_country.office) and
