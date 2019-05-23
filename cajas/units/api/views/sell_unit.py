@@ -7,9 +7,11 @@ from rest_framework.views import APIView
 
 from django.shortcuts import get_object_or_404
 
-from cajas.users.models.partner import Partner
+from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.concepts.models.concepts import Concept
-from cajas.movement.views.movement_partner.movement_partner_handler import MovementPartnerHandler
+from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
 
 from ...models.units import Unit
@@ -33,6 +35,8 @@ class UnitSell(APIView):
         buyer_partner = Partner.objects.get(pk=request.data['buyer_partner'])
         price = int(request.data['total_price'])
         concept = get_object_or_404(Concept, name='Compra de unidad')
+        movement_partner_manager = MovementPartnerManager()
+        don_juan_manager = DonJuanManager()
 
         unit.partner = buyer_partner
         unit.save()
@@ -53,23 +57,41 @@ class UnitSell(APIView):
             'responsible': request.user,
             'ip': ip,
         }
-        movement_seller = MovementPartnerHandler.create_simple(data_seller)
-        data_buyer = {
-            'box': buyer_partner.box,
-            'concept': concept,
-            'date': datetime.now(),
-            'movement_type': 'OUT',
-            'value': price,
-            'detail': 'Compra de unidad {} del socio {}. Precio inventario: ${} - Precio de venda+: ${}'.format(
-                unit.name,
-                seller_partner.get_full_name(),
-                request.data['price_items'],
-                request.data['unit_price']
-            ),
-            'responsible': request.user,
-            'ip': ip,
-        }
-        movement_seller = MovementPartnerHandler.create_simple(data_buyer)
+        movement_partner_manager.create_simple(data_seller)
+        if buyer_partner.code == 'DONJUAN':
+            data_buyer = {
+                'box': BoxDonJuan.objects.get(office=seller_partner.office),
+                'concept': concept,
+                'date': datetime.now(),
+                'movement_type': 'OUT',
+                'value': price,
+                'detail': 'Compra de unidad {} del socio {}. Precio inventario: ${} - Precio de venda+: ${}'.format(
+                    unit.name,
+                    seller_partner.get_full_name(),
+                    request.data['price_items'],
+                    request.data['unit_price']
+                ),
+                'responsible': request.user,
+                'ip': ip,
+            }
+            don_juan_manager.create_movement(data_buyer)
+        else:
+            data_buyer = {
+                'box': buyer_partner.box,
+                'concept': concept,
+                'date': datetime.now(),
+                'movement_type': 'OUT',
+                'value': price,
+                'detail': 'Compra de unidad {} del socio {}. Precio inventario: ${} - Precio de venda+: ${}'.format(
+                    unit.name,
+                    seller_partner.get_full_name(),
+                    request.data['price_items'],
+                    request.data['unit_price']
+                ),
+                'responsible': request.user,
+                'ip': ip,
+            }
+            movement_partner_manager.create_simple(data_buyer)
 
         return Response(
             'El movimiento se ha aprobado exitosamente. Se han creado los movimientos en las cajas correspondientes',
