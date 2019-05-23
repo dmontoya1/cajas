@@ -1,8 +1,9 @@
 version: '3'
 
 volumes:
-  local_postgres_data: {}
-  local_postgres_data_backups: {}
+  stage_postgres_data: {}
+  stage_postgres_data_backups: {}
+  stage_nginx: {}
 
 services:
   django: &django
@@ -25,22 +26,22 @@ services:
     build:
       context: .
       dockerfile: ./compose/stage/postgres/Dockerfile
-    image: cajas_production_postgres
+    image: cajas_stage_postgres
     volumes:
-      - local_postgres_data:/var/lib/postgresql/data
-      - local_postgres_data_backups:/backups
+      - stage_postgres_data:/var/lib/postgresql/data
+      - stage_postgres_data_backups:/backups
     env_file:
       - ./.envs/.stage/.postgres
 
   nginx:
     build:
       context: .
-      dockerfile: ./compose/production/nginx/Dockerfile
-    image: cajas_production_nginx
+      dockerfile: ./compose/stage/nginx/Dockerfile
+    image: cajas_stage_nginx
     depends_on:
       - django
     volumes:
-      - production_nginx:/root/.nginx
+      - stage_nginx:/root/.nginx
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
