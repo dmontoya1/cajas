@@ -1,7 +1,7 @@
 
 from datetime import datetime
 
-from django.db.models import Q, Sum
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
@@ -29,7 +29,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         offices = OfficeCountry.objects.all()
-        units = Unit.objects.filter(partner__office=office)
+        units = Unit.objects.filter(Q(partner__office=office) | Q(partner__code='DONJUAN'))
         users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
                                     Q(related_employee__office=office.office))
         try:
