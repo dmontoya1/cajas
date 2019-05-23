@@ -94,7 +94,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                         withdraws_values = withdraws[0]['data']
                         for i in withdraws_values:
                             withdraw = i['withdrawal']
-                            if user.pk == 36:
+                            if user.pk == int(withdraw['comment']):
                                 values = dict()
                                 values['route'] = withdraw['route']
                                 values['date'] = withdraw['date']
