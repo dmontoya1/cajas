@@ -205,7 +205,11 @@ class PartnerCloseout(APIView):
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 if loan.balance > 0:
                     concept = Concept.objects.get(name='Pago Abono préstamo socio')
-                    total_loan = loan.balance_cop / exchange.exchange_cop_abono
+                    country = office.country
+                    if country.name == 'Guatemala':
+                        total_loan = loan.balance_cop / exchange.exchange_cop_abono * exchange.exchange_dolar_abono
+                    else:
+                        total_loan = loan.balance_cop / exchange.exchange_cop_abono
                     MovementPartner.objects.create(
                         box_partner=partner.box,
                         concept=concept,
