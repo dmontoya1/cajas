@@ -5,11 +5,8 @@ from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.concepts.models.concepts import Concept, ConceptType
-from cajas.movement.models.movement_box_colombia import MovementBoxColombia
-from cajas.movement.models.movement_don_juan import MovementDonJuan
-from cajas.movement.models.movement_office import MovementOffice
 
-from ..models.movement_box_colombia import MovementBoxColombia
+from ..models import MovementBoxColombia, MovementDonJuan, MovementOffice
 from ..services.don_juan_usd_service import DonJuanUSDManager
 
 
