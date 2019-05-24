@@ -1,7 +1,6 @@
 from django.db import models
 
 from cajas.inventory.models.brand import Brand
-from cajas.units.models.units import Unit
 from .movement_daily_square import MovementDailySquare
 
 
