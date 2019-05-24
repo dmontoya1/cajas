@@ -59,16 +59,28 @@ class MovementBoxColombiaManager(object):
         return movement_colombia
 
     def create_colombia_movement(self, data):
-        movement = MovementBoxColombia.objects.create(
-            box_office=BoxColombia.objects.get(name='Caja Colombia'),
-            concept=get_object_or_404(Concept, pk=data['concept'].pk),
-            movement_type=data['movement_type'],
-            value=data['value'],
-            detail=data['detail'],
-            date=data['date'],
-            responsible=data['responsible'],
-            ip=data['ip'],
-        )
+        try:
+            movement = MovementBoxColombia.objects.create(
+                box_office=BoxColombia.objects.get(name='Caja Colombia'),
+                concept=get_object_or_404(Concept, pk=data['concept'].pk),
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip'],
+            )
+        except:
+            movement = MovementBoxColombia.objects.create(
+                box_office=BoxColombia.objects.get(name='Caja Colombia'),
+                concept=get_object_or_404(Concept, pk=data['concept']),
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip'],
+            )
         return movement
 
     def create_box_bank_colombia_movement(self, data):
