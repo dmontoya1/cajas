@@ -41,15 +41,12 @@ class DispersionMovement(APIView):
                     'responsible': request.user,
                     'ip': ip
                 }
-                print("form[form]["+str(i)+"][partner]")
                 if request.data["form[form]["+str(i)+"][partner]"] == "office":
-                    print("Entro al if")
                     office = OfficeCountry.objects.get(slug=request.data['office'])
                     office_manager = MovementOfficeManager()
                     data['box_office'] = BoxOffice.objects.get(office=office)
                     office_manager.create_movement(data)
                 else:
-                    print("ELSEEE")
                     partner = get_object_or_404(Partner, pk=request.data["form[form]["+str(i)+"][partner]"])
 
                     if partner.code == 'DONJUAN':
