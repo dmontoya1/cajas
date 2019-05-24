@@ -88,3 +88,4 @@ class DonJuanManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             self.__update_value(data)
         current_don_juan_movement.update(**object_data)
+        return current_don_juan_movement.first()

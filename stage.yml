@@ -1,0 +1,63 @@
+version: '3'
+
+volumes:
+  stage_postgres_data: {}
+  stage_postgres_data_backups: {}
+  stage_nginx: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/stage/django/Dockerfile
+    image: cajas_stage_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+    env_file:
+      - ./.envs/.stage/.django
+      - ./.envs/.stage/.postgres
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/stage/postgres/Dockerfile
+    image: cajas_stage_postgres
+    volumes:
+      - stage_postgres_data:/var/lib/postgresql/data
+      - stage_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.stage/.postgres
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./compose/stage/nginx/Dockerfile
+    image: cajas_stage_nginx
+    depends_on:
+      - django
+    volumes:
+      - stage_nginx:/root/.nginx
+    ports:
+      - "0.0.0.0:80:80"
+
+  celery_worker:
+    <<: *django
+    depends_on:
+      - django
+      - postgres
+    ports: []
+    command: /start-celeryworker.sh
+
+  celery_beat:
+    <<: *django
+    depends_on:
+      - django
+      - postgres
+    ports: []
+    command: /start-celerybeat.sh
+
+  redis:
+    image: redis:3.2

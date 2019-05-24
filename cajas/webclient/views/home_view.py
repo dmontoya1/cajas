@@ -39,5 +39,4 @@ class Home(LoginRequiredMixin, TemplateView):
             context['offices'] = Office.objects.all()
             context['all_offices'] = OfficeCountry.objects.all().order_by('office')
             context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
-        print("Contexto -->", context)
         return context
