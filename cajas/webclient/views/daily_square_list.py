@@ -29,7 +29,13 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         offices = OfficeCountry.objects.all()
-        units = Unit.objects.filter(Q(partner__office=office) | Q(partner__code='DONJUAN'))
+        units = Unit.objects.filter(Q(partner__office=office) |
+                                    (Q(partner__code='DONJUAN') &
+                                     (Q(collector__related_employee__office_country=office) |
+                                      Q(collector__related_employee__office=office.office) |
+                                      Q(supervisor__related_employee__office_country=office) |
+                                      Q(supervisor__related_employee__office=office.office)
+                                      ))).distinct()
         users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
                                     Q(related_employee__office=office.office))
         try:
