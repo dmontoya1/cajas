@@ -24,7 +24,7 @@ class EmployeeCreate(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request, format=None):
-        aux = request.data.copy()
+        aux = dict()
         user = user_manager.create_user(request.data)
         office = OfficeCountry.objects.get(pk=request.data["office"])
         charge = Charge.objects.get(pk=request.data["charge"])
@@ -33,11 +33,10 @@ class EmployeeCreate(APIView):
         aux['charge'] = charge
         aux['office'] = office
 
-        employee = employee_manager.create_employee(aux)
+        employee_manager.create_employee(request.data, aux)
 
         if request.data["is_daily_square"] == "true":
-            aux['is_daily_square'] = True
-            box_daily_square = box_daily_square_manager.create_box(aux)
+            box_daily_square_manager.create_box(aux)
 
         return Response(
             'El empleado se ha creado correctamente',
