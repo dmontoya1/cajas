@@ -40,7 +40,13 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
             Q(partner__office=office) | Q(related_employee__office_country=office) |
             Q(related_employee__office=office.office) &
             Q(is_daily_square=True))
-        units = Unit.objects.filter(Q(partner__office=office) | Q(partner__code='DONJUAN'))
+        units = Unit.objects.filter(Q(partner__office=office) |
+                                    (Q(partner__code='DONJUAN') &
+                                     (Q(collector__related_employee__office_country=office) |
+                                      Q(collector__related_employee__office=office.office) |
+                                      Q(supervisor__related_employee__office_country=office) |
+                                      Q(supervisor__related_employee__office=office.office)
+                                      ))).distinct()
         past_mvments = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             box_daily_square__is_closed=False,
