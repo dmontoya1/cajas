@@ -16,12 +16,12 @@ class EmployeeManager:
         if not all(property in data for property in self.PROPERTIES):
             raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
 
-    def create_employee(self, data):
+    def create_employee(self, data, aux):
         self.__validate_data(data)
         try:
             employee = Employee.objects.create(
-                user=data['user'],
-                charge=data['charge'],
+                user=aux['user'],
+                charge=aux['charge'],
                 salary_type=data['salary_type'],
                 salary=float(data['salary']),
                 cv=data['cv'],
@@ -29,9 +29,9 @@ class EmployeeManager:
             )
             employee.save()
             if data['user'].related_employee.get().is_admin_charge():
-                employee.office.add(data['office'].office)
+                employee.office.add(aux['office'].office)
             else:
-                employee.office_country.add(data['office'])
+                employee.office_country.add(aux['office'])
         except Exception as e:
             logger.exception(str(e))
             raise Exception(e)
