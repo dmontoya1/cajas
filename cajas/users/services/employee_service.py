@@ -27,7 +27,7 @@ class EmployeeManager:
                 passport=data['passport'],
             )
             employee.save()
-            if data['user'].related_employee.get().is_admin_charge():
+            if aux['user'].related_employee.get().is_admin_charge():
                 employee.office.add(aux['office'].office)
             else:
                 employee.office_country.add(aux['office'])
