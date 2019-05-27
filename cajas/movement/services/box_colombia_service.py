@@ -19,6 +19,7 @@ class MovementBoxColombiaManager(object):
             concept_type=ConceptType.DOUBLE
         )
         concept = get_object_or_404(Concept, pk=data['concept'])
+        data['concept'] = concept
         movement_colombia = self.create_colombia_movement(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -59,7 +60,7 @@ class MovementBoxColombiaManager(object):
         try:
             movement = MovementBoxColombia.objects.create(
                 box_office=BoxColombia.objects.get(name='Caja Colombia'),
-                concept=get_object_or_404(Concept, pk=data['concept'].pk),
+                concept=data['concept'],
                 movement_type=data['movement_type'],
                 value=data['value'],
                 detail=data['detail'],
@@ -87,6 +88,7 @@ class MovementBoxColombiaManager(object):
             concept_type=ConceptType.DOUBLE
         )
         concept = get_object_or_404(Concept, pk=data['concept'])
+        data['concept'] = concept
         self.create_bank_colombia_movement(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -129,7 +131,7 @@ class MovementBoxColombiaManager(object):
     def create_bank_colombia_movement(self, data):
         movement = MovementBoxColombia.objects.create(
             box_office=BoxColombia.objects.get(name="Caja Banco"),
-            concept=get_object_or_404(Concept, pk=data['concept']),
+            concept=data['concept'],
             movement_type=data['movement_type'],
             value=data['value'],
             detail=data['detail'],
