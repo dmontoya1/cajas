@@ -1,22 +1,76 @@
-{% extends "account/base.html" %}
+{% extends "account/base_auth.html" %}
 
-{% load i18n %}
+{% load static i18n %}
+{% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "Sign Out" %}{% endblock %}
+{% comment %}{% block inner %}
+  <h1>{% trans "Sign Out" %}</h1>
 
-{% block inner %}
-<h1>{% trans "Sign Out" %}</h1>
+  <p>{% trans 'Are you sure you want to sign out?' %}</p>
 
-<p>{% trans 'Are you sure you want to sign out?' %}</p>
-
-<form method="post" action="{% url 'account_logout' %}">
+  <form method="post" action="{% url 'account_logout' %}">
     {% csrf_token %}
     {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
     {% endif %}
     <button class="btn btn-danger" type="submit">{% trans 'Sign Out' %}</button>
-</form>
+  </form>
 
 
-{% endblock %}
+{% endblock %}{% endcomment %}
+
+{% block title %}Cerrar Sesión{% endblock %}
+
+{% block content %}
+  <div class="limiter">
+    <div class="container-login100">
+      <div class="wrap-login100 p-b-20">
+        <span class="login100-form-title p-b-40">
+            Seguro Deseas Cerrar Sesion?
+        </span>
+        <span class="login100-form-sub-title p-b-30">
+            Te vamos a extrañar &#128542;...
+        </span>
+
+        {% for message in messages %}
+          <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {{ message }}
+          </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-block alert-danger">
+            {% if form_error_title %}<h4 class="alert-heading">{{ form_error_title }}</h4>{% endif %}
+            <ul>
+              {{ form.non_field_errors|unordered_list }}
+            </ul>
+          </div>
+        {% endif %}
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+          <div class="container-login100-form-btn">
+            <button class="logout100-form-btn" type="submit">
+              {% trans 'Sign Out' %}
+            </button>
+          </div>
+          <ul class="login-more p-t-190">
+            <li class="m-b-8">
+              <a href="{% url 'webclient:home' %}" class="txt2">
+                Volver al inicio
+              </a>
+            </li>
+          </ul>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+
+
 
