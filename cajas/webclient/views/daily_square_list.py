@@ -64,7 +64,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         )
         dq_total = 0
         for dq in dq_list:
-            box = BoxDailySquare.objects.get(user=dq, office=office)
+            box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
             dq_total += box.balance
         context['dq_total'] = dq_total
         context['dq_list'] = dq_list
