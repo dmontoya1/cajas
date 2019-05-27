@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/handsontable@7.0.3/dist/handsontable.full.min.css" rel="stylesheet"
+        media="screen">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <style>
+    .navbar .navbar-nav li.menu-item-has-children a {
+      line-height: 25px !important;
+    }
+
+    button#export-file {
+      margin-top: 25px;
+      border-radius: 10px;
+      background: var(--green-box);
+      color: #fff;
+      padding: 5px 15px;
+    }
+
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
+    </li>
+    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+    <li class="menu-item-has-children dropdown">
+      <a href="{% url 'webclient:home' %}">
+        <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+        Inicio
+      </a>
+    </li>
+    {% if request.user.is_superuser or request.user.is_secretary %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:reports' %}">
+          <i class="fas fa-chart-line mr-3"></i>
+          Informes
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+{% endblock %}
+
+{% block index_actions %}
+{% endblock %}
+
+{% block content %}
+  <div class="row country-row">
+    <div class="col-12">
+      <div class="country-name">
+        <span>Ranking de oficinas</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <div id="ranking"></div>
+                <button id="export-file" class="intext-btn">Descargar CSV</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+  <script src="https://cdn.jsdelivr.net/npm/handsontable@7.0.3/dist/handsontable.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/handsontable@7.0.3/dist/languages/all.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      let container = document.getElementById('ranking');
+      let data = [
+        ['Descripcion de la ponderacion', 0, 0, 0, 0, 0, 0],
+        ['', 0, 0, 0, 0, 0, 0],
+        ['', 0, 0, 0, 0, 0, 0],
+
+      ]
+      let col_header = [
+        '',
+        '<a href="#">Oficina 1</a>',
+        '<a href="#">Oficina 2</a>',
+        '<a href="#">Oficina 3</a>',
+        '<a href="#">Oficina 4</a>',
+        '<a href="#">Oficina 5</a>',
+        '<a href="#">Oficina 6</a>'
+      ]
+      let hot = new Handsontable(container, {
+        data: data,
+        colHeaders: col_header,
+        rowHeaders: true,
+        contextMenu: true,
+        allowInsertColumn: false,
+        language: 'es-MX',
+        width: '100%',
+        licenseKey: 'non-commercial-and-evaluation',
+        columnSummary: function () {
+          let configArray = [];
+          for (let i = 1; i <= 6; i++) {
+            configArray.push({
+              sourceColumn: i,
+              destinationRow: 0,
+              destinationColumn: i,
+              reversedRowCoords: true,
+              type: 'sum',
+              forceNumeric: true
+            },);
+          }
+
+          return configArray;
+        },
+      });
+      let button = document.getElementById('export-file');
+      let exportPlugin = hot.getPlugin('exportFile');
+
+      button.addEventListener('click', function () {
+        exportPlugin.downloadFile('csv', {
+          bom: false,
+          columnDelimiter: ',',
+          columnHeaders: false,
+          exportHiddenColumns: true,
+          exportHiddenRows: true,
+          fileExtension: 'csv',
+          filename: 'Ranking_oficinas_[YYYY]-[MM]-[DD]',
+          mimeType: 'text/csv',
+          rowDelimiter: '\r\n',
+          rowHeaders: true
+        });
+      });
+    });
+
+
+  </script>
+{% endblock %}

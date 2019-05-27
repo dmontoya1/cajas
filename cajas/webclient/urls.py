@@ -40,6 +40,8 @@ from .views.report_accounts_payable import ReportAccountPayable
 from .views.report_debt import ReportDebt
 from .views.report_actives import ReportActives
 from .views.report_employee_salary import ReportEmployeeSalary
+from .views.report_ranking import ReportRanking
+
 from .views.units_list import UnitsList
 
 app_name = 'webclient'
@@ -61,6 +63,7 @@ urlpatterns = [
     path("report-actives/", ReportActives.as_view(), name='report_actives'),
     path("report-debt/", ReportDebt.as_view(), name='report_debt'),
     path("report-employee-salary/", ReportEmployeeSalary.as_view(), name='report_employee_salary'),
+    path("report-ranking/", ReportRanking.as_view(), name='report_ranking'),
 
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),
