@@ -17,18 +17,18 @@ from .models.officeCountry import OfficeCountry
 def create_office_country_box(sender, **kwargs):
     if kwargs.get('created'):
         instance = kwargs.get('instance')
-        box1 = BoxOffice.objects.create(
+        BoxOffice.objects.create(
             office=instance,
         )
         donjuan = Partner.objects.get(code='DONJUAN')
-        box_don_juan = BoxDonJuan.objects.create(
+        BoxDonJuan.objects.create(
             partner=donjuan,
             office=instance
         )
-        box_don_juan_usd = BoxDonJuanUSD.objects.create(
+        BoxDonJuanUSD.objects.create(
             partner=donjuan,
             office=instance
         )
-        box_provisioning = BoxProvisioning.objects.create(
+        BoxProvisioning.objects.create(
             office=instance,
         )
