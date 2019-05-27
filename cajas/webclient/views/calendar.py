@@ -1,4 +1,3 @@
-
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -25,7 +24,13 @@ class Calendar(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         superv = {}
         context['office'] = office
-        context['units'] = Unit.objects.filter(partner__office=office)
+        context['units'] = Unit.objects.filter(Q(partner__office=office) |
+                                               (Q(partner__code='DONJUAN') &
+                                                (Q(collector__related_employee__office_country=office) |
+                                                 Q(collector__related_employee__office=office.office) |
+                                                 Q(supervisor__related_employee__office_country=office) |
+                                                 Q(supervisor__related_employee__office=office.office)
+                                                 ))).distinct()
 
         try:
             user = self.request.user.related_employee.get()
