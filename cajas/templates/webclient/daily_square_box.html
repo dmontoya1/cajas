@@ -268,17 +268,17 @@
                     {% for m in box.movements.all %}
                       <tr>
                         <td>{{ m.responsible.get_full_name }}</td>
-                        <td><span class="d-none">{{ m.date|date:"YMd" }} test</span>{{ m.date|date:"d-M-Y" }}</td>
+                        <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                         <td>{{ m.concept.name }}</td>
                         <td>{{ m.detail }}</td>
                         <td>
                           {% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                          {% else %}-
+                          {% else %}
                           {% endif %}
                         </td>
                         <td>
                           {% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                          {% else %}-
+                          {% else %}
                           {% endif %}
                         </td>
                         <td>
