@@ -209,7 +209,7 @@
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                       {% else %}{% endif %}</td>
                       <td>
-                        {% if perms.movement.change_movementoffice %}
+                        {% if perms.movement.add_movementoffice %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
                         {% endif %}
