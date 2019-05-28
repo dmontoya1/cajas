@@ -52,7 +52,8 @@ class Stop(models.Model):
     report_users = models.ManyToManyField(
         User,
         verbose_name='Informar usuarios',
-        related_name="related_users_report"
+        related_name="related_users_report",
+        blank=True, null=True
     )
 
     def __str__(self):
