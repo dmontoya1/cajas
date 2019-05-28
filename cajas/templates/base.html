@@ -36,7 +36,7 @@
   {% endblock %}
   <style>
     table.dataTable tbody td.child {
-        word-break: break-word;
+      word-break: break-word;
     }
   </style>
   {% block extra_css %}{% endblock %}
@@ -976,12 +976,21 @@
 
     });
 
-    $('.datetimepicker').datetimepicker({
-      format: 'Y-m-d',
-      minDate: '-1970/01/04',//yesterday is minimum date(for today use 0 or -1970/01/01)
-      maxDate: '0',//tomorrow is maximum date calendar
-      timepicker: false,
-    });
+    {% if request.user.is_superuser %}
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
+      });
+    {% else %}
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/04',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
+      });
+    {% endif %}
 
   </script>
 {% endblock %}

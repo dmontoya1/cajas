@@ -1,7 +1,5 @@
 
 from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.contrib.sites.models import Site
 from django.db import models
 
 from cajas.users.models.charges import Charge

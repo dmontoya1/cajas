@@ -283,7 +283,10 @@
                         </td>
                         <td>
                           <ul class="ul-buttons">
-                            {% if request.user.is_superuser or request.user.is_secretary %}
+                            {% if request.user.is_superuser %}
+                              <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
+                                     data-target="#addMovement">Editar</a></li>
+                            {% elif request.user.is_secretary %}
                               {% if m.date|three_last_days %}
                                 <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                        data-target="#addMovement">Editar</a></li>
