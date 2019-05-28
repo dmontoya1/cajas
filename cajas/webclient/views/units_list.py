@@ -32,7 +32,10 @@ class UnitsList(LoginRequiredMixin, TemplateView):
                     Q(office=office.office) &
                     Q(user__is_active=True)
                 )
-                context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+                context['partners'] = Partner.objects.filter(
+                    (Q(office=office) & Q(user__is_active=True)) |
+                    Q(code='DONJUAN')
+                )
                 context['categories'] = Category.objects.all()
             else:
                 partner = Partner.objects.get(user=self.request.user, office=office)
