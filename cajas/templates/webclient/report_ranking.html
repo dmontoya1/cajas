@@ -12,7 +12,7 @@
       line-height: 25px !important;
     }
 
-    button#export-file {
+    button.intext-btn {
       margin-top: 25px;
       border-radius: 10px;
       background: var(--green-box);
@@ -65,9 +65,11 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
+                <pre id="example1console" class="console">consola</pre>
                 <div id="ranking"></div>
+                <button class="intext-btn load">Cargar</button>
+                <button class="intext-btn save">Guardar</button>
                 <button id="export-file" class="intext-btn">Descargar CSV</button>
-
               </div>
             </div>
           </div>
@@ -85,20 +87,21 @@
   <script type="text/javascript">
     $(document).ready(function () {
       let container = document.getElementById('ranking');
+      var consoleExample = $("#example1console");
       let data = [
-        ['Descripcion de la ponderacion', 0, 0, 0, 0, 0, 0],
-        ['', 0, 0, 0, 0, 0, 0],
+        ['Apertura y Cierre', 0, 0, 0, 0, 0, 0],
+        ['Descripción de la ponderación', 0, 0, 0, 0, 0, 0],
         ['', 0, 0, 0, 0, 0, 0],
 
       ]
       let col_header = [
         '',
-        '<a href="#">Oficina 1</a>',
-        '<a href="#">Oficina 2</a>',
-        '<a href="#">Oficina 3</a>',
-        '<a href="#">Oficina 4</a>',
-        '<a href="#">Oficina 5</a>',
-        '<a href="#">Oficina 6</a>'
+        '<a href="{% url 'webclient:report_hours' 1 %}" target="_blank">Oficina 1</a>',
+        '<a href="{% url 'webclient:report_hours' 2 %}" target="_blank">Oficina 2</a>',
+        '<a href="{% url 'webclient:report_hours' 3 %}" target="_blank">Oficina 3</a>',
+        '<a href="{% url 'webclient:report_hours' 4 %}" target="_blank">Oficina 4</a>',
+        '<a href="{% url 'webclient:report_hours' 5 %}" target="_blank">Oficina 5</a>',
+        '<a href="{% url 'webclient:report_hours' 6 %}" target="_blank">Oficina 6</a>'
       ]
       let hot = new Handsontable(container, {
         data: data,
@@ -125,6 +128,7 @@
           return configArray;
         },
       });
+
       let button = document.getElementById('export-file');
       let exportPlugin = hot.getPlugin('exportFile');
 
@@ -142,8 +146,38 @@
           rowHeaders: true
         });
       });
-    });
 
+      $('.load').click(function () {
+        axios.get('/user')
+          .then(function (response) {
+            console.log(response);
+            consoleExample.text('Data Loaded');
+          })
+          .catch(function (error) {
+            console.log(error);
+            consoleExample.text('Load error');
+          });
+        //$.ajax('scripts/json/load.json', 'GET', '', function (res) {
+        //  var data = JSON.parse(res.response);
+        //  hot.loadData(data.data);
+        //  consoleExample.innerText = 'Data loaded';
+        //});
+      });
+
+      $('.save').click(function () {
+        data = hot.getData()
+        console.log(data)
+        axios.post('/user', data)
+          .then(function (response) {
+            console.log(response);
+            consoleExample.text('Data saved');
+          })
+          .catch(function (error) {
+            console.log(error);
+            consoleExample.text('Save error');
+          });
+      });
+    });
 
   </script>
 {% endblock %}
