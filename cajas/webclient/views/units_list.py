@@ -26,7 +26,13 @@ class UnitsList(LoginRequiredMixin, TemplateView):
 
         try:
             if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
-                context['units'] = Unit.objects.filter(partner__office=office)
+                context['units'] = Unit.objects.filter(Q(partner__office=office) |
+                                                       (Q(partner__code='DONJUAN') &
+                                                        (Q(collector__related_employee__office_country=office) |
+                                                         Q(collector__related_employee__office=office.office) |
+                                                         Q(supervisor__related_employee__office_country=office) |
+                                                         Q(supervisor__related_employee__office=office.office)
+                                                         ))).distinct()
                 context['employees'] = Employee.objects.filter(
                     Q(office_country=office) |
                     Q(office=office.office) &
