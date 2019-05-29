@@ -20,6 +20,24 @@
       padding: 5px 15px;
     }
 
+    .first-office {
+      background: #05a905 !important;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .medium-office {
+      background: #a9a000 !important;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .last-office {
+      background: #f30003 !important;
+      color: #fff;
+      font-weight: bold;
+    }
+
   </style>
 {% endblock %}
 
@@ -77,7 +95,7 @@
                 <button id="load-ranking" class="intext-btn">Crear Ranking</button>
                 <button id="export-file" class="intext-btn">Descargar CSV</button>
                 <div class="table mt-4">
-                  <table class="table table-bordered table-ranking d-none">
+                  <table class="table table-bordered table-striped table-ranking d-none">
                     <thead>
                     <tr>
                       <th scope="col">#</th>
@@ -271,9 +289,16 @@
         });
         $('.table-ranking tbody').empty()
         $.each(items, function (k, v) {
+          if (k == 0) {
+            css_class = 'first-office'
+          } else if (k == data_length || k == data_length - 1) {
+            css_class = 'last-office'
+          } else {
+            css_class = 'medium-office'
+          }
           $('.table-ranking tbody').append(
             `
-              <tr>
+              <tr class="${css_class}">
                 <th scope="row">${k + 1}</th>
                 <td>Oficina ${v[0]}</td>
                 <td>${v[1]}</td>
