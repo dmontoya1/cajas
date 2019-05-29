@@ -53,7 +53,6 @@ class Stop(models.Model):
         User,
         verbose_name='Informar usuarios',
         related_name="related_users_report",
-        blank=True, null=True
     )
 
     def __str__(self):

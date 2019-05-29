@@ -1,7 +1,6 @@
 from datetime import timedelta, date, datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils import timezone
 from django.views.generic import TemplateView
 
 from cajas.office.models import Office
