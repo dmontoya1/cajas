@@ -65,11 +65,30 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                <pre id="example1console" class="console">consola</pre>
                 <div id="ranking"></div>
-                <button class="intext-btn load">Cargar</button>
+                <div class="col mt-4">
+                  <label for="date">Selecciona la fecha</label>
+                  <input type="text" class="form-control datetimepicker" id="date" name="date"
+                         placeholder="yyyy-mm-dd"
+                         style="width: 50%;" required autocomplete="off">
+                </div>
                 <button class="intext-btn save">Guardar</button>
+                <button class="intext-btn load">Cargar</button>
+                <button id="load-ranking" class="intext-btn">Crear Ranking</button>
                 <button id="export-file" class="intext-btn">Descargar CSV</button>
+                <div class="table mt-4">
+                  <table class="table table-bordered table-ranking d-none">
+                    <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th>Oficina</th>
+                      <th>Puntaje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -87,24 +106,32 @@
   <script type="text/javascript">
     $(document).ready(function () {
       let container = document.getElementById('ranking');
-      var consoleExample = $("#example1console");
-      let data = [
-        ['Apertura y Cierre', 0, 0, 0, 0, 0, 0],
-        ['Descripción de la ponderación', 0, 0, 0, 0, 0, 0],
-        ['', 0, 0, 0, 0, 0, 0],
-
-      ]
+      let data = []
       let col_header = [
         '',
-        '<a href="{% url 'webclient:report_hours' 1 %}" target="_blank">Oficina 1</a>',
-        '<a href="{% url 'webclient:report_hours' 2 %}" target="_blank">Oficina 2</a>',
-        '<a href="{% url 'webclient:report_hours' 3 %}" target="_blank">Oficina 3</a>',
-        '<a href="{% url 'webclient:report_hours' 4 %}" target="_blank">Oficina 4</a>',
-        '<a href="{% url 'webclient:report_hours' 5 %}" target="_blank">Oficina 5</a>',
-        '<a href="{% url 'webclient:report_hours' 6 %}" target="_blank">Oficina 6</a>'
       ]
+      {% for office in offices %}
+        col_header.push(
+          '<a href="{% url 'webclient:report_hours' office.number %}" target="_blank">Oficina {{ office.number}}',
+        )
+      {% endfor %}
+      array0 = ["Apertura y Cierre"]
+      array1 = ["Descripción de la ponderación"]
+      array2 = [""]
+      {% for i in range %}
+        array0.push("0")
+        array1.push("0")
+        array2.push("0")
+      {% endfor %}
+      data.push(array0)
+      data.push(array1)
+      data.push(array2)
+
       let hot = new Handsontable(container, {
         data: data,
+        {% if not request.user.is_superuser %}
+          readOnly: true,
+        {% endif %}
         colHeaders: col_header,
         rowHeaders: true,
         contextMenu: true,
@@ -114,14 +141,15 @@
         licenseKey: 'non-commercial-and-evaluation',
         columnSummary: function () {
           let configArray = [];
-          for (let i = 1; i <= 6; i++) {
+          for (let i = 1; i <= {{ offices.count }}; i++) {
             configArray.push({
               sourceColumn: i,
               destinationRow: 0,
               destinationColumn: i,
               reversedRowCoords: true,
               type: 'sum',
-              forceNumeric: true
+              forceNumeric: true,
+              editor: false
             },);
           }
 
@@ -136,7 +164,7 @@
         exportPlugin.downloadFile('csv', {
           bom: false,
           columnDelimiter: ',',
-          columnHeaders: false,
+          columnHeaders: true,
           exportHiddenColumns: true,
           exportHiddenRows: true,
           fileExtension: 'csv',
@@ -148,34 +176,114 @@
       });
 
       $('.load').click(function () {
-        axios.get('/user')
-          .then(function (response) {
-            console.log(response);
-            consoleExample.text('Data Loaded');
+        date = $('#date').val()
+        console.log(date)
+        if (date == null || date == "") {
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Debes seleccionar una fecha para cargar los datos',
           })
-          .catch(function (error) {
-            console.log(error);
-            consoleExample.text('Load error');
-          });
-        //$.ajax('scripts/json/load.json', 'GET', '', function (res) {
-        //  var data = JSON.parse(res.response);
-        //  hot.loadData(data.data);
-        //  consoleExample.innerText = 'Data loaded';
-        //});
+        } else {
+          Swal.fire({
+            title: 'Estas seguro?',
+            text: "Seguro deseas cargar los datos para el mes seleccionado?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, cargar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.value) {
+              axios.get(`{% url 'api:reports:report_ranking_load' %}?date=${date}`)
+                .then(function (response) {
+                  fields = response.data[0].fields;
+                  hot.loadData(fields);
+                  Swal.fire(
+                    'Exitoso!',
+                    'Los datos se han cargado exitosamente',
+                    'success'
+                  )
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
+            }
+          })
+        }
       });
 
       $('.save').click(function () {
+        data_length = hot.countRows()
         data = hot.getData()
-        console.log(data)
-        axios.post('/user', data)
-          .then(function (response) {
-            console.log(response);
-            consoleExample.text('Data saved');
+        date = $('#date').val()
+        if (date == null || date == "") {
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Debes seleccionar una fecha para guardar los datos',
           })
-          .catch(function (error) {
-            console.log(error);
-            consoleExample.text('Save error');
-          });
+        } else {
+          Swal.fire({
+            title: 'Estas seguro?',
+            text: "Seguro deseas guardar los datos para el mes seleccionado?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, guardar',
+            cancelButtonText: 'Cancelar'
+          }).then((result) => {
+            if (result.value) {
+              axios.post(`{% url 'api:reports:report_ranking_save' %}?date=${date}`, data)
+                .then(function (response) {
+                  Swal.fire(
+                    'Exitoso!',
+                    'Los datos se han guardado exitosamente',
+                    'success'
+                  )
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
+            }
+          })
+        }
+      });
+
+      $('#load-ranking').click(function () {
+        col = new Array({{ offices.count }})
+        data_length = hot.countRows()
+        data = {}
+        $.each(col, function (i, v) {
+          data[i + 1] = hot.getDataAtCell(data_length - 1, i + 1)
+        })
+        let items = Object.keys(data).map(function (key) {
+          return [key, data[key]];
+        });
+
+        // Sort the array based on the second element
+        items.sort(function (a, b) {
+          return b[1] - a[1];
+        });
+        $('.table-ranking tbody').empty()
+        $.each(items, function (k, v) {
+          $('.table-ranking tbody').append(
+            `
+              <tr>
+                <th scope="row">${k + 1}</th>
+                <td>Oficina ${v[0]}</td>
+                <td>${v[1]}</td>
+              </tr>
+            `
+          )
+        })
+        $('.table-ranking').removeClass('d-none')
+
+
       });
     });
 
