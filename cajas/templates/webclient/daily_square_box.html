@@ -230,7 +230,7 @@
 
                         </td>
                         <td>{{ m.responsible.get_full_name }}</td>
-                        <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
+                        <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                         <td>
                           {% if m.concept.name == 'Inversión Unidad' or m.concept.name == 'Retiro unidad' %}
                             {{ m.concept.name }} ({{ m.unit.name }})

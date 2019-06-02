@@ -394,7 +394,7 @@
     })
 
     $("#add-movement-btn").on("click", function () {
-      $('.add-movement')[0].reset();
+      $('.add-usd-movement')[0].reset();
       $("#method_modal").val("add")
       $("#method_modal").data("id", "")
       $('.modal-title').text("Añadir Movimiento")
@@ -540,6 +540,13 @@
         }
       })
     })
+
+    $('.datetimepicker_dailysquare').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/04',
+      maxDate: '0',
+      timepicker: false,
+    });
 
   </script>
 {% endblock %}
