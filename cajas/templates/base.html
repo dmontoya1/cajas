@@ -578,7 +578,6 @@
       })
 
       $('#unit').on('change', function (e) {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.get(`/api/units/${$(this).val()}/detail`)
           .then(function (response) {
             data = response.data
@@ -608,7 +607,6 @@
 
       $('#sell-units').on('submit', function (e) {
         e.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data = $(this).serialize()
         axios.post('{% url 'api:units:unit_sell' %}', data)
@@ -651,7 +649,6 @@
       $('.partner-closeout').on('submit', function (e) {
         e.preventDefault()
         withdraw = $(this)
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = withdraw.serialize()
         axios.post('{% url 'api:users:validate_closeout' %}', data_send)
@@ -748,7 +745,6 @@
 
       $('#form-investment').on('submit', function (e) {
         e.preventDefault()
-        console.log('FORM SUBMIT')
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data = $(this).serialize()
