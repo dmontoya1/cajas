@@ -157,8 +157,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
                     <th>Administrador</th>
@@ -174,8 +174,10 @@
                       <td class="text-center">
                         <a href="#" class="show-group" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#showGroup">Ver grupo</a>
-                        <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
-                           data-target="#editGroup">Editar</a>
+                        {% if perms.users.change_groupemployee %}
+                          <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
+                             data-target="#editGroup">Editar</a>
+                        {% endif %}
                       </td>
                     </tr>
                   {% endfor %}
@@ -185,13 +187,15 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" data-toggle="modal" data-target="#addGroup">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Añadir grupo</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
+        {% if perms.users.change_groupemployee %}
+          <a href="" class="float" data-toggle="modal" data-target="#addGroup">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Añadir grupo</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -216,7 +220,7 @@
                 <select class="form-control" id="admin" name="admin" style="width: 100%; height: 20px;" required>
                   <option value="" selected disabled>Selecciona un administrador</option>
                   {% for adm in admins %}
-                    <option value="{{ adm.pk }}">{{ adm }}  - ({{ adm.charge }})</option>
+                    <option value="{{ adm.pk }}">{{ adm }} - ({{ adm.charge }})</option>
                   {% endfor %}
                 </select>
               </div>
@@ -225,7 +229,7 @@
                 <select class="supervisors form-control" id="superv" name="supervisors[]"
                         style="width: 100%; height: 20px;" multiple="" required>
                   {% for e in employees %}
-                    <option value="{{ e.pk }}">{{ e }}  - ({{ e.charge }})</option>
+                    <option value="{{ e.pk }}">{{ e }} - ({{ e.charge }})</option>
                   {% endfor %}
                 </select>
               </div>
