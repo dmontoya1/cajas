@@ -166,8 +166,8 @@
           <div class="col-md-12">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <thead>
                   <tr>
                     <th>Nombre</th>
@@ -292,7 +292,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="email">Correo electrónico</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com" required>
+                <input type="email" class="form-control" name="email" id="email" placeholder="johndoe@mail.com"
+                       required>
               </div>
             </div>
             <div class="form-row">
@@ -459,12 +460,12 @@
                   {% endfor %}
                 </select>
               </div>
-
             </div>
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label for="edit_salary_type">Tipo de sueldo</label><br>
-                <select class="form-control salary_type" id="edit_salary_type" name="salary_type" style="width: 100%; height: 20px;"
+                <select class="form-control salary_type" id="edit_salary_type" name="salary_type"
+                        style="width: 100%; height: 20px;"
                         required>
                   <option selected disabled value="">Selecciona el tipo de salario</option>
                   <option value="FX">Salario Fijo</option>
@@ -477,8 +478,34 @@
                   <div class="input-group-prepend">
                     <div class="input-group-text salary-type-icon">$</div>
                   </div>
-                  <input type="number" class="form-control to-dec" id="edit_salary" name="salary" required>
+                  <input type="text" class="form-control to-dec" id="edit_salary" name="salary" required>
                 </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="false" id="is_abstract_edit" name="is_abstract">
+                  <label class="form-check-label" for="is_abstract">
+                    ¿Tiene acceso a la plataforma?
+                  </label>
+                </div>
+              </div>
+              <div class="form-group col-md-6 form-check">
+                <input type="checkbox" class="form-check-input" id="is_daily_square_edit" name="is_daily_square">
+                <label class="form-check-label" for="is_daily_square">¿Es cuadre diario?</label>
+              </div>
+            </div>
+            <div class="form-row d-none" id="password_inputs_edit">
+              <div class="form-group col-md-6">
+                <label for="password1">Contraseña</label>
+                <input type="password" class="form-control d-none" name="password1" id="password1_edit"
+                       placeholder="Password">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="password2">Repetir Contraseña</label>
+                <input type="password" class="form-control d-none" name="password2" id="password2_edit"
+                       placeholder="Password Again">
               </div>
             </div>
             <div class="form-row">
@@ -490,7 +517,8 @@
               <div class="form-group col-md-6">
                 <label for="daily_square">Pasaporte</label><br>
                 <input type="file" class="form-control-file" id="edit_passport" name="passport">
-                <label id="current_passport">Actualmente: <a id="current_passport_link" href="">Ver pasaporte</a></label>
+                <label id="current_passport">Actualmente: <a id="current_passport_link" href="">Ver
+                  pasaporte</a></label>
               </div>
             </div>
             <button type="submit" class="btn btn-submit" id="btn-edit">Editar</button>
@@ -505,7 +533,7 @@
 
   <script type="text/javascript">
 
-    $(document).on('blur', '.to-dec', function() {
+    $(document).on('blur', '.to-dec', function () {
       var value = $(this).val();
       if (isNaN(value)) {
         $(this).val('');
@@ -519,7 +547,7 @@
 
     $('.add-employee').on('submit', function (e) {
       e.preventDefault()
-      $('#addEmployee_submit').attr('disabled', true )
+      $('#addEmployee_submit').attr('disabled', true)
       var bodyFormData = new FormData();
 
       bodyFormData.append("office", $(this).context.office.value)
@@ -588,6 +616,25 @@
       }
     });
 
+    $('#is_abstract_edit').click(function () {
+      console.log('click')
+      if ($(this).is(':checked')) {
+        $("#password_inputs_edit").removeClass("d-none");
+        $("#password1_edit").prop('required', true);
+        $("#password2_edit").prop('required', true);
+        $("#password1_edit").removeClass("d-none");
+        $("#password2_edit").removeClass("d-none");
+        $('#is_abstract').prop('checked', true);
+      } else {
+        $("#password_inputs_edit").addClass("d-none");
+        $("#password1_edit").prop('required', false);
+        $("#password2_edit").prop('required', false);
+        $("#password2_edit").addClass("d-none");
+        $("#password1_edit").addClass("d-none");
+        $('#is_abstract').prop('checked', false);
+      }
+    });
+
     //"Ver detalles" modal functionality
     $('.employee_detail').on('click', function () {
       var employee_pk = $(this).data("id")
@@ -601,13 +648,13 @@
           $("#detail_salary").val(data.salary)
           $("#detail_charge").val(data.charge.name)
           $("#detail_charge").attr("data-id", data.charge.id)
-          if(data.cv != null){
+          if (data.cv != null) {
             $("#detail_cv").attr("href", data.cv)
             $("#detail_cv").removeClass("d-none")
           } else {
             $("#detail_cv").addClass("d-none")
           }
-          if(data.passport != null){
+          if (data.passport != null) {
             $("#detail_passport").attr("href", data.passport)
             $("#detail_passport").removeClass("d-none")
           } else {
@@ -646,19 +693,25 @@
       axios.get(`/api/users/${employee_pk}/employee-detail`)
         .then(function (response) {
           data = response.data
+          console.log(data)
           $("#edit_first_name").val(data.user.first_name)
           $("#edit_last_name").val(data.user.last_name)
           $("#edit_email").val(data.user.email)
           $("#edit_salary").val(parseFloat(data.salary).toFixed(1))
-
-          if(data.cv != null){
+          if (data.user.is_abstract == true){
+            $('#is_abstract_edit').attr('checked', 'checked')
+          }
+          if (data.user.is_daily_square == true){
+            $('#is_daily_square_edit').attr('checked', 'checked')
+          }
+          if (data.cv != null) {
             $("#current_cv").removeClass("d-none")
             $("#current_cv_link").attr("href", data.cv)
           } else {
             $("#current_cv").addClass("d-none")
           }
 
-          if(data.passport != null){
+          if (data.passport != null) {
             $("#current_passport").removeClass("d-none")
             $("#current_passport_link").attr("href", data.passport)
           } else {
@@ -673,9 +726,9 @@
           $("#edit_salary_type option[value='" + data.salary_type + "']").prop("selected", true);
           $("#edit_salary_type").trigger("change")
 
-          if(data.salary_type == "PE")
+          if (data.salary_type == "PE")
             $(".salary-type-icon").text("%")
-          if(data.salary_type == "FX")
+          if (data.salary_type == "FX")
             $(".salary-type-icon").text("$")
 
         })
@@ -683,73 +736,7 @@
           // handle error
           console.log(error);
         })
-      });
-
-    //Edit an employee
-    $('.edit-item').on('click', function () {
-      // var employee_pk = $(this).data("id")
-      // $("#employee_pk").val(employee_pk)
-      // //fill charges select input
-      // axios.get("{% url 'api:users:charge-list' %}")
-      //   .then(function (response) {
-      //     data = response.data
-      //     $('#edit_charge').empty()
-      //     $.each(data, function (k, v) {
-      //       $('#edit_charge').append(
-      //         `<option value=${v.id}>${v.name}</option>`
-      //       )
-      //     })
-      //     $('#edit_charge').prepend(
-      //       '<option value="" selected disabled>Selecciona un cargo</option>'
-      //     )
-      //   })
-      //   .catch(function (error) {
-      //     // handle error
-      //     console.log(error);
-      //   })
-
-      // //get employee data
-      // axios.get(`/api/users/${employee_pk}/employee-detail`)
-      //   .then(function (response) {
-      //     data = response.data
-      //     $("#edit_first_name").val(data.user.first_name)
-      //     $("#edit_last_name").val(data.user.last_name)
-      //     $("#edit_email").val(data.user.email)
-      //     $("#edit_salary").val(parseFloat(data.salary).toFixed(1))
-
-      //     if(data.cv != null){
-      //       $("#current_cv").removeClass("d-none")
-      //       $("#current_cv_link").attr("href", data.cv)
-      //     } else {
-      //       $("#current_cv").addClass("d-none")
-      //     }
-
-      //     if(data.passport != null){
-      //       $("#current_passport").removeClass("d-none")
-      //       $("#current_passport_link").attr("href", data.passport)
-      //     } else {
-      //       $("#current_passport").addClass("d-none")
-      //     }
-
-      //     $("#edit_charge option").prop("selected", false);
-      //     $("#edit_charge option[value='" + data.charge.id + "']").prop("selected", true);
-      //     $("#edit_charge").trigger("change")
-
-      //     $("#edit_salary_type option").prop("selected", false);
-      //     $("#edit_salary_type option[value='" + data.salary_type + "']").prop("selected", true);
-      //     $("#edit_salary_type").trigger("change")
-
-      //     if(data.salary_type == "PE")
-      //       $(".salary-type-icon").text("%")
-      //     if(data.salary_type == "FX")
-      //       $(".salary-type-icon").text("$")
-
-      //   })
-      //   .catch(function (error) {
-      //     // handle error
-      //     console.log(error);
-      //   })
-    })
+    });
 
     //and then submit the form
     $('.edit_employee_form').on('submit', function (e) {
@@ -765,6 +752,10 @@
       data.append("charge", $(this).context.edit_charge.value)
       data.append("cv", $(this).context.edit_cv.files[0])
       data.append("passport", $(this).context.edit_passport.files[0])
+      data.append("password1", $(this).context.password1_edit.value)
+      data.append("password2", $(this).context.password2_edit.value)
+      data.append("is_daily_square", $("#is_daily_square_edit").is(":checked") ? true : false)
+      data.append("is_abstract", $("#is_abstract_edit").is(":checked") ? true : false)
 
       axios.patch(`/api/users/${$("#employee_pk").val()}/employee-detail`, data)
         .then(function (response) {
@@ -830,7 +821,7 @@
 
     $(document).ready(function () {
 
-    var table = $('#table').DataTable({
+      var table = $('#table').DataTable({
         responsive: {
           details: true,
         },

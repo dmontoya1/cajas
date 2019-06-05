@@ -1,4 +1,6 @@
+
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
 
 from rest_framework import generics
 from rest_framework.response import Response
@@ -23,6 +25,13 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         user = User.objects.get(pk=item.user.pk)
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
+        if request.data['is_daily_square'] == "true":
+            user.is_daily_square = True
+        if "password1" in request.data:
+            user.password = make_password(request.data['password1'])
+            user.is_abstract = True
+        else:
+            user.is_abstract = False
         user.save()
         item.user = user
         item.salary = request.data["salary"]
