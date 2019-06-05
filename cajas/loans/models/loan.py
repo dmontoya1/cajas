@@ -100,7 +100,7 @@ class Loan(models.Model):
     def get_interest_actual_month_payment(self):
         month = datetime.now().month
         interest = self.related_payments.filter(date__month=month, history_type='IN')
-        if interest.exists():
+        if self.interest == 0 or interest.exists():
             return True
         return False
 
