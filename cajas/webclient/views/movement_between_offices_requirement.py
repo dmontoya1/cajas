@@ -20,7 +20,7 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
         user = self.request.user
         if user.is_superuser:
             movements = MovementBetweenOfficeRequest.objects.all()
-        elif user.is_secretary:
+        elif user.is_secretary():
             for office in user.related_employee.get().office.all():
                 movements = MovementBetweenOfficeRequest.objects.filter(
                     box_office__office__office=office

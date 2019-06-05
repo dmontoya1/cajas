@@ -13,6 +13,7 @@ from cajas.inventory.models import Category
 from cajas.movement.models.movement_daily_square import MovementDailySquare
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.users.models import Employee, DailySquareUnits
 from cajas.webclient.views.utils import get_object_or_none
 
 
@@ -40,13 +41,19 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
             Q(partner__office=office) | Q(related_employee__office_country=office) |
             Q(related_employee__office=office.office) &
             Q(is_daily_square=True))
-        units = Unit.objects.filter(Q(partner__office=office) |
-                                    (Q(partner__code='DONJUAN') &
-                                     (Q(collector__related_employee__office_country=office) |
-                                      Q(collector__related_employee__office=office.office) |
-                                      Q(supervisor__related_employee__office_country=office) |
-                                      Q(supervisor__related_employee__office=office.office)
-                                      ))).distinct()
+        employee = Employee.objects.get(
+            Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        try:
+            group = DailySquareUnits.objects.get(employee=employee)
+            units = group.units.all()
+        except:
+            units = Unit.objects.filter(Q(partner__office=office) |
+                                        (Q(partner__code='DONJUAN') &
+                                         (Q(collector__related_employee__office_country=office) |
+                                          Q(collector__related_employee__office=office.office) |
+                                          Q(supervisor__related_employee__office_country=office) |
+                                          Q(supervisor__related_employee__office=office.office)
+                                          ))).distinct()
         past_mvments = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             box_daily_square__is_closed=False,
