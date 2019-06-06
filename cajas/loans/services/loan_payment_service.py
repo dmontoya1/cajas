@@ -59,7 +59,8 @@ class LoanPaymentManager(object):
                     return movement_office_manager.create_movement(data)
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
-                partner = loan.provider
+                user = loan.lender
+                partner = Partner.objects.get(user=user, office=office)
                 data = {
                     'partner': partner,
                     'box': partner.box,
@@ -117,7 +118,8 @@ class LoanPaymentManager(object):
                     return movement_office_manager.create_movement(data)
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 concept = get_object_or_404(Concept, name='Pago Interés Préstamo Socio Directo')
-                partner = loan.provider
+                user = loan.lender
+                partner = Partner.objects.get(user=user, office=office)
                 data = {
                     'partner': partner,
                     'box': partner.box,
