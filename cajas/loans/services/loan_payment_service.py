@@ -126,7 +126,7 @@ class LoanPaymentManager(object):
                     'concept': concept,
                     'movement_type': 'OUT',
                     'value': request.data['value'],
-                    'detail': 'Pago interés prestamo socio directo',
+                    'detail': 'Pago interés {}'.format(loan),
                     'date': request.data['date'],
                     'responsible': request.user,
                     'ip': get_ip(request)
