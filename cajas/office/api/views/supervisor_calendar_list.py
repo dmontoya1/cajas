@@ -25,8 +25,6 @@ def get_calendar(super_calendar):
                 text += "\n Supervisor: {}".format(item.supervisor.first_name + " " + item.supervisor.last_name)
             if item.unit.collector:
                 text += "\n Cobrador: {}".format(item.unit.collector.first_name + " " + item.unit.collector.last_name)
-            if item.unit.partner:
-                text += "\n Socio: {}".format(item.unit.partner.user.first_name + " " + item.unit.partner.user.last_name)
             scheduling["title"] = text
         else:
             scheduling["title"] = "Supervisor: {} \n Detalle: {}".format(
