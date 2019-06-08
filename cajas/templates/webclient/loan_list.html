@@ -188,7 +188,7 @@
                       <td>{{ l.loan_type }}</td>
                       <td>{{ l.interest }}%</td>
                       <td>${{ l.balance|floatformat:2|intcomma }}</td>
-                      <td>${{ l.balance_cop|intcomma }}</td>
+                      <td>${{ l.balance_cop|floatformat:2|intcomma }}</td>
                       <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Historial</a></td>
                       <td>
                         {% if perms.loans.add_loanpayment %}
@@ -368,7 +368,7 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label for="value_cop">Monto del préstamo (COP)</label>
-                  <input class="form-control" type="number" name="value_cop" id="value_cop" value="0" step="0.01"
+                  <input class="form-control" type="number" name="value_cop" id="value_cop" value="0"
                          placeholder="Ingresa el monto del préstamo en COP" readonly>
                 </div>
               </div>
@@ -479,7 +479,8 @@
               <div class="form-group col-md-6">
                 <label for="exchange_abono">Tasa de cambio</label>
                 <input class="form-control" type="text" name="exchange" id="exchange_abono"
-                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}" readonly>
+                       value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}"
+                       readonly>
               </div>
             </div>
             <hr>
@@ -492,7 +493,6 @@
 {% endblock %}
 
 {% block extra_js %}
-
   <script type="text/javascript">
     $(document).ready(function () {
       $('#table').DataTable({
@@ -576,21 +576,22 @@
     $('#value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange').data('value'))
-      if ('{{ office.country}}' === 'Guatemala'){
-        $('#value_cop').val(value /'{{ exchange.exchange_dolar }}' * exchange)
-      }
-      else{
+      if ('{{ office.country}}' === 'Guatemala') {
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        $('#value_cop').val(parseFloat(total).toFixed(2))
+      } else {
         $('#value_cop').val(value * exchange)
       }
+
     })
 
     $('#interest_value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala'){
-        $('#value_cop_interes').val(value / '{{ exchange.exchange_dolar_abono }}' * exchange)
-      }
-      else{
+      if ('{{ office.country}}' === 'Guatemala') {
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        $('#value_cop_interes').val(parseFloat(total).toFixed(2))
+      } else {
         $('#value_cop_interes').val(value * exchange)
       }
     })
@@ -598,10 +599,10 @@
     $('#abono_value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala'){
-        $('#value_cop_abono').val(value / '{{ exchange.exchange_dolar_abono }}' * exchange)
-      }
-      else{
+      if ('{{ office.country}}' === 'Guatemala') {
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        $('#value_cop_abono').val(parseFloat(total).toFixed(2))
+      } else {
         $('#value_cop_abono').val(value * exchange)
       }
     })
@@ -632,10 +633,9 @@
       $('#interest_value').val($(this).data('interest'))
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala'){
+      if ('{{ office.country}}' === 'Guatemala') {
         $('#value_cop_interes').val(value / '{{ exchange.exchange_dolar_abono }}' * exchange)
-      }
-      else{
+      } else {
         $('#value_cop_interes').val(value * exchange)
       }
     })
