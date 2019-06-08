@@ -18,5 +18,5 @@ class LoanAdmin(admin.ModelAdmin):
 
     list_display = ('provider', 'lender', 'value', 'balance')
     search_list = ('provider', 'lender')
-    search_fields = ('provider__first_name', 'provider__last_name', 'lender__first_name', 'lender__last_name')
+    search_fields = ('provider__user__first_name', 'provider__user__last_name', 'lender__first_name', 'lender__last_name')
     inlines = [LoanHistoryStacked, ]
