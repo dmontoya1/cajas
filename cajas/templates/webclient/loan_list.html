@@ -606,7 +606,7 @@
       }
     })
 
-    $('.add-pay').on('click', function () {
+    $('#table tbody').on('click', '.add-pay', function () {
       let interest_has_pay = $(this).data('interest-pay')
       let box_balance_positive = $(this).data('box-balance-positive')
       if (interest_has_pay === 'False') {
@@ -627,7 +627,7 @@
       }
     })
 
-    $('.add-interest').on('click', function () {
+    $('#table tbody').on('click', '.add-interest', function () {
       $('#loan_interest').val($(this).data('id'))
       $('#interest_value').val($(this).data('interest'))
       value = parseInt($('#interest_value').val())
@@ -640,7 +640,7 @@
       }
     })
 
-    $('.add-new-loan').on('click', function () {
+    $('#table tbody').on('click', '.add-new-loan', function () {
       pk = $(this).data('id')
       axios.get(`/api/loans/loan/${pk}/detail`)
         .then(function (response) {
