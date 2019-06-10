@@ -224,7 +224,7 @@
                                 {% for u in p.related_users.all %}
                                   <tr>
                                     <th>{{ u.user }}</th>
-                                    <th>{{ u.user.partner.get.office|default:"Sin oficina" }}</th>
+                                    <th>{{ u.user }}</th>
                                     <td>{{ u.place_porcentaje }}%</td>
                                     <td>${{ u.get_user_value|intcomma }}</td>
                                     <td>
