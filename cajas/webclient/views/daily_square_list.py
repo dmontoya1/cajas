@@ -10,7 +10,7 @@ from cajas.general_config.models.exchange import Exchange
 from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
-from cajas.users.models import User, DailySquareUnits, Employee
+from cajas.users.models import User, DailySquareUnits, Employee, Partner, GroupEmployee
 from cajas.webclient.views.utils import get_object_or_none
 
 
@@ -38,7 +38,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                       Q(supervisor__related_employee__office=office.office)
                                       ))).distinct()
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
+            if self.request.user.is_superuser or self.request.user.is_secretary():
                 context['dailys'] = User.objects.filter(
                     Q(is_daily_square=True) &
                     (Q(related_employee__office=office.office) |
@@ -46,32 +46,48 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                      Q(related_employee__office_country=office)
                      )
                 ).distinct()
+                dq_total = 0
+                dq_list = User.objects.filter(
+                    (Q(partner__office=office) | Q(related_employee__office_country=office) |
+                     Q(related_employee__office=office.office)) &
+                    Q(is_daily_square=True)).distinct()
+                for dq in dq_list:
+                    box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
+                    dq_total += box.balance
+                context['dq_total'] = dq_total
+                context['dq_list'] = dq_list
             else:
                 employee = Employee.objects.get(
                     Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
-                group = get_object_or_none(DailySquareUnits, employee=employee)
-                if group and group.units.all().exists():
-                    units = group.units.filter(partner__office=office)
-                context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
+                groups = GroupEmployee.objects.filter(group__admin=employee)
+                if groups.exists():
+                    dailys = list()
+                    for sup in groups:
+                        if sup.supervisor.user.is_daily_square:
+                            dailys.append(sup.supervisor.user)
+                    context['dailys'] = dailys
+                elif self.request.user.is_admin_senior():
+                    context['dailys'] = User.objects.filter(
+                        Q(is_daily_square=True) &
+                        (Q(related_employee__office=office.office) |
+                         Q(partner__office=office) |
+                         Q(related_employee__office_country=office)
+                         )
+                    ).distinct()
+                else:
+                    context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
+                group_units = get_object_or_none(DailySquareUnits, employee=employee)
+                if group_units and group_units.units.all().exists():
+                    units = group_units.units.filter(partner__office=office)
         except Exception as e:
             print(e)
-            context['partner'] = self.request.user.partner.get()
-        dq_list = User.objects.filter(
-            (Q(partner__office=office) | Q(related_employee__office_country=office) |
-             Q(related_employee__office=office.office)) &
-            Q(is_daily_square=True)).distinct()
+            context['partner'] = Partner.objects.get(user=self.request.user, office=office)
         now = datetime.now()
         context['exchange'] = get_object_or_none(
             Exchange,
             currency=office.country.currency,
             month__month=now.month,
         )
-        dq_total = 0
-        for dq in dq_list:
-            box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
-            dq_total += box.balance
-        context['dq_total'] = dq_total
-        context['dq_list'] = dq_list
         context['categories'] = Category.objects.all()
         context['offices'] = offices
         context['units'] = units

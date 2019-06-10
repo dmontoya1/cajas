@@ -37,7 +37,6 @@ class Groups(LoginRequiredMixin, TemplateView):
                 Q(admin__office_country=office)
             )
         else:
-            print("Else")
             employee = Employee.objects.get(
                 Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office))
             )

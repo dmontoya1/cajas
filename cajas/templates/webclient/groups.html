@@ -174,7 +174,7 @@
                       <td class="text-center">
                         <a href="#" class="show-group" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#showGroup">Ver grupo</a>
-                        {% if perms.users.change_groupemployee %}
+                        {% if perms.users.add_groupemployee %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editGroup">Editar</a>
                         {% endif %}
@@ -187,7 +187,7 @@
             </div>
           </div>
         </div>
-        {% if perms.users.change_groupemployee %}
+        {% if perms.users.add_groupemployee %}
           <a href="" class="float" data-toggle="modal" data-target="#addGroup">
             <i class="fa fa-plus my-float"></i>
           </a>

@@ -175,6 +175,7 @@
                     <th>Cargo</th>
                     <th>Sueldo</th>
                     <th>Detalle</th>
+                    <th>Grupo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -188,6 +189,7 @@
                       <td>
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#modalDetail">Ver detalle</a></td>
+                      <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
                         {% if request.user.is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
@@ -208,6 +210,7 @@
                       <td>
                         <a href="#" class="employee_detail" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#modalDetail">Ver detalle</a></td>
+                      <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
                         {% if request.user.is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"

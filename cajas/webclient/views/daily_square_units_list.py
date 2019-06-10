@@ -22,13 +22,10 @@ class DailySquareUnitsList(LoginRequiredMixin, TemplateView):
         user_pk = self.kwargs['pk']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        user = User.objects.get(pk=user_pk)
-        employee = Employee.objects.get(
-            Q(user=user) & (Q(office=office.office) | Q(office_country=office)))
+        employee = Employee.objects.get(pk=user_pk)
         daily_square_group, created = DailySquareUnits.objects.get_or_create(
             employee=employee
         )
-        context['user'] = user
         context['employee'] = employee
         context['units'] = daily_square_group.units.all()
         context['units_office'] = Unit.objects.filter(Q(partner__office=office) |
