@@ -28,7 +28,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         offices = OfficeCountry.objects.all()
-
         users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
                                     Q(related_employee__office=office.office))
         units = Unit.objects.filter(Q(partner__office=office) |
@@ -39,7 +38,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                       Q(supervisor__related_employee__office=office.office)
                                       ))).distinct()
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary():
+            if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
                 context['dailys'] = User.objects.filter(
                     Q(is_daily_square=True) &
                     (Q(related_employee__office=office.office) |
@@ -52,7 +51,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
                 group = get_object_or_none(DailySquareUnits, employee=employee)
                 if group and group.units.all().exists():
-                    units = group.units.all()
+                    units = group.units.filter(partner__office=office)
                 context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
         except Exception as e:
             print(e)

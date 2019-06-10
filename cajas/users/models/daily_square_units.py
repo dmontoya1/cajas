@@ -24,5 +24,5 @@ class DailySquareUnits(models.Model):
         return 'Grupo de {}'.format(self.employee)
 
     class Meta:
-        verbose_name = "Rutas de Cuadre Diario"
-        verbose_name_plural = "Rutas de Cuadres Diarios"
+        verbose_name = "Ruta a cargo"
+        verbose_name_plural = "Rutas a cargo"
