@@ -270,7 +270,7 @@
                           <ul class="ul-buttons">
                             {% get_dq_box_id office d as box_id %}
                             {% get_dq_box_is_close office d as box_is_close %}
-                            {% if perms.movement.add_movementdailysquare and not box_is_close %}
+                            {% if perms.movement.add_movementdailysquare and not box_is_close and d == request.user %}
                               <li>
                                 <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
                                         data-toggle="modal"

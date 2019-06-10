@@ -65,6 +65,8 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     for sup in groups:
                         if sup.supervisor.user.is_daily_square:
                             dailys.append(sup.supervisor.user)
+                    if employee.user.is_daily_square:
+                        dailys.append(employee.user)
                     context['dailys'] = dailys
                 elif self.request.user.is_admin_senior():
                     context['dailys'] = User.objects.filter(
