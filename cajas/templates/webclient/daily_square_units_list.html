@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_dailysquare_box %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -106,7 +107,7 @@
     {% if perms.users.change_employee %}
       <li class="menu-title">Empleados</li><!-- /.menu-title -->
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:employee_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Lista de empleados
         </a>
@@ -116,14 +117,14 @@
     <li class="menu-title">Secretaria</li><!-- /.menu-title -->
     {% if perms.units.change_unit %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:units_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Árbol de unidades
         </a>
       </li>
     {% endif %}
     {% if perms.boxes.change_boxdailysquare %}
-      <li class="menu-item-has-children dropdown">
+      <li class="menu-item-has-children dropdown active">
         <a href="{% url 'webclient:daily_square_list' office.slug %}">
           <img src="{% static 'icons/ICONOS-07.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Cuadres diarios
@@ -132,7 +133,7 @@
     {% endif %}
     {% if perms.office.change_officecommitments %}
       <li class="menu-item-has-children dropdown">
-        <a href="#">
+        <a href="{% url 'webclient:provisioning' office.slug %}">
           <img src="{% static 'icons/ICONOS-08.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
           Aprovisionamiento
         </a>
@@ -162,165 +163,164 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="row">
+
           <div class="col-md-12">
-            <div class="card">
-              <div class="card-body">
-                <h3 class="mb-3">Arqueo</h3>
-                <form class="filter" action="." method="get">
-                  <div class="row">
-                    <div class="col">
-                      <label for="date_start">Fecha de inicio</label>
-                      <input type="text" class="form-control datetimepicker" id="date_start" name="date_start"
-                             placeholder="yyyy-mm-dd"
-                             style="width: 100%;" required autocomplete="off">
-                    </div>
-                    <div class="col">
-                      <label for="date_end">Fecha de finalizacion</label>
-                      <input type="text" class="form-control datetimepicker" id="date_end" name="date_end"
-                             placeholder="yyyy-mm-dd"
-                             style="width: 100%;" required autocomplete="off">
-                    </div>
-                  </div>
-                  <button type="submit" class="filter-report">Filtrar</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6">
             <div class="card">
               <div class="card-body">
                 <table id="table" class="table table-striped table-bordered responsive display"
                        cellspacing="0" style="width:100%">
-                  <h3 class="mb-4">Cajas generales</h3>
+                  <h3 class="mb-4">Grupo de {{ user.get_full_name }} - Código {{ user.pk }}</h3>
                   <thead>
                   <tr>
-                    <th>Socio</th>
-                    <th>Saldo final</th>
+                    <th>Unidad</th>
+                    <th>Cobrador</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>{{ box_donjuan }}</td>
-                    <td>$ {{ data.don_juan|intcomma }}</td>
-                  </tr>
-                  <tr>
-                    <td>{{ box_office }}</td>
-                    <td>$ {{ data.office|intcomma }}</td>
-                  </tr>
-                  {% for k, v in data.partners.items %}
+                  {% for u in units %}
                     <tr>
-                      <td>{{ k }}</td>
-                      <td>$ {{ v|intcomma }}</td>
+                      <td>{{ u.name }}</td>
+                      <td>{{ u.collector }}</td>
                     </tr>
                   {% endfor %}
-                  <tr>
-                    <td>
-                      <strong>TOTAL</strong>
-                    </td>
-                    <td>
-                      <strong>$ {{ partner_total|intcomma }}</strong>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <table id="table" class="table table-striped table-bordered display responsive display nowrap"
-                       cellspacing="0" style="width:100%">
-                  <h3 class="mb-4">Cajas Cuadre diario</h3>
-                  <thead>
-                  <tr>
-                    <th></th>
-                    <th>Socio</th>
-                    <th>Saldo final</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {% for k,v in data.dailys.items %}
-                    <tr>
-                      <td>
-                        {% if d.is_closed %}
-                          <i class="fas fa-check" style="color:green;"></i>
-                        {% else %}
-                          <i class="fas fa-times" style="color: red;"></i>
-                        {% endif %}
-                      </td>
-                      <td>{{ k }}</td>
-                      <td>$ {{ v|intcomma }}</td>
-                    </tr>
-                  {% endfor %}
-                  <tr>
-                    <td></td>
-                    <td>
-                      <strong>TOTAL</strong>
-                    </td>
-                    <td>
-                      <strong>$ {{ box_daily_total|intcomma }}</strong>
-                    </td>
-                  </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
-        <div class="row justify-content-end">
-          <div class="col-md-6">
-            <div class="card">
-              <div class="card-body">
-                <table class="table table-striped table-bordered display responsive display nowrap">
-                  <thead>
-                  <tr>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <th scope="row">Cajas Generales</th>
-                    <td>$ {{ partner_total|intcomma }}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Cuadre Diario</th>
-                    <td>$ {{ box_daily_total|intcomma }}</td>
-                  </tr>
-                  <tr class="deficit">
-                    <th>Total deficiencia cajas</th>
-                    <td>$ {{ deficit|intcomma }}</td>
-                  </tr>
+      {% if request.user.is_superuser or request.user.is_secretary %}
+        <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
+          <i class="fa fa-edit my-float"></i>
+        </a>
+        <div class="label-container">
+          <div class="label-text">Editar Unidades</div>
+          <i class="fa fa-play label-arrow"></i>
+        </div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
 
-                  </tbody>
-                </table>
+  <!-- Modal add movement -->
+  <div class="modal fade" id="addMovement" role="dialog" aria-labelledby="addMovementTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Editar unidades</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" class="update-units">
+            {% csrf_token %}
+            <input type="hidden" name="office_slug" value="{{ office.slug }}">
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <input type="hidden" name="employee" id="employee" value="{{ employee.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="units">Unidades </label>
+                <select class="form-control" id="units" name="units[]" multiple="multiple"
+                        style="width: 100%; height: 20px;" required>
+                  {% for unit in units_office %}
+                    <option value="{{ unit.pk }}" {% if unit in units %}selected{% endif %}>{{ unit.name }}
+                      (Cobrador: {{ unit.collector.get_full_name|default:"Sin cobrador" }})
+                    </option>
+                  {% endfor %}
+                </select>
               </div>
             </div>
-          </div>
+            <button type="submit" class="btn btn-submit">Guardar</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
-
-
 {% endblock %}
 
 {% block extra_js %}
+
   <script type="text/javascript">
+
     $(document).ready(function () {
-      $('.datetimepicker').datetimepicker({
-        format: 'Y-m-d',
-        minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
-        maxDate: '0',//tomorrow is maximum date calendar
-        timepicker: false,
+      $('#table').DataTable({
+        responsive: {
+          details: true
+        },
+        dom: 'lBfrtip',
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        buttons: [
+          'excel', 'print'
+        ],
+        "order": [[0, "asc"]],
+        language: {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+        }
+      });
+      $('#units').select2({
+        language: "es"
       });
     });
 
+    $('.update-units').on('submit', function (ev) {
+      ev.preventDefault()
+      $('.btn-submit').attr('disabled', true)
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data_send = $(this).serialize()
+      axios.post('{% url 'api:users:update_group_units' %}', data_send)
+        .then(function (response) {
+          console.log(response.data)
+          msg = response.data
+          Swal.fire({
+            type: 'success',
+            title: 'Exitoso',
+            text: "Se ha guardado el grupo exitosamente",
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error)
+          Swal.fire({
+            title: 'Ha ocurrido un error',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        })
+    })
 
   </script>
-
 {% endblock %}

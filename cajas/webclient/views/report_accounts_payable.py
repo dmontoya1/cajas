@@ -20,7 +20,7 @@ class ReportAccountPayable(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ReportAccountPayable, self).get_context_data(**kwargs)
         today = date.today()
-        if self.request.user.is_secretary:
+        if self.request.user.is_secretary():
             employee = self.request.user.related_employee.get()
             offices = employee.office.all()
             offices_country = list()

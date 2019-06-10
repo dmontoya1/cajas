@@ -1,17 +1,19 @@
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 
 from cajas.units.admin import UnitInline
-from cajas.users.forms import UserChangeForm, UserCreationForm
-from cajas.users.models.employee import Employee
-from cajas.users.models.partner import Partner
-from cajas.users.models.charges import Charge
-from cajas.users.models.auth_logs import AuthLogs
-from cajas.users.models.group import Group
-from cajas.users.models.group_employee import GroupEmployee
+
+from .forms import UserChangeForm, UserCreationForm
+from .models import Employee, Partner, Charge, AuthLogs, Group, GroupEmployee, DailySquareUnits
 
 User = get_user_model()
+
+
+class DailySquareUnitsInline(admin.StackedInline):
+
+    model = DailySquareUnits
+    extra = 1
 
 
 class EmployeeAdminInline(admin.StackedInline):
@@ -27,6 +29,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['get_full_name', 'salary_type', 'salary']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
     list_filter = ['charge', ]
+    inlines = [DailySquareUnitsInline, ]
 
     class Media:
         js = (

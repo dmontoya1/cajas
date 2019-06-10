@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from django.db.models import Q
@@ -11,7 +10,7 @@ from cajas.general_config.models.exchange import Exchange
 from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
-from cajas.users.models.user import User
+from cajas.users.models import User, DailySquareUnits, Employee
 from cajas.webclient.views.utils import get_object_or_none
 
 
@@ -29,6 +28,9 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         offices = OfficeCountry.objects.all()
+
+        users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
+                                    Q(related_employee__office=office.office))
         units = Unit.objects.filter(Q(partner__office=office) |
                                     (Q(partner__code='DONJUAN') &
                                      (Q(collector__related_employee__office_country=office) |
@@ -36,10 +38,8 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                       Q(supervisor__related_employee__office_country=office) |
                                       Q(supervisor__related_employee__office=office.office)
                                       ))).distinct()
-        users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
-                                    Q(related_employee__office=office.office))
         try:
-            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+            if self.request.user.is_superuser or self.request.user.is_secretary():
                 context['dailys'] = User.objects.filter(
                     Q(is_daily_square=True) &
                     (Q(related_employee__office=office.office) |
@@ -48,6 +48,11 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                      )
                 ).distinct()
             else:
+                employee = Employee.objects.get(
+                    Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+                group = get_object_or_none(DailySquareUnits, employee=employee)
+                if group and group.units.all().exists():
+                    units = group.units.all()
                 context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
         except Exception as e:
             print(e)
