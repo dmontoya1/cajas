@@ -50,11 +50,9 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
             else:
                 employee = Employee.objects.get(
                     Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
-                try:
-                    group = DailySquareUnits.objects.get(employee=employee)
+                group = get_object_or_none(DailySquareUnits, employee=employee)
+                if group and group.units.all().exists():
                     units = group.units.all()
-                except:
-                    pass
                 context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
         except Exception as e:
             print(e)

@@ -80,11 +80,14 @@
     <div class="col-lg-4 col-md-6">
       <div class="card">
         <div class="card-body">
-          <h3 class="card-title">Informe de endeudamiento</h3>
-          <p class="card-text">El cálculo del nivel de endeudamiento se realiza con la siguiente formula: ENDEUDAMIENTO
-            = SALDO CAJA SOCIEDAD+SALDO UNIDAD+BASERUTA/DEUDA DE LA SOCIEDAD. Dependiendo del resultado, se debe
-            presentar un semáforo de colores, de la siguiente manera: 0-50 VERDE 51-79 AMARILLO 80-100 NARANJA MAYOR DE
-            100 ROJO"</p>
+          <h3 class="card-title">Nivel de endeudamiento</h3>
+          <p class="card-text">el nivel de endeudamiento mide la proporción de deuda que soporta un socio frente a sus
+            recursos con la sociedad (unidades). El resultado se indica en porcentaje (%) y el colores de semáforo que
+            muestra la capacidad que tiene en el momento. <br>
+            a. Verde: Con capacidad.<br>
+            b. Amarillo: capacidad media. <br>
+            c. Naranja: capacidad al límite. <br>
+            d. Rojo: Sin capacidad</p>
           <a href="{% url 'webclient:report_debt' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
@@ -103,7 +106,8 @@
       <div class="card">
         <div class="card-body">
           <h3 class="card-title">Ranking de oficinas</h3>
-          <p class="card-text">Ranking de oficinas</p>
+          <p class="card-text">Informe donde se miden varios criterios y/o variables de calidad operativa ordenando en
+            cumplimiento de mayor a menor</p>
           <a href="{% url 'webclient:report_ranking' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
@@ -112,9 +116,9 @@
       <div class="card">
         <div class="card-body">
           <h3 class="card-title">Obligaciones mensuales por pagar</h3>
-          <p class="card-text">Obligaciones mensuales por pagar: Pago de intereses de prestámos. Cobro intereses
-            prestámos.
-            Pago de cadena. Cobro de cadena. Pago de inversiones Negocios </p>
+          <p class="card-text">Compromisos pendiente por realizar pago, tales como: Pago de intereses de préstamos,
+            abonos a préstamos, pago de cadena, pago de inversiones a Negocios, préstamos a terceros, liquidaciones,
+            otros</p>
           <a href="{% url 'webclient:report_account_payable' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>
@@ -123,10 +127,10 @@
       <div class="card">
         <div class="card-body">
           <h3 class="card-title">Calculo de pagos de salarios</h3>
-          <p class="card-text">cálculo de pago de salarios de los empleados de la unidades; el sistema cargará del
-            informe de Venda+ el recaudo de la semana de cada cobrador y el sistema realizará el cálculo del salario de
-            acuerdo al porcentaje de comisión que gana cada cobrador, para que la secretaria verifique de forma manual,
-            que el pago que recibió cada cobrador sea el pactado</p>
+          <p class="card-text">Es el cálculo de pago de salarios de los empleados de las unidades, el sistema cargará
+            del informe de venda+ el recaudo de la semana de cada asesor en calle y el sistema realizará el cálculo del
+            salario de acuerdo al porcentaje de comisión que gana cada cobrador, para que la secretaria verifique que el
+            pago que recibió cada cobrador sea el pactado</p>
           <a href="{% url 'webclient:report_employee_salary' %}" class="card-link btn-dynamic">Ver informe</a>
         </div>
       </div>

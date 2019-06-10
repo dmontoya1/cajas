@@ -35,18 +35,19 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                                     Q(related_employee__office=office.office))
         box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
         offices = OfficeCountry.objects.all()
-        partners = Partner.objects.filter((Q(office=box_daily_square.office) | Q(code='DONJUAN')) & Q(is_active=True))\
+        partners = Partner.objects.filter((Q(office=box_daily_square.office) | Q(code='DONJUAN')) & Q(is_active=True)) \
             .order_by('user__first_name')
         dq_list = User.objects.filter(
             Q(partner__office=office) | Q(related_employee__office_country=office) |
             Q(related_employee__office=office.office) &
             Q(is_daily_square=True))
         employee = Employee.objects.get(
-            Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
-        try:
-            group = DailySquareUnits.objects.get(employee=employee)
+            Q(user=user) & (Q(office=office.office) | Q(office_country=office)))
+
+        group = get_object_or_none(DailySquareUnits, employee=employee)
+        if group and group.units.all().exists():
             units = group.units.all()
-        except:
+        else:
             units = Unit.objects.filter(Q(partner__office=office) |
                                         (Q(partner__code='DONJUAN') &
                                          (Q(collector__related_employee__office_country=office) |
