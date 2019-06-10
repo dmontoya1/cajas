@@ -26,7 +26,7 @@ class EmployeeAdminInline(admin.StackedInline):
 class EmployeeAdmin(admin.ModelAdmin):
 
     model = Employee
-    list_display = ['get_full_name', 'salary_type', 'salary']
+    list_display = ['get_full_name', 'charge', 'salary_type', 'salary']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
     list_filter = ['charge', ]
     inlines = [DailySquareUnitsInline, ]

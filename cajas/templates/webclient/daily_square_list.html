@@ -177,7 +177,6 @@
                     <th>Código</th>
                     <th>Email</th>
                     <th>Saldo</th>
-                    <th>Grupo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -189,7 +188,6 @@
                       <td>{{ partner.code|default:"Sin Codigo" }}</td>
                       <td>{{ partner.user.email }}</td>
                       <td>$ {% get_dq_box_balance office partner.user %}</td>
-                      <td><a href="#">Ver Grupo</a></td>
                       <td>
                         <ul class="ul-buttons">
                           {% get_dq_box_id office partner.user as box_id %}
@@ -212,7 +210,7 @@
                         </ul>
                       </td>
                     </tr>
-                  {% elif request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                  {% elif request.user.is_superuser or request.user.is_secretary %}
                     {% for d in dailys %}
                       <tr>
                         <td>{{ d.first_name }}</td>
@@ -220,7 +218,6 @@
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box_balance office d %}</td>
-                        <td><a href="{% url 'webclient:daily_square_units' office.slug d.pk %}">Ver Grupo</a></td>
                         <td>
                           <ul class="ul-buttons-partner">
                             {% get_dq_box_id office d as box_id %}
@@ -233,8 +230,8 @@
                                 </button>
                               </li>
                               {% if not box_is_close %}
-                                <li><a href="#" class="close-box-dq" data-id="{{ box_id }}">
-                                  <i class="fas fa-power-off mr-2"></i>Cerrar Caja</a></li>
+                                <li><button class="close-box-dq" data-id="{{ box_id }}">
+                                  <i class="fas fa-power-off mr-2"></i>Cerrar Caja</button></li>
                               {% else %}
                                 <li><a href="#" class="open-box-dq" data-id="{{ box_id }}">
                                   <i class="fas fa-power-off mr-2"></i>Abrir Caja</a></li>
@@ -269,7 +266,6 @@
                         <td>{{ d.pk|default:"Sin Codigo" }}</td>
                         <td>{{ d.email }}</td>
                         <td>$ {% get_dq_box_balance office d %}</td>
-                        <td><a href="{% url 'webclient:daily_square_units' office.slug d.pk %}">Ver Grupo</a></td>
                         <td>
                           <ul class="ul-buttons">
                             {% get_dq_box_id office d as box_id %}
