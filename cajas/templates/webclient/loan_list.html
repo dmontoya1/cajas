@@ -634,7 +634,8 @@
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
       if ('{{ office.country}}' === 'Guatemala') {
-        $('#value_cop_interes').val(value / '{{ exchange.exchange_dolar_abono }}' * exchange)
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        $('#value_cop_interes').val(parseFloat(total).toFixed(2))
       } else {
         $('#value_cop_interes').val(value * exchange)
       }
