@@ -23,9 +23,8 @@ class Groups(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         if self.request.user.is_superuser or self.request.user.is_secretary():
             context['employees'] = Employee.objects.filter(
-                Q(related_group_supervisor=None) &
-                (Q(office_country=office) |
-                 Q(office=office.office))
+                Q(office_country=office) |
+                Q(office=office.office)
             ).order_by('user__first_name')
             context['admins'] = Employee.objects.filter(
                 Q(group=None) &
