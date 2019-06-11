@@ -8,7 +8,7 @@ class Group(models.Model):
     """Guarda la relacion del Administrador de Grupo con sus supervisores
     """
 
-    admin = models.OneToOneField(
+    admin = models.ForeignKey(
         Employee,
         verbose_name='Administrador de Grupo',
         on_delete=models.CASCADE,

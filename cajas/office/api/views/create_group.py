@@ -13,7 +13,7 @@ class CreateGroup(APIView):
 
     def post(self, request, format=None):
         employee = Employee.objects.get(pk=request.data["admin"])
-        office = OfficeCountry.office.get(pk=request.data['office'])
+        office = OfficeCountry.objects.get(pk=request.data['office'])
         group = Group.objects.create(admin=employee, office=office)
         for sup in request.POST.getlist("supervisors[]"):
             supervisor = Employee.objects.get(pk=sup)

@@ -27,9 +27,8 @@ class Groups(LoginRequiredMixin, TemplateView):
                 Q(office=office.office)
             ).order_by('user__first_name')
             context['admins'] = Employee.objects.filter(
-                Q(group=None) &
-                (Q(office_country=office) |
-                 Q(office=office.office))
+                Q(office_country=office) |
+                Q(office=office.office)
             ).order_by('user__first_name')
             existing_admins = Group.objects.filter(
                 office=office
@@ -38,7 +37,7 @@ class Groups(LoginRequiredMixin, TemplateView):
             employee = Employee.objects.get(
                 Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office))
             )
-            existing_admins = Group.objects.filter(admin=employee)
+            existing_admins = Group.objects.filter(admin=employee, office=office)
         context['office'] = office
         context['existing'] = existing_admins
 
