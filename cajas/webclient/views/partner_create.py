@@ -1,4 +1,5 @@
 
+from django.db import IntegrityError
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +15,6 @@ from cajas.users.services.partner_service import PartnerManager
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.movement.services.daily_square_service import MovementDailySquareManager
 from cajas.office.models.officeCountry import OfficeCountry
-from cajas.webclient.views.utils import get_object_or_none
 
 from .get_ip import get_ip
 
@@ -85,7 +85,11 @@ class PartnerCreate(LoginRequiredMixin, View):
             'document_id': document_id,
             'is_daily_square': daily_square
         }
-        user = user_manager.create_user(data_user)
+        try:
+            user = user_manager.create_user(data_user)
+        except IntegrityError:
+            messages.add_message(request, messages.ERROR, 'Ya existe un usuario con el correo {}'.format(email))
+            return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
         data_partner = {
             'user': user,
             'office': office,
