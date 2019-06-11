@@ -60,9 +60,8 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 employee = Employee.objects.get(
                     Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
                 groups = GroupEmployee.objects.filter(
-                    Q(group__admin=employee) & Q(group__admin__office_country=office)
+                    Q(group__admin=employee) & Q(group__office=office)
                 )
-                print(groups)
                 if groups.exists():
                     dailys = list()
                     for sup in groups:
