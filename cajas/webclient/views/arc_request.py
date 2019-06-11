@@ -1,5 +1,5 @@
 
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
@@ -36,7 +36,6 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
         total_don_juan = 0
         if start_date and end_date:
             movements_office = box_office.movements.filter(
-                date__gte=start_date,
                 date__lte=end_date,
             )
             for mv in movements_office:
@@ -46,7 +45,6 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
                     total_office -= mv.value
             data['office'] = total_office
             movements_don_juan = box_donjuan.movements.filter(
-                date__gte=start_date,
                 date__lte=end_date,
             )
             for mv in movements_don_juan:
@@ -58,7 +56,6 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
             for box in box_partners:
                 total_partner = 0
                 movements = box.movements.filter(
-                    date__gte=start_date,
                     date__lte=end_date,
                 )
                 for mv in movements:
@@ -71,8 +68,8 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
             for box in box_daily:
                 total_daily = 0
                 movements = box.movements.filter(
-                    date__gte=start_date,
-                    date__lte=end_date,
+                    Q(date__lte=end_date) &
+                    ~Q(status='DE')
                 )
                 for mv in movements:
                     if mv.movement_type == 'IN':
