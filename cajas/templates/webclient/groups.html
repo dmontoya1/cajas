@@ -385,7 +385,6 @@
       e.preventDefault()
 
       data = $(this).serialize()
-      console.log(data)
       axios.post("{% url 'api:office:group_create' %}", data)
         .then(function (response) {
           data = response.data
