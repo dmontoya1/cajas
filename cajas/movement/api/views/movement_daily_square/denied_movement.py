@@ -1,4 +1,3 @@
-
 from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.views import APIView
@@ -13,6 +12,7 @@ from ....models.movement_daily_square_request_item import MovementDailySquareReq
 
 from cajas.units.models.unitItems import UnitItems
 from cajas.units.models.units import Unit
+
 
 class DeniedMovement(APIView):
     """

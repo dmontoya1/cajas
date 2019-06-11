@@ -51,7 +51,7 @@ class SupervisorCalendarList(APIView):
                 super_calendar = SupervisorCalendar.objects.filter(
                     office__slug=self.request.GET.get("office"),
                     assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=5),
+                        datetime.date.today() - datetime.timedelta(days=360),
                         datetime.date.today()
                     ]
                 )
@@ -64,7 +64,7 @@ class SupervisorCalendarList(APIView):
             super_calendar = SupervisorCalendar.objects.filter(
                 office__slug=self.request.GET.get("office"),
                 assigned_date__range=[
-                    datetime.date.today() - datetime.timedelta(days=5),
+                    datetime.date.today() - datetime.timedelta(days=360),
                     datetime.date.today()
                 ]
             )
@@ -77,7 +77,7 @@ class SupervisorCalendarList(APIView):
                 obj = SupervisorCalendar.objects.filter(
                     supervisor=i.supervisor.user,
                     assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=5),
+                        datetime.date.today() - datetime.timedelta(days=360),
                         datetime.date.today()
                     ]
                 )
