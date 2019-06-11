@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
-
+from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.employee import Employee
 from cajas.users.models.group import Group
 from cajas.users.models.group_employee import GroupEmployee
-from cajas.office.api.serializer.group_employee_serializer import GroupEmployeeSerializer
+
+from ...api.serializer.group_employee_serializer import GroupEmployeeSerializer
 
 
 class GroupDetail(generics.RetrieveUpdateAPIView):
@@ -23,14 +24,17 @@ class GroupDetail(generics.RetrieveUpdateAPIView):
         return Response(quest.data)
 
     def update(self, request, *args, **kwargs):
-        admin = Group.objects.get(pk=request.data["admin"])
-        reset = GroupEmployee.objects.filter(
-            group=admin,
+        office = OfficeCountry.objects.get(pk=request.data['office'])
+        group = Group.objects.get(pk=request.data["admin"])
+        group.office = office
+        group.save()
+        GroupEmployee.objects.filter(
+            group=group,
         ).delete()
         for sup in request.POST.getlist("supervisors[]"):
             supervisor = Employee.objects.get(pk=sup)
-            group = GroupEmployee.objects.create(
-                group=admin,
+            GroupEmployee.objects.create(
+                group=group,
                 supervisor=supervisor
             )
         return Response(
