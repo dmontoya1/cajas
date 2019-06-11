@@ -589,7 +589,7 @@
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange_abono').data('value'))
       if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar_abono }}') * parseFloat(exchange)
         $('#value_cop_interes').val(parseFloat(total).toFixed(2))
       } else {
         $('#value_cop_interes').val(value * exchange)
@@ -634,7 +634,7 @@
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
       if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
+        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar_abono }}') * parseFloat(exchange)
         $('#value_cop_interes').val(parseFloat(total).toFixed(2))
       } else {
         $('#value_cop_interes').val(value * exchange)
