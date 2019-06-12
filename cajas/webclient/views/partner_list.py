@@ -36,16 +36,20 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(partner__office=office)
         employee = Employee.objects.get(
             Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        logger.debug(employee)
         try:
             if self.request.user.is_superuser or employee.is_admin_charge():
+                logger.debug("Es Administrativo")
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     is_active=True,
                     box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
             else:
+                logger.debug("Else de es administrativo")
                 context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         except Exception as e:
+            logger.exception("EXCEPTION EN PARTNER LIST")
             logger.exception(str(e))
             context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         context['groups'] = Group.objects.all()

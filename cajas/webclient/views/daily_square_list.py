@@ -66,7 +66,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 groups = GroupEmployee.objects.filter(
                     Q(group__admin=employee) & Q(group__office=office)
                 )
-                logger.exception(str(groups))
                 if len(groups) > 0:
                     dailys = list()
                     for sup in groups:
