@@ -12,7 +12,9 @@ from cajas.concepts.models.concepts import Concept, Relationship
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.office_service import MovementOfficeManager
 from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.unitItems import UnitItems
+from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
@@ -26,15 +28,17 @@ class AcceptMovement(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
 
     def post(self, request, format=None):
+        office = OfficeCountry.objects.get(pk=request.session['office'])
         withdraw_concept = get_object_or_404(Concept, name="Retiro de Socio")
         movement = get_object_or_404(MovementDailySquare, pk=request.data['movement_id'])
         user = movement.box_daily_square.user
         movement_partner_manager = MovementPartnerManager()
         don_juan_manager = DonJuanManager()
         if movement.concept == withdraw_concept:
+            partner = Partner.objects.get(user=movement.user, office=office)
             data = {
-                'box': movement.user.partner.get().box,
-                'partner': movement.user.partner.get(),
+                'box': partner.box,
+                'partner': partner,
                 'value': movement.value,
                 'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
                 'date': movement.date,
