@@ -99,3 +99,9 @@ class Employee(models.Model):
         if self.charge == charge_secretary or self.charge == charge_admin_senior:
             return True
         return False
+
+    def is_admin_senior(self):
+        admin_senior = Charge.objects.get(name="Administrador Senior")
+        if self.charge == admin_senior:
+            return True
+        return False

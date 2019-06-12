@@ -76,7 +76,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     if employee.user.is_daily_square and employee.user not in dailys:
                         dailys.append(employee.user)
                     context['dailys'] = dailys
-                elif self.request.user.is_admin_senior():
+                elif employee.is_admin_senior():
                     logger.debug(str("IS ADMIN SENIOR"))
                     context['dailys'] = User.objects.filter(
                         Q(is_daily_square=True) &
