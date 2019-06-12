@@ -68,7 +68,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 )
                 logger.exception(str(groups))
                 if len(groups) > 0:
-                    logger.debug(str("Entro al IFF"))
                     dailys = list()
                     for sup in groups:
                         if sup.supervisor.user.is_daily_square:
@@ -77,7 +76,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                         dailys.append(employee.user)
                     context['dailys'] = dailys
                 elif employee.is_admin_senior():
-                    logger.debug(str("IS ADMIN SENIOR"))
                     context['dailys'] = User.objects.filter(
                         Q(is_daily_square=True) &
                         (Q(related_employee__office=office.office) |
@@ -86,13 +84,11 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                          )
                     ).distinct()
                 else:
-                    logger.debug(str("ELSE NO ES ADMIN SENIOR"))
                     context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
                 group_units = get_object_or_none(DailySquareUnits, employee=employee)
                 if group_units and group_units.units.all().exists():
                     units = group_units.units.filter(partner__office=office)
         except Exception as e:
-            print(e)
             logger.exception(str(e))
             context['partner'] = Partner.objects.get(user=self.request.user, office=office)
         now = datetime.now()
