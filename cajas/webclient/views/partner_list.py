@@ -50,7 +50,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             else:
                 context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         except Exception as e:
-            logger.exception(str(e))
+            logger.exception("Excepcion de Try: " + str(e))
             context['partner'] = Partner.objects.get(office=office, user=self.request.user)
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
