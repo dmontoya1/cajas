@@ -62,7 +62,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 groups = GroupEmployee.objects.filter(
                     Q(group__admin=employee) & Q(group__office=office)
                 )
-                if groups.exists():
+                if len(groups) > 0:
                     dailys = list()
                     for sup in groups:
                         if sup.supervisor.user.is_daily_square:
