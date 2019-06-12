@@ -18,7 +18,7 @@ class UserManager:
         daily_square = False
         email = ""
         try:
-            user = User.objects.filter(username=data['email']).first()
+            user = User.objects.get(username=data['email'])
         except User.DoesNotExist:
             if data['is_daily_square'] == "true":
                 daily_square = True
