@@ -88,7 +88,7 @@ class PartnerCreate(LoginRequiredMixin, View):
         try:
             user = user_manager.create_user(data_user)
         except IntegrityError:
-            messages.add_message(request, messages.ERROR, 'Ya existe un usuario con el correo {}'.format(email))
+            messages.add_message(request, messages.ERROR, 'Ha ocurrido un error al crear el socio. :( No eres tu, Soy Yo!')
             return HttpResponseRedirect(reverse('webclient:partners_list', kwargs={'slug': office.slug}))
         data_partner = {
             'user': user,
