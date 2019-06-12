@@ -31,8 +31,11 @@ class LoanList(LoginRequiredMixin, TemplateView):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        employee = Employee.objects.get(
-            Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        try:
+            employee = Employee.objects.get(
+                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        except Employee.DoesNotExist:
+            employee = None
         try:
             if self.request.user.is_superuser or employee.is_admin_charge():
                 context['loans'] = Loan.objects.filter(office=office)
