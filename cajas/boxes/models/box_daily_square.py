@@ -41,7 +41,7 @@ class BoxDailySquare(models.Model):
 
     def __str__(self):
         if self.user:
-            return "Caja de {}".format(self.user.get_full_name())
+            return "Caja de {} de oficina {}".format(self.user.get_full_name(), self.office)
         return "Caja de cuadre diario"
 
     class Meta:

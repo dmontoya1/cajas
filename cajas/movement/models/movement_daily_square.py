@@ -101,7 +101,9 @@ class MovementDailySquare(MovementMixin):
     )
 
     def __str__(self):
-        return "Movimiento de {}".format(self.box_daily_square.user)
+        if self.box_daily_square and self.box_daily_square.user:
+            return "Movimiento de {}".format(self.box_daily_square.user)
+        return "Movimiento de Cuadre diario"
 
     def __init__(self, *args, **kwargs):
         super(MovementDailySquare, self).__init__(*args, **kwargs)

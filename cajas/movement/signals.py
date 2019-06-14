@@ -152,11 +152,12 @@ def save_balance_provisioning(sender, **kwargs):
 def delete_movement_daily_square(sender, **kwargs):
     instance = kwargs.get('instance')
     box = instance.box_daily_square
-    if instance.movement_type == MovementDailySquare.IN:
-        box.balance -= instance.value
-    else:
-        box.balance += instance.value
-    box.save()
+    if box:
+        if instance.movement_type == MovementDailySquare.IN:
+            box.balance -= instance.value
+        else:
+            box.balance += instance.value
+        box.save()
 
 
 @receiver(pre_delete, sender=MovementDonJuan)
