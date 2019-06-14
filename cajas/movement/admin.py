@@ -37,6 +37,18 @@ class MovementDailySquareInline(admin.TabularInline):
     }
 
 
+@admin.register(MovementDailySquare)
+class MovementDailySquareAdmin(admin.ModelAdmin):
+    """Inline para los movimientos de la caja de un cuadre diario
+    """
+
+    list_display = ('box_daily_square', 'date', 'concept', 'detail', 'value',)
+    list_filter = ('box_daily_square', 'concept')
+    search_fields = ('box_daily_square__user__first_name',
+                     'box_daily_square__user__last_name',
+                     )
+
+
 class MovementDonJuanInline(admin.TabularInline):
     """Inline para los movimientos de la caja de Don Juan
     """
@@ -47,6 +59,15 @@ class MovementDonJuanInline(admin.TabularInline):
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
     }
+
+
+@admin.register(MovementDonJuan)
+class MovementDonJuan(admin.ModelAdmin):
+    """Inline para los movimientos de la caja de Don Juan
+    """
+
+    list_display = ('box_don_juan', 'date', 'concept', 'detail', 'value',)
+    list_filter = ('box_don_juan__office__office', 'box_don_juan__office', 'concept')
 
 
 class MovementOfficeInline(admin.TabularInline):
