@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.utils.encoding import force_text
 
 from cajas.movement.admin import (
     MovementColombiaInline,
@@ -37,10 +40,22 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('user', 'office', 'balance', 'is_active')
-    inlines = [MovementDailySquareInline, ]
+    list_display = ('user', 'office', 'balance', 'is_active', 'get_edit_link')
+    readonly_fields = ["get_edit_link", ]
     search_fields = ('user__first_name', 'user__last_name', 'user__document_id' )
     exclude = ('last_movement_id', )
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:
+            url = '/admin/movement/movementdailysquare/?box_daily_square__id__exact={}'.format(obj.pk)
+            return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
+                url=url,
+                text="Ver movimientos de la caja",
+            ))
+        return "Guarde y continúe editando para poder ver los movimientos"
+
+    get_edit_link.short_description = "Movimientos"
+    get_edit_link.allow_tags = True
 
 
 @admin.register(BoxDonJuan)
