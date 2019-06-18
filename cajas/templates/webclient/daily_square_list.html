@@ -226,23 +226,24 @@
                             {% get_office_arqueada office as deficit %}
                             {% if request.user.is_superuser %}
                               <li>
-                              <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
-                                      data-toggle="modal"
-                                      data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                              </button>
-                            </li>
+                                <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                        data-toggle="modal"
+                                        data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                                </button>
+                              </li>
                             {% elif request.user.is_secretary and deficit == 0 %}
                               <li>
-                              <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
-                                      data-toggle="modal"
-                                      data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                              </button>
-                            </li>
+                                <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                        data-toggle="modal"
+                                        data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                                </button>
+                              </li>
                             {% else %}
                               <li>
-                              <button type="button" class="add-movement-button"><i class="fas fa-times mr-2"></i>El arqueo esta descuadrado
-                              </button>
-                            </li>
+                                <button type="button" class="add-movement-button"><i class="fas fa-times mr-2"></i>El
+                                  arqueo esta descuadrado
+                                </button>
+                              </li>
                             {% endif %}
                             {% if not box_is_close %}
                               <li>
