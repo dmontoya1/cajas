@@ -35,7 +35,7 @@ class BoxDonJuan(models.Model):
 
     def __str__(self):
         if self.office is not None:
-            return "Caja de Don Juan de la oficina".format(self.office)
+            return "Caja de Don Juan {}".format(self.office)
         return "Caja de don Juan"
 
     class Meta:
