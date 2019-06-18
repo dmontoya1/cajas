@@ -38,9 +38,10 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         partners = Partner.objects.filter((Q(office=box_daily_square.office) | Q(code='DONJUAN')) & Q(is_active=True)) \
             .order_by('user__first_name')
         dq_list = User.objects.filter(
-            Q(partner__office=office) | Q(related_employee__office_country=office) |
-            Q(related_employee__office=office.office) &
-            Q(is_daily_square=True))
+            (Q(partner__office=office) | Q(related_employee__office_country=office) |
+             Q(related_employee__office=office.office)) &
+            Q(is_daily_square=True)).distinct()
+        context['dq_list'] = dq_list
         try:
             employee = Employee.objects.get(
                 Q(user=user) & (Q(office=office.office) | Q(office_country=office)))

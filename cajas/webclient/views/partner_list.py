@@ -48,10 +48,23 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
             else:
-                context['partner'] = Partner.objects.get(office=office, user=self.request.user)
+                partners = list()
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                partners.append(partner)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for p in mini_partners:
+                    partners.append(p)
+                context['partner'] = partners
         except Exception as e:
             logger.exception("Excepcion de Try: " + str(e))
-            context['partner'] = Partner.objects.get(office=office, user=self.request.user)
+            partners = list()
+            partner = Partner.objects.get(office=office, user=self.request.user)
+            partners.append(partner)
+            mini_partners = Partner.objects.filter(direct_partner=partner)
+            for p in mini_partners:
+                partners.append(p)
+            context['partner'] = partners
+
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office

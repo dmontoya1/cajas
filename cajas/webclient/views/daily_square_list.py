@@ -41,6 +41,11 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                       Q(supervisor__related_employee__office_country=office) |
                                       Q(supervisor__related_employee__office=office.office)
                                       ))).distinct()
+        dq_list = User.objects.filter(
+            (Q(partner__office=office) | Q(related_employee__office_country=office) |
+             Q(related_employee__office=office.office)) &
+            Q(is_daily_square=True)).distinct()
+        context['dq_list'] = dq_list
         try:
             if self.request.user.is_superuser or self.request.user.is_secretary():
                 context['dailys'] = User.objects.filter(
@@ -51,15 +56,11 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                      )
                 ).distinct()
                 dq_total = 0
-                dq_list = User.objects.filter(
-                    (Q(partner__office=office) | Q(related_employee__office_country=office) |
-                     Q(related_employee__office=office.office)) &
-                    Q(is_daily_square=True)).distinct()
                 for dq in dq_list:
                     box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
                     dq_total += box.balance
                 context['dq_total'] = dq_total
-                context['dq_list'] = dq_list
+
             else:
                 employee = Employee.objects.get(
                     Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))

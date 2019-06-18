@@ -42,7 +42,7 @@ class MovementDailySquareAdmin(admin.ModelAdmin):
     """Inline para los movimientos de la caja de un cuadre diario
     """
 
-    list_display = ('box_daily_square', 'date', 'concept', 'detail', 'value',)
+    list_display = ('box_daily_square', 'date', 'concept', 'detail', 'movement_type', 'value', )
     list_filter = ('box_daily_square', 'concept')
     search_fields = ('box_daily_square__user__first_name',
                      'box_daily_square__user__last_name',
