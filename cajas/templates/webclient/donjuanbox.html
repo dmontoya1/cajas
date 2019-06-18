@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_arqueada %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -224,13 +225,34 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Añadir movimiento</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
+        {% if perms.movement.add_movementdonjuan %}
+          {% get_office_arqueada office as deficit %}
+          {% if request.user.is_superuser %}
+            <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% elif request.user.is_secretary and deficit == 0 %}
+            <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% else %}
+            <a href="#" id="add-movement-btn" class="float float-close">
+              <i class="fa fa-times my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">El arqueo esta descuadrado</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>

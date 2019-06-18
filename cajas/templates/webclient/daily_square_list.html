@@ -2,6 +2,7 @@
 
 {% load static humanize %}
 {% load office_dailysquare_box %}
+{% load office_arqueada %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -222,31 +223,36 @@
                           <ul class="ul-buttons-partner">
                             {% get_dq_box_id office d as box_id %}
                             {% get_dq_box_is_close office d as box_is_close %}
-                            {% if request.user.is_superuser or request.user.is_secretary %}
+                            {% get_office_arqueada office as deficit %}
+                            {% if request.user.is_superuser %}
                               <li>
-                                <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
-                                        data-toggle="modal"
-                                        data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                              <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                      data-toggle="modal"
+                                      data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                              </button>
+                            </li>
+                            {% elif request.user.is_secretary and deficit == 0 %}
+                              <li>
+                              <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                      data-toggle="modal"
+                                      data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
+                              </button>
+                            </li>
+                            {% else %}
+                              <li>
+                              <button type="button" class="add-movement-button"><i class="fas fa-times mr-2"></i>El arqueo esta descuadrado
+                              </button>
+                            </li>
+                            {% endif %}
+                            {% if not box_is_close %}
+                              <li>
+                                <button class="close-box-dq" data-id="{{ box_id }}">
+                                  <i class="fas fa-power-off mr-2"></i>Cerrar Caja
                                 </button>
                               </li>
-                              {% if not box_is_close %}
-                                <li><button class="close-box-dq" data-id="{{ box_id }}">
-                                  <i class="fas fa-power-off mr-2"></i>Cerrar Caja</button></li>
-                              {% else %}
-                                <li><a href="#" class="open-box-dq" data-id="{{ box_id }}">
-                                  <i class="fas fa-power-off mr-2"></i>Abrir Caja</a></li>
-                              {% endif %}
                             {% else %}
-                              {% if d == request.user and not box_is_close %}
-                                <li>
-                                  <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
-                                          data-toggle="modal"
-                                          data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
-                                  </button>
-                                </li>
-                              {% else %}
-                                <li>La caja esta cerrada</li>
-                              {% endif %}
+                              <li><a href="#" class="open-box-dq" data-id="{{ box_id }}">
+                                <i class="fas fa-power-off mr-2"></i>Abrir Caja</a></li>
                             {% endif %}
                             {% if perms.boxes.change_boxdailysquare %}
                               <li><a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i

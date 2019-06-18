@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_arqueada %}
 
 {% block extra_css %}
 
@@ -203,9 +204,9 @@
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {% else %}{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {% else %}{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>
                         <ul class="ul-buttons">
                           {% if perms.movement.add_movementoffice %}
@@ -228,13 +229,32 @@
           </div>
         </div>
         {% if perms.movement.add_movementoffice %}
-          <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
-            <i class="fa fa-plus my-float"></i>
-          </a>
-          <div class="label-container">
-            <div class="label-text">Añadir movimiento</div>
-            <i class="fa fa-play label-arrow"></i>
-          </div>
+          {% get_office_arqueada office as deficit %}
+          {% if request.user.is_superuser %}
+            <a href="#" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% elif request.user.is_secretary and deficit == 0 %}
+            <a href="#" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% else %}
+            <a href="#" id="add-movement-btn" class="float float-close">
+              <i class="fa fa-times my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">El arqueo esta descuadrado</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% endif %}
         {% endif %}
       </div>
     </div>
