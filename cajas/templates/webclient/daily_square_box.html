@@ -212,13 +212,30 @@
                             {% endif %}
                             {% if not m.review %}
                               {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
-                                <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
-                                <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
-                                <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
-                                       data-toggle="modal"
-                                       data-target="#dispersionMovement">
-                                  Dispersión
-                                </a></li>
+                                {% if request.user.is_secretary or request.user.is_superuser %}
+                                  {% get_office_arqueada office as deficit %}
+                                  {% if request.user.is_superuser %}
+                                    <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
+                                    <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
+                                    <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}"
+                                           data-value="{{ m.value }}"
+                                           data-toggle="modal"
+                                           data-target="#dispersionMovement">
+                                      Dispersión
+                                    </a></li>
+                                  {% elif request.user.is_secretary and deficit == 0 %}
+                                    <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
+                                    <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
+                                    <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}"
+                                           data-value="{{ m.value }}"
+                                           data-toggle="modal"
+                                           data-target="#dispersionMovement">
+                                      Dispersión
+                                    </a></li>
+                                  {% else %}
+                                    <li><a href="#" class="btn btn-danger">El arqueo esta descuadrado</a></li>
+                                  {% endif %}
+                                {% endif %}
                               {% endif %}
                             {% else %}
                               <li><span
@@ -303,7 +320,8 @@
                               {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
                                 <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
                                 <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
-                                <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}" data-value="{{ m.value }}"
+                                <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}"
+                                       data-value="{{ m.value }}"
                                        data-toggle="modal"
                                        data-target="#dispersionMovement">
                                   Dispersión
@@ -312,8 +330,8 @@
                             {% else %}
                               <li><span
                                 class="{% if m.status == 'AP' %}green{% elif m.status == 'DE' %}red{% else %}orange{% endif %}">
-                            {{ m.get_status_display }}
-                          </span></li>
+                                {{ m.get_status_display }}
+                              </span></li>
 
                             {% endif %}
                           </ul>
@@ -322,39 +340,19 @@
                     {% endfor %}
                     </tbody>
                   {% endif %}
-
                 </table>
               </div>
             </div>
           </div>
         </div>
         {% if request.user.is_secretary or request.user.is_superuser %}
-          {% get_office_arqueada office as deficit %}
-          {% if request.user.is_superuser %}
-            <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
-              <i class="fa fa-plus my-float"></i>
-            </a>
-            <div class="label-container">
-              <div class="label-text">Añadir movimiento</div>
-              <i class="fa fa-play label-arrow"></i>
-            </div>
-          {% elif request.user.is_secretary and deficit == 0 %}
-            <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
-              <i class="fa fa-plus my-float"></i>
-            </a>
-            <div class="label-container">
-              <div class="label-text">Añadir movimiento</div>
-              <i class="fa fa-play label-arrow"></i>
-            </div>
-          {% else %}
-            <a href="#" id="add-movement-btn" class="float float-close">
-              <i class="fa fa-times my-float"></i>
-            </a>
-            <div class="label-container">
-              <div class="label-text">El arqueo esta descuadrado</div>
-              <i class="fa fa-play label-arrow"></i>
-            </div>
-          {% endif %}
+          <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Añadir movimiento</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
         {% elif perms.movement.add_movementdailysquare and not box.is_closed and box.user == request.user %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
