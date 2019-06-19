@@ -214,15 +214,15 @@
                               {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
                                 {% if request.user.is_secretary or request.user.is_superuser %}
                                   {% get_office_arqueada office as deficit %}
-                                  {% if request.user.is_superuser %}
-                                    <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
-                                    <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
-                                    <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}"
-                                           data-value="{{ m.value }}"
-                                           data-toggle="modal"
-                                           data-target="#dispersionMovement">
-                                      Dispersión
-                                    </a></li>
+                                  <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
+                                  <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
+                                  <li><a href="#" class="dispersion-mv" data-pk="{{ m.pk }}"
+                                         data-value="{{ m.value }}"
+                                         data-toggle="modal"
+                                         data-target="#dispersionMovement">
+                                    Dispersión
+                                  </a></li>
+                                  {% comment %}{% if request.user.is_superuser %}
                                   {% elif request.user.is_secretary and deficit == 0 %}
                                     <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
                                     <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
@@ -234,7 +234,7 @@
                                     </a></li>
                                   {% else %}
                                     <li><a href="#" class="btn btn-danger">El arqueo esta descuadrado</a></li>
-                                  {% endif %}
+                                  {% endif %}{% endcomment %}
                                 {% endif %}
                               {% endif %}
                             {% else %}
