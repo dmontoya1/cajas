@@ -1145,6 +1145,7 @@
         total = total + parseInt(values[`form[form][${i}][value]`])
       }
       if (total !== parseInt(values['value'])) {
+        $('.btn-dispersion').attr('disabled', false)
         Swal.fire({
           type: 'error',
           title: 'Error',
@@ -1166,6 +1167,7 @@
               })
           })
           .catch(function (error) {
+            $('.btn-dispersion').attr('disabled', false)
             console.log(error);
             console.log(error.response)
           });
