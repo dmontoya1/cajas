@@ -27,8 +27,8 @@
     5.2 oficinas blanco
     5.3 tipo de socio: Don Juan
 6 Crear todos los conceptos
-7 Crear países 
+7 Crear países
 8 Crear divisas
 9 crear oficinas
-10 Crear administrador senior con cuadre diario para la oficina 
+10 Crear administrador senior con cuadre diario para la oficina
 
