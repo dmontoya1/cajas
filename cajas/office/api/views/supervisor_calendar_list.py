@@ -25,8 +25,6 @@ def get_calendar(super_calendar):
                 text += "\n Supervisor: {}".format(item.supervisor.first_name + " " + item.supervisor.last_name)
             if item.unit.collector:
                 text += "\n Cobrador: {}".format(item.unit.collector.first_name + " " + item.unit.collector.last_name)
-            if item.unit.partner:
-                text += "\n Socio: {}".format(item.unit.partner.user.first_name + " " + item.unit.partner.user.last_name)
             scheduling["title"] = text
         else:
             scheduling["title"] = "Supervisor: {} \n Detalle: {}".format(
@@ -53,7 +51,7 @@ class SupervisorCalendarList(APIView):
                 super_calendar = SupervisorCalendar.objects.filter(
                     office__slug=self.request.GET.get("office"),
                     assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=5),
+                        datetime.date.today() - datetime.timedelta(days=360),
                         datetime.date.today()
                     ]
                 )
@@ -66,7 +64,7 @@ class SupervisorCalendarList(APIView):
             super_calendar = SupervisorCalendar.objects.filter(
                 office__slug=self.request.GET.get("office"),
                 assigned_date__range=[
-                    datetime.date.today() - datetime.timedelta(days=5),
+                    datetime.date.today() - datetime.timedelta(days=360),
                     datetime.date.today()
                 ]
             )
@@ -79,7 +77,7 @@ class SupervisorCalendarList(APIView):
                 obj = SupervisorCalendar.objects.filter(
                     supervisor=i.supervisor.user,
                     assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=5),
+                        datetime.date.today() - datetime.timedelta(days=360),
                         datetime.date.today()
                     ]
                 )

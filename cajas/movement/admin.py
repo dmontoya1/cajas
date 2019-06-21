@@ -24,17 +24,16 @@ class MovementDonJuanUSDInline(admin.TabularInline):
     }
 
 
-class MovementDailySquareInline(admin.TabularInline):
+@admin.register(MovementDailySquare)
+class MovementDailySquareAdmin(admin.ModelAdmin):
     """Inline para los movimientos de la caja de un cuadre diario
     """
 
-    model = MovementDailySquare
-    extra = 0
-    exclude = ('movement_don_juan', 'movement_don_juan_usd', 'movement_partner', 'movement_office', 'movement_cd')
-
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
-    }
+    list_display = ('box_daily_square', 'date', 'concept', 'detail', 'movement_type', 'value', )
+    list_filter = ('box_daily_square', 'concept')
+    search_fields = ('box_daily_square__user__first_name',
+                     'box_daily_square__user__last_name',
+                     )
 
 
 class MovementDonJuanInline(admin.TabularInline):
@@ -49,6 +48,15 @@ class MovementDonJuanInline(admin.TabularInline):
     }
 
 
+@admin.register(MovementDonJuan)
+class MovementDonJuan(admin.ModelAdmin):
+    """Inline para los movimientos de la caja de Don Juan
+    """
+
+    list_display = ('box_don_juan', 'date', 'concept', 'detail', 'value',)
+    list_filter = ('box_don_juan__office__office', 'box_don_juan__office', 'concept')
+
+
 class MovementOfficeInline(admin.TabularInline):
     """Inline para los movimientos de la caja de una oficina
     """
@@ -61,28 +69,22 @@ class MovementOfficeInline(admin.TabularInline):
     }
 
 
-class MovementColombiaInline(admin.TabularInline):
+@admin.register(MovementBoxColombia)
+class MovementColombiaAdmin(admin.ModelAdmin):
     """Inline para los movimientos de la caja Colombia
     """
 
-    model = MovementBoxColombia
-    extra = 0
-
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
-    }
+    list_display = ('box_office', 'date', 'concept', 'detail', 'value',)
+    list_filter = ('box_office__office', 'concept')
 
 
-class MovementPartnerInline(admin.TabularInline):
-    """Inline para los movimientos de la caja de un socio
+@admin.register(MovementPartner)
+class MovementPartnerAdmin(admin.ModelAdmin):
+    """Inline para los movimientos de la caja de Don Juan
     """
 
-    model = MovementPartner
-    extra = 0
-
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 30})},
-    }
+    list_display = ('box_partner', 'date', 'concept', 'detail', 'value',)
+    list_filter = ('box_partner__partner', 'box_partner__partner__office', 'concept')
 
 
 class MovementProvisioningInline(admin.TabularInline):

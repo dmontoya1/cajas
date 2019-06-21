@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_arqueada %}
 
 {% block extra_css %}
 
@@ -199,16 +200,16 @@
                   {% for m in office.box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
+                      <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        {% else %}-{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        {% else %}-{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>
                         <ul class="ul-buttons">
-                          {% if perms.movement.change_movementoffice %}
+                          {% if perms.movement.add_movementoffice %}
                             <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                    data-target="#addMovement">Editar</a></li>
                           {% endif %}
@@ -228,7 +229,7 @@
           </div>
         </div>
         {% if perms.movement.add_movementoffice %}
-          <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
+          <a href="#" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
           <div class="label-container">
@@ -532,7 +533,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,
@@ -563,7 +564,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,

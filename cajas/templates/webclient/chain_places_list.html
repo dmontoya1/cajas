@@ -224,7 +224,7 @@
                                 {% for u in p.related_users.all %}
                                   <tr>
                                     <th>{{ u.user }}</th>
-                                    <th>{{ u.user.partner.get.office|default:"Sin oficina" }}</th>
+                                    <th>{{ u.user }}</th>
                                     <td>{{ u.place_porcentaje }}%</td>
                                     <td>${{ u.get_user_value|intcomma }}</td>
                                     <td>
@@ -400,7 +400,7 @@
         })
         .catch(function (error) {
           Swal.fire({
-            title: 'Ha ocurrido un error',
+            title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
             text: error,
             type: 'error',
             showCancelButton: false,
@@ -432,7 +432,7 @@
         })
         .catch(function (error) {
           Swal.fire({
-            title: 'Ha ocurrido un error',
+            title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
             text: error,
             type: 'error',
             showCancelButton: false,

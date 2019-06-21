@@ -28,7 +28,7 @@ class Loan(models.Model):
     """
 
     provider = models.ForeignKey(
-        User,
+        Partner,
         verbose_name='Fondeador',
         on_delete=models.CASCADE,
         related_name='related_provider_loan',
@@ -85,7 +85,7 @@ class Loan(models.Model):
     def __str__(self):
         if self.provider:
             return "Préstamo de {} a {}".format(
-                self.provider.get_full_name(),
+                self.provider.user.get_full_name(),
                 self.lender.get_full_name(),
             )
         return "Préstamo de la oficina a {}".format(
@@ -100,7 +100,7 @@ class Loan(models.Model):
     def get_interest_actual_month_payment(self):
         month = datetime.now().month
         interest = self.related_payments.filter(date__month=month, history_type='IN')
-        if interest.exists():
+        if self.interest == 0 or interest.exists():
             return True
         return False
 

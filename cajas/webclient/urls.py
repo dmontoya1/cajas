@@ -12,6 +12,7 @@ from .views.create_daily_square_movement import CreateDailySquareMovement
 from .views.create_office_movement import CreateOfficeMovement
 from .views.daily_square_box import DailySquareBox
 from .views.daily_square_list import DailySquareList
+from .views.daily_square_units_list import DailySquareUnitsList
 from .views.daily_square_venda import DailySquareVenda
 from .views.employee_list import EmployeeList
 from .views.groups import Groups
@@ -40,6 +41,9 @@ from .views.report_accounts_payable import ReportAccountPayable
 from .views.report_debt import ReportDebt
 from .views.report_actives import ReportActives
 from .views.report_employee_salary import ReportEmployeeSalary
+from .views.report_hours import ReportHours
+from .views.report_ranking import ReportRanking
+
 from .views.units_list import UnitsList
 
 app_name = 'webclient'
@@ -61,6 +65,8 @@ urlpatterns = [
     path("report-actives/", ReportActives.as_view(), name='report_actives'),
     path("report-debt/", ReportDebt.as_view(), name='report_debt'),
     path("report-employee-salary/", ReportEmployeeSalary.as_view(), name='report_employee_salary'),
+    path("report-hours/<int:number>/", ReportHours.as_view(), name='report_hours'),
+    path("report-ranking/", ReportRanking.as_view(), name='report_ranking'),
 
     # Office
     path("office/<slug:slug>/", OfficeBox.as_view(), name='office'),
@@ -90,6 +96,7 @@ urlpatterns = [
     path("office/<slug:slug>/daily-square/", DailySquareList.as_view(), name='daily_square_list'),
     path("office/<slug:slug>/daily-square/<int:pk>/box/", DailySquareBox.as_view(), name='daily_square_box'),
     path("office/<slug:slug>/daily-square/<int:pk>/venda/", DailySquareVenda.as_view(), name='daily_square_venda'),
+    path("office/<slug:slug>/daily-square/<int:pk>/groups/", DailySquareUnitsList.as_view(), name='daily_square_units'),
     path("create-daily-square-movement/", CreateDailySquareMovement.as_view(), name='add_daily_square_movement'),
 
     # Loans

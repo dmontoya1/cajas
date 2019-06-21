@@ -5,6 +5,10 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 
+from cajas.core.services.email_service import EmailManager
+from cajas.movement.services.movement_between_office_service import MovementBetweenOfficesManager
+from cajas.office.models import OfficeCountry, Notifications
+from cajas.users.models.employee import Employee
 from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_don_juan import MovementDonJuan
@@ -28,7 +32,23 @@ class MovementDonJuanUpdate(generics.RetrieveUpdateDestroyAPIView):
 
         try:
             office_manager = DonJuanManager()
-            office_manager.update_don_juan_movement(data)
+            movement = office_manager.update_don_juan_movement(data)
+            if "destine_office" in request.POST:
+                destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
+                data['destine_office'] = destine_office
+                data['concept'] = movement.concept
+                data['office'] = movement.box_don_juan.office
+                data['responsible'] = request.user
+                movement_between_office_manager = MovementBetweenOfficesManager()
+                movement_between_office_manager.create_between_offices_movement_request(data, movement.pk, 'BDJ')
+                secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
+                if secretary:
+                    email_manager = EmailManager()
+                    email_manager.send_office_mail(request, secretary.user.email)
+                    Notifications.objects.create(
+                        office=destine_office, office_sender=movement.box_don_juan.office,
+                        concept=movement.concept, detail=request.POST['detail'], value=request.POST['value']
+                    )
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
                 status=status.HTTP_201_CREATED

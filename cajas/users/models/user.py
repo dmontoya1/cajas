@@ -51,6 +51,15 @@ class User(AbstractUser):
 
     def is_secretary(self):
         secretary = Charge.objects.get(name="Secretaria")
-        if self.related_employee.get().charge == secretary:
+        try:
+            if self.related_employee.get().charge == secretary:
+                return True
+            return False
+        except:
+            return False
+
+    def is_admin_senior(self):
+        admin_senior = Charge.objects.get(name="Administrador Senior")
+        if self.related_employee.get().charge == admin_senior:
             return True
         return False

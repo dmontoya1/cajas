@@ -8,6 +8,7 @@ from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
+from cajas.boxes.models import BoxDailySquare
 from cajas.users.models.partner import Partner
 from cajas.concepts.models.concepts import Concept
 from cajas.core.services.email_service import EmailManager
@@ -35,7 +36,7 @@ class MovementWithdrawRequestCreate(APIView):
     def create_movement_dq(self, request):
         partner = get_object_or_404(Partner, pk=request.data['partner'])
         concept = get_object_or_404(Concept, name="Retiro de Socio")
-        box_daily = request.user.related_daily_box.get()
+        box_daily = BoxDailySquare.objects.get(user=request.user, office=partner.office)
         MovementWithdraw.objects.create(
             box_daily_square=box_daily,
             box_partner=partner.box,

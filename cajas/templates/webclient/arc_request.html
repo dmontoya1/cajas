@@ -162,11 +162,37 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="mb-3">Arqueo</h3>
+                <form class="filter" action="." method="get">
+                  <div class="row">
+                    <div class="col">
+                      <label for="date_start">Fecha de inicio</label>
+                      <input type="text" class="form-control datetimepicker" id="date_start" name="date_start"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                    <div class="col">
+                      <label for="date_end">Fecha de finalizacion</label>
+                      <input type="text" class="form-control datetimepicker" id="date_end" name="date_end"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                  </div>
+                  <button type="submit" class="filter-report">Filtrar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-6">
             <div class="card">
               <div class="card-body">
-                  <table id="table" class="table table-striped table-bordered responsive display"
-                  cellspacing="0" style="width:100%">
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%">
                   <h3 class="mb-4">Cajas generales</h3>
                   <thead>
                   <tr>
@@ -177,16 +203,16 @@
                   <tbody>
                   <tr>
                     <td>{{ box_donjuan }}</td>
-                    <td>$ {{ box_donjuan.balance|intcomma }}</td>
+                    <td>$ {{ data.don_juan|intcomma }}</td>
                   </tr>
                   <tr>
                     <td>{{ box_office }}</td>
-                    <td>$ {{ box_office.balance|intcomma }}</td>
+                    <td>$ {{ data.office|intcomma }}</td>
                   </tr>
-                  {% for p in box_partners %}
+                  {% for k, v in data.partners.items %}
                     <tr>
-                      <td>{{ p.partner }}</td>
-                      <td>$ {{ p.balance|intcomma }}</td>
+                      <td>{{ k }}</td>
+                      <td>$ {{ v|intcomma }}</td>
                     </tr>
                   {% endfor %}
                   <tr>
@@ -216,8 +242,8 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for d in box_daily %}
-                  <tr>
+                  {% for k,v in data.dailys.items %}
+                    <tr>
                       <td>
                         {% if d.is_closed %}
                           <i class="fas fa-check" style="color:green;"></i>
@@ -225,8 +251,8 @@
                           <i class="fas fa-times" style="color: red;"></i>
                         {% endif %}
                       </td>
-                      <td>{{ d.user.get_full_name }}</td>
-                      <td>$ {{ d.balance|intcomma }}</td>
+                      <td>{{ k }}</td>
+                      <td>$ {{ v|intcomma }}</td>
                     </tr>
                   {% endfor %}
                   <tr>
@@ -284,5 +310,17 @@
 {% endblock %}
 
 {% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
+      });
+    });
+
+
+  </script>
 
 {% endblock %}

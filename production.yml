@@ -32,7 +32,6 @@ services:
     <<: *django
     depends_on:
       - django
-      - nginx
     ports: []
     command: /start-celeryworker.sh
 
@@ -40,7 +39,6 @@ services:
     <<: *django
     depends_on:
       - django
-      - nginx
     ports: []
     command: /start-celerybeat.sh
 

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_arqueada %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -200,15 +201,15 @@
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
+                      <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                      {% else %}-{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                      {% else %}-{% endif %}</td>
+                      {% else %}{% endif %}</td>
                       <td>
-                        {% if perms.movement.change_movementdonjuan %}
+                        {% if perms.movement.add_movementdonjuan %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                              data-target="#addMovement">Editar</a>
                         {% endif %}
@@ -224,13 +225,15 @@
             </div>
           </div>
         </div>
-        <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
-          <i class="fa fa-plus my-float"></i>
-        </a>
-        <div class="label-container">
-          <div class="label-text">Añadir movimiento</div>
-          <i class="fa fa-play label-arrow"></i>
-        </div>
+        {% if perms.movement.add_movementdonjuan %}
+          <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
+            <i class="fa fa-plus my-float"></i>
+          </a>
+          <div class="label-container">
+            <div class="label-text">Añadir movimiento</div>
+            <i class="fa fa-play label-arrow"></i>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -444,7 +447,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,
@@ -475,7 +478,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,

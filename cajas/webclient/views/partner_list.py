@@ -1,4 +1,7 @@
 
+import logging
+
+from django.db.models import Q
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -6,9 +9,11 @@ from django.views.generic import TemplateView
 
 from cajas.boxes.models.box_partner import BoxStatus
 from cajas.inventory.models.category import Category
-from cajas.users.models.partner import Partner
+from cajas.users.models import Partner, Employee
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+
+logger = logging.getLogger(__name__)
 
 
 class PartnerList(LoginRequiredMixin, TemplateView):
@@ -29,18 +34,37 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner__office=office)
-
         try:
-            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+            employee = Employee.objects.filter(
+                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office))).first()
+        except Employee.DoesNotExist:
+            employee = None
+        context['employee'] = employee
+        try:
+            if self.request.user.is_superuser or employee.is_admin_charge():
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     is_active=True,
                     box__box_status=BoxStatus.ABIERTA,
                 ).exclude(partner_type='DJ')
             else:
-                context['partner'] = Partner.objects.get(office=office, user=self.request.user)
+                partners = list()
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                partners.append(partner)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for p in mini_partners:
+                    partners.append(p)
+                context['partner'] = partners
         except Exception as e:
-            context['partner'] = Partner.objects.get(office=office, user=self.request.user)
+            logger.exception("Excepcion de Try: " + str(e))
+            partners = list()
+            partner = Partner.objects.get(office=office, user=self.request.user)
+            partners.append(partner)
+            mini_partners = Partner.objects.filter(direct_partner=partner)
+            for p in mini_partners:
+                partners.append(p)
+            context['partner'] = partners
+
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office

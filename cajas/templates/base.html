@@ -36,7 +36,7 @@
   {% endblock %}
   <style>
     table.dataTable tbody td.child {
-        word-break: break-word;
+      word-break: break-word;
     }
   </style>
   {% block extra_css %}{% endblock %}
@@ -578,7 +578,6 @@
       })
 
       $('#unit').on('change', function (e) {
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.get(`/api/units/${$(this).val()}/detail`)
           .then(function (response) {
             data = response.data
@@ -608,7 +607,6 @@
 
       $('#sell-units').on('submit', function (e) {
         e.preventDefault()
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data = $(this).serialize()
         axios.post('{% url 'api:units:unit_sell' %}', data)
@@ -626,7 +624,7 @@
               .catch(function (error) {
                 // handle error
                 Swal.fire({
-                  title: 'Ha ocurrido un error',
+                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
                   text: error,
                   type: 'error',
                   showCancelButton: false,
@@ -651,7 +649,6 @@
       $('.partner-closeout').on('submit', function (e) {
         e.preventDefault()
         withdraw = $(this)
-        axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data_send = withdraw.serialize()
         axios.post('{% url 'api:users:validate_closeout' %}', data_send)
@@ -731,7 +728,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,
@@ -748,7 +745,6 @@
 
       $('#form-investment').on('submit', function (e) {
         e.preventDefault()
-        console.log('FORM SUBMIT')
         axios.defaults.headers.common['Api-Key'] = '{{API_KEY}}'
         axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
         data = $(this).serialize()
@@ -767,7 +763,7 @@
               .catch(function (error) {
                 // handle error
                 Swal.fire({
-                  title: 'Ha ocurrido un error',
+                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
                   text: error,
                   type: 'error',
                   showCancelButton: false,
@@ -838,7 +834,7 @@
                         console.log(error)
                         console.log(error.response)
                         Swal.fire({
-                          title: 'Ha ocurrido un error',
+                          title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
                           text: error.response.data,
                           type: 'error',
                           showCancelButton: false,
@@ -894,7 +890,7 @@
                     // handle error
                     console.log(error)
                     Swal.fire({
-                      title: 'Ha ocurrido un error',
+                      title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
                       text: error.response,
                       type: 'error',
                       showCancelButton: false,
@@ -922,7 +918,7 @@
           // handle error
           console.log(error)
           Swal.fire({
-            title: 'Ha ocurrido un error',
+            title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
             text: error,
             type: 'error',
             showCancelButton: false,
@@ -976,12 +972,21 @@
 
     });
 
-    $('.datetimepicker').datetimepicker({
-      format: 'Y-m-d',
-      minDate: '-1970/01/04',//yesterday is minimum date(for today use 0 or -1970/01/01)
-      maxDate: '0',//tomorrow is maximum date calendar
-      timepicker: false,
-    });
+    {% if request.user.is_superuser %}
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
+      });
+    {% else %}
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/01/04',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
+      });
+    {% endif %}
 
   </script>
 {% endblock %}

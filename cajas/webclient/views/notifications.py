@@ -15,6 +15,11 @@ class Notifications(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'redirect_to'
     template_name = 'webclient/notifications.html'
 
+    def get(self, request, slug):
+        office = OfficeCountry.objects.get(slug=slug)
+        request.session['office'] = office.pk
+        return super(Notifications, self).get(request)
+
     def get_context_data(self, **kwargs):
         context = super(Notifications, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']

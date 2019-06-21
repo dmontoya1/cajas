@@ -33,7 +33,7 @@ USE_I18N = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-l10n
 USE_L10N = False
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
-USE_TZ = True
+USE_TZ = False
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ DJANGO_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize', # Handy template tags
+    'django.contrib.humanize',
     'django.contrib.admin',
 ]
 THIRD_PARTY_APPS = [
@@ -355,3 +355,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 100240

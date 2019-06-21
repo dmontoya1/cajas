@@ -15,6 +15,7 @@ from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.webclient.views.get_ip import get_ip
 
 from ..models import Loan, LoanHistory
+from ..models.loan import LoanType
 
 User = get_user_model()
 donjuan_manager = DonJuanManager()
@@ -33,20 +34,19 @@ class LoanManager(object):
     def create_partner_loan(self, data):
         self.__validate_data(data)
         lender_partner = get_object_or_404(Partner, pk=data['lender'])
-        lender = lender_partner.user
-        loan = Loan.objects.filter(lender=lender).last()
+        loan = Loan.objects.filter(lender=lender_partner.user, loan_type=LoanType.SOCIO_DIRECTO).last()
         office = get_object_or_404(OfficeCountry, pk=data['office'])
         if lender_partner.direct_partner:
-            provider = lender_partner.direct_partner.user
+            provider = lender_partner.direct_partner
         else:
-            provider = get_object_or_404(User, username='donjuan')
+            provider = get_object_or_404(Partner, code='DONJUAN')
         if data['time'] == '':
             time = 0
         else:
             time = data['time']
         if not loan:
             loan = Loan.objects.create(
-                lender=lender,
+                lender=lender_partner.user,
                 provider=provider,
                 office=office,
                 loan_type=data['loan_type'],
@@ -95,7 +95,7 @@ class LoanManager(object):
         self.__validate_data(data)
         lender_employee = get_object_or_404(Employee, pk=data['lender'])
         lender = lender_employee.user
-        old_loan = Loan.objects.filter(lender=lender).last()
+        old_loan = Loan.objects.filter(lender=lender, loan_type=LoanType.EMPLEADO).last()
         office = get_object_or_404(OfficeCountry, pk=data['office'])
         concept = get_object_or_404(Concept, name='Préstamo Personal Empleado')
 
@@ -117,7 +117,7 @@ class LoanManager(object):
                 provider = get_object_or_404(Partner, pk=data['provider'])
                 loan = Loan.objects.create(
                     lender=lender,
-                    provider=provider.user,
+                    provider=provider,
                     office=office,
                     loan_type=data['loan_type'],
                     value=data['value'],
@@ -134,7 +134,7 @@ class LoanManager(object):
                 provider = get_object_or_404(Partner, code='DONJUAN')
                 loan = Loan.objects.create(
                     lender=lender,
-                    provider=provider.user,
+                    provider=provider,
                     office=office,
                     loan_type=data['loan_type'],
                     value=data['value'],
@@ -194,7 +194,7 @@ class LoanManager(object):
             document_type=data['document_type'],
             document_id=data['document_id']
         )
-        old_loan = Loan.objects.filter(lender=lender, provider=provider).last()
+        old_loan = Loan.objects.filter(lender=lender, provider=provider, loan_type=LoanType.TERCERO).last()
         if not old_loan:
             loan = Loan.objects.create(
                 provider=provider,
@@ -239,6 +239,3 @@ class LoanManager(object):
         }
         movement = donjuan_manager.create_movement(data)
         return loan
-
-
-

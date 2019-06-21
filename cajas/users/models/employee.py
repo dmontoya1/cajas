@@ -1,7 +1,5 @@
 
 from django.contrib.auth import get_user_model
-from django.conf import settings
-from django.contrib.sites.models import Site
 from django.db import models
 
 from cajas.users.models.charges import Charge
@@ -99,5 +97,11 @@ class Employee(models.Model):
         charge_secretary = Charge.objects.get(name='Secretaria')
         charge_admin_senior = Charge.objects.get(name='Administrador Senior')
         if self.charge == charge_secretary or self.charge == charge_admin_senior:
+            return True
+        return False
+
+    def is_admin_senior(self):
+        admin_senior = Charge.objects.get(name="Administrador Senior")
+        if self.charge == admin_senior:
             return True
         return False

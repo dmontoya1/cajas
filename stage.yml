@@ -9,8 +9,8 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: cajas_local_django
+      dockerfile: ./compose/stage/django/Dockerfile
+    image: cajas_stage_django
     depends_on:
       - postgres
     volumes:

@@ -50,14 +50,6 @@ def create_partner_box(sender, **kwargs):
         box.save()
 
 
-@receiver(post_save, sender=Employee)
-def create_employee_admin_group(sender, instance, **kwargs):
-    if kwargs.get('created'):
-        if str(instance.charge) == "Administrador de Grupo":
-            group = Group(admin=instance)
-            group.save()
-
-
 @receiver(pre_save, sender=Employee)
 def send_mail_when_salary_value_changes(sender, instance, **kwargs):
     try:

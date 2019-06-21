@@ -1,12 +1,10 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from cajas.movement.admin import (
-    MovementColombiaInline,
     MovementDonJuanUSDInline,
-    MovementDailySquareInline,
     MovementDonJuanInline,
     MovementOfficeInline,
-    MovementPartnerInline,
     MovementProvisioningInline
 )
 
@@ -25,10 +23,22 @@ class BoxColombiaAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('office', 'name', 'balance', 'is_active')
-    inlines = [MovementColombiaInline, ]
+    list_display = ('office', 'name', 'balance', 'is_active', 'get_edit_link')
+    readonly_fields = ["get_edit_link", ]
     search_fields = ('office__name',)
     exclude = ('last_movement_id',)
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:
+            url = '/admin/movement/movementboxcolombia/?box_office__id__exact={}'.format(obj.pk)
+            return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
+                url=url,
+                text="Ver movimientos de la caja",
+            ))
+        return "Guarde y continúe editando para poder ver los movimientos"
+
+    get_edit_link.short_description = "Movimientos"
+    get_edit_link.allow_tags = True
 
 
 @admin.register(BoxDailySquare)
@@ -37,10 +47,22 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('user', 'office', 'balance', 'is_active')
-    inlines = [MovementDailySquareInline, ]
-    search_fields = ('user__first_name', 'user__last_name', 'user__document_id' )
+    list_display = ('user', 'office', 'balance', 'is_active', 'get_edit_link')
+    readonly_fields = ["get_edit_link", ]
+    search_fields = ('user__first_name', 'user__last_name', 'user__document_id')
     exclude = ('last_movement_id', )
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:
+            url = '/admin/movement/movementdailysquare/?box_daily_square__id__exact={}'.format(obj.pk)
+            return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
+                url=url,
+                text="Ver movimientos de la caja",
+            ))
+        return "Guarde y continúe editando para poder ver los movimientos"
+
+    get_edit_link.short_description = "Movimientos"
+    get_edit_link.allow_tags = True
 
 
 @admin.register(BoxDonJuan)
@@ -49,10 +71,22 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('office', 'balance', 'is_active')
-    inlines = [MovementDonJuanInline, ]
+    list_display = ('office', 'balance', 'is_active', 'get_edit_link')
+    readonly_fields = ["get_edit_link", ]
     search_fields = ('office__country__abbr', 'office__number', )
     exclude = ('last_movement_id', )
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:
+            url = '/admin/movement/movementdonjuan/?box_don_juan__id__exact={}'.format(obj.pk)
+            return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
+                url=url,
+                text="Ver movimientos de la caja",
+            ))
+        return "Guarde y continúe editando para poder ver los movimientos"
+
+    get_edit_link.short_description = "Movimientos"
+    get_edit_link.allow_tags = True
 
 
 @admin.register(BoxDonJuanUSD)
@@ -85,12 +119,24 @@ class BoxPartnerAdmin(admin.ModelAdmin):
         Se agrega INLINE con los movimientos
     """
 
-    list_display = ('partner', 'balance', 'box_status')
+    list_display = ('partner', 'balance', 'box_status', 'get_edit_link')
+    readonly_fields = ["get_edit_link", ]
     list_filter = ('partner__office', 'box_status')
-    inlines = [MovementPartnerInline, ]
     search_fields = ('partner__user__first_name', 'partner__user__last_name', 'partner__code',
                      'partner__user__document_id')
     exclude = ('last_movement_id', )
+
+    def get_edit_link(self, obj=None):
+        if obj.pk:
+            url = '/admin/movement/movementpartner/?box_partner__partner__id__exact={}'.format(obj.pk)
+            return mark_safe("""<a href="{url}" target="_blank">{text}</a>""".format(
+                url=url,
+                text="Ver movimientos de la caja",
+            ))
+        return "Guarde y continúe editando para poder ver los movimientos"
+
+    get_edit_link.short_description = "Movimientos"
+    get_edit_link.allow_tags = True
 
 
 @admin.register(BoxProvisioning)

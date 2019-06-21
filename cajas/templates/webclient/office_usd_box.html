@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% load static humanize %}
+{% load office_arqueada %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -185,13 +186,13 @@
                   {% for m in box.movements.all %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
-                      <td><span class="d-none">{{ m.date|date:"YMd" }}</span>{{ m.date|date:"d-M-Y" }}</td>
+                      <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        USD{% else %}-{% endif %}</td>
+                        USD{% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        USD{% else %}-{% endif %}</td>
+                        USD{% else %}{% endif %}</td>
                       <td>
                         {% if perms.movement.add_movementdonjuanusd %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
@@ -210,13 +211,32 @@
           </div>
         </div>
         {% if perms.movement.add_movementdonjuanusd %}
-          <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
-            <i class="fa fa-plus my-float"></i>
-          </a>
-          <div class="label-container">
-            <div class="label-text">Añadir movimiento</div>
-            <i class="fa fa-play label-arrow"></i>
-          </div>
+          {% get_office_arqueada office as deficit %}
+          {% if request.user.is_superuser %}
+            <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% elif request.user.is_secretary and deficit == 0 %}
+            <a href="" class="float" id="add-movement-btn" data-toggle="modal" data-target="#addMovement">
+              <i class="fa fa-plus my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">Añadir movimiento</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% else %}
+            <a href="#" id="add-movement-btn" class="float float-close">
+              <i class="fa fa-times my-float"></i>
+            </a>
+            <div class="label-container">
+              <div class="label-text">El arqueo esta descuadrado</div>
+              <i class="fa fa-play label-arrow"></i>
+            </div>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -394,7 +414,7 @@
     })
 
     $("#add-movement-btn").on("click", function () {
-      $('.add-movement')[0].reset();
+      $('.add-usd-movement')[0].reset();
       $("#method_modal").val("add")
       $("#method_modal").data("id", "")
       $('.modal-title').text("Añadir Movimiento")
@@ -449,7 +469,7 @@
             })
               .catch(function (error) {
                 Swal.fire({
-                  title: 'Ha ocurrido un error',
+                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
                   text: error,
                   type: 'error',
                   showCancelButton: false,
@@ -481,7 +501,7 @@
             // handle error
             console.log(error)
             Swal.fire({
-              title: 'Ha ocurrido un error',
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
               text: error,
               type: 'error',
               showCancelButton: false,
@@ -540,6 +560,13 @@
         }
       })
     })
+
+    $('.datetimepicker_dailysquare').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/01/04',
+      maxDate: '0',
+      timepicker: false,
+    });
 
   </script>
 {% endblock %}

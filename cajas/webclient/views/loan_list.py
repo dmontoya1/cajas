@@ -1,4 +1,5 @@
 
+import logging
 from datetime import datetime
 
 from django.db.models import Q
@@ -15,6 +16,7 @@ from cajas.office.models.officeCountry import OfficeCountry
 from cajas.webclient.views.utils import get_object_or_none
 
 User = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 class LoanList(LoginRequiredMixin, TemplateView):
@@ -29,9 +31,13 @@ class LoanList(LoginRequiredMixin, TemplateView):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-
         try:
-            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
+            employee = Employee.objects.get(
+                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        except Employee.DoesNotExist:
+            employee = None
+        try:
+            if self.request.user.is_superuser or employee.is_admin_charge():
                 context['loans'] = Loan.objects.filter(office=office)
                 context['partners'] = Partner.objects.filter(office=office, is_active=True)
                 context['employees'] = Employee.objects.filter(
@@ -45,6 +51,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
                     month__month=now.month,
                 )
         except Exception as e:
+            logger.exception(str(e))
             context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
         context['office'] = office
         return context

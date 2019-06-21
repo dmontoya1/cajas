@@ -5,3 +5,5 @@ from .charges import Charge
 from .auth_logs import AuthLogs
 from .group import Group
 from .group_employee import GroupEmployee
+from .daily_square_units import DailySquareUnits
+

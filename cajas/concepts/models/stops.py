@@ -52,7 +52,7 @@ class Stop(models.Model):
     report_users = models.ManyToManyField(
         User,
         verbose_name='Informar usuarios',
-        related_name="related_users_report"
+        related_name="related_users_report",
     )
 
     def __str__(self):

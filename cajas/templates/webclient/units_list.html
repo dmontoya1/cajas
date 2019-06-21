@@ -445,7 +445,7 @@
               </div>
             </div>
             <!--end Replication-->
-            <button type="submit" class="btn btn-submit">Crear</button>
+            <button type="submit" class="btn btn-submit btn-submit-unit">Crear</button>
           </form>
         </div>
       </div>
@@ -513,7 +513,6 @@
           console.log(error);
         })
     })
-
 
     var fill_brands = function (cat_id, index_pk, brand_pk) {
       axios.get(`/api/inventory/${cat_id}/brand`)
@@ -772,6 +771,7 @@
     //create items
     $('.create_unit_form').on('submit', function (e) {
       e.preventDefault()
+      $('.btn-submit-unit').attr('disabled', true)
       var elemts = []
       $('.create_unit_form .dynamic_controller *').filter('.category_control').each(function () {
         id_form = $(this).attr("id")

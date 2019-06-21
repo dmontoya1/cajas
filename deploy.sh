@@ -75,6 +75,30 @@ cat << EOF > Dockerrun.aws.json
      "memory": 512
     },
     {
+     "name": "celery_worker",
+     "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest",
+     "essential": true,
+     "links":[
+       "redis"
+     ],
+     "command": [
+        "/start-celeryworker.sh"
+      ],
+     "memory": 300
+    },
+    {
+     "name": "celery_beat",
+     "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_DJANGO_BUILD_NAME}-latest",
+     "essential": true,
+     "links":[
+       "redis"
+     ],
+     "command": [
+        "/start-celerybeat.sh"
+      ],
+     "memory": 300
+    },
+    {
      "name": "nginx",
      "image": "${CONTAINER_REGISTRY_PREFIX}/${CONTAINER_REGISTRY_REPOSITORY_NAME}:${COMPOSE_PROJECT_NAME}-${SERVICE_NGINX_BUILD_NAME}-latest",
      "essential": true,

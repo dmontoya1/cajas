@@ -20,6 +20,7 @@ from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.webclient.views.get_ip import get_ip
 from cajas.webclient.views.utils import get_object_or_none
 
@@ -152,10 +153,12 @@ class PartnerCloseout(APIView):
                     )
 
     def validate_loans(self, request):
+        movement_partner_manager = MovementPartnerManager()
         data = request.data
         partner = get_object_or_404(Partner, pk=data['partner'])
         office = partner.office
         loans = Loan.objects.filter(lender=partner.user)
+        partner_balance = partner.box.balance
         exchange = get_object_or_none(
             Exchange,
             currency=office.country.currency,
@@ -164,39 +167,23 @@ class PartnerCloseout(APIView):
         for loan in loans:
             if loan.loan_type == LoanType.EMPLEADO:
                 if loan.balance > 0:
-                    concept = Concept.objects.get(name='Pago Abono préstamo socio')
-                    MovementPartner.objects.create(
-                        box_partner=partner.box,
-                        concept=concept,
-                        movement_type='OUT',
-                        value=loan.balance * 3,
-                        detail='Pago préstamo por ${} (Sale como retiro de socio)'.format(loan.balance),
-                        date=datetime.now(),
-                        responsible=request.user,
-                        ip=get_ip(request)
-                    )
-                    if partner.partner_type == PartnerType.DIRECTO:
-                        MovementDonJuan.objects.create(
-                            box_don_juan=BoxDonJuan.objects.get(office=office),
-                            concept=concept.counterpart,
-                            movement_type='IN',
-                            value=loan.balance * 3,
-                            detail='Pago préstamo por ${} (Entra como retiro de socio)'.format(loan.balance),
-                            date=datetime.now(),
-                            responsible=request.user,
-                            ip=get_ip(request)
-                        )
+                    if (partner_balance * 3) >= loan.balance:
+                        value = loan.balance * 3
                     else:
-                        MovementPartner.objects.create(
-                            box_partner=partner.direct_partner.box,
-                            concept=concept.counterpart,
-                            movement_type='IN',
-                            value=loan.balance * 3,
-                            detail='Pago préstamo por ${} (Entra como retiro de socio)'.format(loan.balance),
-                            date=datetime.now(),
-                            responsible=request.user,
-                            ip=get_ip(request)
-                        )
+                        value = partner_balance
+                    concept = Concept.objects.get(name='Pago Abono préstamo socio')
+                    data = {
+                        'partner': partner,
+                        'box': partner.box,
+                        'concept': concept,
+                        'movement_type': 'OUT',
+                        'value': value,
+                        'detail': 'Pago préstamo por ${} de socio {} (Sale como retiro de socio)'.format(value, partner),
+                        'date': datetime.now(),
+                        'responsible': request.user,
+                        'ip': get_ip(request)
+                    }
+                    movement_partner_manager.create_double(data)
                     LoanHistory.objects.create(
                         loan=loan,
                         value=loan.balance,
@@ -205,39 +192,31 @@ class PartnerCloseout(APIView):
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 if loan.balance > 0:
                     concept = Concept.objects.get(name='Pago Abono préstamo socio')
-                    total_loan = loan.balance_cop / exchange.exchange_cop_abono
-                    MovementPartner.objects.create(
-                        box_partner=partner.box,
-                        concept=concept,
-                        movement_type='OUT',
-                        value=total_loan,
-                        detail='Pago préstamo por ${}'.format(loan.balance),
-                        date=datetime.now(),
-                        responsible=request.user,
-                        ip=get_ip(request)
-                    )
-                    if partner.partner_type == PartnerType.DIRECTO:
-                        MovementDonJuan.objects.create(
-                            box_don_juan=BoxDonJuan.objects.get(office=office),
-                            concept=concept.counterpart,
-                            movement_type='IN',
-                            value=total_loan,
-                            detail='Pago préstamo por ${}'.format(loan.balance),
-                            date=datetime.now(),
-                            responsible=request.user,
-                            ip=get_ip(request)
-                        )
+                    country = office.country
+                    if country.name == 'Guatemala':
+                        total_loan = loan.balance_cop / exchange.exchange_cop_abono * exchange.exchange_dolar_abono
+                        if partner_balance >= total_loan:
+                            value = total_loan
+                        else:
+                            value = partner_balance
                     else:
-                        MovementPartner.objects.create(
-                            box_partner=partner.direct_partner.box,
-                            concept=concept.counterpart,
-                            movement_type='IN',
-                            value=total_loan,
-                            detail='Pago préstamo por ${}'.format(loan.balance),
-                            date=datetime.now(),
-                            responsible=request.user,
-                            ip=get_ip(request)
-                        )
+                        total_loan = loan.balance_cop / exchange.exchange_cop_abono
+                        if partner_balance >= total_loan:
+                            value = total_loan
+                        else:
+                            value = partner_balance
+                    data = {
+                        'partner': partner,
+                        'box': partner.box,
+                        'concept': concept,
+                        'movement_type': 'OUT',
+                        'value': value,
+                        'detail': 'Pago préstamo por ${} de socio {}'.format(value, partner),
+                        'date': datetime.now(),
+                        'responsible': request.user,
+                        'ip': get_ip(request)
+                    }
+                    movement_partner_manager.create_double(data)
                     LoanHistory.objects.create(
                         loan=loan,
                         value=total_loan,

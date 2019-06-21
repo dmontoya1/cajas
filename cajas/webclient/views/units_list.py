@@ -1,4 +1,6 @@
 
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -9,6 +11,8 @@ from cajas.users.models.partner import Partner
 from cajas.inventory.models import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+
+logger = logging.getLogger(__name__)
 
 
 class UnitsList(LoginRequiredMixin, TemplateView):
@@ -23,21 +27,35 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         context = super(UnitsList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-
         try:
-            if self.request.user.is_superuser or self.request.user.related_employee.get().is_admin_charge():
-                context['units'] = Unit.objects.filter(partner__office=office)
+            employee = Employee.objects.get(
+                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+        except Employee.DoesNotExist:
+            employee = None
+        try:
+            if self.request.user.is_superuser or employee.is_admin_charge():
+                context['units'] = Unit.objects.filter(Q(partner__office=office) |
+                                                       (Q(partner__code='DONJUAN') &
+                                                        (Q(collector__related_employee__office_country=office) |
+                                                         Q(collector__related_employee__office=office.office) |
+                                                         Q(supervisor__related_employee__office_country=office) |
+                                                         Q(supervisor__related_employee__office=office.office)
+                                                         ))).distinct()
                 context['employees'] = Employee.objects.filter(
                     Q(office_country=office) |
                     Q(office=office.office) &
                     Q(user__is_active=True)
                 )
-                context['partners'] = Partner.objects.filter(office=office, user__is_active=True).exclude(partner_type='DJ')
+                context['partners'] = Partner.objects.filter(
+                    (Q(office=office) & Q(user__is_active=True)) |
+                    Q(code='DONJUAN')
+                )
                 context['categories'] = Category.objects.all()
             else:
                 partner = Partner.objects.get(user=self.request.user, office=office)
                 context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
         except Exception as e:
+            logger.exception(str(e))
             partner = Partner.objects.get(user=self.request.user, office=office)
             context['units'] = Unit.objects.filter(partner__office=office, partner=partner)
 

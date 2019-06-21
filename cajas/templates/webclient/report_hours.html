@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% load static humanize %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/handsontable@7.0.3/dist/handsontable.full.min.css" rel="stylesheet"
+        media="screen">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+  <style>
+    .navbar .navbar-nav li.menu-item-has-children a {
+      line-height: 25px !important;
+    }
+
+    tr.sunday {
+      background: #555 !important;
+      color: #fff;
+      font-weight: bold;
+    }
+
+  </style>
+{% endblock %}
+
+{% block navbar %}
+  <ul class="nav navbar-nav">
+    <li class="active">
+      <a href="#"><i class="menu-icon fa fa-laptop"></i>Oficinas Mundiales</a>
+    </li>
+    <li class="menu-title">DETALLE OFICINA</li><!-- /.menu-title -->
+    <li class="menu-item-has-children dropdown">
+      <a href="{% url 'webclient:home' %}">
+        <img src="{% static 'icons/ICONOS-01.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
+        Inicio
+      </a>
+    </li>
+    {% if request.user.is_superuser or request.user.is_secretary %}
+      <li class="menu-item-has-children dropdown active">
+        <a href="{% url 'webclient:reports' %}">
+          <i class="fas fa-chart-line mr-3"></i>
+          Informes
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+{% endblock %}
+
+{% block index_actions %}
+{% endblock %}
+
+{% block content %}
+  <div class="row country-row">
+    <div class="col-12">
+      <div class="country-name">
+        <span>Apertura y cierre</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="mb-3">Filtros</h3>
+                <form class="filter mb-4" action="." method="get">
+                  <div class="row">
+                    <div class="col">
+                      <label for="date_start">Fecha de inicio</label>
+                      <input type="text" class="form-control datetimepicker" id="date_start" name="date_start"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                    <div class="col">
+                      <label for="date_end">Fecha de finalizacion</label>
+                      <input type="text" class="form-control datetimepicker" id="date_end" name="date_end"
+                             placeholder="yyyy-mm-dd"
+                             style="width: 100%;" required autocomplete="off">
+                    </div>
+                  </div>
+                  <button type="submit" class="filter-report">Filtrar</button>
+                </form>
+                <table id="table" class="table table-striped table-bordered responsive display"
+                       cellspacing="0" style="width:100%;">
+                  <thead>
+                  <tr>
+                    <th>Secretaria</th>
+                    <th>Fecha</th>
+                    <th>Hora de Apertura</th>
+                    <th>Hora de Cierre</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for d in data %}
+                    <tr {% if d.date.weekday == 6 %}class="sunday"{% endif %}>
+                      <td>{{ d.secretary }}</td>
+                      <td>{{ d.date|date:"d M Y" }}</td>
+                      <td>{{ d.login|time:"P"|default:"Sin Horario" }}</td>
+                      <td>{{ d.logout|time:"P"|default:"Sin Horario" }}</td>
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extra_js %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('#table').DataTable({
+        responsive: {
+          details: true
+        },
+        dom: 'lBfrtip',
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        buttons: [
+          'excel', 'print'
+        ],
+        "order": [[1, "asc"]],
+        language: {
+          "sProcessing": "Procesando...",
+          "sLengthMenu": "Mostrar _MENU_ registros",
+          "sZeroRecords": "No se encontraron resultados",
+          "sEmptyTable": "Ningún dato disponible en esta tabla",
+          "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+          "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+          "sInfoPostFix": "",
+          "sSearch": "Buscar:",
+          "sUrl": "",
+          "sInfoThousands": ",",
+          "sLoadingRecords": "Cargando...",
+          "oPaginate": {
+            "sFirst": "Primero",
+            "sLast": "Último",
+            "sNext": "Siguiente",
+            "sPrevious": "Anterior"
+          },
+          "oAria": {
+            "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          }
+        }
+      });
+    });
+    $('.datetimepicker').datetimepicker({
+      format: 'Y-m-d',
+      minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+      maxDate: '0',//tomorrow is maximum date calendar
+      timepicker: false,
+    });
+
+  </script>
+{% endblock %}
