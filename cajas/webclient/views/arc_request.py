@@ -26,7 +26,7 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
         box_office = office.box
         box_donjuan = BoxDonJuan.objects.get(office=office)
         box_partners = BoxPartner.objects.filter(partner__office=office, is_active=True)
-        box_daily = BoxDailySquare.objects.filter(office=office)
+        box_daily = BoxDailySquare.objects.filter(office=office, user__is_daily_square=True)
         dq_total = 0
         partner_sum = 0
         data = dict()
