@@ -17,7 +17,9 @@ class MovementOffice(MovementMixin):
     )
 
     def __str__(self):
-        return "Movimiento de {}".format(self.box_office.office)
+        if self.box_office:
+            return "Movimiento de {}".format(self.box_office.office)
+        return "Movimiento de oficina"
 
     def __init__(self, *args, **kwargs):
         super(MovementOffice, self).__init__(*args, **kwargs)

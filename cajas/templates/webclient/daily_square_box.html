@@ -924,6 +924,12 @@
               $('#usd-sell').addClass('d-none')
               $('#usd-buy').addClass('d-none')
               break;
+            case 'Recibo de Efectivo de CD':
+              $('#dq-select-').removeClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              break;
             case 'Préstamo Personal Empleado':
               $('.loan-employee').removeClass("d-none")
               $('#regular-value').addClass('d-none')
@@ -1497,6 +1503,11 @@
             $("#office option[value='" + data.office + "']").prop("selected", true);
             $("#office").trigger("change")
           }
+          if (data.user) {
+            $("#dq-select option").prop("selected", false);
+            $("#dq-select option[value='" + data.user + "']").prop("selected", true);
+            $("#dq-select").trigger("change")
+          }
           if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
             axios.get(`/api/movements/${mov_pk}/dq-request-item-detail/`)
               .then(function (response) {
@@ -1580,7 +1591,6 @@
           axios.delete(`/api/movements/${mov_pk}/dq-detail/`)
             .then(function (response) {
               data = response.data
-              console.log(data)
               Swal.fire(
                 'Eliminado',
                 'El movimiento se ha eliminado correctamente',

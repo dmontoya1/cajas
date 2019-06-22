@@ -1,6 +1,7 @@
 
 from datetime import datetime
 
+from django.contrib.auth import get_user_model
 from django.db.models import Sum
 
 from cajas.boxes.models import BoxDailySquare
@@ -20,11 +21,13 @@ class MovementDailySquareManager(object):
                   'unit', 'user', 'office', 'loan', 'chain']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_movement(self, data):
         self.__validate_data(data)
+        print(data)
         movement = MovementDailySquare.objects.create(
             box_daily_square=data['box'],
             concept=data['concept'],
@@ -80,6 +83,10 @@ class MovementDailySquareManager(object):
     def __get_movement_by_pk(self, pk):
         return MovementDailySquare.objects.filter(pk=pk)
 
+    def __get_user_by_pk(self, pk):
+        User = get_user_model()
+        return User.objects.get(pk=pk)
+
     def __get_user_box_daily_square(self, user_id, office_slug):
         return BoxDailySquare.objects.get(user__pk=user_id, office__slug=office_slug)
 
@@ -88,6 +95,9 @@ class MovementDailySquareManager(object):
 
     def __is_movement_type_updated(self, movement, movement_type):
         return movement.movement_type != movement_type
+
+    def __is_money_delivery_and_target_has_changed(self, concept, movement, dq):
+        return concept.name == 'Entrega de Efectivo a CD' and movement.user.pk != dq
 
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
@@ -117,6 +127,7 @@ class MovementDailySquareManager(object):
             self.update_counterpart_movement_type(current_movement.movement_cd)
 
     def update_movement_type(self, data):
+        print("UPDATING MOVEMENT TYPE")
         box = data['box']
         if data['movement_type'] == 'IN':
             box.balance += (int(data['movement'].value) * 2)
@@ -130,6 +141,23 @@ class MovementDailySquareManager(object):
         else:
             movement.movement_type = movement.IN
         movement.save()
+
+    def __update_new_target_user_on_delivery_money(self, data):
+        current_movement = self.__get_movement_by_pk(data['pk']).first()
+        current_movement.movement_cd.delete()
+        data['box'] = self.__get_user_box_daily_square(data['dq'], data['office_slug'])
+        data['concept'] = self.__get_current_concept(data['concept']).counterpart
+        data['unit'] = None
+        data['user'] = self.__get_user_by_pk(data['dq'])
+        data['loan'] = None
+        data['chain'] = None
+        data['office'] = get_object_or_none(OfficeCountry, pk=data.get('office', None))
+        print(current_movement.movement_type)
+        if current_movement.movement_type == 'OUT':
+            data['movement_type'] = 'IN'
+        else:
+            data['movement_type'] = 'OUT'
+        return self.create_movement(data)
 
     def __update_value(self, data):
         current_movement = data['movement']
@@ -197,19 +225,20 @@ class MovementDailySquareManager(object):
         object_data['movement_type'] = data['movement_type']
         object_data['detail'] = data['detail']
         object_data['date'] = data['date']
-        object_data['user'] = current_user
+        object_data['user'] = data['dq']
         object_data['office'] = get_object_or_none(OfficeCountry, pk=data.get('office', None))
         object_data['unit'] = get_object_or_none(Unit, pk=data.get('unit', None))
-
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
             data['movement'] = current_movement
             data['box'] = current_user_box_daily_square
             self.__update_movement_type(data)
-
         if self.__is_movement_value_updated(current_movement, data['value']):
             data['movement'] = current_movement
             data['box'] = current_user_box_daily_square
             self.__update_value(data)
+        if self.__is_money_delivery_and_target_has_changed(current_concept, current_movement, data['dq']):
+            movement_dq = self.__update_new_target_user_on_delivery_money(data)
+            object_data['movement_cd'] = movement_dq
 
         if current_user is not None:
             stop_manager = StopManager(current_user)
