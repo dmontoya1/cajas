@@ -29,6 +29,7 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         data = request.POST.copy()
         data['pk'] = self.kwargs['pk']
+        data['responsible'] = request.user
         data['ip'] = get_ip(request)
         concept = Concept.objects.get(pk=request.POST['concept'])
         try:

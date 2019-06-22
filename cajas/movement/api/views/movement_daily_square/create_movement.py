@@ -132,9 +132,9 @@ class CreateDailySquareMovement(APIView):
             movement.save()
 
         elif concept.name == "Entrega de Efectivo a CD":
+            movement = daily_square_manager.create_movement(data)
             dq_target = get_object_or_404(User, pk=request.POST['dq'])
             box_daily_square_target = BoxDailySquare.objects.get(user=dq_target, office=office_)
-            movement = daily_square_manager.create_movement(data)
             data['box'] = box_daily_square_target
             data['concept'] = concept.counterpart
             if movement_type == 'OUT':
@@ -143,6 +143,7 @@ class CreateDailySquareMovement(APIView):
                 data['movement_type'] = 'OUT'
             movement_cd = daily_square_manager.create_movement(data)
             movement.movement_cd = movement_cd
+            movement.user = dq_target
             movement.save()
 
         elif concept.name == "Préstamo Personal Empleado":
@@ -189,7 +190,6 @@ class CreateDailySquareMovement(APIView):
                             brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                             price=request.data["form[form][" + value + "][price]"]
                         )
-
         else:
             if user:
                 total_movements = daily_square_manager.get_user_value(data)

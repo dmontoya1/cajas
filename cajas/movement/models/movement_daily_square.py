@@ -110,24 +110,26 @@ class MovementDailySquare(MovementMixin):
         self.__movement_type = self.movement_type
         self.__value = self.value
 
-    def save(self, *args, **kwargs):
-        if self.__movement_type != self.movement_type:
-            box = self.box_daily_square
-            if self.movement_type == 'IN':
-                box.balance = box.balance + (int(self.value) * 2)
-            else:
-                box.balance = box.balance - (int(self.value) * 2)
-            box.save()
-        if self.__value != self.value:
-            box = self.box_daily_square
-            if self.movement_type == 'IN':
-                box.balance -= int(self.value)
-                box.balance += int(self.value)
-            else:
-                box.balance += int(self.value)
-                box.balance -= int(self.value)
-            box.save()
-        super(MovementDailySquare, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     print(self, "MODELOOOOOO")
+    #     if self.__movement_type != self.movement_type:
+    #         print("CAMBIO TIPO DE MOVIMIENTO")
+    #         box = self.box_daily_square
+    #         if self.movement_type == 'IN':
+    #             box.balance = box.balance + (int(self.value) * 2)
+    #         else:
+    #             box.balance = box.balance - (int(self.value) * 2)
+    #         box.save()
+    #     if self.__value != self.value:
+    #         box = self.box_daily_square
+    #         if self.movement_type == 'IN':
+    #             box.balance -= int(self.value)
+    #             box.balance += int(self.value)
+    #         else:
+    #             box.balance += int(self.value)
+    #             box.balance -= int(self.value)
+    #         box.save()
+    #     super(MovementDailySquare, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'
