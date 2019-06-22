@@ -216,7 +216,7 @@ class MovementDailySquareManager(object):
         current_movement = current_movement_daily_square.first()
         current_user_box_daily_square = self.__get_user_box_daily_square(data['user_id'], data['office_slug'])
         current_concept = self.__get_current_concept(data['concept'])
-
+        user = data.get('dq', None)
         current_user = get_object_or_none(User, pk=data.get('user', None))
         object_data = dict()
         object_data['box_daily_square'] = current_user_box_daily_square
@@ -225,7 +225,7 @@ class MovementDailySquareManager(object):
         object_data['movement_type'] = data['movement_type']
         object_data['detail'] = data['detail']
         object_data['date'] = data['date']
-        object_data['user'] = data['dq']
+        object_data['user'] = user
         object_data['office'] = get_object_or_none(OfficeCountry, pk=data.get('office', None))
         object_data['unit'] = get_object_or_none(Unit, pk=data.get('unit', None))
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
@@ -236,7 +236,7 @@ class MovementDailySquareManager(object):
             data['movement'] = current_movement
             data['box'] = current_user_box_daily_square
             self.__update_value(data)
-        if self.__is_money_delivery_and_target_has_changed(current_concept, current_movement, data['dq']):
+        if user and self.__is_money_delivery_and_target_has_changed(current_concept, current_movement, user):
             movement_dq = self.__update_new_target_user_on_delivery_money(data)
             object_data['movement_cd'] = movement_dq
 

@@ -1495,9 +1495,9 @@
           $("#value").val(data.value)
           $("#detail").val(data.detail)
           if (data.unit) {
-            $("#unity option").prop("selected", false);
-            $("#unity option[value='" + data.unit + "']").prop("selected", true);
-            $("#unity").trigger("change")
+            $("#unit option").prop("selected", false);
+            $("#unit option[value='" + data.unit + "']").prop("selected", true);
+            $("#unit").trigger("change")
           } else if (data.office) {
             $("#office option").prop("selected", false);
             $("#office option[value='" + data.office + "']").prop("selected", true);
