@@ -48,7 +48,13 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
 
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
-                units = group.units.filter(partner__office=office)
+                units = group.units.filter(Q(partner__office=office) |
+                                            (Q(partner__code='DONJUAN') &
+                                             (Q(collector__related_employee__office_country=office) |
+                                              Q(collector__related_employee__office=office.office) |
+                                              Q(supervisor__related_employee__office_country=office) |
+                                              Q(supervisor__related_employee__office=office.office)
+                                              ))).distinct()
             else:
                 units = Unit.objects.filter(Q(partner__office=office) |
                                             (Q(partner__code='DONJUAN') &
