@@ -87,7 +87,13 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     context['dailys'] = User.objects.filter(pk=self.request.user.pk, is_daily_square=True)
                 group_units = get_object_or_none(DailySquareUnits, employee=employee)
                 if group_units and group_units.units.all().exists():
-                    units = group_units.units.filter(partner__office=office)
+                    units = group_units.units.filter(Q(partner__office=office) |
+                                               (Q(partner__code='DONJUAN') &
+                                                (Q(collector__related_employee__office_country=office) |
+                                                 Q(collector__related_employee__office=office.office) |
+                                                 Q(supervisor__related_employee__office_country=office) |
+                                                 Q(supervisor__related_employee__office=office.office)
+                                                 ))).distinct()
         except Exception as e:
             logger.exception(str(e))
             context['partner'] = Partner.objects.get(user=self.request.user, office=office)
