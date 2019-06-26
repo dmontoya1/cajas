@@ -208,6 +208,7 @@
                                       data-id="{{ l.id }}"
                                       data-interest-pay="{{ l.get_interest_actual_month_payment }}"
                                       data-box-balance-positive="{{ l.get_lender_box_balance_positive }}"
+                                      data-loan-type="{{ l.loan_type }}"
                               >
                                 <i class="fas fa-plus mr-1"></i>
                                 Abono
@@ -610,18 +611,24 @@
     $('#table tbody').on('click', '.add-pay', function () {
       let interest_has_pay = $(this).data('interest-pay')
       let box_balance_positive = $(this).data('box-balance-positive')
-      if (interest_has_pay === 'False') {
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: 'Parece que no se ha pagado el interés de éste préstamo. Paga el interés antes de realizar un abono',
-        })
-      } else if (box_balance_positive === 'False') {
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: 'Parece que el socio no tiene saldo para realizar el abono al préstamo. Revisa su caja para revisar el saldo del socio',
-        })
+      let loan_type = $(this).data('loan-type')
+      if (loan_type === 'Socio Directo') {
+        if (interest_has_pay === 'False') {
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Parece que no se ha pagado el interés de éste préstamo. Paga el interés antes de realizar un abono',
+          })
+        } else if (box_balance_positive === 'False') {
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Parece que el socio no tiene saldo para realizar el abono al préstamo. Revisa su caja para revisar el saldo del socio',
+          })
+        } else {
+          $('#loan').val($(this).data('id'))
+          $('#modalAddPayment').modal('show')
+        }
       } else {
         $('#loan').val($(this).data('id'))
         $('#modalAddPayment').modal('show')
