@@ -3,7 +3,7 @@ import requests
 from datetime import date
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
@@ -12,6 +12,7 @@ from cajas.users.models.user import User
 from cajas.concepts.models.concepts import Concept
 from cajas.movement.models.movement_daily_square import MovementDailySquare
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.units.models.units import Unit
 
 
 class DailySquareVenda(LoginRequiredMixin, TemplateView):
@@ -34,6 +35,13 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         investment_concept = get_object_or_404(Concept, name="Inversión Unidad")
         total_withdraws = 0
         total_investments = 0
+        units = Unit.objects.filter(Q(partner__office=office) |
+                                    (Q(partner__code='DONJUAN') &
+                                     (Q(collector__related_employee__office_country=office) |
+                                      Q(collector__related_employee__office=office.office) |
+                                      Q(supervisor__related_employee__office_country=office) |
+                                      Q(supervisor__related_employee__office=office.office)
+                                      ))).distinct()
         withdraws_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
             concept=withdraw_concept,
@@ -46,8 +54,8 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
             date__lte=end_date,
             date__gte=start_date
         )
-        withdraws_list = self.get_venda_withdraws(withdraws_movements, user, start_date, end_date)
-        investments_list = self.get_venda_investments(investments_movements, user, start_date, end_date)
+        withdraws_list = self.get_venda_withdraws(units, user, start_date, end_date)
+        investments_list = self.get_venda_investments(units, user, start_date, end_date)
         withdraws_total = withdraws_movements.aggregate(Sum('value'))
         investments_total = investments_movements.aggregate(Sum('value'))
         if withdraws_total['value__sum']:
@@ -72,20 +80,20 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         login = login.json()
         return login[0]['data'][0]['user']['token']
 
-    def get_venda_withdraws(self, withdraws_movements, user, start_date, end_date):
+    def get_venda_withdraws(self, units, user, start_date, end_date):
         withdraws_list = list()
         start = start_date.replace('-', '')
         end = end_date.replace('-', '')
         token = self.login()
         visited = list()
-        for w in withdraws_movements:
-            if w.unit.name not in visited:
+        for unit in units:
+            if unit.name not in visited:
                 withdraws_venda = requests.get(
                     'http://external.vnmas.net/api/Vmas/GetWithdrawals/{}/{}/{}/{}'.format(
                         token,
                         start,
                         end,
-                        w.unit.name,
+                        unit.name,
                     )
                 )
                 try:
@@ -103,23 +111,23 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                                 withdraws_list.append(values)
                 except Exception as e:
                     print(e)
-                visited.append(w.unit.name)
+                visited.append(unit.name)
         return withdraws_list
 
-    def get_venda_investments(self, investments_movements, user, start_date, end_date):
+    def get_venda_investments(self, units, user, start_date, end_date):
         investments_list = list()
         start = start_date.replace('-', '')
         end = end_date.replace('-', '')
         token = self.login()
         visited = list()
-        for i in investments_movements:
-            if i.unit.name not in visited:
+        for unit in units:
+            if unit.name not in visited:
                 investments = requests.get(
                     'http://external.vnmas.net/api/Vmas/GetInvestments/{}/{}/{}/{}'.format(
                         token,
                         start,
                         end,
-                        i.unit.name,
+                        unit.name,
                     )
                 )
                 investments = investments.json()
@@ -134,7 +142,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                             values['comment'] = investment['comment']
                             values['value'] = investment['value']
                             investments_list.append(values)
-                visited.append(i.unit.name)
+                visited.append(unit.name)
         return investments_list
 
     def get_venda_withdraws_total(self, withdraws):
