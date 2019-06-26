@@ -630,8 +630,17 @@
           $('#modalAddPayment').modal('show')
         }
       } else {
-        $('#loan').val($(this).data('id'))
-        $('#modalAddPayment').modal('show')
+        if (interest_has_pay === 'False') {
+          Swal.fire({
+            type: 'error',
+            title: 'Oops...',
+            text: 'Parece que no se ha pagado el interés de éste préstamo. Paga el interés antes de realizar un abono',
+          })
+        }
+        else{
+          $('#loan').val($(this).data('id'))
+          $('#modalAddPayment').modal('show')
+        }
       }
     })
 
