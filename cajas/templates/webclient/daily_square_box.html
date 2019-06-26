@@ -259,12 +259,12 @@
                         <td>{{ m.detail }}</td>
                         <td>
                           {% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                          {% else %}-
+                          {% else %}
                           {% endif %}
                         </td>
                         <td>
                           {% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                          {% else %}-
+                          {% else %}
                           {% endif %}
                         </td>
                       </tr>
