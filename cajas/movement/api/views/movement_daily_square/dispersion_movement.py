@@ -27,6 +27,7 @@ class DispersionMovement(APIView):
     def post(self, request, format=None):
         try:
             movement = get_object_or_404(MovementDailySquare, pk=request.data['id'])
+            daily_square = movement.box_daily_square.user
             counter = request.data['counter'] / 2
             counter = int(counter)
             for i in range(counter):
@@ -36,7 +37,7 @@ class DispersionMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': value,
-                    'detail': movement.detail,
+                    'detail': '{} ({})'.format(movement.detail, daily_square),
                     'date': movement.date,
                     'responsible': request.user,
                     'ip': ip
