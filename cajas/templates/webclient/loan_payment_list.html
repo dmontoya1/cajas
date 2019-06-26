@@ -183,27 +183,43 @@
                   <tr>
                     <th>Fecha</th>
                     <th>Tipo</th>
-                    <th>Valor Prestamo - Valor COP</th>
-                    <th>Valor Abono/Interes - Valor COP</th>
+                    <th>Valor Prestamo</th>
+                    <th>Valor Prestamo COP</th>
+                    <th>Valor Abono/Interes</th>
+                    <th>Valor Abono/Interes COP</th>
                   </tr>
                   </thead>
                   <tbody>
                   {% for p in loan.related_payments.all %}
                     <tr>
-                      <td><span class="d-none">{{ p.date|date:"YMd" }}</span>{{ p.date|date:"d-M-Y" }}</td>
+                      <td><span>{{ p.date|date:"Y-m-d" }}</span></td>
                       <td>{{ p.get_history_type_display }}</td>
                       <td>
                         {% if p.movement_type == 'OUT' %}
-                        -
+
                         {% else %}
-                          $ {{ p.value|floatformat:2|intcomma }} - (COP ${{ p.value_cop|floatformat:2|intcomma }})
+                          $ {{ p.value|floatformat:2|intcomma }}
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if p.movement_type == 'OUT' %}
+
+                        {% else %}
+                          $ {{ p.value_cop|floatformat:2|intcomma }}
                         {% endif %}
                       </td>
                       <td>
                         {% if p.movement_type == 'IN' %}
-                          -
+
                         {% else %}
-                          $ {{ p.value|floatformat:2|intcomma }} - (COP ${{ p.value_cop|floatformat:2|intcomma }})
+                          $ {{ p.value|floatformat:2|intcomma }}
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if p.movement_type == 'IN' %}
+
+                        {% else %}
+                          $ {{ p.value_cop|floatformat:2|intcomma }}
                         {% endif %}
                       </td>
                     </tr>
