@@ -187,7 +187,9 @@ class PartnerCloseout(APIView):
                     LoanHistory.objects.create(
                         loan=loan,
                         value=loan.balance,
-                        date=datetime.now()
+                        date=datetime.now(),
+                        history_type=LoanHistory.ABONO,
+                        movement_type=LoanHistory.OUT
                     )
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
                 if loan.balance > 0:
@@ -221,7 +223,9 @@ class PartnerCloseout(APIView):
                         loan=loan,
                         value=total_loan,
                         value_cop=loan.balance_cop,
-                        date=datetime.now()
+                        date=datetime.now(),
+                        history_type=LoanHistory.ABONO,
+                        movement_type=LoanHistory.OUT
                     )
 
     def generate_closeout(self, request):
