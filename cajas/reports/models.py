@@ -17,10 +17,14 @@ class RankingOffice(models.Model):
             )
         )
     )
-    month = models.DateField(
-        'Mes ranking',
+    start_date = models.DateField(
+        'Fecha inicio ranking',
+        default=date.today()
+    )
+    end_date = models.DateField(
+        'Fecha fin ranking',
         default=date.today()
     )
 
     def __str__(self):
-        return "Valores Ranking {}".format(self.month)
+        return "Valores Ranking"

@@ -20,23 +20,21 @@ class ReportEmployeeSalary(APIView):
         office_country_pk = request.query_params.get('office_country', None)
         office_pk = request.query_params.get('office', None)
         employee_pk = request.query_params.get('employee', None)
+        date_start = request.query_params.get('date_start', None)
+        date_end = request.query_params.get('date_end', None)
 
         employees = Employee.objects.filter(user__related_collector_units__isnull=False).distinct()
         login = requests.get('http://external.vnmas.net/api/Session/Login/c184Ext/Gj7uQU')
         login = login.json()
         token = login[0]['data'][0]['user']['token']
-        now = date.today()
-        today = now.strftime('%Y%m%d')
-        five_days_early = now - timedelta(days=6)
-        five_days_early_str = five_days_early.strftime('%Y%m%d')
         if employee_pk:
             employee = Employee.objects.get(pk=employee_pk)
             unit = employee.user.related_collector_units.get()
             unit_venda = requests.get(
                 'http://external.vnmas.net/api/Vmas/getInfoByPeriodAndRoute/{}/{}/{}/{}'.format(
                     token,
-                    five_days_early_str,
-                    today,
+                    date_start,
+                    date_end,
                     unit.name,
                 )
             )
@@ -46,8 +44,8 @@ class ReportEmployeeSalary(APIView):
             values = dict()
             values['employee'] = employee.__str__()
             values['total_collection'] = total_collection
-            values['init_date'] = five_days_early
-            values['end_date'] = now
+            values['init_date'] = date_start
+            values['end_date'] = date_end
             values['total_collection'] = total_collection
             if employee.salary_type == Employee.PERCENTAGE:
                 values['value'] = (total_collection * employee.salary) / 100
@@ -65,8 +63,8 @@ class ReportEmployeeSalary(APIView):
                 unit_venda = requests.get(
                     'http://external.vnmas.net/api/Vmas/getInfoByPeriodAndRoute/{}/{}/{}/{}'.format(
                         token,
-                        five_days_early_str,
-                        today,
+                        date_start,
+                        date_end,
                         unit.name,
                     )
                 )
@@ -76,8 +74,8 @@ class ReportEmployeeSalary(APIView):
                 values = dict()
                 values['employee'] = employee.__str__()
                 values['total_collection'] = total_collection
-                values['init_date'] = five_days_early
-                values['end_date'] = now
+                values['init_date'] = date_start
+                values['end_date'] = date_end
                 if employee.salary_type == Employee.PERCENTAGE:
                     values['value'] = (total_collection * employee.salary) / 100
                 else:
@@ -95,8 +93,8 @@ class ReportEmployeeSalary(APIView):
                     unit_venda = requests.get(
                         'http://external.vnmas.net/api/Vmas/getInfoByPeriodAndRoute/{}/{}/{}/{}'.format(
                             token,
-                            five_days_early_str,
-                            today,
+                            date_start,
+                            date_end,
                             unit.name,
                         )
                     )
@@ -106,8 +104,8 @@ class ReportEmployeeSalary(APIView):
                     values = dict()
                     values['employee'] = employee.__str__()
                     values['total_collection'] = total_collection
-                    values['init_date'] = five_days_early
-                    values['end_date'] = now
+                    values['init_date'] = date_start
+                    values['end_date'] = date_end
                     if employee.salary_type == Employee.PERCENTAGE:
                         values['value'] = (total_collection * employee.salary) / 100
                     else:
@@ -128,8 +126,8 @@ class ReportEmployeeSalary(APIView):
                     unit_venda = requests.get(
                         'http://external.vnmas.net/api/Vmas/getInfoByPeriodAndRoute/{}/{}/{}/{}'.format(
                             token,
-                            five_days_early_str,
-                            today,
+                            date_start,
+                            date_end,
                             unit.name,
                         )
                     )
@@ -139,8 +137,8 @@ class ReportEmployeeSalary(APIView):
                     values = dict()
                     values['employee'] = employee.__str__()
                     values['total_collection'] = total_collection
-                    values['init_date'] = five_days_early
-                    values['end_date'] = now
+                    values['init_date'] = date_start
+                    values['end_date'] = date_end
                     if employee.salary_type == Employee.PERCENTAGE:
                         values['value'] = (total_collection * employee.salary) / 100
                     else:
