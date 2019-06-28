@@ -15,7 +15,6 @@ from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.core.services.email_service import EmailManager
-from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
 from cajas.movement.models.movement_office import MovementOffice
 from cajas.movement.services.box_colombia_service import MovementBoxColombiaManager
 from cajas.movement.services.don_juan_service import DonJuanManager
