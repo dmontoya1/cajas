@@ -31,27 +31,22 @@ class LoanList(LoginRequiredMixin, TemplateView):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        try:
-            employee = Employee.objects.get(
-                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
-        except Employee.DoesNotExist:
-            employee = None
-        try:
-            if self.request.user.is_superuser or employee.is_admin_charge():
-                context['loans'] = Loan.objects.filter(office=office)
-                context['partners'] = Partner.objects.filter(office=office, is_active=True)
-                context['employees'] = Employee.objects.filter(
-                    Q(user__is_active=True) &
-                    (Q(office_country=office) | Q(office=office.office))
-                )
-                now = datetime.now()
-                context['exchange'] = get_object_or_none(
-                    Exchange,
-                    currency=office.country.currency,
-                    month__month=now.month,
-                )
-        except Exception as e:
-            logger.exception(str(e))
+        print(self.request.user.is_secretary())
+
+        if self.request.user.is_superuser or self.request.user.is_secretary():
+            context['loans'] = Loan.objects.filter(office=office)
+            context['partners'] = Partner.objects.filter(office=office, is_active=True)
+            context['employees'] = Employee.objects.filter(
+                Q(user__is_active=True) &
+                (Q(office_country=office) | Q(office=office.office))
+            )
+            now = datetime.now()
+            context['exchange'] = get_object_or_none(
+                Exchange,
+                currency=office.country.currency,
+                month__month=now.month,
+            )
+        else:
             context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
         context['office'] = office
         return context
