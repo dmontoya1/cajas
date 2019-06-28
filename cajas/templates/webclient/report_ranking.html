@@ -84,11 +84,18 @@
             <div class="card">
               <div class="card-body">
                 <div id="ranking"></div>
-                <div class="col mt-4">
-                  <label for="date">Selecciona la fecha</label>
-                  <input type="text" class="form-control datetimepicker" id="date" name="date"
-                         placeholder="yyyy-mm-dd"
-                         style="width: 50%;" required autocomplete="off">
+                <div class="row">
+
+                  <div class="col-md-6 mt-4">
+                    <label for="date">Fecha de inicio</label>
+                    <input type="text" class="form-control datetimepicker" id="start-date" name="start-date"
+                           placeholder="yyyy-mm-dd" required autocomplete="off">
+                  </div>
+                  <div class="col-md-6 mt-4">
+                    <label for="date">Fecha de fin</label>
+                    <input type="text" class="form-control datetimepicker" id="end-date" name="end-date"
+                           placeholder="yyyy-mm-dd" required autocomplete="off">
+                  </div>
                 </div>
                 <button class="intext-btn save">Guardar</button>
                 <button class="intext-btn load">Cargar</button>
@@ -194,18 +201,18 @@
       });
 
       $('.load').click(function () {
-        date = $('#date').val()
-        console.log(date)
-        if (date == null || date == "") {
+        start_date = $('#start-date').val()
+        end_date = $('#end-date').val()
+        if ((start_date == null || start_date === "") && (end_date == null || end_date === "")) {
           Swal.fire({
             type: 'error',
             title: 'Oops...',
-            text: 'Debes seleccionar una fecha para cargar los datos',
+            text: 'Debes seleccionar la fecha de inicio de fin para cargas los datos',
           })
         } else {
           Swal.fire({
             title: 'Estas seguro?',
-            text: "Seguro deseas cargar los datos para el mes seleccionado?",
+            text: "Seguro deseas cargar los datos para las fechas seleccionadas?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -214,7 +221,7 @@
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.value) {
-              axios.get(`{% url 'api:reports:report_ranking_load' %}?date=${date}`)
+              axios.get(`{% url 'api:reports:report_ranking_load' %}?start_date=${start_date}&end_date=${end_date}`)
                 .then(function (response) {
                   fields = response.data[0].fields;
                   hot.loadData(fields);
@@ -236,7 +243,8 @@
       $('.save').click(function () {
         data_length = hot.countRows()
         data = hot.getData()
-        date = $('#date').val()
+        start_date = $('#start-date').val()
+        end_date = $('#end-date').val()
         if (date == null || date == "") {
           Swal.fire({
             type: 'error',
@@ -255,7 +263,7 @@
             cancelButtonText: 'Cancelar'
           }).then((result) => {
             if (result.value) {
-              axios.post(`{% url 'api:reports:report_ranking_save' %}?date=${date}`, data)
+              axios.post(`{% url 'api:reports:report_ranking_save' %}?start_date=${start_date}&end_date=${end_date}`, data)
                 .then(function (response) {
                   Swal.fire(
                     'Exitoso!',
@@ -309,6 +317,13 @@
         $('.table-ranking').removeClass('d-none')
 
 
+      });
+
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/12/01',//yesterday is minimum date(for today use 0 or -1970/01/01)
+        maxDate: '0',//tomorrow is maximum date calendar
+        timepicker: false,
       });
     });
 

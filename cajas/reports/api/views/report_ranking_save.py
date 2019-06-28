@@ -16,15 +16,18 @@ class ReportRankingSave(APIView):
 
     def post(self, request):
         data = request.data
-        date = request.query_params.get('date', None)
-        date = datetime.strptime(date, '%Y-%m-%d')
+        start_date = request.query_params.get('start_date', None)
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = request.query_params.get('end_date', None)
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
         RankingOffice.objects.filter(
-            month__month=date.month,
-            month__year=date.year
+            start_date=start_date,
+            end_date=end_date
         ).delete()
         RankingOffice.objects.create(
             fields=data,
-            month=date
+            start_date=start_date,
+            end_date=end_date
         )
 
         return Response(
