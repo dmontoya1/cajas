@@ -287,7 +287,13 @@
                       <tr>
                         <td>{{ m.responsible.get_full_name }}</td>
                         <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
-                        <td>{{ m.concept.name }}</td>
+                        <td>
+                          {% if m.concept.name == 'Inversión Unidad' or m.concept.name == 'Retiro unidad' %}
+                            {{ m.concept.name }} ({{ m.unit.name }})
+                          {% else %}
+                            {{ m.concept.name }}
+                          {% endif %}
+                        </td>
                         <td>{{ m.detail }}</td>
                         <td>
                           {% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
