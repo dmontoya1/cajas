@@ -102,13 +102,16 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                         withdraws_values = withdraws[0]['data']
                         for i in withdraws_values:
                             withdraw = i['withdrawal']
-                            if user.pk == int(withdraw['comment']):
-                                values = dict()
-                                values['route'] = withdraw['route']
-                                values['date'] = withdraw['date']
-                                values['comment'] = withdraw['comment']
-                                values['value'] = withdraw['value']
-                                withdraws_list.append(values)
+                            try:
+                                if user.pk == int(withdraw['comment']):
+                                    values = dict()
+                                    values['route'] = withdraw['route']
+                                    values['date'] = withdraw['date']
+                                    values['comment'] = withdraw['comment']
+                                    values['value'] = withdraw['value']
+                                    withdraws_list.append(values)
+                            except:
+                                pass
                 except Exception as e:
                     print(e)
                 visited.append(unit.name)
@@ -135,13 +138,16 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
                     investments_values = investments[0]['data']
                     for j in investments_values:
                         investment = j['investment']
-                        if user.pk == int(investment['comment']):
-                            values = dict()
-                            values['route'] = investment['route']
-                            values['date'] = investment['date']
-                            values['comment'] = investment['comment']
-                            values['value'] = investment['value']
-                            investments_list.append(values)
+                        try:
+                            if user.pk == int(investment['comment']):
+                                values = dict()
+                                values['route'] = investment['route']
+                                values['date'] = investment['date']
+                                values['comment'] = investment['comment']
+                                values['value'] = investment['value']
+                                investments_list.append(values)
+                        except:
+                            pass
                 visited.append(unit.name)
         return investments_list
 
