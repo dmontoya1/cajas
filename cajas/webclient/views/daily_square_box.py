@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -84,6 +84,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
             currency=office.country.currency,
             month__month=now.month,
         )
+        today = datetime.today() - timedelta(hours=5)
         context['box'] = box_daily_square
         context['offices'] = offices
         context['office'] = office
@@ -92,7 +93,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['box_user'] = user
         context['users'] = users
         context['units'] = units
-        context['today'] = datetime.today().strftime('%d/%m/%Y')
+        context['today'] = today.strftime('%d/%m/%Y')
         context['past_mvments'] = past_mvments
         context['categories'] = Category.objects.all()
 
