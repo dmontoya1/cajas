@@ -577,35 +577,19 @@
     $('#value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange').data('value'))
-      if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar }}') * parseFloat(exchange)
-        $('#value_cop').val(parseFloat(total).toFixed(2))
-      } else {
-        $('#value_cop').val(value * exchange)
-      }
-
+      $('#value_cop').val(value * exchange)
     })
 
     $('#interest_value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar_abono }}') * parseFloat(exchange)
-        $('#value_cop_interes').val(parseFloat(total).toFixed(2))
-      } else {
-        $('#value_cop_interes').val(value * exchange)
-      }
+      $('#value_cop_interes').val(value * exchange)
     })
 
     $('#abono_value').keyup(function () {
       value = parseInt($(this).val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar_abono }}') * parseFloat(exchange)
-        $('#value_cop_abono').val(parseFloat(total).toFixed(2))
-      } else {
-        $('#value_cop_abono').val(value * exchange)
-      }
+      $('#value_cop_abono').val(value * exchange)
     })
 
     $('#table tbody').on('click', '.add-pay', function () {
@@ -649,12 +633,7 @@
       $('#interest_value').val($(this).data('interest'))
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      if ('{{ office.country}}' === 'Guatemala') {
-        total = parseFloat(value) / parseFloat('{{ exchange.exchange_dolar_abono }}') * parseFloat(exchange)
-        $('#value_cop_interes').val(parseFloat(total).toFixed(2))
-      } else {
-        $('#value_cop_interes').val(value * exchange)
-      }
+      $('#value_cop_interes').val(value * exchange)
     })
 
     $('#table tbody').on('click', '.add-new-loan', function () {
