@@ -165,7 +165,7 @@ class PartnerCloseout(APIView):
             month__month=datetime.now().month,
         )
         for loan in loans:
-            
+
             if loan.loan_type == LoanType.SOCIO_DIRECTO:
                 if loan.balance > 0:
                     concept = Concept.objects.get(name='Pago Abono préstamo socio')
