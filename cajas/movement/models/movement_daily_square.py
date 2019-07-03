@@ -105,11 +105,6 @@ class MovementDailySquare(MovementMixin):
             return "Movimiento de {}".format(self.box_daily_square.user)
         return "Movimiento de Cuadre diario"
 
-    def __init__(self, *args, **kwargs):
-        super(MovementDailySquare, self).__init__(*args, **kwargs)
-        self.__movement_type = self.movement_type
-        self.__value = self.value
-
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'
         verbose_name_plural = 'Movimientos del Cuadre Diario'
