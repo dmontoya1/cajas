@@ -76,6 +76,7 @@ class UnitSell(APIView):
                 'ip': ip,
             }
             movement_partner_manager.create_simple(data_seller)
+
         if buyer_partner.code == 'DONJUAN':
             data_buyer = {
                 'box': BoxDonJuan.objects.get(office=seller_partner.office),
@@ -111,6 +112,8 @@ class UnitSell(APIView):
             }
             movement_partner_manager.create_simple(data_buyer)
 
+        seller_partner.buyer_unit_partner = buyer_partner
+        seller_partner.save()
         return Response(
             'El movimiento se ha aprobado exitosamente. Se han creado los movimientos en las cajas correspondientes',
             status=status.HTTP_201_CREATED
