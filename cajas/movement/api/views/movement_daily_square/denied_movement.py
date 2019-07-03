@@ -26,13 +26,13 @@ class DeniedMovement(APIView):
         movement.review = True
         movement.status = MovementDailySquare.DENIED
         movement.detail += ' (RECHAZADO)'
-        movement.save()
         if movement.movement_type == 'IN':
             box.balance -= movement.value
         else:
             box.balance += movement.value
-        movement.value = 0
         box.save()
+        movement.value = 0
+        movement.save()
         return Response(
             'El movimiento se ha rechazado exitosamente. No se creó ningún movimiento en otra caja',
             status=status.HTTP_201_CREATED
