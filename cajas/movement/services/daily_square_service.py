@@ -27,7 +27,6 @@ class MovementDailySquareManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        print(data)
         movement = MovementDailySquare.objects.create(
             box_daily_square=data['box'],
             concept=data['concept'],
@@ -183,14 +182,10 @@ class MovementDailySquareManager(object):
 
     def update_movement_box_value(self, data, movement_type):
         box = data['box']
-        print("DQ BOX: ", box)
         balance = box.balance
-        print("Initial Balance: ", balance)
         if movement_type == 'IN':
             balance -= int(data['movement'].value)
-            print(balance)
             balance += int(data['value'])
-            print(balance)
         else:
             balance += int(data['movement'].value)
             balance -= int(data['value'])

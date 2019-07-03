@@ -20,7 +20,6 @@ class ReportRankingLoad(APIView):
             start_date=start_date,
             end_date=end_date
         )
-        print(ranking)
         data = list(ranking.values())
         return JsonResponse(
             data,
