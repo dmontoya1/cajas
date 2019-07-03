@@ -131,7 +131,7 @@ class CreateDailySquareMovement(APIView):
             movement.movement_don_juan_usd = movement_djd
             movement.save()
 
-        elif concept.name == "Entrega de Efectivo a CD":
+        elif concept.name == "Traslado de Efectivo entre Cuadres Diarios":
             movement = daily_square_manager.create_movement(data)
             dq_target = get_object_or_404(User, pk=request.POST['dq'])
             box_daily_square_target = BoxDailySquare.objects.get(user=dq_target, office=office_)

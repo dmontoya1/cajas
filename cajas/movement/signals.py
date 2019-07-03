@@ -37,10 +37,8 @@ def save_balance_box_colombia(sender, **kwargs):
 @receiver(post_save, sender=MovementDailySquare)
 def save_balance_daily_square(sender, **kwargs):
     if kwargs.get('created'):
-        print("CREATED MV, SAVING BALANCE")
+        print("SIGNAL")
         instance = kwargs.get('instance')
-        print(instance)
-        print(instance.value)
         if instance.box_daily_square.balance:
             l_balance = instance.box_daily_square.balance
         else:
