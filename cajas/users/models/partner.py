@@ -69,6 +69,13 @@ class Partner(models.Model):
         'Socio activo?',
         default=True
     )
+    sell_unit_partner = models.ForeignKey(
+        'self',
+        verbose_name='Socio al que se le vendio la ultima unidad',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name = 'Socio'

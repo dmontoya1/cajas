@@ -10,9 +10,6 @@ from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from ....models.movement_daily_square import MovementDailySquare
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 
-from cajas.units.models.unitItems import UnitItems
-from cajas.units.models.units import Unit
-
 
 class DeniedMovement(APIView):
     """
@@ -28,11 +25,13 @@ class DeniedMovement(APIView):
         movement.denied_detail = request.data['text']
         movement.review = True
         movement.status = MovementDailySquare.DENIED
+        movement.detail += ' (RECHAZADO)'
         movement.save()
         if movement.movement_type == 'IN':
             box.balance -= movement.value
         else:
             box.balance += movement.value
+        movement.value = 0
         box.save()
         return Response(
             'El movimiento se ha rechazado exitosamente. No se creó ningún movimiento en otra caja',
