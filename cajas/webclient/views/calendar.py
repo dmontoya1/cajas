@@ -23,7 +23,7 @@ class Calendar(LoginRequiredMixin, TemplateView):
         context = super(Calendar, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        superv = {}
+        group_supervisors = Group.objects.get(pk=self.kwargs['pk'])
         context['office'] = office
         units = Unit.objects.filter(Q(partner__office=office) |
                                     (Q(partner__code='DONJUAN') &
@@ -39,31 +39,12 @@ class Calendar(LoginRequiredMixin, TemplateView):
             if group and group.units.all().exists():
                 units = group.units.filter(partner__office=office)
         except:
-            if self.request.user.is_superuser:
-                superv = Employee.objects.filter(
-                    (Q(office_country=office) |
-                     Q(office=office.office)) &
-                    Q(user__is_active=True)
-                )
-            else:
-                superv = []
-            context['supervisors'] = superv
-            return context
+            pass
 
-        if str(employee.charge) == "Administrador de Grupo":
-            try:
-                group = get_object_or_404(Group, admin=employee)
-                superv = GroupEmployee.objects.filter(
-                    group=group,
-                )
-            except Exception as e:
-                print(e)
-        else:
-            superv = Employee.objects.filter(
-                (Q(office_country=office) |
-                 Q(office=office.office)) &
-                Q(user__is_active=True)
-            )
+        superv = GroupEmployee.objects.filter(
+            group=group_supervisors,
+        )
+        context['group'] = group_supervisors
         context['units'] = units
         context['supervisors'] = superv
         return context

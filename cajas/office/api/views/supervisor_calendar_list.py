@@ -3,8 +3,6 @@ from django.http import JsonResponse
 
 import datetime
 
-from django.shortcuts import get_object_or_404
-
 from cajas.office.models.supervisorCalendar import SupervisorCalendar
 from cajas.office.api.serializer.supervisor_calendar_serializer import SupervisorCalendarSerializer
 from cajas.users.models.group_employee import GroupEmployee
@@ -39,59 +37,25 @@ def get_calendar(super_calendar):
 
 
 class SupervisorCalendarList(APIView):
+
     serializer_class = SupervisorCalendarSerializer
 
     def get(self, request, format=None):
-        calendar = []
         super_calendar = []
-        try:
-            user_type = request.user.related_employee.get()
-        except:
-            if request.user.is_superuser:
-                super_calendar = SupervisorCalendar.objects.filter(
-                    office__slug=self.request.GET.get("office"),
-                    assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=360),
-                        datetime.date.today()
-                    ]
-                )
-                calendar = get_calendar(super_calendar)
-            else:
-                calendar = []
-            return JsonResponse(calendar, safe=False)
-
-        if user_type.is_admin_charge():
-            super_calendar = SupervisorCalendar.objects.filter(
-                office__slug=self.request.GET.get("office"),
+        group = Group.objects.get(pk=self.request.GET.get('group'))
+        superv = GroupEmployee.objects.filter(
+            group=group,
+        )
+        for i in superv:
+            obj = SupervisorCalendar.objects.filter(
+                supervisor=i.supervisor.user,
                 assigned_date__range=[
                     datetime.date.today() - datetime.timedelta(days=360),
                     datetime.date.today()
                 ]
             )
-        elif str(user_type.charge) == "Administrador de Grupo":
-            group = get_object_or_404(Group, admin=user_type)
-            superv = GroupEmployee.objects.filter(
-                group=group,
-            )
-            for i in superv:
-                obj = SupervisorCalendar.objects.filter(
-                    supervisor=i.supervisor.user,
-                    assigned_date__range=[
-                        datetime.date.today() - datetime.timedelta(days=360),
-                        datetime.date.today()
-                    ]
-                )
-                for o in obj:
-                    if o is not None:
-                        super_calendar.append(o)
-
-        elif str(user_type.charge) == "Supervisor":
-            super_calendar = SupervisorCalendar.objects.filter(
-                office__slug=self.request.GET.get("office"),
-                supervisor=request.user
-            )
-        else:
-            super_calendar = []
-
+            for o in obj:
+                if o is not None:
+                    super_calendar.append(o)
         calendar = get_calendar(super_calendar)
         return JsonResponse(calendar, safe=False)
