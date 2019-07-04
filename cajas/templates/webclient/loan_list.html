@@ -197,7 +197,6 @@
                               <button type="button" class="add-movement add-interest" data-id="{{ l.id }}"
                                       data-toggle="modal"
                                       data-interest="{{ l.get_interest_payment }}"
-
                                       data-target="#modalAddInterest">
                                 <i class="fas fa-plus mr-1"></i>
                                 Interés
@@ -388,7 +387,7 @@
                   <label for="exchange">Tasa de cambio</label>
                   <input class="form-control" type="text" name="exchange" id="exchange"
                          value="{{ exchange.exchange_cop }}" data-value="{{ exchange.exchange_cop }}"
-                         placeholder="Ingresa el plazo en meses" readonly>
+                         placeholder="No hay tasa de cambio configurada" readonly>
                 </div>
               </div>
             </div>
@@ -434,7 +433,7 @@
                 <label for="exchange_abono">Tasa de cambio</label>
                 <input class="form-control" type="text" name="exchange" id="exchange_abono"
                        value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}"
-                       placeholder="Ingresa el plazo en meses" readonly>
+                       placeholder="No hay tasa de cambio configurada" readonly>
               </div>
             </div>
             <hr>
@@ -481,6 +480,7 @@
                 <label for="exchange_abono">Tasa de cambio</label>
                 <input class="form-control" type="text" name="exchange" id="exchange_abono"
                        value="{{ exchange.exchange_cop_abono }}" data-value="{{ exchange.exchange_cop_abono }}"
+                       placeholder="No hay tasa de cambio configurada"
                        readonly>
               </div>
             </div>
@@ -628,10 +628,11 @@
 
     $('#table tbody').on('click', '.add-interest', function () {
       $('#loan_interest').val($(this).data('id'))
+      $('#value_cop_interes').val($(this).data('interest'))
       $('#interest_value').val($(this).data('interest'))
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      $('#value_cop_interes').val(value * exchange)
+      $('#interest_value').val(Math.round(value / exchange))
     })
 
     $('#table tbody').on('click', '.add-new-loan', function () {

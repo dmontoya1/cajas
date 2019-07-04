@@ -95,7 +95,7 @@ class Loan(models.Model):
     def get_interest_payment(self):
         """Obtiene el pago del interes mensual del prestamo
         """
-        return int((self.balance * self.interest) / 100)
+        return int((self.balance_cop * self.interest) / 100)
 
     def get_interest_actual_month_payment(self):
         month = datetime.now().month
