@@ -197,7 +197,6 @@
                               <button type="button" class="add-movement add-interest" data-id="{{ l.id }}"
                                       data-toggle="modal"
                                       data-interest="{{ l.get_interest_payment }}"
-
                                       data-target="#modalAddInterest">
                                 <i class="fas fa-plus mr-1"></i>
                                 Interés
@@ -629,10 +628,11 @@
 
     $('#table tbody').on('click', '.add-interest', function () {
       $('#loan_interest').val($(this).data('id'))
+      $('#value_cop_interes').val($(this).data('interest'))
       $('#interest_value').val($(this).data('interest'))
       value = parseInt($('#interest_value').val())
       exchange = parseInt($('#exchange_abono').data('value'))
-      $('#value_cop_interes').val(value * exchange)
+      $('#interest_value').val(Math.round(value / exchange))
     })
 
     $('#table tbody').on('click', '.add-new-loan', function () {

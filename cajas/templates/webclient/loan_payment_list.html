@@ -170,7 +170,7 @@
                        cellspacing="0" style="width:100%">
                   <div class="row">
                     <div class="col-md-7">
-                      <h3 class="mb-4">{{ loan }}</h3>
+                      <h3 class="mb-4">{{ loan }} ({{ loan.loan_type }})</h3>
                     </div>
                     <div class="col-md-5">
                       <h3 class="float-right">Balance Prestamo: ${{ loan.balance|floatformat:2|intcomma }}</h3>
@@ -477,7 +477,14 @@
         dom: 'lBfrtip',
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
         buttons: [
-          'excel', 'print'
+          {
+            extend: 'excelHtml5',
+            title: '{{ loan }} ({{ loan.loan_type }})'
+          },
+          {
+            extend: 'print',
+            title: '{{ loan }} ({{ loan.loan_type }})'
+          }
         ],
         "order": [[0, "des"]],
         language: {
