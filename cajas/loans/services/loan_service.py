@@ -34,8 +34,12 @@ class LoanManager(object):
     def create_partner_loan(self, data):
         self.__validate_data(data)
         lender_partner = get_object_or_404(Partner, pk=data['lender'])
-        loan = Loan.objects.filter(lender=lender_partner.user, loan_type=LoanType.SOCIO_DIRECTO).last()
         office = get_object_or_404(OfficeCountry, pk=data['office'])
+        loan = Loan.objects.filter(
+            lender=lender_partner.user,
+            loan_type=LoanType.SOCIO_DIRECTO,
+            office=office
+        ).last()
         if lender_partner.direct_partner:
             provider = lender_partner.direct_partner
         else:
