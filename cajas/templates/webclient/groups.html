@@ -56,14 +56,6 @@
         </li>
       {% endif %}
       {% if perms.office.change_supervisorcalendar %}
-        <li class="menu-item-has-children dropdown">
-          <a href="{% url 'webclient:calendar' office.slug %}">
-            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Calendario Supervisor
-          </a>
-        </li>
-      {% endif %}
-      {% if perms.office.change_supervisorcalendar %}
         <li class="menu-item-has-children dropdown active">
           <a href="{% url 'webclient:groups' office.slug %}">
             <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -171,7 +163,10 @@
                       <td>
                         {{ e }}
                       </td>
-                      <td class="text-center">
+                      <td >
+                        {% if perms.office.change_supervisorcalendar %}
+                          <a href="{% url 'webclient:calendar' office.slug e.pk %}" class="show-group">Ver calendario</a>
+                        {% endif %}
                         <a href="#" class="show-group" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#showGroup">Ver grupo</a>
                         {% if perms.users.add_groupemployee %}

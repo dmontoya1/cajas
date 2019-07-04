@@ -69,14 +69,7 @@
           </a>
         </li>
       {% endif %}
-      {% if perms.office.change_supervisorcalendar %}
-        <li class="menu-item-has-children dropdown">
-          <a href="{% url 'webclient:calendar' office.slug %}">
-            <img src="{% static 'icons/ICONOS-06.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Calendario Supervisor
-          </a>
-        </li>
-      {% endif %}
+
       {% if perms.office.change_supervisorcalendar %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:groups' office.slug %}">

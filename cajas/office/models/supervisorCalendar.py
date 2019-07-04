@@ -42,7 +42,7 @@ class SupervisorCalendar(models.Model):
     )
 
     def __str__(self):
-        return 'calendario'
+        return 'calendario {}'.format(self.supervisor)
 
     class Meta:
         verbose_name = 'Calendario de supervisor'
