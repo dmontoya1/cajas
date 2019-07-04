@@ -565,15 +565,17 @@
     })
 
     $('#value').keyup(function () {
-      value = parseInt($(this).val())
-      exchange = parseInt($('#exchange').data('value'))
-      $('#value_cop').val(value * exchange)
+      value = $(this).val()
+      exchange = $('#exchange').data('value')
+      total = value * exchange
+      $('#value_cop').val(parseInt(total))
     })
 
     $('#interest_value').keyup(function () {
-      value = parseInt($(this).val())
-      exchange = parseInt($('#exchange_abono').data('value'))
-      $('#value_cop_interes').val(value * exchange)
+      value = $(this).val()
+      exchange = $('#exchange_abono').data('value')
+      total = value * exchange
+      $('#value_cop_interes').val(parseInt(total))
     })
 
     $('#abono_value').keyup(function () {
