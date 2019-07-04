@@ -577,9 +577,10 @@
     })
 
     $('#abono_value').keyup(function () {
-      value = parseInt($(this).val())
-      exchange = parseInt($('#exchange_abono').data('value'))
-      $('#value_cop_abono').val(value * exchange)
+      value = $(this).val()
+      exchange = $('#exchange_abono').data('value')
+      total = value * exchange
+      $('#value_cop_abono').val(parseInt(total))
     })
 
     $('#table tbody').on('click', '.add-pay', function () {
