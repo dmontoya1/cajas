@@ -32,7 +32,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
 
-        if self.request.user.is_superuser or self.request.user.is_secretary():
+        if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
             context['loans'] = Loan.objects.filter(office=office)
             context['partners'] = Partner.objects.filter(office=office, is_active=True)
             context['employees'] = Employee.objects.filter(
