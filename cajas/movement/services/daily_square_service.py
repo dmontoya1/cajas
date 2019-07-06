@@ -96,7 +96,14 @@ class MovementDailySquareManager(object):
         return movement.movement_type != movement_type
 
     def __is_money_delivery_and_target_has_changed(self, concept, movement, dq):
-        return concept.name == 'Traslado de Efectivo entre Cuadres Diarios' and int(movement.user.pk) != int(dq)
+        print("Cambio el traslado de efectivo??")
+        if concept.name == 'Traslado de Efectivo entre Cuadres Diarios':
+            if movement.user:
+                return int(movement.user.pk) != int(dq)
+            else:
+                return True
+        else:
+            return False
 
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
@@ -142,7 +149,8 @@ class MovementDailySquareManager(object):
 
     def __update_new_target_user_on_delivery_money(self, data):
         current_movement = self.__get_movement_by_pk(data['pk']).first()
-        current_movement.movement_cd.delete()
+        if current_movement.movement_cd:
+            current_movement.movement_cd.delete()
         data['box'] = self.__get_user_box_daily_square(data['dq'], data['office_slug'])
         data['concept'] = self.__get_current_concept(data['concept']).counterpart
         data['unit'] = None
@@ -211,6 +219,7 @@ class MovementDailySquareManager(object):
             movement_cd.delete()
 
     def update_daily_square_movement(self, data):
+        print(data)
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_daily_square.first()
         current_user_box_daily_square = self.__get_user_box_daily_square(data['user_id'], data['office_slug'])
