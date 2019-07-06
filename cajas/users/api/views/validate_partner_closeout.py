@@ -1,4 +1,6 @@
 
+import logging
+
 from django.shortcuts import get_object_or_404
 
 from rest_framework import status
@@ -6,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from cajas.users.models.partner import Partner
+
+logger = logging.getLogger(__name__)
 
 
 class ValidatePartnerCloseout(APIView):
@@ -27,6 +31,8 @@ class ValidatePartnerCloseout(APIView):
     def validate_units(self, data):
         partner = get_object_or_404(Partner, pk=data['partner'])
         units = partner.related_units.all()
+        logger.exception("Unidades del socio {}: {} ".format(partner, units))
+        logger.exception(units)
         if len(units) > 0:
             return True
         return False
