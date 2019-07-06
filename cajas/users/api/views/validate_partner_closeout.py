@@ -30,7 +30,7 @@ class ValidatePartnerCloseout(APIView):
 
     def validate_units(self, data):
         partner = get_object_or_404(Partner, pk=data['partner'])
-        units = partner.related_units.all()
+        units = partner.related_units.filter(is_active=True)
         logger.exception("Unidades del socio {}: {} ".format(partner, units))
         logger.exception(units)
         if len(units) > 0:
