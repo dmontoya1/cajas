@@ -4,10 +4,13 @@ from datetime import datetime, date
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from cajas.boxes.models.box_don_juan import BoxDonJuan
-from cajas.boxes.models.box_partner import BoxStatus
 from cajas.users.models.partner import Partner
-from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
@@ -15,6 +18,7 @@ from cajas.webclient.views.get_ip import get_ip
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
 from ..models.user_place import UserPlace
+from ..models.user_place_pay import UserPlacePay
 
 
 class ChainManager(object):
@@ -53,18 +57,47 @@ class ChainManager(object):
                 place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
             )
 
+    def get_partner_by_user_and_office(self, user, office):
+        return Partner.objects.get(user=user, office=office)
+
+    def create_chain_pay_partner_movement(self, data, user_place):
+        try:
+            concept = Concept.objects.get(name="Pago Puesto Cadena")
+            partner = self.get_partner_by_user_and_office(user_place.user, data['office'])
+            print(partner)
+            MovementPartner.objects.create(
+                box_partner=partner.box,
+                concept=concept,
+                movement_type='OUT',
+                value=data['pay_value'],
+                detail='Pagos puesto de la cadena {}'.format(user_place.chain_place.chain),
+                date=datetime.now(),
+                responsible=data['responsible'],
+                ip=data['ip']
+            )
+            return True
+        except Partner.DoesNotExist:
+            return False
+
     def internal_chain_pay(self, data):
-        pass
+        user_place = UserPlace.objects.get(pk=data['user_place'])
+        parter_payment = self.create_chain_pay_partner_movement(data, user_place)
+        if parter_payment:
+            UserPlacePay.objects.create(
+                user_place=user_place,
+                pay_value=data['pay_value'],
+                date=data['date']
+            )
+            return True
+        return False
 
     def user_place_update(self, request):
         data = request.data
         place = get_object_or_404(UserPlace, pk=data['user_place'])
         new_partner = get_object_or_404(Partner, code=data['code'])
-        print(new_partner)
         office = new_partner.office
         old_user = place.user
         old_partner = get_object_or_404(Partner, user=old_user, office=office)
-        print(old_partner)
         today = date.today()
         chain = place.chain_place.chain
         pay_date = place.chain_place.pay_date
