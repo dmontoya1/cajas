@@ -26,3 +26,4 @@ class MovementBoxColombia(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento de la caja de Colombia'
         verbose_name_plural = 'Movimientos de la caja de Colombia'
+        ordering = ['date', ]

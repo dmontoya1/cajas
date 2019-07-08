@@ -39,3 +39,4 @@ class MovementWithdraw(MovementMixin):
     class Meta:
         verbose_name = 'Requerimiento de retiro'
         verbose_name_plural = "Requerimientos de retiro"
+        ordering = ['date', ]

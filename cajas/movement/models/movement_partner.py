@@ -26,3 +26,4 @@ class MovementPartner(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento del socio'
         verbose_name_plural = 'Movimientos del socio'
+        ordering = ['date', ]
