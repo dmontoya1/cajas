@@ -51,3 +51,4 @@ class MovementBetweenOfficeRequest(MovementMixin):
     class Meta:
         verbose_name = 'Requerimiento de Movimiento entre oficinas'
         verbose_name_plural = 'Requerimientos de Movimientos entre oficinas'
+        ordering = ['date', ]

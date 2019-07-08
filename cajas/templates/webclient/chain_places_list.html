@@ -364,12 +364,20 @@
       $('#partner-chain').select2({
         language: "es"
       });
+
+      $('.datetimepicker').datetimepicker({
+        format: 'Y-m-d',
+        minDate: '-1970/12/01',
+        maxDate: '+1970/12/01',
+        timepicker: false,
+      });
     });
 
     $('.user-place-pay').on('click', function () {
       $('#user_place').val($(this).data('id'))
       $('#pay_value').val(parseInt($(this).data('value')))
     })
+
     $('.user-edit-place').on('click', function () {
       $('#user_place_edit').val($(this).data('id'))
     })

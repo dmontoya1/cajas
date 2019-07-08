@@ -47,7 +47,7 @@ class ChainManager(object):
         counters = data['counters']
         for j in range(0, int(counters['counter_{}'.format(i)])):
             partner = get_object_or_404(Partner, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
-            user_place = UserPlace.objects.create(
+            UserPlace.objects.create(
                 chain_place=place,
                 user=partner.user,
                 place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
@@ -60,9 +60,11 @@ class ChainManager(object):
         data = request.data
         place = get_object_or_404(UserPlace, pk=data['user_place'])
         new_partner = get_object_or_404(Partner, code=data['code'])
+        print(new_partner)
         office = new_partner.office
         old_user = place.user
         old_partner = get_object_or_404(Partner, user=old_user, office=office)
+        print(old_partner)
         today = date.today()
         chain = place.chain_place.chain
         pay_date = place.chain_place.pay_date

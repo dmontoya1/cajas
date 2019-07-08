@@ -47,3 +47,4 @@ class MovementRequest(MovementMixin):
     class Meta:
         verbose_name = 'Requerimiento de Movimiento'
         verbose_name_plural = "Requerimientos de movimientos"
+        ordering = ['date', ]

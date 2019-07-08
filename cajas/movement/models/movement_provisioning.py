@@ -36,3 +36,4 @@ class MovementProvisioning(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento de aprovisionamiento'
         verbose_name_plural = 'Movimientos de aprovisionamiento'
+        ordering = ['date', ]
