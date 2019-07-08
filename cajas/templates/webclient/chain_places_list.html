@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load static humanize %}
+{% load static humanize user_in_office %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
@@ -220,20 +220,21 @@
                                     <td>{{ u.place_porcentaje }}%</td>
                                     <td>${{ u.get_user_value|intcomma }}</td>
                                     <td>
-                                      {% if u.user.partner.get.office.slug == office.slug and perms.chains.add_userplacepay %}
-                                        <button type="button" class="btn-dynamic user-place-pay" data-id="{{ u.pk }}"
-                                                data-value="{{ u.get_user_value }}"
-                                                data-toggle="modal" data-target="#modalAddPayment">
-                                          Pagar Puesto
-                                        </button>
-                                        <button type="button" class="btn-dynamic user-edit-place" data-id="{{ u.pk }}"
-                                                data-value="{{ u.get_user_value }}"
-                                                data-toggle="modal" data-target="#modalEditPlace">
-                                          Editar Puesto
-                                        </button>
-                                      {% else %}
-                                        Este puesto se paga en otra oficina
-                                      {% endif %}
+                                    {% user_in_office u.user office as user_is_in_office %}
+                                    {% if user_is_in_office and perms.chains.add_userplacepay %}
+                                      <button type="button" class="btn-dynamic user-place-pay" data-id="{{ u.pk }}"
+                                              data-value="{{ u.get_user_value }}"
+                                              data-toggle="modal" data-target="#modalAddPayment">
+                                        Pagar Puesto
+                                      </button>
+                                      <button type="button" class="btn-dynamic user-edit-place" data-id="{{ u.pk }}"
+                                              data-value="{{ u.get_user_value }}"
+                                              data-toggle="modal" data-target="#modalEditPlace">
+                                        Editar Puesto
+                                      </button>
+                                    {% else %}
+                                      Este puesto se paga en otra oficina
+                                    {% endif %}
                                     </td>
                                   </tr>
                                 {% endfor %}
