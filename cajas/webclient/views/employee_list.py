@@ -32,7 +32,7 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         try:
             employee = Employee.objects.get(
-                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+                Q(user=self.request.user) & Q(office_country=office))
         except Employee.DoesNotExist:
             employee = None
         try:

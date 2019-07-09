@@ -1,5 +1,3 @@
-from rest_framework.views import APIView
-from rest_framework import generics
 
 from django.shortcuts import get_object_or_404
 
@@ -10,7 +8,6 @@ from rest_framework import status
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 
 from cajas.inventory.models.brand import Brand
-from cajas.users.models.employee import Employee
 
 from ...serializers.movement_daily_square_request_item_serializer import MovementDailySquareRequestItemSerializer
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem

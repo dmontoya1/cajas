@@ -34,7 +34,7 @@ class Calendar(LoginRequiredMixin, TemplateView):
                                       ))).distinct()
         try:
             employee = Employee.objects.get(
-                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+                Q(user=self.request.user) & Q(office_country=office))
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
                 units = group.units.filter(partner__office=office)
