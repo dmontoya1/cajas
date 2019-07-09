@@ -28,15 +28,12 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         data = request.POST.copy()
-        print(self.kwargs['pk'])
         data['pk'] = self.kwargs['pk']
         data['responsible'] = request.user
         data['ip'] = get_ip(request)
         concept = Concept.objects.get(pk=request.POST['concept'])
         try:
-            print("Go to update")
             daily_square_manager.update_daily_square_movement(data)
-            print("Exit Update")
             if concept.name == "Compra de Inventario Unidad":
                 movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
                 items = MovementDailySquareRequestItem.objects.filter(movement=movement).delete()

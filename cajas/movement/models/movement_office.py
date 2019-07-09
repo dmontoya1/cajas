@@ -28,4 +28,4 @@ class MovementOffice(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento de la oficina'
         verbose_name_plural = 'Movimientos de la oficina'
-        ordering = ['date', ]
+        ordering = ['-date', '-pk']

@@ -217,31 +217,59 @@
         </div>
       {% endif %}
     {% else %}
-      {% for office in offices %}
-        <div class="row country-row">
-          <div class="col-12">
-            <div class="country-name">
-              <span>{{ office.office|upper }}</span>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-4 col-xlg-4 col-md-6">
-            <div class="card blog-widget">
-              <div class="card-body">
-                <a href="{% url 'webclient:employee_list' office.slug %}">
-                  <div class="blog-image">
-                    <img
-                      src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
-                      alt="img" class="img-responsive">
-                  </div>
-                  <span class="office-name">{{ office }}</span>
-                </a><br>
+      {% if offices %}
+        {% for office in offices %}
+          <div class="row country-row">
+            <div class="col-12">
+              <div class="country-name">
+                <span>{{ office.office|upper }}</span>
               </div>
             </div>
           </div>
-        </div>
-      {% endfor %}
+          <div class="row">
+            <div class="col-lg-4 col-xlg-4 col-md-6">
+              <div class="card blog-widget">
+                <div class="card-body">
+                  <a href="{% url 'webclient:employee_list' office.slug %}">
+                    <div class="blog-image">
+                      <img
+                        src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
+                        alt="img" class="img-responsive">
+                    </div>
+                    <span class="office-name">{{ office }}</span>
+                  </a><br>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% elif offices_country %}
+        {% for office in offices_country %}
+          <div class="row country-row">
+            <div class="col-12">
+              <div class="country-name">
+                <span>{{ office.office|upper }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-xlg-4 col-md-6">
+              <div class="card blog-widget">
+                <div class="card-body">
+                  <a href="{% url 'webclient:employee_list' office.slug %}">
+                    <div class="blog-image">
+                      <img
+                        src="{% if office.image %} {{ office.image.url }}{% else %}{% static 'images/country.jpg' %}{% endif %}"
+                        alt="img" class="img-responsive">
+                    </div>
+                    <span class="office-name">{{ office }}</span>
+                  </a><br>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     {% endif %}
   {% endif %}
 

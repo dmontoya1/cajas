@@ -2,7 +2,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from cajas.users.models.partner import Partner
+from cajas.users.models import Partner, Employee
 from cajas.office.models.office import Office
 from cajas.office.models.officeCountry import OfficeCountry
 
@@ -34,7 +34,24 @@ class Home(LoginRequiredMixin, TemplateView):
                     context['offices'] = user.related_employee.get().office_country.all()
             except Exception as e:
                 print(e)
-                context['actual_partners'] = Partner.objects.filter(user=user)
+                try:
+                    employees = Employee.objects.filter(user=user)
+                    if len(employees) > 0:
+                        offices = list()
+                        offices_country = list()
+                        for employee in employees:
+                            if employee.office.all().exists():
+                                for of in employee.office.all():
+                                    offices.append(of)
+                            if employee.office_country.all().exists():
+                                for of in employee.office_country.all():
+                                    offices_country.append(of)
+                        context['offices'] = offices
+                        context['offices_country'] = offices_country
+                    else:
+                        context['actual_partners'] = Partner.objects.filter(user=user)
+                except Employee.DoesNotExist:
+                    context['actual_partners'] = Partner.objects.filter(user=user)
         else:
             context['offices'] = Office.objects.all()
             context['all_offices'] = OfficeCountry.objects.all().order_by('office')
