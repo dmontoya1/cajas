@@ -24,3 +24,4 @@ class MovementDonJuan(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento de Don Juan'
         verbose_name_plural = 'Movimientos de Don Juan'
+        ordering = ['date', ]

@@ -53,7 +53,7 @@ class MovementMixin(models.Model):
         blank=True, null=True
     )
     balance = models.IntegerField(
-        'Saldo',
+        'Saldo a la fecha',
         default=0
     )
 
