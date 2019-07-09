@@ -41,7 +41,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             employee = None
         context['employee'] = employee
         try:
-            if self.request.user.is_superuser or employee.is_admin_charge():
+            if self.request.user.is_superuser or self.request.user.is_secretary or self.request.user.is_admin_senior:
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     is_active=True,
@@ -57,6 +57,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 context['partner'] = partners
         except Exception as e:
             logger.exception("Excepcion de Try: " + str(e))
+            print(e)
             partners = list()
             partner = Partner.objects.get(office=office, user=self.request.user)
             partners.append(partner)
@@ -69,6 +70,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
+        print(context)
         return context
 
     # def get_context_data(self, **kwargs):
