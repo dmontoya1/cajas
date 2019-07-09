@@ -62,7 +62,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
 
             else:
                 employee = Employee.objects.get(
-                    Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+                    Q(user=self.request.user) & Q(office_country=office))
                 groups = GroupEmployee.objects.filter(
                     Q(group__admin=employee) & Q(group__office=office)
                 )

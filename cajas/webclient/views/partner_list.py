@@ -36,7 +36,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(partner__office=office)
         try:
             employee = Employee.objects.filter(
-                Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office))).first()
+                Q(user=self.request.user) & Q(office_country=office)).first()
         except Employee.DoesNotExist:
             employee = None
         context['employee'] = employee
@@ -78,7 +78,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
     #     units = Unit.objects.filter(partner__office=office)
     #     try:
     #         employee = Employee.objects.get(
-    #             Q(user=self.request.user) & (Q(office=office.office) | Q(office_country=office)))
+    #             Q(user=self.request.user) & Q(office_country=office))
     #     except Employee.DoesNotExist:
     #         employee = None
     #     try:

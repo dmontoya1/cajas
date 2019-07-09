@@ -44,7 +44,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['dq_list'] = dq_list
         try:
             employee = Employee.objects.get(
-                Q(user=user) & (Q(office=office.office) | Q(office_country=office)))
+                Q(user=user) & Q(office_country=office))
 
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
