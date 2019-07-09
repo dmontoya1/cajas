@@ -108,4 +108,4 @@ class MovementDailySquare(MovementMixin):
     class Meta:
         verbose_name = 'Movimiento del Cuadre Diario'
         verbose_name_plural = 'Movimientos del Cuadre Diario'
-        ordering = ['date', ]
+        ordering = ['-date', '-pk']
