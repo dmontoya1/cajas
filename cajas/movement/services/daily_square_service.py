@@ -29,10 +29,16 @@ class MovementDailySquareManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        if len(MovementDailySquare.objects.filter(date=data['date'])) > 0:
-            last_movement = MovementDailySquare.objects.filter(date=data['date']).order_by('date', 'pk').last()
+        if len(MovementDailySquare.objects.filter(box_daily_square=data['box'], date=data['date'])) > 0:
+            last_movement = MovementDailySquare.objects.filter(
+                date=data['date'],
+                box_daily_square=data['box'],
+            ).order_by('date', 'pk').last()
         else:
-            last_movement = MovementDailySquare.objects.filter(date__lt=data['date']).order_by('date', 'pk').last()
+            last_movement = MovementDailySquare.objects.filter(
+                box_daily_square=data['box'],
+                date__lt=data['date']
+            ).order_by('date', 'pk').last()
         movement = MovementDailySquare.objects.create(
             box_daily_square=data['box'],
             concept=data['concept'],
@@ -50,6 +56,7 @@ class MovementDailySquareManager(object):
             last_balance = last_movement.balance
         except:
             last_balance = 0
+        print(last_balance)
         if movement.movement_type == MovementDailySquare.IN:
             movement.balance = int(last_balance) + int(movement.value)
         else:
