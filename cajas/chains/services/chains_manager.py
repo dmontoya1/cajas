@@ -64,7 +64,6 @@ class ChainManager(object):
         try:
             concept = Concept.objects.get(name="Pago Puesto Cadena")
             partner = self.get_partner_by_user_and_office(user_place.user, data['office'])
-            print(partner)
             MovementPartner.objects.create(
                 box_partner=partner.box,
                 concept=concept,
