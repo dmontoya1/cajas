@@ -219,7 +219,6 @@ class MovementDailySquareManager(object):
             movement_cd.delete()
 
     def update_daily_square_movement(self, data):
-        print(data)
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_daily_square.first()
         current_user_box_daily_square = self.__get_user_box_daily_square(data['user_id'], data['office_slug'])

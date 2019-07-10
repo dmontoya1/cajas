@@ -106,22 +106,24 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 for u in units:
                     if u.partner not in partners:
                         partners.append(u.partner)
-                context['partner'] = partners
+
             if employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
                 partner = Partner.objects.get(office=office, user=self.request.user)
-                partners.append(partner)
+                if partner not in partners:
+                    partners.append(partner)
                 mini_partners = Partner.objects.filter(direct_partner=partner)
                 for p in mini_partners:
                     if p not in partners:
                         partners.append(p)
             if self.request.user.groups.filter(name='Socios').exists():
                 partner = Partner.objects.get(office=office, user=self.request.user)
-                partners.append(partner)
+                if partner not in partners:
+                    partners.append(partner)
                 mini_partners = Partner.objects.filter(direct_partner=partner)
                 for p in mini_partners:
                     if p not in partners:
                         partners.append(p)
-
+            context['partner'] = partners
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office
