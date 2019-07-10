@@ -106,8 +106,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 for u in units:
                     if u.partner not in partners:
                         partners.append(u.partner)
-
-            if employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
+            elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
                 partner = Partner.objects.get(office=office, user=self.request.user)
                 if partner not in partners:
                     partners.append(partner)
