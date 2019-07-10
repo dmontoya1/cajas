@@ -3,16 +3,14 @@ import logging
 from django.db.models import Q
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.boxes.models.box_partner import BoxStatus
 from cajas.inventory.models.category import Category
-from cajas.users.models import Partner, Employee, DailySquareUnits
+from cajas.users.models import Partner, Employee
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
-from cajas.webclient.views.utils import get_object_or_none
 
 logger = logging.getLogger(__name__)
 
@@ -60,16 +58,12 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             logger.exception("Excepcion de Try: " + str(e))
             print(e)
             partners = list()
-            try:
-                partner = Partner.objects.get(office=office, user=self.request.user)
-                partners.append(partner)
-                mini_partners = Partner.objects.filter(direct_partner=partner)
-                for p in mini_partners:
-                    partners.append(p)
-                context['partner'] = partners
-            except Partner.DoesNotExist:
-                messages.add_message(self.request, messages.ERROR, 'No existe un socio para este usuario')
-                return context
+            partner = Partner.objects.get(office=office, user=self.request.user)
+            partners.append(partner)
+            mini_partners = Partner.objects.filter(direct_partner=partner)
+            for p in mini_partners:
+                partners.append(p)
+            context['partner'] = partners
 
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
