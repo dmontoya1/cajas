@@ -28,7 +28,7 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary or self.request.user.is_admin_senior:
+            if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
                 context['units'] = Unit.objects.filter(Q(partner__office=office) |
                                                        (Q(partner__code='DONJUAN') &
                                                         (Q(collector__related_employee__office_country=office) |
