@@ -189,7 +189,9 @@
                               <button type="button" class="add-movement add-interest" data-id="{{ l.id }}"
                                       data-toggle="modal"
                                       data-interest="{{ l.get_interest_payment }}"
-                                      data-target="#modalAddInterest">
+                                      data-target="#modalAddInterest"
+                                      data-loan-type="{{ l.loan_type }}"
+                              >
                                 <i class="fas fa-plus mr-1"></i>
                                 Interés
                               </button>
