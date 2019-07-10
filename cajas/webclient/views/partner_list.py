@@ -3,6 +3,7 @@ import logging
 from django.db.models import Q
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
@@ -41,7 +42,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             employee = None
         context['employee'] = employee
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary or self.request.user.is_admin_senior:
+            if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
                 context['partners'] = Partner.objects.filter(
                     office=office,
                     is_active=True,
@@ -59,18 +60,21 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             logger.exception("Excepcion de Try: " + str(e))
             print(e)
             partners = list()
-            partner = Partner.objects.get(office=office, user=self.request.user)
-            partners.append(partner)
-            mini_partners = Partner.objects.filter(direct_partner=partner)
-            for p in mini_partners:
-                partners.append(p)
-            context['partner'] = partners
+            try:
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                partners.append(partner)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for p in mini_partners:
+                    partners.append(p)
+                context['partner'] = partners
+            except Partner.DoesNotExist:
+                messages.add_message(self.request, messages.ERROR, 'No existe un socio para este usuario')
+                return context
 
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
-        print(context)
         return context
 
     # def get_context_data(self, **kwargs):
