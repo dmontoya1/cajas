@@ -93,29 +93,34 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 is_active=True,
                 box__box_status=BoxStatus.ABIERTA,
             ).exclude(partner_type='DJ')
-        elif employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
-            partners = list()
-            units = group.units.filter(Q(partner__office=office) |
-                                       (Q(partner__code='DONJUAN') &
-                                        (Q(collector__related_employee__office_country=office) |
-                                         Q(collector__related_employee__office=office.office) |
-                                         Q(supervisor__related_employee__office_country=office) |
-                                         Q(supervisor__related_employee__office=office.office)
-                                         ))).distinct()
-            for u in units:
-                if u.partner not in partners:
-                    partners.append(u.partner)
-            context['partner'] = partners
-        elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
-            context['partner'] = list()
         else:
             partners = list()
-            partner = Partner.objects.get(office=office, user=self.request.user)
-            partners.append(partner)
-            mini_partners = Partner.objects.filter(direct_partner=partner)
-            for p in mini_partners:
-                partners.append(p)
-            context['partner'] = partners
+            if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
+                units = group.units.filter(Q(partner__office=office) |
+                                           (Q(partner__code='DONJUAN') &
+                                            (Q(collector__related_employee__office_country=office) |
+                                             Q(collector__related_employee__office=office.office) |
+                                             Q(supervisor__related_employee__office_country=office) |
+                                             Q(supervisor__related_employee__office=office.office)
+                                             ))).distinct()
+                for u in units:
+                    if u.partner not in partners:
+                        partners.append(u.partner)
+                context['partner'] = partners
+            if employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                partners.append(partner)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for p in mini_partners:
+                    if p not in partners:
+                        partners.append(p)
+            if self.request.user.groups.filter(name='Socios').exists():
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                partners.append(partner)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for p in mini_partners:
+                    if p not in partners:
+                        partners.append(p)
 
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
