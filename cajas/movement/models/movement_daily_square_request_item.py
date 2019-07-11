@@ -46,4 +46,3 @@ class MovementDailySquareRequestItem(models.Model):
     class Meta:
         verbose_name = 'Movimiento de Aprobación'
         verbose_name_plural = 'Movimientos de aprobación'
-        ordering = ['-date', '-pk']

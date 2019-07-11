@@ -96,7 +96,6 @@ class MovementDailySquareManager(object):
         return movement.movement_type != movement_type
 
     def __is_money_delivery_and_target_has_changed(self, concept, movement, dq):
-        print("Cambio el traslado de efectivo??")
         if concept.name == 'Traslado de Efectivo entre Cuadres Diarios':
             if movement.user:
                 return int(movement.user.pk) != int(dq)

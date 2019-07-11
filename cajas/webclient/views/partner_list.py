@@ -29,49 +29,6 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         request.session['office'] = office.pk
         return super(PartnerList, self).get(request)
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(PartnerList, self).get_context_data(**kwargs)
-    #     slug = self.kwargs['slug']
-    #     office = get_object_or_404(OfficeCountry, slug=slug)
-    #     units = Unit.objects.filter(partner__office=office)
-    #     try:
-    #         employee = Employee.objects.filter(
-    #             Q(user=self.request.user) & Q(office_country=office)).first()
-    #     except Employee.DoesNotExist:
-    #         employee = None
-    #     context['employee'] = employee
-    #     try:
-    #         if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
-    #             context['partners'] = Partner.objects.filter(
-    #                 office=office,
-    #                 is_active=True,
-    #                 box__box_status=BoxStatus.ABIERTA,
-    #             ).exclude(partner_type='DJ')
-    #         else:
-    #             partners = list()
-    #             partner = Partner.objects.get(office=office, user=self.request.user)
-    #             partners.append(partner)
-    #             mini_partners = Partner.objects.filter(direct_partner=partner)
-    #             for p in mini_partners:
-    #                 partners.append(p)
-    #             context['partner'] = partners
-    #     except Exception as e:
-    #         logger.exception("Excepcion de Try: " + str(e))
-    #         print(e)
-    #         partners = list()
-    #         partner = Partner.objects.get(office=office, user=self.request.user)
-    #         partners.append(partner)
-    #         mini_partners = Partner.objects.filter(direct_partner=partner)
-    #         for p in mini_partners:
-    #             partners.append(p)
-    #         context['partner'] = partners
-    #
-    #     context['groups'] = Group.objects.all()
-    #     context['categories'] = Category.objects.all()
-    #     context['office'] = office
-    #     context['units'] = units
-    #     return context
-
     def get_context_data(self, **kwargs):
         context = super(PartnerList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']

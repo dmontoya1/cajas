@@ -64,6 +64,5 @@ class User(AbstractUser):
             if self.related_employee.get().charge == admin_senior:
                 return True
             return False
-
         except:
             return False
