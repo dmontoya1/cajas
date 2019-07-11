@@ -1,5 +1,4 @@
-
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
@@ -14,11 +13,11 @@ from cajas.units.models.units import Unit
 from cajas.webclient.views.utils import get_object_or_none
 from ..models import MovementDailySquare, MovementPartner, MovementDonJuan, MovementOffice, \
     MovementDonJuanUsd
-from .utils import update_movements_balance, get_related_movement_by_date_and_pk, get_related_movement_by_date
+from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, get_related_movement_by_date, \
+    delete_movement_by_box
 
 
 class MovementDailySquareManager(object):
-
     PROPERTIES = ['box', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip',
                   'unit', 'user', 'office', 'loan', 'chain']
 
@@ -29,16 +28,7 @@ class MovementDailySquareManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        if len(MovementDailySquare.objects.filter(box_daily_square=data['box'], date=data['date'])) > 0:
-            last_movement = MovementDailySquare.objects.filter(
-                date=data['date'],
-                box_daily_square=data['box'],
-            ).order_by('date', 'pk').last()
-        else:
-            last_movement = MovementDailySquare.objects.filter(
-                box_daily_square=data['box'],
-                date__lt=data['date']
-            ).order_by('date', 'pk').last()
+        last_movement = self.get_last_movement(data['box'], data['date'])
         movement = MovementDailySquare.objects.create(
             box_daily_square=data['box'],
             concept=data['concept'],
@@ -56,22 +46,31 @@ class MovementDailySquareManager(object):
             last_balance = last_movement.balance
         except:
             last_balance = 0
-        print(last_balance)
         if movement.movement_type == MovementDailySquare.IN:
             movement.balance = int(last_balance) + int(movement.value)
         else:
             movement.balance = int(last_balance) - int(movement.value)
         movement.save()
-        print(movement.balance)
         related_movements = get_related_movement_by_date(
             MovementDailySquare,
             'box_daily_square',
             data['box'],
             data['date'],
         )
-        print(related_movements)
         update_movements_balance(related_movements, movement.balance, movement.box_daily_square)
         return movement
+
+    def get_last_movement(self, box, date_mv):
+        if len(MovementDailySquare.objects.filter(box_daily_square=box, date=date_mv)) > 0:
+            return MovementDailySquare.objects.filter(
+                date=date_mv,
+                box_daily_square=box,
+            ).order_by('date', 'pk').last()
+        else:
+            return MovementDailySquare.objects.filter(
+                box_daily_square=box,
+                date__lt=date_mv
+            ).order_by('date', 'pk').last()
 
     def create_new_partner_movement(self, data):
         movement = MovementDailySquare.objects.create(
@@ -148,7 +147,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_don_juan)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuan,
                 'box_don_juan',
                 current_movement.movement_don_juan.box_don_juan,
@@ -167,7 +166,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_don_juan_usd)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuanUsd,
                 'box_don_juan',
                 current_movement.movement_don_juan_usd.box_don_juan,
@@ -186,7 +185,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_partner)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementPartner,
                 'box_partner',
                 current_movement.movement_partner.box_partner,
@@ -205,7 +204,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_office)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementOffice,
                 'box_office',
                 current_movement.movement_office.box_office,
@@ -224,7 +223,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_cd)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDailySquare,
                 'box_daily_square',
                 current_movement.movement_cd.box_daily_square,
@@ -277,7 +276,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_don_juan)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuan,
                 'box_don_juan',
                 current_movement.movement_don_juan.box_don_juan,
@@ -295,7 +294,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_don_juan_usd)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuanUsd,
                 'box_don_juan',
                 current_movement.movement_don_juan_usd.box_don_juan,
@@ -313,7 +312,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_partner)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementPartner,
                 'box_partner',
                 current_movement.movement_partner.box_partner,
@@ -331,7 +330,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_office)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementOffice,
                 'box_office',
                 current_movement.movement_office.box_office,
@@ -349,7 +348,7 @@ class MovementDailySquareManager(object):
                 data['value']
             )
             self.update_counterpart_movement_type(current_movement.movement_cd)
-            related_movements = get_related_movement_by_date_and_pk(
+            related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDailySquare,
                 'box_daily_square',
                 current_movement.movement_cd.box_daily_square,
@@ -371,23 +370,15 @@ class MovementDailySquareManager(object):
             movement.balance -= int(value)
         movement.save()
 
-    def update_counterpart_movement_value(self, movement, value):
-        movement.value = value
-        movement.save()
-
     def __delete_related_movement(self, movement):
         if movement.movement_don_juan:
-            movement_don_juan = movement.movement_don_juan
-            movement_don_juan.delete()
+            delete_movement_by_box(movement.movement_don_juan, MovementDonJuan, 'box_don_juan')
         if movement.movement_don_juan_usd:
-            movement_don_juan_usd = movement.movement_don_juan_usd
-            movement_don_juan_usd.delete()
+            delete_movement_by_box(movement.movement_don_juan_usd, MovementDonJuanUsd, 'box_don_juan_usd')
         if movement.movement_partner:
-            movement_partner = movement.movement_partner
-            movement_partner.delete()
+            delete_movement_by_box(movement.movement_partner, MovementPartner, 'box_partner')
         if movement.movement_cd:
-            movement_cd = movement.movement_cd
-            movement_cd.delete()
+            delete_movement_by_box(movement.movement_cd, MovementDailySquare, 'box_daily_square')
 
     def update_daily_square_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
@@ -437,7 +428,7 @@ class MovementDailySquareManager(object):
         else:
             current_movement_daily_square.update(**object_data)
         current_movement = MovementDailySquare.objects.get(pk=data['pk'])
-        related_movements = get_related_movement_by_date_and_pk(
+        related_movements = get_next_related_movement_by_date_and_pk(
             MovementDailySquare,
             'box_daily_square',
             current_user_box_daily_square,
@@ -454,4 +445,4 @@ class MovementDailySquareManager(object):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_daily_square.first()
         self.__delete_related_movement(current_movement)
-        current_movement.delete()
+        delete_movement_by_box(current_movement, MovementDailySquare, 'box_daily_square')
