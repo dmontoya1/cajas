@@ -1,10 +1,14 @@
 
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
 from cajas.users.models import Partner, Employee
 from cajas.office.models.office import Office
 from cajas.office.models.officeCountry import OfficeCountry
+
+logger = logging.getLogger(__name__)
 
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -52,8 +56,10 @@ class Home(LoginRequiredMixin, TemplateView):
                         context['actual_partners'] = Partner.objects.filter(user=user)
                 except Employee.DoesNotExist:
                     context['actual_partners'] = Partner.objects.filter(user=user)
+
         else:
             context['offices'] = Office.objects.all()
             context['all_offices'] = OfficeCountry.objects.all().order_by('office')
             context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        logger.exception(context)
         return context
