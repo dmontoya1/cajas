@@ -53,15 +53,16 @@ def delete_movement_by_box(current_movement, model, box_name):
         current_movement.pk
     )
     current_movement.delete()
-    related_movements = get_next_related_movement_by_date_and_pk(
-        model,
-        box_name,
-        last_movement.box_daily_square,
-        last_movement.date,
-        last_movement.pk
-    )
-    update_movements_balance(
-        related_movements,
-        last_movement.balance,
-        last_movement.box_daily_square,
-    )
+    if last_movement:
+        related_movements = get_next_related_movement_by_date_and_pk(
+            model,
+            box_name,
+            last_movement.box_daily_square,
+            last_movement.date,
+            last_movement.pk
+        )
+        update_movements_balance(
+            related_movements,
+            last_movement.balance,
+            last_movement.box_daily_square,
+        )

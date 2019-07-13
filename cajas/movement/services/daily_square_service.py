@@ -445,4 +445,5 @@ class MovementDailySquareManager(object):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_daily_square.first()
         self.__delete_related_movement(current_movement)
-        delete_movement_by_box(current_movement, MovementDailySquare, 'box_daily_square')
+        delete_move
+        ment_by_box(current_movement, MovementDailySquare, 'box_daily_square')
