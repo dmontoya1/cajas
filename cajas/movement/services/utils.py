@@ -34,21 +34,19 @@ def get_last_movement_on_delete(model, box_name, box, date_mv, pk):
     if len(model.objects.filter(**{box_name: box}).filter(date=date_mv, pk__lt=pk)) > 0:
         return model.objects.filter(**{box_name: box}).filter(
             date=date_mv,
-            box_daily_square=box,
             pk__lt=pk
         ).order_by('date', 'pk').last()
     else:
         return model.objects.filter(**{box_name: box}).filter(
-            box_daily_square=box,
             date__lt=date_mv,
         ).order_by('date', 'pk').last()
 
 
-def delete_movement_by_box(current_movement, model, box_name):
+def delete_movement_by_box(current_movement, box, model, box_name):
     last_movement = get_last_movement_on_delete(
         model,
         box_name,
-        current_movement.box_daily_square,
+        box,
         current_movement.date,
         current_movement.pk
     )
@@ -57,12 +55,60 @@ def delete_movement_by_box(current_movement, model, box_name):
         related_movements = get_next_related_movement_by_date_and_pk(
             model,
             box_name,
-            last_movement.box_daily_square,
+            box,
             last_movement.date,
             last_movement.pk
         )
         update_movements_balance(
             related_movements,
             last_movement.balance,
-            last_movement.box_daily_square,
+            box,
         )
+
+
+def get_last_movement(model, box_name, box, date_mv,):
+    if len(model.objects.filter(**{box_name: box}).filter(date=date_mv)) > 0:
+        return model.objects.filter(**{box_name: box}).filter(date=date_mv).order_by('date', 'pk').last()
+    else:
+        return model.objects.filter(**{box_name: box}).filter(date__lt=date_mv).order_by('date', 'pk').last()
+
+
+def update_movement_balance_on_create(last_movement, movement):
+    try:
+        last_balance = last_movement.balance
+    except:
+        last_balance = 0
+    if movement.movement_type == 'IN':
+        movement.balance = int(last_balance) + int(movement.value)
+    else:
+        movement.balance = int(last_balance) - int(movement.value)
+    movement.save()
+
+
+def update_all_movements_balance_on_create(model, box_name, box, date_mv, movement):
+    related_movements = get_related_movement_by_date(
+        model,
+        box_name,
+        box,
+        date_mv,
+    )
+    update_movements_balance(
+        related_movements,
+        movement.balance,
+        box
+    )
+
+
+def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, movement):
+    related_movements = get_next_related_movement_by_date_and_pk(
+        model,
+        box_name,
+        box,
+        date_mv,
+        pk
+    )
+    update_movements_balance(
+        related_movements,
+        movement.balance,
+        box
+    )

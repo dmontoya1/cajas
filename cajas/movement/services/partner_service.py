@@ -11,6 +11,8 @@ from cajas.concepts.models.concepts import Concept, ConceptType, CrossoverType, 
 from ..models.movement_partner import MovementPartner
 from ..services.don_juan_service import DonJuanManager
 from ..services.office_service import MovementOfficeManager
+from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
+    update_all_movements_balance_on_create, update_all_movement_balance_on_update
 
 donjuan_manager = DonJuanManager()
 
@@ -25,6 +27,7 @@ class MovementPartnerManager(object):
 
     def create_simple(self, data):
         self.__validate_data(data)
+        last_movement = get_last_movement(MovementPartner, 'box_partner', data['box'], data['date'])
         movement = MovementPartner.objects.create(
             box_partner=data['box'],
             concept=data['concept'],
@@ -34,6 +37,14 @@ class MovementPartnerManager(object):
             date=data['date'],
             responsible=data['responsible'],
             ip=data['ip']
+        )
+        update_movement_balance_on_create(last_movement, movement)
+        update_all_movements_balance_on_create(
+            MovementPartner,
+            'box_partner',
+            data['box'],
+            data['date'],
+            movement
         )
         return movement
 
@@ -323,8 +334,8 @@ class MovementPartnerManager(object):
         box.save()
 
     def update_partner_movement(self, data):
-        current_movement_office = self.__get_movement_by_pk(data['pk'])
-        current_movement = current_movement_office.first()
+        current_movement_partner = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_partner.first()
         current_concept = self.__get_current_concept(data['concept'])
         object_data = dict()
         object_data['box_partner'] = current_movement.box_partner
@@ -335,10 +346,21 @@ class MovementPartnerManager(object):
         object_data['date'] = data['date']
         data['movement'] = current_movement
         data['box'] = current_movement.box_partner
-
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
             self.__update_movement_type(data)
         if self.__is_movement_value_updated(current_movement, data['value']):
             self.__update_value(data)
-        current_movement_office.update(**object_data)
+        current_movement_partner.update(**object_data)
+        update_all_movement_balance_on_update(
+            MovementPartner,
+            'box_partner',
+            current_movement.box_partner,
+            current_movement.date,
+            current_movement.pk,
+            current_movement
+        )
 
+    def delete_partner_movement(self, data):
+        current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_daily_square.first()
+        delete_movement_by_box(current_movement, current_movement.box_partner, MovementPartner, 'box_partner')

@@ -264,7 +264,7 @@
                           {% else %}
                           {% endif %}
                         </td>
-                        <td>{{ m.balance|intcomma }}</td>
+                        <td><strong>{{ m.balance|intcomma }}</strong></td>
                       </tr>
                     {% endfor %}
                     </tbody>
@@ -304,7 +304,7 @@
                           {% else %}
                           {% endif %}
                         </td>
-                        <td>{{ m.balance|intcomma }}</td>
+                        <td><strong>{{ m.balance|intcomma }}</strong></td>
                         <td>
                           <ul class="ul-buttons">
                             {% if request.user.is_superuser %}
