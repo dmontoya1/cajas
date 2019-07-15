@@ -37,7 +37,7 @@ class DispersionMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': value,
-                    'detail': '{} (Valor: ${} de ${}) ({} {})'.format(
+                    'detail': '{} (Valor: ${} de ${}) (Cuadre Diario: {} {})'.format(
                         movement.detail,
                         value,
                         movement.value,

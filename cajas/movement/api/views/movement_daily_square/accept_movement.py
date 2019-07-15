@@ -55,7 +55,12 @@ class AcceptMovement(APIView):
                         'concept': movement.concept,
                         'movement_type': movement.movement_type,
                         'value': movement.value,
-                        'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
+                        'detail': '{} (Cuadre Diario: {} {}) (Unidad: {})'.format(
+                            movement.detail,
+                            user.first_name,
+                            user.last_name,
+                            movement.unit
+                        ),
                         'date': movement.date,
                         'responsible': request.user,
                         'ip': get_ip(request)
@@ -68,7 +73,12 @@ class AcceptMovement(APIView):
                         'concept': movement.concept,
                         'movement_type': movement.movement_type,
                         'value': movement.value,
-                        'detail': '{} (Cuadre Diario: {})'.format(movement.detail, user),
+                        'detail': '{} (Cuadre Diario: {} {}) (Unidad: {})'.format(
+                            movement.detail,
+                            user.first_name,
+                            user.last_name,
+                            movement.unit
+                        ),
                         'date': movement.date,
                         'responsible': request.user,
                         'ip': get_ip(request)
