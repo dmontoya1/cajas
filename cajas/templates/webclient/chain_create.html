@@ -263,44 +263,44 @@
       for (i = 1; i <= $(this).val(); i++) {
         $('.places-list').append(
           `
-                <div class="form-group col-md-6">
-                  <div class="places-item">
-                    <span class="place-name">Puesto ${i}</span>
-                    <div class="form-row">
-                      <div class="form-group col-md-6">
-                        <label for="pay_date_${i}">Fecha de pago del puesto</label>
-                        <input type="date" class="form-control" id="pay_date_${i}" name="pay_date_${i}" placeholder="yyyy-mm-dd" style="width: 100%;" required>
-                      </div>
-                    </div>
-                    <div class="form-group" id="dynamic_form_${i}">
-                      <div class="row" id="field">
-                        <div class="col-md-6">
-                          <label for="partner">Socio</label>
-                          <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
-                            <option value="" selected disabled>Selecciona un socio</option>
-                            {% for p in all_partners %}
-                              <option value="{{p.pk}}">{{p}}</option>
-                            {% endfor %}
-                          </select>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="place_porcentaje">Porcentaje</label>
-                            <div class="input-group mb-2">
-                              <div class="input-group-prepend">
-                                <div class="input-group-text">%</div>
-                              </div>
-                              <input type="number" class="form-control" name="place_porcentaje_${i}" id="place_porcentaje_${i}" value="0">
-                            </div>
-                        </div>
-                        <div class="col-md-2 pt-4">
-                            <a href="#" class="btn btn-danger minus_${i} minus_btn" data-id="${i}" id="minus_${i}"><i class="fas fa-trash-alt"></i></a>
-                        </div>
-                      </div>
-                      <a href="#" class="btn btn-dynamic mt-4 plus_${i} plus_btn" data-id="${i}" id="plus_${i}">Agregar socio</a>
+              <div class="form-group col-md-6">
+                <div class="places-item">
+                  <span class="place-name">Puesto ${i}</span>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="pay_date_${i}">Fecha de pago del puesto</label>
+                      <input type="date" class="form-control" id="pay_date_${i}" name="pay_date_${i}" placeholder="yyyy-mm-dd" style="width: 100%;" required>
                     </div>
                   </div>
+                  <div class="form-group" id="dynamic_form_${i}">
+                    <div class="row" id="field">
+                      <div class="col-md-6">
+                        <label for="partner">Socio</label>
+                        <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
+                          <option value="" selected disabled>Selecciona un socio</option>
+                          {% for p in all_partners %}
+                            <option value="{{p.pk}}">{{p}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                          <label for="place_porcentaje">Porcentaje</label>
+                          <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text">%</div>
+                            </div>
+                            <input type="number" step="0.01" class="form-control" name="place_porcentaje_${i}" id="place_porcentaje_${i}" value="0" min=0>
+                          </div>
+                      </div>
+                      <div class="col-md-2 pt-4">
+                          <a href="#" class="btn btn-danger minus_${i} minus_btn" data-id="${i}" id="minus_${i}"><i class="fas fa-trash-alt"></i></a>
+                      </div>
+                    </div>
+                    <a href="#" class="btn btn-dynamic mt-4 plus_${i} plus_btn" data-id="${i}" id="plus_${i}">Agregar socio</a>
+                  </div>
                 </div>
-              `
+              </div>
+           `
         )
         counters[`counter_${i}`] = 1
         $(`#dynamic_form_${i}`).dynamicForm(`#dynamic_form_${i}`, `#plus_${i}`, `#minus_${i}`, {
