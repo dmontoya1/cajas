@@ -187,6 +187,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -201,6 +202,7 @@
                         {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                         {% else %}{% endif %}</td>
+                      <td><strong>${{ m.balance|intcomma }}</strong></td>
                       <td>
                         {% if perms.movement.add_movementoffice %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"

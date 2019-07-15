@@ -172,6 +172,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -183,9 +184,10 @@
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
                       <td>{% if m.movement_type == 'IN' %}${{ m.value|intcomma }}
-                        USD{% else %}{% endif %}</td>
+                        {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
-                        USD{% else %}{% endif %}</td>
+                        {% else %}{% endif %}</td>
+                      <td><strong>{{ m.balance|intcomma }}</strong></td>
                       <td>
                         {% if perms.movement.add_movementdonjuanusd %}
                           <a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
@@ -341,7 +343,8 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "asc"]],
+        "order": [],
+        "bSort" : false,
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
@@ -523,6 +526,7 @@
         allowOutsideClick: false
       }).then((result) => {
         if (result.value) {
+          axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
           axios.delete(`/api/movements/${mov_pk}/movement-don-juan-usd-update/`)
             .then(function (response) {
               data = response.data

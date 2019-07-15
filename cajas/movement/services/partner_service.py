@@ -331,9 +331,9 @@ class MovementPartnerManager(object):
         data['movement'] = current_movement
         data['box'] = current_movement.box_partner
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
-            update_movement_type_value(data['movement_type'], current_movement, data['value'])
+            current_movement = update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if self.__is_movement_value_updated(current_movement, data['value']):
-            update_movement_balance(current_movement, data['value'])
+            current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_partner.update(**object_data)
         update_all_movement_balance_on_update(
             MovementPartner,

@@ -16,6 +16,7 @@ from ....services.don_juan_service import DonJuanManager
 from ...serializers.movement_don_juan_serializer import MovementDonJuanSerializer
 
 logger = logging.getLogger(__name__)
+don_juan_manager = DonJuanManager()
 
 
 class MovementDonJuanUpdate(generics.RetrieveUpdateDestroyAPIView):
@@ -31,8 +32,7 @@ class MovementDonJuanUpdate(generics.RetrieveUpdateDestroyAPIView):
         data['ip'] = get_ip(request)
 
         try:
-            office_manager = DonJuanManager()
-            movement = office_manager.update_don_juan_movement(data)
+            movement = don_juan_manager.update_don_juan_movement(data)
             if "destine_office" in request.POST:
                 destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
                 data['destine_office'] = destine_office
@@ -60,3 +60,13 @@ class MovementDonJuanUpdate(generics.RetrieveUpdateDestroyAPIView):
                 'Ha ocurrido un error inesperado. Comunicate con el administrador',
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    def delete(self, request, *args, **kwargs):
+        data = request.POST.copy()
+        data['pk'] = self.kwargs['pk']
+
+        don_juan_manager.delete_don_juan_movement(data)
+        return Response(
+            'Se ha eliminado el movimiento exitosamente',
+            status=status.HTTP_201_CREATED
+        )

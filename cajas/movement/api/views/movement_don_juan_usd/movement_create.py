@@ -12,75 +12,67 @@ from cajas.webclient.views.get_ip import get_ip
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
 from ....models.movement_don_juan import MovementDonJuan
 
+from ....services.don_juan_usd_service import DonJuanUSDManager
+from ....services.don_juan_service import DonJuanManager
+
 
 class MovementUSDCreate(APIView):
 
     def post(self, request, format=None):
         data = request.data
+        box_don_juan = get_object_or_404(BoxDonJuanUSD, pk=data['box'])
+        ip = get_ip(request)
         concept = get_object_or_404(Concept, pk=data['concept'])
+        data_send = {
+            'box': box_don_juan,
+            'concept': concept,
+            'date': data['date'],
+            'detail': data['detail'],
+            'movement_type': data['movement_type'],
+            'responsible': request.user,
+            'ip': ip,
+        }
+        don_juan_usd_manager = DonJuanUSDManager()
+        don_juan_manager = DonJuanManager()
         if concept.name == 'Compra Dólares':
-            MovementDonJuanUsd.objects.create(
-                box_don_juan=get_object_or_404(BoxDonJuanUSD, pk=data['box']),
-                concept=concept,
-                movement_type=data['movement_type'],
-                value=data['buy_usd_value'],
-                detail=data['detail'],
-                date=data['date'],
-                responsible=request.user,
-                ip=get_ip(request)
-            )
+            data_send['value'] = data['buy_usd_value']
+            don_juan_usd_manager.create_movement(data_send)
             if data['movement_type'] == 'OUT':
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            MovementDonJuan.objects.create(
-                box_don_juan=get_object_or_404(BoxDonJuan, office__pk=data['office']),
-                concept=concept.counterpart,
-                movement_type=contrapart,
-                value=data['buy_value'],
-                detail=data['detail'],
-                date=data['date'],
-                responsible=request.user,
-                ip=get_ip(request)
-            )
-
+            data_send_1 = {
+                'box': get_object_or_404(BoxDonJuan, office__pk=data['office']),
+                'concept': concept.counterpart,
+                'date': data['date'],
+                'movement_type': contrapart,
+                'value': data['buy_value'],
+                'detail': data['detail'],
+                'responsible': request.user,
+                'ip': ip,
+            }
+            don_juan_manager.create_movement(data_send_1)
         elif concept.name == 'Venta Dólares':
-            MovementDonJuanUsd.objects.create(
-                box_don_juan=get_object_or_404(BoxDonJuanUSD, pk=data['box']),
-                concept=concept,
-                movement_type=data['movement_type'],
-                value=data['sell_usd_value'],
-                detail=data['detail'],
-                date=data['date'],
-                responsible=request.user,
-                ip=get_ip(request)
-            )
+            data_send['value'] = data['sell_usd_value']
+            don_juan_usd_manager.create_movement(data_send)
             if data['movement_type'] == 'OUT':
                 contrapart = 'IN'
             else:
                 contrapart = 'OUT'
-            MovementDonJuan.objects.create(
-                box_don_juan=get_object_or_404(BoxDonJuan, office__pk=data['office']),
-                concept=concept.counterpart,
-                movement_type=contrapart,
-                value=data['sell_value'],
-                detail=data['detail'],
-                date=data['date'],
-                responsible=request.user,
-                ip=get_ip(request)
-            )
-
+            data_send_1 = {
+                'box': get_object_or_404(BoxDonJuan, office__pk=data['office']),
+                'concept': concept.counterpart,
+                'date': data['date'],
+                'movement_type': contrapart,
+                'value': data['sell_value'],
+                'detail': data['detail'],
+                'responsible': request.user,
+                'ip': ip,
+            }
+            don_juan_manager.create_movement(data_send_1)
         else:
-            MovementDonJuanUsd.objects.create(
-                box_don_juan=get_object_or_404(BoxDonJuanUSD, pk=data['box']),
-                concept=concept,
-                movement_type=data['movement_type'],
-                value=data['value'],
-                detail=data['detail'],
-                date=data['date'],
-                responsible=request.user,
-                ip=get_ip(request)
-            )
+            data_send['value'] = data['value']
+            don_juan_usd_manager.create_movement(data_send)
 
         return Response(
             'Se ha creado el movimiento exitosamente',

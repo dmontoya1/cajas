@@ -1,11 +1,14 @@
 
 def get_next_related_movement_by_date_and_pk(model, box_name, box, date_mv, pk):
-    return model.objects.filter(**{
-        box_name: box,
-    }).filter(
-        date__gte=date_mv,
-        pk__gt=pk
-    ).order_by('date', 'pk')
+    if len(model.objects.filter(**{box_name: box}).filter(date=date_mv, pk__gt=pk)) > 0:
+        return model.objects.filter(**{box_name: box}).filter(
+            date=date_mv,
+            pk__gt=pk
+        ).order_by('date', 'pk')
+    else:
+        return model.objects.filter(**{box_name: box}).filter(
+            date__gt=date_mv,
+        ).order_by('date', 'pk')
 
 
 def get_related_movement_by_date(model, box_name, box, date):
@@ -107,6 +110,9 @@ def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, mov
         date_mv,
         pk
     )
+    print(related_movements)
+    for mv in related_movements:
+        print(mv.date, mv.concept, mv.value, mv.balance)
     update_movements_balance(
         related_movements,
         movement.balance,
@@ -120,6 +126,7 @@ def update_movement_type_value(movement_type, movement, value):
     else:
         movement.balance -= (int(value) * 2)
     movement.save()
+    return movement
 
 
 def update_movement_balance(movement, value):
@@ -130,3 +137,4 @@ def update_movement_balance(movement, value):
         movement.balance += movement.value
         movement.balance -= int(value)
     movement.save()
+    return movement

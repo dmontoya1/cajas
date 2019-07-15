@@ -12,6 +12,7 @@ from ....services.box_colombia_service import MovementBoxColombiaManager
 from ...serializers.movement_box_colombia_serializer import MovementBoxColombiaSerializer
 
 logger = logging.getLogger(__name__)
+box_colombia_manager = MovementBoxColombiaManager()
 
 
 class MovementBankColombiaDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -27,7 +28,6 @@ class MovementBankColombiaDetail(generics.RetrieveUpdateDestroyAPIView):
         data['ip'] = get_ip(request)
 
         try:
-            box_colombia_manager = MovementBoxColombiaManager()
             box_colombia_manager.update_office_movement(data)
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
@@ -40,3 +40,12 @@ class MovementBankColombiaDetail(generics.RetrieveUpdateDestroyAPIView):
                 'Ha ocurrido un error inesperado. Comunicate con el administrador',
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    def delete(self, request, *args, **kwargs):
+        data = request.POST.copy()
+        data['pk'] = self.kwargs['pk']
+        box_colombia_manager.delete_box_colombia_movement(data)
+        return Response(
+            'Se ha eliminado el movimiento exitosamente',
+            status=status.HTTP_201_CREATED
+        )
