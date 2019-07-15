@@ -37,7 +37,13 @@ class DispersionMovement(APIView):
                     'concept': movement.concept,
                     'movement_type': movement.movement_type,
                     'value': value,
-                    'detail': '{} ({})'.format(movement.detail, daily_square),
+                    'detail': '{} (Valor: ${} de ${}) (Cuadre Diario: {} {})'.format(
+                        movement.detail,
+                        value,
+                        movement.value,
+                        daily_square.first_name,
+                        daily_square.last_name
+                    ),
                     'date': movement.date,
                     'responsible': request.user,
                     'ip': ip
