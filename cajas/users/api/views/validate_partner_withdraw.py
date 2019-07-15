@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from cajas.users.models.partner import Partner
-from cajas.loans.models.loan import Loan
+from cajas.loans.models.loan import Loan, LoanType
 
 
 class ValidatePartnerWithdraw(APIView):
@@ -39,9 +39,12 @@ class ValidatePartnerWithdraw(APIView):
 
     def validate_loans(self, data):
         partner = get_object_or_404(Partner, pk=data['partner'])
-        loans = Loan.objects.filter(lender=partner.user)
+        loans = Loan.objects.filter(lender=partner.user, loan_type=LoanType.SOCIO_DIRECTO)
         if loans.exists():
-            return True
+            for loan in loans:
+                if loan.balance > 0:
+                    return True
+            return False
         return False
 
     def validate_value(self, data):
