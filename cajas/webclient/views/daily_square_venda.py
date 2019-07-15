@@ -38,9 +38,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(Q(partner__office=office) |
                                     (Q(partner__code='DONJUAN') &
                                      (Q(collector__related_employee__office_country=office) |
-                                      Q(collector__related_employee__office=office.office) |
-                                      Q(supervisor__related_employee__office_country=office) |
-                                      Q(supervisor__related_employee__office=office.office)
+                                      Q(collector__related_employee__office=office.office)
                                       ))).distinct()
         withdraws_movements = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
