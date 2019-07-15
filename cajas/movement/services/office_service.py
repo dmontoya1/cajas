@@ -10,6 +10,10 @@ from ..models.movement_office import MovementOffice
 from ..services.don_juan_service import DonJuanManager
 from ..services.don_juan_usd_service import DonJuanUSDManager
 from ..services.box_colombia_service import MovementBoxColombiaManager
+from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
+    update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
+    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_movement_balance
 
 
 class MovementOfficeManager(object):
@@ -17,8 +21,9 @@ class MovementOfficeManager(object):
     PROPERTIES = ['box_office', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_office_movement(self, data):
         transfer_concept = get_object_or_404(
@@ -65,6 +70,7 @@ class MovementOfficeManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
+        last_movement = get_last_movement(MovementOffice, 'box_office', data['box_office'], data['date'])
         movement = MovementOffice.objects.create(
             box_office=data['box_office'],
             concept=data['concept'],
@@ -74,6 +80,14 @@ class MovementOfficeManager(object):
             date=data['date'],
             responsible=data['responsible'],
             ip=data['ip'],
+        )
+        update_movement_balance_on_create(last_movement, movement)
+        update_all_movements_balance_on_create(
+            MovementOffice,
+            'box_office',
+            data['box_office'],
+            data['date'],
+            movement
         )
         return movement
 
@@ -89,24 +103,6 @@ class MovementOfficeManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
-    def __update_movement_type(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance += (int(data['movement'].value) * 2)
-        else:
-            box.balance -= (int(data['movement'].value) * 2)
-        box.save()
-
-    def __update_value(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance -= int(data['movement'].value)
-            box.balance += int(data['value'])
-        else:
-            box.balance += int(data['movement'].value)
-            box.balance -= int(data['value'])
-        box.save()
-
     def update_office_movement(self, data):
         current_movement_office = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_office.first()
@@ -120,9 +116,21 @@ class MovementOfficeManager(object):
         object_data['date'] = data['date']
         data['movement'] = current_movement
         data['box'] = current_movement.box_office
-
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
-            self.__update_movement_type(data)
+            update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if self.__is_movement_value_updated(current_movement, data['value']):
-            self.__update_value(data)
+            update_movement_balance(current_movement, data['value'])
         current_movement_office.update(**object_data)
+        update_all_movement_balance_on_update(
+            MovementOffice,
+            'box_office',
+            current_movement.box_office,
+            current_movement.date,
+            current_movement.pk,
+            current_movement
+        )
+
+    def delete_office_movement(self, data):
+        current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_daily_square.first()
+        delete_movement_by_box(current_movement, current_movement.box_office, MovementOffice, 'box_office')

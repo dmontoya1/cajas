@@ -12,7 +12,8 @@ from ..models.movement_partner import MovementPartner
 from ..services.don_juan_service import DonJuanManager
 from ..services.office_service import MovementOfficeManager
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update
+    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_movement_balance
 
 donjuan_manager = DonJuanManager()
 
@@ -22,8 +23,9 @@ class MovementPartnerManager(object):
     PROPERTIES = ['box', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_simple(self, data):
         self.__validate_data(data)
@@ -315,24 +317,6 @@ class MovementPartnerManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
-    def __update_movement_type(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance += (int(data['movement'].value) * 2)
-        else:
-            box.balance -= (int(data['movement'].value) * 2)
-        box.save()
-
-    def __update_value(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance -= int(data['movement'].value)
-            box.balance += int(data['value'])
-        else:
-            box.balance += int(data['movement'].value)
-            box.balance -= int(data['value'])
-        box.save()
-
     def update_partner_movement(self, data):
         current_movement_partner = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_partner.first()
@@ -347,9 +331,9 @@ class MovementPartnerManager(object):
         data['movement'] = current_movement
         data['box'] = current_movement.box_partner
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
-            self.__update_movement_type(data)
+            update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if self.__is_movement_value_updated(current_movement, data['value']):
-            self.__update_value(data)
+            update_movement_balance(current_movement, data['value'])
         current_movement_partner.update(**object_data)
         update_all_movement_balance_on_update(
             MovementPartner,

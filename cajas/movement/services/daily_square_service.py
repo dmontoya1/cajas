@@ -1,4 +1,4 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
@@ -15,7 +15,8 @@ from ..models import MovementDailySquare, MovementPartner, MovementDonJuan, Move
     MovementDonJuanUsd
 from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
     update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update
+    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_movement_balance
 
 
 class MovementDailySquareManager(object):
@@ -120,9 +121,9 @@ class MovementDailySquareManager(object):
 
     def __update_movement_type(self, data):
         current_movement = data['movement']
-        self.__update_movement_type_value(data['movement_type'], current_movement, data['value'])
+        update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if current_movement.movement_don_juan:
-            self.__update_movement_type_value(
+            update_movement_type_value(
                 current_movement.movement_don_juan.movement_type,
                 current_movement.movement_don_juan,
                 data['value']
@@ -141,7 +142,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.box_don_juan
             )
         if current_movement.movement_don_juan_usd:
-            self.__update_movement_type_value(
+            update_movement_type_value(
                 current_movement.movement_don_juan_usd.movement_type,
                 current_movement.movement_don_juan_usd,
                 data['value']
@@ -160,7 +161,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.box_don_juan
             )
         if current_movement.movement_partner:
-            self.__update_movement_type_value(
+            update_movement_type_value(
                 current_movement.movement_partner.movement_type,
                 current_movement.movement_partner,
                 data['value']
@@ -179,7 +180,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.box_don_juan
             )
         if current_movement.movement_office:
-            self.__update_movement_type_value(
+            update_movement_type_value(
                 current_movement.movement_office.movement_type,
                 current_movement.movement_office,
                 data['value']
@@ -198,7 +199,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.box_don_juan
             )
         if current_movement.movement_cd:
-            self.__update_movement_type_value(
+            update_movement_type_value(
                 current_movement.movement_cd.movement_type,
                 current_movement.movement_cd,
                 data['value']
@@ -216,13 +217,6 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.balance,
                 current_movement.movement_don_juan.box_don_juan
             )
-
-    def __update_movement_type_value(self, movement_type, movement, value):
-        if movement_type == MovementDailySquare.IN:
-            movement.balance += (int(value) * 2)
-        else:
-            movement.balance -= (int(value) * 2)
-        movement.save()
 
     def update_counterpart_movement_type(self, movement):
         if movement.movement_type == movement.IN:
@@ -250,9 +244,9 @@ class MovementDailySquareManager(object):
 
     def __update_value(self, data):
         current_movement = data['movement']
-        self.__update_movement_balance(current_movement, data['value'])
+        update_movement_balance(current_movement, data['value'])
         if current_movement.movement_don_juan:
-            self.__update_movement_balance(
+            update_movement_balance(
                 current_movement.movement_don_juan,
                 data['value']
             )
@@ -270,7 +264,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan.box_don_juan
             )
         if current_movement.movement_don_juan_usd:
-            self.__update_movement_balance(
+            update_movement_balance(
                 current_movement.movement_don_juan_usd,
                 data['value']
             )
@@ -288,7 +282,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan_usd.box_don_juan_usd
             )
         if current_movement.movement_partner:
-            self.__update_movement_balance(
+            update_movement_balance(
                 current_movement.movement_partner,
                 data['value']
             )
@@ -306,7 +300,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_partner.box_partner
             )
         if current_movement.movement_office:
-            self.__update_movement_balance(
+            update_movement_balance(
                 current_movement.movement_office,
                 data['value']
             )
@@ -324,7 +318,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_office.box_office
             )
         if current_movement.movement_cd:
-            self.__update_movement_balance(
+            update_movement_balance(
                 current_movement.movement_cd,
                 data['value']
             )
@@ -341,15 +335,6 @@ class MovementDailySquareManager(object):
                 current_movement.movement_cd.balance,
                 current_movement.movement_cd.box_daily_square
             )
-
-    def __update_movement_balance(self, movement, value):
-        if movement.movement_type == MovementDailySquare.IN:
-            movement.balance -= movement.value
-            movement.balance += int(value)
-        else:
-            movement.balance += movement.value
-            movement.balance -= int(value)
-        movement.save()
 
     def __delete_related_movement(self, movement):
         if movement.movement_don_juan:

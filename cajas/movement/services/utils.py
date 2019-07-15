@@ -112,3 +112,21 @@ def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, mov
         movement.balance,
         box
     )
+
+
+def update_movement_type_value(movement_type, movement, value):
+    if movement_type == 'IN':
+        movement.balance += (int(value) * 2)
+    else:
+        movement.balance -= (int(value) * 2)
+    movement.save()
+
+
+def update_movement_balance(movement, value):
+    if movement.movement_type == 'IN':
+        movement.balance -= movement.value
+        movement.balance += int(value)
+    else:
+        movement.balance += movement.value
+        movement.balance -= int(value)
+    movement.save()
