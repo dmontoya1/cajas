@@ -36,9 +36,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
         units = Unit.objects.filter(Q(partner__office=office) |
                                     (Q(partner__code='DONJUAN') &
                                      (Q(collector__related_employee__office_country=office) |
-                                      Q(collector__related_employee__office=office.office) |
-                                      Q(supervisor__related_employee__office_country=office) |
-                                      Q(supervisor__related_employee__office=office.office)
+                                      Q(collector__related_employee__office=office.office)
                                       ))).distinct()
         dq_list = User.objects.filter(
             (Q(partner__office=office) | Q(related_employee__office_country=office) |
@@ -89,9 +87,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     units = group_units.units.filter(Q(partner__office=office) |
                                                      (Q(partner__code='DONJUAN') &
                                                       (Q(collector__related_employee__office_country=office) |
-                                                       Q(collector__related_employee__office=office.office) |
-                                                       Q(supervisor__related_employee__office_country=office) |
-                                                       Q(supervisor__related_employee__office=office.office)
+                                                       Q(collector__related_employee__office=office.office)
                                                        ))).distinct()
         except Exception as e:
             logger.exception(str(e))

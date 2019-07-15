@@ -51,25 +51,19 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                 units = group.units.filter(Q(partner__office=office) |
                                             (Q(partner__code='DONJUAN') &
                                              (Q(collector__related_employee__office_country=office) |
-                                              Q(collector__related_employee__office=office.office) |
-                                              Q(supervisor__related_employee__office_country=office) |
-                                              Q(supervisor__related_employee__office=office.office)
+                                              Q(collector__related_employee__office=office.office)
                                               ))).distinct()
             else:
                 units = Unit.objects.filter(Q(partner__office=office) |
                                             (Q(partner__code='DONJUAN') &
                                              (Q(collector__related_employee__office_country=office) |
-                                              Q(collector__related_employee__office=office.office) |
-                                              Q(supervisor__related_employee__office_country=office) |
-                                              Q(supervisor__related_employee__office=office.office)
+                                              Q(collector__related_employee__office=office.office)
                                               ))).distinct()
         except Employee.DoesNotExist:
             units = Unit.objects.filter(Q(partner__office=office) |
                                         (Q(partner__code='DONJUAN') &
                                          (Q(collector__related_employee__office_country=office) |
-                                          Q(collector__related_employee__office=office.office) |
-                                          Q(supervisor__related_employee__office_country=office) |
-                                          Q(supervisor__related_employee__office=office.office)
+                                          Q(collector__related_employee__office=office.office)
                                           ))).distinct()
         past_mvments = MovementDailySquare.objects.filter(
             box_daily_square=box_daily_square,
