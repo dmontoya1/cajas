@@ -163,9 +163,10 @@
                       <td>
                         {{ e }}
                       </td>
-                      <td >
+                      <td>
                         {% if perms.office.change_supervisorcalendar %}
-                          <a href="{% url 'webclient:calendar' office.slug e.pk %}" class="show-group">Ver calendario</a>
+                          <a href="{% url 'webclient:calendar' office.slug e.pk %}" class="show-group">Ver
+                            calendario</a>
                         {% endif %}
                         <a href="#" class="show-group" data-id="{{ e.id }}" data-toggle="modal"
                            data-target="#showGroup">Ver grupo</a>
@@ -443,21 +444,42 @@
       axios.get(`/api/office/${adm_group_pk}/group-detail`)
         .then(function (response) {
           data = response.data
-          $("#edit_admin").append(
-            `\
-            <option selected value="${data[0].group.pk}">\
-            Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name} -  (${data[0].group.admin.charge.name})
-            </option>\
-          `
-          )
-          $(data).each(function () {
-            $("#edit_superv").append(
-              `\
-                <option selected value="${$(this)[0].supervisor.id}">\
-                ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name} - (${$(this)[0].supervisor.charge.name})\
-                </option>\
+          if (data[0].group.admin.charge !== null) {
+            $("#edit_admin").append(
+              `
+              <option selected value="${data[0].group.pk}">
+              Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name} -  (${data[0].group.admin.charge.name})
+              </option>
             `
-            );
+            )
+          } else {
+            $("#edit_admin").append(
+              `
+              <option selected value="${data[0].group.pk}">
+              Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name} -  (Sin Cargo)
+              </option>
+            `
+            )
+          }
+
+          $(data).each(function () {
+            if ($(this)[0].supervisor.charge !== null) {
+              $("#edit_superv").append(
+                `
+                    <option selected value="${$(this)[0].supervisor.id}">
+                    ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name} - (${$(this)[0].supervisor.charge.name})
+                    </option>
+                `
+              );
+            } else {
+              $("#edit_superv").append(
+                `
+                    <option selected value="${$(this)[0].supervisor.id}">
+                    ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name} - (Sin Cargo)
+                    </option>
+                `
+              );
+            }
           })
         })
         .catch(function (error) {
