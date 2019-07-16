@@ -448,7 +448,7 @@
             $("#edit_admin").append(
               `
               <option selected value="${data[0].group.pk}">
-              Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name} -  (${data[0].group.admin.charge})
+              Administrador ${data[0].group.admin.user.first_name} ${data[0].group.admin.user.last_name} -  (${data[0].group.admin.charge.name})
               </option>
             `
             )
@@ -467,7 +467,7 @@
               $("#edit_superv").append(
                 `
                     <option selected value="${$(this)[0].supervisor.id}">
-                    ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name} - (${$(this)[0].supervisor.charge})
+                    ${$(this)[0].supervisor.user.first_name} ${$(this)[0].supervisor.user.last_name} - (${$(this)[0].supervisor.charge.name})
                     </option>
                 `
               );
