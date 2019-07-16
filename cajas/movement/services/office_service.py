@@ -58,7 +58,7 @@ class MovementOfficeManager(object):
                     data['movement_type'] = MovementOffice.OUT
                 else:
                     data['movement_type'] = MovementOffice.IN
-                box_colombia_manager.create_colombia_movement(data)
+                box_colombia_manager.create_movement_box_colombia(data)
             elif data['destine_box'] == 'CAJA_BANCO':
                 box_colombia_manager = MovementBoxColombiaManager()
                 data['box'] = BoxColombia.objects.get(name="Caja Banco"),

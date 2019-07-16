@@ -17,7 +17,6 @@ class DonJuanUSDManager(object):
                 raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_movement(self, data):
-        print(data)
         self.__validate_data(data)
         last_movement = get_last_movement(MovementDonJuanUsd, 'box_don_juan', data['box'], data['date'])
         movement = MovementDonJuanUsd.objects.create(

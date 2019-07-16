@@ -279,7 +279,7 @@ class MovementDailySquareManager(object):
             update_movements_balance(
                 related_movements,
                 current_movement.movement_don_juan_usd.balance,
-                current_movement.movement_don_juan_usd.box_don_juan_usd
+                current_movement.movement_don_juan_usd.box_don_juan
             )
         if current_movement.movement_partner:
             update_movement_balance(
@@ -347,7 +347,7 @@ class MovementDailySquareManager(object):
         if movement.movement_don_juan_usd:
             delete_movement_by_box(
                 movement.movement_don_juan_usd,
-                movement.movement_don_juan_usd.box_don_juan_usd,
+                movement.movement_don_juan_usd.box_don_juan,
                 MovementDonJuanUsd,
                 'box_don_juan_usd'
             )
