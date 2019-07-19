@@ -7,8 +7,9 @@ class OfficeItemsManager(object):
     PROPERTIES = ['office', 'name', 'description', 'price', 'brand']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_office_item(self, data):
         self.__validate_data(data)

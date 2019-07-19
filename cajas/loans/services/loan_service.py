@@ -28,8 +28,9 @@ class LoanManager(object):
     PROPERTIES = ['value', 'value_cop', 'interest', 'time', 'exchange', 'office', 'loan_type']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_partner_loan(self, data):
         self.__validate_data(data)

@@ -2,6 +2,9 @@
 from cajas.concepts.models.concepts import Concept
 
 from ..models.movement_don_juan import MovementDonJuan
+from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
+    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_movement_balance
 
 
 class DonJuanManager(object):
@@ -9,11 +12,13 @@ class DonJuanManager(object):
     PROPERTIES = ['box', 'concept', 'movement_type', 'value', 'detail', 'date', 'responsible', 'ip']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_movement(self, data):
         self.__validate_data(data)
+        last_movement = get_last_movement(MovementDonJuan, 'box_don_juan', data['box'], data['date'])
         try:
             movement = MovementDonJuan.objects.create(
                 box_don_juan=data['box'][0],
@@ -37,6 +42,14 @@ class DonJuanManager(object):
                 responsible=data['responsible'],
                 ip=data['ip']
             )
+        update_movement_balance_on_create(last_movement, movement)
+        update_all_movements_balance_on_create(
+            MovementDonJuan,
+            'box_don_juan',
+            data['box'],
+            data['date'],
+            movement
+        )
         return movement
 
     def __get_movement_by_pk(self, pk):
@@ -51,24 +64,6 @@ class DonJuanManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
-    def __update_movement_type(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance += (int(data['movement'].value) * 2)
-        else:
-            box.balance -= (int(data['movement'].value) * 2)
-        box.save()
-
-    def __update_value(self, data):
-        box = data['box']
-        if data['movement_type'] == 'IN':
-            box.balance -= int(data['movement'].value)
-            box.balance += int(data['value'])
-        else:
-            box.balance += int(data['movement'].value)
-            box.balance -= int(data['value'])
-        box.save()
-
     def update_don_juan_movement(self, data):
         current_don_juan_movement = self.__get_movement_by_pk(data['pk'])
         current_movement = current_don_juan_movement.first()
@@ -82,10 +77,22 @@ class DonJuanManager(object):
         object_data['date'] = data['date']
         data['movement'] = current_movement
         data['box'] = current_movement.box_don_juan
-
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
-            self.__update_movement_type(data)
+            current_movement = update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if self.__is_movement_value_updated(current_movement, data['value']):
-            self.__update_value(data)
+            current_movement = update_movement_balance(current_movement, data['value'])
         current_don_juan_movement.update(**object_data)
+        update_all_movement_balance_on_update(
+            MovementDonJuan,
+            'box_don_juan',
+            current_movement.box_don_juan,
+            current_movement.date,
+            current_movement.pk,
+            current_movement
+        )
         return current_don_juan_movement.first()
+
+    def delete_don_juan_movement(self, data):
+        current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_daily_square.first()
+        delete_movement_by_box(current_movement, current_movement.box_don_juan, MovementDonJuan, 'box_don_juan')

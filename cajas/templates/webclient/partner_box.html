@@ -187,6 +187,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -201,6 +202,7 @@
                       {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                       {% else %}{% endif %}</td>
+                      <td><strong>{{ m.balance|intcomma }}</strong></td>
                       <td>
                         <ul class="ul-buttons">
                           {% if perms.movement.add_movementpartner %}
@@ -373,7 +375,8 @@
             title: '{{ box }}'
           }
         ],
-        "order": [[1, "des"]],
+        "order": [],
+        "bSort" : false,
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
@@ -697,7 +700,6 @@
           axios.delete(`/api/movements/${mov_pk}/movement-partner-update/`)
             .then(function (response) {
               data = response.data
-              console.log(data)
               Swal.fire(
                 'Eliminado',
                 'El movimiento se ha eliminado correctamente',

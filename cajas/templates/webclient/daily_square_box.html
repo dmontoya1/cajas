@@ -184,6 +184,7 @@
                       <th>Detalle</th>
                       <th>Entra</th>
                       <th>Sale</th>
+                      <th>Saldo</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -263,6 +264,7 @@
                           {% else %}
                           {% endif %}
                         </td>
+                        <td><strong>{{ m.balance|intcomma }}</strong></td>
                       </tr>
                     {% endfor %}
                     </tbody>
@@ -275,6 +277,7 @@
                       <th>Detalle</th>
                       <th>Entra</th>
                       <th>Sale</th>
+                      <th>Saldo</th>
                       <th></th>
                     </tr>
                     </thead>
@@ -301,6 +304,7 @@
                           {% else %}
                           {% endif %}
                         </td>
+                        <td><strong>{{ m.balance|intcomma }}</strong></td>
                         <td>
                           <ul class="ul-buttons">
                             {% if request.user.is_superuser %}
@@ -725,6 +729,7 @@
         "scrollX": true,
         dom: 'lBfrtip',
         lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "bSort" : false,
         buttons: [
           {
             extend: 'excelHtml5',
@@ -735,11 +740,7 @@
             title: 'Cuadre Diario de {{ box_user.get_full_name }}'
           }
         ],
-        {% if request.user.is_superuser or request.user.is_secretary %}
-          "order": [[2, "desc"]],
-        {% else %}
-          "order": [[1, "desc"]],
-        {% endif %}
+        "order": [],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
