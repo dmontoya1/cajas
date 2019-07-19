@@ -90,7 +90,6 @@ class DonJuanManager(object):
             current_movement.pk,
             current_movement
         )
-        return current_don_juan_movement.first()
 
     def delete_don_juan_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])

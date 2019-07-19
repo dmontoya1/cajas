@@ -2,7 +2,7 @@
 def get_next_related_movement_by_date_and_pk(model, box_name, box, date_mv, pk):
     if len(model.objects.filter(**{box_name: box}).filter(date=date_mv, pk__gt=pk)) > 0:
         return model.objects.filter(**{box_name: box}).filter(
-            date=date_mv,
+            date__gte=date_mv,
             pk__gt=pk
         ).order_by('date', 'pk')
     else:
