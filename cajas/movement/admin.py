@@ -30,9 +30,10 @@ class MovementDailySquareAdmin(admin.ModelAdmin):
     """
 
     list_display = ('box_daily_square', 'date', 'concept', 'detail', 'movement_type', 'value', )
-    list_filter = ('box_daily_square', 'concept')
+    list_filter = ('box_daily_square', 'concept', 'status')
     search_fields = ('box_daily_square__user__first_name',
                      'box_daily_square__user__last_name',
+                     'detail'
                      )
 
 
