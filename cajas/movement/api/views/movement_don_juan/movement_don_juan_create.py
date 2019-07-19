@@ -1,13 +1,10 @@
 
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-
-
-from ....models.movement_don_juan import MovementDonJuan
-from ...serializers.movement_don_juan_serializer import MovementDonJuanSerializer
 
 from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.boxes.models.box_don_juan import BoxDonJuan
@@ -23,10 +20,10 @@ from cajas.movement.services.don_juan_usd_service import DonJuanUSDManager
 from cajas.office.models.notifications import Notifications
 from cajas.office.models.officeCountry import OfficeCountry
 
-from cajas.webclient.views.get_ip import get_ip
+from ....models.movement_don_juan import MovementDonJuan
+from ...serializers.movement_don_juan_serializer import MovementDonJuanSerializer
 
-donjuan_manager = DonJuanManager()
-email_manager = EmailManager()
+from cajas.webclient.views.get_ip import get_ip
 
 
 class MovementDonJuanCreate(generics.CreateAPIView):
@@ -56,6 +53,7 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             'responsible': request.user,
             'ip': ip,
         }
+        donjuan_manager = DonJuanManager()
         movement = donjuan_manager.create_movement(data)
         if "destine_office" in request.POST:
             destine_office = OfficeCountry.objects.get(pk=request.POST['destine_office'])
@@ -66,6 +64,7 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             movement_between_office_manager.create_between_offices_movement_request(data, movement.pk, 'BDJ')
             secretary = Employee.objects.filter(office=destine_office.office, charge__name='Secretaria').first()
             if secretary:
+                email_manager = EmailManager()
                 email_manager.send_office_mail(request, secretary.user.email)
                 Notifications.objects.create(
                     office=destine_office, office_sender=office,

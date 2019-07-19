@@ -186,6 +186,7 @@
                     <th>Detalle</th>
                     <th>Entra</th>
                     <th>Sale</th>
+                    <th>Saldo</th>
                     <th></th>
                   </tr>
                   </thead>
@@ -200,6 +201,7 @@
                       {% else %}{% endif %}</td>
                       <td>{% if m.movement_type == 'OUT' %}${{ m.value|intcomma }}
                       {% else %}{% endif %}</td>
+                      <td><strong>{{ m.balance|intcomma }}</strong> </td>
                       <td>
                         <ul class="ul-buttons">
                           {% if perms.movement.add_movementoffice %}
@@ -428,7 +430,8 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "des"]],
+        "order": [],
+        "bSort" : false,
         "scrollX": true,
         language: {
           "sProcessing": "Procesando...",

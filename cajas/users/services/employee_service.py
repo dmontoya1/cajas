@@ -13,8 +13,9 @@ class EmployeeManager:
     PROPERTIES = ['user', 'office', 'charge', 'salary_type', 'salary']
 
     def __validate_data(self, data):
-        if not all(property in data for property in self.PROPERTIES):
-            raise Exception('la propiedad {} no se encuentra en los datos'.format(property))
+        for field in self.PROPERTIES:
+            if field not in data:
+                raise Exception('la propiedad {} no se encuentra en los datos'.format(field))
 
     def create_employee(self, data, aux):
         try:

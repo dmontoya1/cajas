@@ -12,6 +12,7 @@ from ....services.partner_service import MovementPartnerManager
 from ...serializers.movement_partner_serializer import MovementPartnerSerializer
 
 logger = logging.getLogger(__name__)
+partner_manager = MovementPartnerManager()
 
 
 class MovementPartnerDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -27,8 +28,7 @@ class MovementPartnerDetail(generics.RetrieveUpdateDestroyAPIView):
         data['ip'] = get_ip(request)
 
         try:
-            office_manager = MovementPartnerManager()
-            office_manager.update_partner_movement(data)
+            partner_manager.update_partner_movement(data)
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
                 status=status.HTTP_201_CREATED
@@ -40,3 +40,13 @@ class MovementPartnerDetail(generics.RetrieveUpdateDestroyAPIView):
                 'Ha ocurrido un error inesperado. Comunicate con el administrador',
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    def delete(self, request, *args, **kwargs):
+        data = request.POST.copy()
+        data['pk'] = self.kwargs['pk']
+
+        partner_manager.delete_partner_movement(data)
+        return Response(
+            'Se ha eliminado el movimiento exitosamente',
+            status=status.HTTP_201_CREATED
+        )

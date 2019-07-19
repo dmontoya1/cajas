@@ -79,6 +79,6 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
 
         daily_square_manager.delete_daily_square_movement(data)
         return Response(
-            'Se ha actualizado el movimiento exitosamente',
+            'Se ha eliminado el movimiento exitosamente',
             status=status.HTTP_201_CREATED
         )
