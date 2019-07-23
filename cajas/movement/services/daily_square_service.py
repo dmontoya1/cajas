@@ -117,7 +117,7 @@ class MovementDailySquareManager(object):
             return False
 
     def __is_movement_value_updated(self, movement, value):
-        return movement.value != value
+        return int(movement.value) != int(value)
 
     def __update_movement_type(self, data):
         current_movement = data['movement']
@@ -214,8 +214,8 @@ class MovementDailySquareManager(object):
             )
             update_movements_balance(
                 related_movements,
-                current_movement.movement_don_juan.balance,
-                current_movement.movement_don_juan.box_don_juan
+                current_movement.movement_cd.balance,
+                current_movement.movement_cd.box_daily_square
             )
 
     def update_counterpart_movement_type(self, movement):
@@ -223,6 +223,10 @@ class MovementDailySquareManager(object):
             movement.movement_type = movement.OUT
         else:
             movement.movement_type = movement.IN
+        movement.save()
+
+    def update_movement_value(self, movement, value):
+        movement.value = value
         movement.save()
 
     def __update_new_target_user_on_delivery_money(self, data):
@@ -250,7 +254,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan,
                 data['value']
             )
-            self.update_counterpart_movement_type(current_movement.movement_don_juan)
+            self.update_movement_value(current_movement.movement_don_juan, data['value'])
             related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuan,
                 'box_don_juan',
@@ -268,7 +272,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_don_juan_usd,
                 data['value']
             )
-            self.update_counterpart_movement_type(current_movement.movement_don_juan_usd)
+            self.update_movement_value(current_movement.movement_don_juan_usd, data['value'])
             related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDonJuanUsd,
                 'box_don_juan',
@@ -286,7 +290,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_partner,
                 data['value']
             )
-            self.update_counterpart_movement_type(current_movement.movement_partner)
+            self.update_movement_value(current_movement.movement_partner, data['value'])
             related_movements = get_next_related_movement_by_date_and_pk(
                 MovementPartner,
                 'box_partner',
@@ -304,7 +308,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_office,
                 data['value']
             )
-            self.update_counterpart_movement_type(current_movement.movement_office)
+            self.update_movement_value(current_movement.movement_office, data['value'])
             related_movements = get_next_related_movement_by_date_and_pk(
                 MovementOffice,
                 'box_office',
@@ -322,7 +326,7 @@ class MovementDailySquareManager(object):
                 current_movement.movement_cd,
                 data['value']
             )
-            self.update_counterpart_movement_type(current_movement.movement_cd)
+            self.update_movement_value(current_movement.movement_cd, data['value'])
             related_movements = get_next_related_movement_by_date_and_pk(
                 MovementDailySquare,
                 'box_daily_square',

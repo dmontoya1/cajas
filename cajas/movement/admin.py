@@ -35,9 +35,9 @@ class MovementDailySquareAdmin(admin.ModelAdmin):
                      'box_daily_square__user__last_name',
                      'detail'
                      )
-    list_select_related = (
-        'box_daily_square',
-    )
+    # list_select_related = (
+    #     'box_daily_square',
+    # )
 
 
 class MovementDonJuanInline(admin.TabularInline):
