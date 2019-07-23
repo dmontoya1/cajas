@@ -32,52 +32,43 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
         data = dict()
         partners_list = dict()
         dailys_list = dict()
-        total_office = 0
-        total_don_juan = 0
         if start_date and end_date:
-            movements_office = box_office.movements.filter(
+            # Office Movements
+            last_movement_office = box_office.movements.filter(
                 date__lte=end_date,
-            )
-            for mv in movements_office:
-                if mv.movement_type == 'IN':
-                    total_office += mv.value
-                else:
-                    total_office -= mv.value
-            data['office'] = total_office
-            movements_don_juan = box_donjuan.movements.filter(
+            ).first()
+            data['office'] = last_movement_office.balance
+            total_office = last_movement_office.balance
+
+            # Don Juan Movements
+            last_movement_don_juan = box_donjuan.movements.filter(
                 date__lte=end_date,
-            )
-            for mv in movements_don_juan:
-                if mv.movement_type == 'IN':
-                    total_don_juan += mv.value
-                else:
-                    total_don_juan -= mv.value
-            data['don_juan'] = total_don_juan
+            ).first()
+            data['don_juan'] = last_movement_don_juan.balance
+            total_don_juan = last_movement_don_juan.balance
+
+            # Partners Movements
             for box in box_partners:
-                total_partner = 0
-                movements = box.movements.filter(
+                last_movement = box.movements.filter(
                     date__lte=end_date,
-                )
-                for mv in movements:
-                    if mv.movement_type == 'IN':
-                        total_partner += mv.value
-                    else:
-                        total_partner -= mv.value
-                partners_list[box.partner] = total_partner
-                partner_sum += total_partner
+                ).first()
+                if last_movement:
+                    partners_list[box.partner] = last_movement.balance
+                    partner_sum += last_movement.balance
+                else:
+                    partners_list[box.partner] = 0
+
+            # Dailys Movements
             for box in box_daily:
-                total_daily = 0
-                movements = box.movements.filter(
+                last_movement = box.movements.filter(
                     Q(date__lte=end_date) &
                     ~Q(status='DE')
-                )
-                for mv in movements:
-                    if mv.movement_type == 'IN':
-                        total_daily += mv.value
-                    else:
-                        total_daily -= mv.value
-                dailys_list[box.user.get_full_name()] = total_daily
-                dq_total += total_daily
+                ).first()
+                if last_movement:
+                    dailys_list[box.user.get_full_name()] = last_movement.balance
+                    dq_total += last_movement.balance
+                else:
+                    dailys_list[box.user.get_full_name()] = 0
         else:
             total_don_juan = box_donjuan.balance
             total_office = box_office.balance
