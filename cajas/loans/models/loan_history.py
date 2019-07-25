@@ -59,6 +59,14 @@ class LoanHistory(models.Model):
         'Fecha del pago',
 
     )
+    balance = models.FloatField(
+        'Saldo a la Fecha',
+        default=0
+    )
+    balance_cop = models.FloatField(
+        'Saldo a la Fecha (COP)',
+        default=0
+    )
 
     def __str__(self):
         if self.history_type:
