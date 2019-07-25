@@ -55,17 +55,17 @@ class MovementDailySquareManager(object):
         return movement
 
     def create_new_partner_movement(self, data):
-        movement = MovementDailySquare.objects.create(
-            box_daily_square=data['box'],
-            concept=Concept.objects.get(name='Aporte personal socio'),
-            movement_type='IN',
-            value=data['value'],
-            detail='Aporte personal {}'.format(data['partner']),
-            date=datetime.now(),
-            responsible=data['responsible'],
-            ip=data['ip'],
-        )
-        return movement
+        data_send = data.copy()
+        data_send['concept'] = Concept.objects.get(name='Aporte personal socio')
+        data_send['movement_type'] = 'IN'
+        data_send['detail'] = 'Aporte personal {}'.format(data['partner'])
+        data_send['date'] = datetime.now()
+        data_send['unit'] = None
+        data_send['user'] = None
+        data_send['office'] = None
+        data_send['loan'] = None
+        data_send['chain'] = None
+        return self.create_movement(data_send)
 
     def get_user_value(self, data):
         month = datetime.now().month

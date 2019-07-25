@@ -51,7 +51,7 @@ class AcceptMovement(APIView):
             if relationship == Relationship.UNIT:
                 if movement.unit.partner.code == 'DONJUAN':
                     data = {
-                        'box': BoxDonJuan.objects.filter(office=movement.box_daily_square.office),
+                        'box': BoxDonJuan.objects.get(office=movement.box_daily_square.office),
                         'concept': movement.concept,
                         'movement_type': movement.movement_type,
                         'value': movement.value,

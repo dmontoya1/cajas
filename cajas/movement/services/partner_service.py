@@ -171,32 +171,23 @@ class MovementPartnerManager(object):
         }
         movement1 = self.create_simple(data1)
         concept2 = Concept.objects.get(name='Aporte socio directo')
+        data2 = {
+            'concept': concept2,
+            'movement_type': 'OUT',
+            'value': int(data['value']) * 2,
+            'detail': 'Salida Aporte Nuevo socio {}'.format(data['partner']),
+            'date': datetime.now(),
+            'responsible': data['responsible'],
+            'ip': data['ip']
+        }
         if data['partner'].partner_type == PartnerType.DIRECTO:
             box_don_juan = BoxDonJuan.objects.get(office=data['partner'].office)
-            data2 = {
-                'box': box_don_juan,
-                'concept': concept2,
-                'movement_type': 'OUT',
-                'value': int(data['value']) * 2,
-                'detail': 'Salida Aporte Nuevo socio {}'.format(data['partner']),
-                'date': datetime.now(),
-                'responsible': data['responsible'],
-                'ip': data['ip']
-            }
-            movement2 = donjuan_manager.create_movement(data2)
+            data2['box'] = box_don_juan
+            donjuan_manager.create_movement(data2)
         elif data['partner'].partner_type == PartnerType.INDIRECTO:
             box_direct_partner = BoxPartner.objects.get(partner=data['partner'].direct_partner)
-            data2 = {
-                'box': box_direct_partner,
-                'concept': concept2,
-                'movement_type': 'OUT',
-                'value': int(data['value']) * 2,
-                'detail': 'Salida Aporte Nuevo socio {}'.format(data['partner']),
-                'date': datetime.now(),
-                'responsible': data['responsible'],
-                'ip': data['ip']
-            }
-            movement2 = self.create_simple(data2)
+            data2['box'] = box_direct_partner
+            self.create_simple(data2)
         data3 = {
             'box': data['partner'].box,
             'concept': concept2,
