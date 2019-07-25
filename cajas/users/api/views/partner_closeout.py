@@ -187,8 +187,8 @@ class PartnerCloseout(APIView):
                     movement_partner_manager.create_double(data)
                     LoanHistory.objects.create(
                         loan=loan,
-                        value=total_loan,
-                        value_cop=loan.balance_cop,
+                        value=value,
+                        value_cop=value * exchange.exchange_cop_abono,
                         date=datetime.now(),
                         history_type=LoanHistory.ABONO,
                         movement_type=LoanHistory.OUT
@@ -214,7 +214,7 @@ class PartnerCloseout(APIView):
                     movement_partner_manager.create_double(data)
                     LoanHistory.objects.create(
                         loan=loan,
-                        value=loan.balance,
+                        value=value,
                         date=datetime.now(),
                         history_type=LoanHistory.ABONO,
                         movement_type=LoanHistory.OUT
