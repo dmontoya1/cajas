@@ -4,9 +4,10 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
-from cajas.boxes.models import BoxDonJuan, BoxPartner
-from cajas.concepts.models.concepts import Concept
-from cajas.loans.models.loan import Loan, LoanType
+from cajas.boxes.models import BoxDonJuan
+from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.general_config.models.exchange import Exchange
+from cajas.loans.models.loan import LoanType
 from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.partner_service import MovementPartnerManager
@@ -14,6 +15,7 @@ from cajas.movement.services.office_service import MovementOfficeManager
 from cajas.office.models import OfficeCountry
 from cajas.users.models import Partner
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_object_or_none
 
 from ..models.loan import Loan
 
@@ -58,7 +60,7 @@ class LoanPaymentManager(object):
                     }
                     return movement_office_manager.create_movement(data)
             elif loan.loan_type == LoanType.SOCIO_DIRECTO:
-                concept = get_object_or_404(Concept, name='Pago Abono préstamo socio')
+                concept = get_object_or_404(Concept, name='Pago Abono préstamo socio', concept_type=ConceptType.DOUBLE)
                 user = loan.lender
                 partner = Partner.objects.get(user=user, office=office)
                 data = {
@@ -149,13 +151,23 @@ class LoanPaymentManager(object):
 
     def create_payment(self, request):
         loan = get_object_or_404(Loan, pk=request.data['loan'])
+        office = OfficeCountry.objects.get(pk=request.session['office'])
+        exchange = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=datetime.now().month,
+        )
+        new_balance_cop = loan.balance_cop - float(request.data['value_cop'])
+        new_balance = new_balance_cop / exchange.exchange_cop_abono
         LoanHistory.objects.create(
             loan=loan,
             history_type=LoanHistory.ABONO,
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
             value_cop=request.data['value_cop'],
-            date=request.data['date']
+            date=request.data['date'],
+            balance_cop=new_balance_cop,
+            balance=new_balance
         )
 
     def interest_load_payment(self, request):
@@ -166,5 +178,7 @@ class LoanPaymentManager(object):
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
             value_cop=request.data['value_cop'],
-            date=datetime.now()
+            date=datetime.now(),
+            balance=loan.balance,
+            balance_cop=loan.balance_cop
         )

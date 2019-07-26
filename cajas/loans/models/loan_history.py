@@ -26,8 +26,8 @@ class LoanHistory(models.Model):
     )
 
     HISTORY_TYPE = (
-        (LOAN, 'Prestamo'),
-        (INTEREST, 'Interes'),
+        (LOAN, 'Préstamo'),
+        (INTEREST, 'Interés'),
         (ABONO, 'Abono')
     )
     loan = models.ForeignKey(
@@ -58,6 +58,14 @@ class LoanHistory(models.Model):
     date = models.DateField(
         'Fecha del pago',
 
+    )
+    balance = models.FloatField(
+        'Saldo a la Fecha',
+        default=0
+    )
+    balance_cop = models.FloatField(
+        'Saldo a la Fecha (COP)',
+        default=0
     )
 
     def __str__(self):

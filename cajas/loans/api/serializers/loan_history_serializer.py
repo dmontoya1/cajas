@@ -10,4 +10,4 @@ class LoanHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LoanHistory
-        fields = ('id', 'history_type', 'movement_type', 'value', 'date')
+        fields = ('id', 'history_type', 'movement_type', 'value', 'date', 'balance', 'balance_cop')
