@@ -25,19 +25,28 @@ class Calendar(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         group_supervisors = Group.objects.get(pk=self.kwargs['pk'])
         context['office'] = office
-        units = Unit.objects.filter(Q(partner__office=office) |
-                                    (Q(partner__code='DONJUAN') &
-                                     (Q(collector__related_employee__office_country=office) |
-                                      Q(collector__related_employee__office=office.office)
-                                      ))).distinct()
         try:
             employee = Employee.objects.get(
-                Q(user=self.request.user) & Q(office_country=office))
+                Q(user=group_supervisors.admin.user) & Q(office_country=office))
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
-                units = group.units.filter(partner__office=office)
-        except:
-            pass
+                units = group.units.filter(Q(partner__office=office) |
+                                           (Q(partner__code='DONJUAN') &
+                                            (Q(collector__related_employee__office_country=office) |
+                                             Q(collector__related_employee__office=office.office)
+                                             ))).distinct()
+            else:
+                units = Unit.objects.filter(Q(partner__office=office) |
+                                            (Q(partner__code='DONJUAN') &
+                                             (Q(collector__related_employee__office_country=office) |
+                                              Q(collector__related_employee__office=office.office)
+                                              ))).distinct()
+        except Employee.DoesNotExist:
+            units = Unit.objects.filter(Q(partner__office=office) |
+                                        (Q(partner__code='DONJUAN') &
+                                         (Q(collector__related_employee__office_country=office) |
+                                          Q(collector__related_employee__office=office.office)
+                                          ))).distinct()
 
         superv = GroupEmployee.objects.filter(
             group=group_supervisors,
