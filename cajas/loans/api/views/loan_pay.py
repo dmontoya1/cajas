@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cajas.loans.api.serializers.loan_history_serializer import LoanHistorySerializer
-from cajas.loans.services.loan_payment_service import LoanPaymentManager
+from ..serializers.loan_history_serializer import LoanHistorySerializer
+from ...services.loan_payment_service import LoanPaymentManager
 
 
 class LoanPaymentCreate(APIView):

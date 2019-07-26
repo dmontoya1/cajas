@@ -68,7 +68,9 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=data['value'],
+                balance_cop=data['value_cop']
             )
         else:
             LoanHistory.objects.create(
@@ -77,7 +79,9 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=loan.balance + int(data['value']),
+                balance_cop=loan.balance_cop + int(data['value_cop'])
             )
             loan.interest = data['interest']
             loan.save()
@@ -134,7 +138,7 @@ class LoanManager(object):
                 )
                 data_mov['box'] = provider.box
                 data_mov['partner'] = provider
-                movement = movement_parter_manager.create_simple(data_mov)
+                movement_parter_manager.create_simple(data_mov)
             elif data['box_from'] == 'donjuan':
                 provider = get_object_or_404(Partner, code='DONJUAN')
                 loan = Loan.objects.create(
@@ -150,7 +154,7 @@ class LoanManager(object):
                     balance=0
                 )
                 data_mov['box'] = BoxDonJuan.objects.get(office=office)
-                movement = donjuan_manager.create_movement(data_mov)
+                donjuan_manager.create_movement(data_mov)
             else:
                 loan = Loan.objects.create(
                     lender=lender,
@@ -164,14 +168,16 @@ class LoanManager(object):
                     balance=0
                 )
                 data_mov['box_office'] = office.box
-                movement = movement_office_manager.create_movement(data_mov)
+                movement_office_manager.create_movement(data_mov)
             LoanHistory.objects.create(
                 loan=loan,
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=data['value'],
+                balance_cop=data['value_cop']
             )
         else:
             LoanHistory.objects.create(
@@ -180,7 +186,9 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=old_loan.balance + int(data['value']),
+                balance_cop=old_loan.balance_cop + int(data['value_cop'])
             )
             old_loan.interest = data['interest']
             old_loan.save()
@@ -219,7 +227,9 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=data['value'],
+                balance_cop=data['value_cop']
             )
         else:
             LoanHistory.objects.create(
@@ -228,10 +238,13 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now()
+                date=datetime.now(),
+                balance=old_loan.balance + int(data['value']),
+                balance_cop=old_loan.balance_cop + int(data['value_cop'])
             )
             old_loan.interest = data['interest']
             old_loan.save()
+            loan = old_loan
         data = {
             'box': box_don_juan,
             'concept': concept,
@@ -242,5 +255,5 @@ class LoanManager(object):
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
-        movement = donjuan_manager.create_movement(data)
+        donjuan_manager.create_movement(data)
         return loan

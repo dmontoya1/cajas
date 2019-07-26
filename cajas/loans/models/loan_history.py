@@ -26,8 +26,8 @@ class LoanHistory(models.Model):
     )
 
     HISTORY_TYPE = (
-        (LOAN, 'Prestamo'),
-        (INTEREST, 'Interes'),
+        (LOAN, 'Préstamo'),
+        (INTEREST, 'Interés'),
         (ABONO, 'Abono')
     )
     loan = models.ForeignKey(
