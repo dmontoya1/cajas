@@ -1083,14 +1083,14 @@
                 })
               }
             })
-            .catch(function (error) {
+          .catch(function (error) {
               Swal.fire({
                 title: 'Error!',
-                text: error.response,
+                text: error.response.data.detail,
                 type: 'error',
                 allowOutsideClick: false
               })
-            });
+          });
         }
       })
     })
