@@ -1,10 +1,6 @@
 
 
-from cajas.concepts.models.concepts import Concept
-from cajas.general_config.models.exchange import Exchange
 from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
-from cajas.office.models.notifications import Notifications
-from cajas.office.models.officeCountry import OfficeCountry
 
 
 class MovementBetweenOfficesManager(object):
@@ -14,7 +10,7 @@ class MovementBetweenOfficesManager(object):
             contrapart = 'IN'
         else:
             contrapart = 'OUT'
-        mv = MovementBetweenOfficeRequest.objects.create(
+        MovementBetweenOfficeRequest.objects.create(
             box_office=data['destine_office'].box,
             origin_office=data['office'].box,
             from_box_type=origin_type,

@@ -2,8 +2,8 @@
 
 from django.urls import path
 
-from cajas.loans.api.views.loan_pay import LoanPaymentCreate
-from cajas.loans.api.views.loan_detail import LoanDetail
+from .api.views.loan_pay import LoanPaymentCreate
+from .api.views.loan_detail import LoanDetail
 
 app_name = 'loans'
 urlpatterns = [
