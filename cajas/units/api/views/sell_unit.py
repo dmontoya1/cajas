@@ -45,7 +45,7 @@ class UnitSell(APIView):
         ip = get_ip(request)
         if seller_partner.code == 'DONJUAN':
             data_seller = {
-                'box': BoxDonJuan.objects.get(office=seller_partner.office),
+                'box': BoxDonJuan.objects.get(office__pk=request.session['office']),
                 'concept': concept.counterpart,
                 'date': datetime.now(),
                 'movement_type': 'IN',
@@ -80,7 +80,7 @@ class UnitSell(APIView):
 
         if buyer_partner.code == 'DONJUAN':
             data_buyer = {
-                'box': BoxDonJuan.objects.get(office=seller_partner.office),
+                'box': BoxDonJuan.objects.get(office__pk=request.session['office']),
                 'concept': concept,
                 'date': datetime.now(),
                 'movement_type': 'OUT',
