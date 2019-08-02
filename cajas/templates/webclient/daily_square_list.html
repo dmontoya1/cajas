@@ -431,6 +431,17 @@
               </div>
             </div>
             <div class="form-row">
+              <div class="form-group col-md-6 lender-user-select d-none">
+                <label for="lender-user">Deudor</label>
+                <select class="form-control" id="lender-user" name="lender-user" style="width: 100%; height: 20px;">
+                  <option value="" selected disabled>Selecciona un usuario deudor</option>
+                  {% for user in users %}
+                    <option value="{{ user.pk }}">{{ user.get_full_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
               <div class="form-group col-md-6 loan-select d-none">
                 <label for="loan">Préstamo</label>
                 <select class="form-control" id="loan" name="loan" style="width: 100%; height: 20px;">
@@ -674,18 +685,21 @@
               $('#usd-sell').addClass('d-none')
               $('#regular-value').addClass('d-none')
               $('#dq-select-').addClass('d-none')
+              $('.lender-user-select').addClass('d-none')
               break;
             case 'Venta Dólares':
               $('#usd-sell').removeClass('d-none')
               $('#usd-buy').addClass('d-none')
               $('#regular-value').addClass('d-none')
               $('#dq-select-').addClass('d-none')
+              $('.lender-user-select').addClass('d-none')
               break;
             case 'Traslado de Efectivo entre Cuadres Diarios':
               $('#dq-select-').removeClass('d-none')
               $('#regular-value').removeClass('d-none')
               $('#usd-sell').addClass('d-none')
               $('#usd-buy').addClass('d-none')
+              $('.lender-user-select').addClass('d-none')
               break;
             case 'Préstamo Personal Empleado':
               $('.loan-employee').removeClass("d-none")
@@ -696,12 +710,24 @@
               $('#regular-value').addClass('d-none')
               $('#usd-sell').addClass('d-none')
               $('#usd-buy').addClass('d-none')
+              $('.lender-user-select').addClass('d-none')
               break;
             case 'Compra de Inventario Unidad':
               $(".dynamic_controller").removeClass("d-none")
               $("#unit_select").removeClass("d-none")
               $('.loan-employee').addClass('d-none')
               $('#regular-value').removeClass('d-none')
+              break;
+            case 'Pago Abono préstamo empleado':
+              $('.lender-user-select').removeClass('d-none')
+              $('.loan-employee').addClass("d-none")
+              $('#regular-value').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('#dq-select-').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
               break;
             default:
               $('#usd-sell').addClass('d-none')
@@ -713,6 +739,7 @@
               $('.loan-employee').addClass('d-none')
               $("#unity").val("")
               $("#unity").prop("required", false)
+              $('.lender-user-select').addClass('d-none')
 
               // deactivate required prop and clean inputs beacause these are going to be hidden
               $('.add-movement .dynamic_controller *').filter(':input').each(function () {
@@ -873,6 +900,9 @@
         language: "es"
       });
       $('#lender_employee').select2({
+        language: "es"
+      });
+      $('#lender-user').select2({
         language: "es"
       });
     });

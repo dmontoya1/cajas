@@ -9,9 +9,8 @@ from django.shortcuts import get_object_or_404
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.boxes.models import BoxDonJuan
 from cajas.concepts.models.concepts import Concept, Relationship
-from cajas.movement.services.don_juan_service import DonJuanManager
-from cajas.movement.services.office_service import MovementOfficeManager
-from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.loans.models.loan import Loan, LoanType
+from cajas.loans.models.loan_history import LoanHistory
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.unitItems import UnitItems
 from cajas.users.models.partner import Partner
@@ -19,6 +18,9 @@ from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
+from ....services.don_juan_service import DonJuanManager
+from ....services.office_service import MovementOfficeManager
+from ....services.partner_service import MovementPartnerManager
 
 
 class AcceptMovement(APIView):
@@ -34,6 +36,7 @@ class AcceptMovement(APIView):
         user = movement.box_daily_square.user
         movement_partner_manager = MovementPartnerManager()
         don_juan_manager = DonJuanManager()
+        movement_office_manager = MovementOfficeManager()
         if movement.concept == withdraw_concept:
             partner = Partner.objects.get(user=movement.user, office=office)
             data = {
@@ -139,6 +142,46 @@ class AcceptMovement(APIView):
                         item_create.is_replacement = True
                     item_create.save()
             movement_items.delete()
+        elif movement.concept.name == 'Pago Abono préstamo empleado':
+            try:
+                user = movement.user
+                loan = Loan.objects.get(lender=user, loan_type=LoanType.EMPLEADO)
+                data = {
+                    'concept': movement.concept,
+                    'movement_type': 'IN',
+                    'value': request.data['value'],
+                    'detail': 'Pago abono {}'.format(loan),
+                    'date': request.data['date'],
+                    'responsible': request.user,
+                    'ip': get_ip(request)
+                }
+                if loan.provider:
+                    if loan.provider.code == 'DONJUAN':
+                        data['box'] = BoxDonJuan.objects.get(office=office)
+                        movement = don_juan_manager.create_movement(data)
+                    else:
+                        data['partner'] = loan.provider
+                        data['box'] = loan.provider.box
+                        movement = movement_partner_manager.create_simple(data)
+                else:
+                    data['box_office'] = loan.office.box
+                    movement = movement_office_manager.create_movement(data)
+                new_balance = loan.balance - request.data['value']
+                LoanHistory.objects.create(
+                    loan=loan,
+                    history_type=LoanHistory.ABONO,
+                    movement_type=LoanHistory.OUT,
+                    value=request.data['value'],
+                    value_cop=0,
+                    date=request.data['date'],
+                    balance_cop=0,
+                    balance=new_balance
+                )
+            except Loan.DoesNotExists:
+                return Response(
+                    'No se pudo encontrar el préstamo para el usuario {}'.format(user.get_full_name()),
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
         movement.save()

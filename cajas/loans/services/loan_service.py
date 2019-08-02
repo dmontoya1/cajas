@@ -130,7 +130,7 @@ class LoanManager(object):
                     office=office,
                     loan_type=data['loan_type'],
                     value=data['value'],
-                    value_cop=data['value_cop'],
+                    value_cop=0,
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
@@ -147,7 +147,7 @@ class LoanManager(object):
                     office=office,
                     loan_type=data['loan_type'],
                     value=data['value'],
-                    value_cop=data['value_cop'],
+                    value_cop=0,
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
@@ -174,10 +174,10 @@ class LoanManager(object):
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
-                value_cop=data['value_cop'],
+                value_cop=0,
                 date=datetime.now(),
                 balance=data['value'],
-                balance_cop=data['value_cop']
+                balance_cop=0
             )
         else:
             LoanHistory.objects.create(
@@ -188,7 +188,7 @@ class LoanManager(object):
                 value_cop=data['value_cop'],
                 date=datetime.now(),
                 balance=old_loan.balance + int(data['value']),
-                balance_cop=old_loan.balance_cop + int(data['value_cop'])
+                balance_cop=0
             )
             old_loan.interest = data['interest']
             old_loan.save()
