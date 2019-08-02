@@ -31,7 +31,7 @@ class LoanPaymentManager(object):
         office = OfficeCountry.objects.get(pk=request.session['office'])
         loan = get_object_or_404(Loan, pk=request.data['loan'])
         if request.data['history_type'] == LoanHistory.ABONO:
-            self.create_payment(request, loan)
+            self.create_payment(request)
             if loan.loan_type == LoanType.EMPLEADO:
                 concept = get_object_or_404(Concept, name='Pago Abono préstamo empleado')
                 data = {
