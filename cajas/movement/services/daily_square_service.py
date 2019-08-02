@@ -157,8 +157,8 @@ class MovementDailySquareManager(object):
             )
             update_movements_balance(
                 related_movements,
-                current_movement.movement_don_juan.balance,
-                current_movement.movement_don_juan.box_don_juan
+                current_movement.movement_don_juan_usd.balance,
+                current_movement.movement_don_juan_usd.box_don_juan
             )
         if current_movement.movement_partner:
             update_movement_type_value(
@@ -176,8 +176,8 @@ class MovementDailySquareManager(object):
             )
             update_movements_balance(
                 related_movements,
-                current_movement.movement_don_juan.balance,
-                current_movement.movement_don_juan.box_don_juan
+                current_movement.movement_partner.balance,
+                current_movement.movement_partner.box_partner
             )
         if current_movement.movement_office:
             update_movement_type_value(
