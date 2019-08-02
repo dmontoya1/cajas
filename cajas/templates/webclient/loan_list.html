@@ -180,10 +180,15 @@
                       <td>{{ l.loan_type }}</td>
                       <td>{{ l.interest }}%</td>
                       <td>${{ l.balance|floatformat:2|intcomma }}</td>
-                      <td>${{ l.balance_cop|floatformat:2|intcomma }}</td>
+                      <td>
+                        {% if l.get_loan_type == 'Socio Directo' %}
+                          ${{ l.balance_cop|floatformat:2|intcomma }}</td>
+                        {% else %}
+                          No Aplica
+                        {% endif %}
                       <td><a href="{% url 'webclient:loan_payment_list' office.slug l.pk %}">Historial</a></td>
                       <td>
-                        {% if perms.loans.add_loanpayment %}
+                        {% if perms.loans.add_loanhistory %}
                           <ul class="ul-buttons">
                             <li>
                               <button type="button" class="add-movement add-interest" data-id="{{ l.id }}"

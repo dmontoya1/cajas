@@ -114,5 +114,8 @@ class Loan(models.Model):
         else:
             return True
 
+    def get_loan_type(self):
+        return str(self.loan_type)
+
     class Meta:
         verbose_name = 'Préstamo'

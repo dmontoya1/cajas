@@ -190,6 +190,9 @@ class CreateDailySquareMovement(APIView):
                             brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                             price=request.data["form[form][" + value + "][price]"]
                         )
+        elif concept.name == 'Pago Abono préstamo empleado':
+            data['user'] = request.data['lender-user']
+            movement = daily_square_manager.create_movement(data)
         else:
             if user:
                 total_movements = daily_square_manager.get_user_value(data)
