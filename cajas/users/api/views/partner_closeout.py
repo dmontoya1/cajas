@@ -95,7 +95,7 @@ class PartnerCloseout(APIView):
                 actual_place = actual_place.name.split(" ")
                 actual_place_number = actual_place[1]
                 total_places = int(chain_places) - int(actual_place_number)
-                concept2 = get_object_or_404(Concept, name="Pago Puestos Cadena")
+                concept2 = get_object_or_404(Concept, name="Pago Puesto Cadena")
                 MovementPartner.objects.create(
                     box_partner=partner.box,
                     concept=concept2,
