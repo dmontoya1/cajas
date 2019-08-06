@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.general_config.models.exchange import Exchange
-from cajas.loans.models.loan import Loan
+from cajas.loans.models.loan import Loan, LoanType
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.webclient.views.utils import get_object_or_none
 
@@ -46,6 +46,25 @@ class LoanList(LoginRequiredMixin, TemplateView):
                 month__month=now.month,
             )
         else:
-            context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
+            loans_list = list()
+            if self.request.user.groups.filter(name='Socios').exists():
+                loans = Loan.objects.filter(office=office, lender=self.request.user)
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                for l in loans:
+                    if l not in loans_list:
+                        loans_list.append(l)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for mini_partner in mini_partners:
+                    loans = Loan.objects.filter(
+                        office=office,
+                        lender=mini_partner.user,
+                        loan_type=LoanType.SOCIO_DIRECTO
+                    )
+                    for loan in loans:
+                        if loan not in loans_list:
+                            loans_list.append(loan)
+                context['loans'] = loans_list
+            else:
+                context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
         context['office'] = office
         return context
