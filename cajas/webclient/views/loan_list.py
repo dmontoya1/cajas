@@ -4,14 +4,14 @@ from datetime import datetime
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from cajas.users.models.employee import Employee
-from cajas.users.models.partner import Partner
+from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.general_config.models.exchange import Exchange
-from cajas.loans.models.loan import Loan
+from cajas.loans.models.loan import Loan, LoanType
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.webclient.views.utils import get_object_or_none
 
@@ -31,6 +31,15 @@ class LoanList(LoginRequiredMixin, TemplateView):
         context = super(LoanList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
+        try:
+            employee = Employee.objects.get(
+                Q(user=self.request.user) & Q(office_country=office))
+        except Employee.DoesNotExist:
+            employee = None
+        try:
+            group = get_object_or_none(DailySquareUnits, employee=employee)
+        except Group.DoesNotExist:
+            group = None
 
         if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
             context['loans'] = Loan.objects.filter(office=office)
@@ -46,6 +55,58 @@ class LoanList(LoginRequiredMixin, TemplateView):
                 month__month=now.month,
             )
         else:
-            context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
+            loans_list = list()
+            if employee and group and self.request.user.groups.filter(name='Administrador de Grupo').exists():
+                units = group.units.filter(Q(partner__office=office) |
+                                           (Q(partner__code='DONJUAN') &
+                                            (Q(collector__related_employee__office_country=office) |
+                                             Q(collector__related_employee__office=office.office) |
+                                             Q(supervisor__related_employee__office_country=office) |
+                                             Q(supervisor__related_employee__office=office.office)
+                                             ))).distinct()
+                for u in units:
+                    loans = Loan.objects.filter(
+                        office=office,
+                        lender=u.partner.user,
+                    )
+                    for loan in loans:
+                        if loan not in loans_list:
+                            loans_list.append(loan)
+            elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
+                loans = Loan.objects.filter(office=office, lender=self.request.user)
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                for l in loans:
+                    if l not in loans_list:
+                        loans_list.append(l)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for mini_partner in mini_partners:
+                    loans = Loan.objects.filter(
+                        office=office,
+                        lender=mini_partner.user,
+                        loan_type=LoanType.SOCIO_DIRECTO
+                    )
+                    for loan in loans:
+                        if loan not in loans_list:
+                            loans_list.append(loan)
+                context['loans'] = loans_list
+            if self.request.user.groups.filter(name='Socios').exists():
+                loans = Loan.objects.filter(office=office, lender=self.request.user)
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                for l in loans:
+                    if l not in loans_list:
+                        loans_list.append(l)
+                mini_partners = Partner.objects.filter(direct_partner=partner)
+                for mini_partner in mini_partners:
+                    loans = Loan.objects.filter(
+                        office=office,
+                        lender=mini_partner.user,
+                        loan_type=LoanType.SOCIO_DIRECTO
+                    )
+                    for loan in loans:
+                        if loan not in loans_list:
+                            loans_list.append(loan)
+                context['loans'] = loans_list
+            else:
+                context['loans'] = Loan.objects.filter(office=office, lender=self.request.user)
         context['office'] = office
         return context

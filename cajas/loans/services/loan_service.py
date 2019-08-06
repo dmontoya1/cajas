@@ -68,7 +68,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now(),
+                date=data['date'],
                 balance=data['value'],
                 balance_cop=data['value_cop']
             )
@@ -79,7 +79,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now(),
+                date=data['date'],
                 balance=loan.balance + int(data['value']),
                 balance_cop=loan.balance_cop + int(data['value_cop'])
             )
@@ -93,7 +93,7 @@ class LoanManager(object):
             'movement_type': 'IN',
             'value': data['value'],
             'detail': 'Préstamo sociedad a socio {}'.format(lender_partner),
-            'date': datetime.now(),
+            'date': data['date'],
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
@@ -113,7 +113,7 @@ class LoanManager(object):
             'movement_type': 'OUT',
             'value': data['value'],
             'detail': 'Préstamo a empleado {}'.format(lender_employee),
-            'date': datetime.now(),
+            'date': data['date'],
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
@@ -175,7 +175,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=0,
-                date=datetime.now(),
+                date=data['date'],
                 balance=data['value'],
                 balance_cop=0
             )
@@ -186,7 +186,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now(),
+                date=data['date'],
                 balance=old_loan.balance + int(data['value']),
                 balance_cop=0
             )
@@ -227,7 +227,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now(),
+                date=data['date'],
                 balance=data['value'],
                 balance_cop=data['value_cop']
             )
@@ -238,7 +238,7 @@ class LoanManager(object):
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=data['value_cop'],
-                date=datetime.now(),
+                date=data['date'],
                 balance=old_loan.balance + int(data['value']),
                 balance_cop=old_loan.balance_cop + int(data['value_cop'])
             )
@@ -251,7 +251,7 @@ class LoanManager(object):
             'movement_type': 'IN',
             'value': data['value'],
             'detail': 'Ingreso préstamo desde terceros',
-            'date': datetime.now(),
+            'date': data['date'],
             'responsible': data['request'].user,
             'ip': get_ip(data['request'])
         }
