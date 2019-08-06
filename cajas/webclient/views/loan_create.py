@@ -35,6 +35,7 @@ class LoanCreate(LoginRequiredMixin, View):
             'exchange': exchange,
             'office': office,
             'loan_type': loan_type,
+            'date': request.POST['date'],
             'request': request
         }
         if loan_type == 'DIR':
