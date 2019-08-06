@@ -52,6 +52,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             ).exclude(partner_type='DJ')
         else:
             partners = list()
+            partner = Partner.objects.get(office=office, user=self.request.user)
             if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
                 units = group.units.filter(Q(partner__office=office) |
                                            (Q(partner__code='DONJUAN') &
@@ -64,7 +65,6 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     if u.partner not in partners:
                         partners.append(u.partner)
             elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
-                partner = Partner.objects.get(office=office, user=self.request.user)
                 if partner not in partners:
                     partners.append(partner)
                 mini_partners = Partner.objects.filter(direct_partner=partner)
@@ -72,7 +72,6 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     if p not in partners:
                         partners.append(p)
             if self.request.user.groups.filter(name='Socios').exists():
-                partner = Partner.objects.get(office=office, user=self.request.user)
                 if partner not in partners:
                     partners.append(partner)
                 mini_partners = Partner.objects.filter(direct_partner=partner)
