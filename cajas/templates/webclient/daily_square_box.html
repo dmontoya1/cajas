@@ -192,14 +192,9 @@
                       <tr>
                         <td>
                           <ul class="ul-buttons">
-                            {% if request.user.is_superuser %}
+                            {% if request.user.is_superuser or request.user.is_secretary %}
                               <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                      data-target="#addMovement">Editar</a></li>
-                            {% elif request.user.is_secretary %}
-                              {% if m.date|three_last_days %}
-                                <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
-                                       data-target="#addMovement">Editar</a></li>
-                              {% endif %}
                             {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
                               <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                      data-target="#addMovement">Editar</a></li>
@@ -606,6 +601,18 @@
             <!-- end replication -->
 
             <!-- Appears if concept is Employee loan-->
+            <div class="form-row lender_employee d-none">
+              <div class="form-group col-md-12 lender_employee">
+                <label for="lender_employee">Selecciona el empleado Deudor</label>
+                <select class="form-control" id="lender_employee" name="lender_employee"
+                        style="width: 100%; height: 20px;">
+                  <option selected disabled value="">Selecciona el socio deudor</option>
+                  {% for e in office_employees %}
+                    <option value="{{ e.pk }}">{{ e }} - {{ e.charge }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
             <div class="loan-employee d-none">
               <div class="form-row">
                 <div class="form-group col-md-6 box-select">
@@ -626,18 +633,6 @@
                     <option selected disabled value="">Selecciona el socio fondeador</option>
                     {% for p in partners %}
                       <option value="{{ p.pk }}">{{ p }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-md-12 lender_employee">
-                  <label for="lender_employee">Selecciona el empleado Deudor</label>
-                  <select class="form-control" id="lender_employee" name="lender_employee"
-                          style="width: 100%; height: 20px;">
-                    <option selected disabled value="">Selecciona el socio deudor</option>
-                    {% for e in office_employees %}
-                      <option value="{{ e.pk }}">{{ e }} - {{ e.charge }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -950,18 +945,32 @@
               $('.lender-user-select').addClass('d-none')
               break;
             case 'Préstamo Personal Empleado':
-              $('.loan-employee').removeClass("d-none")
-              $('#regular-value').addClass('d-none')
-              $(".dynamic_controller").addClass("d-none")
-              $("#unit_select").addClass("d-none")
-              $('#dq-select-').addClass('d-none')
-              $('#regular-value').addClass('d-none')
-              $('#usd-sell').addClass('d-none')
-              $('#usd-buy').addClass('d-none')
-              $('.lender-user-select').addClass('d-none')
+              {% if request.user.is_superuser or request.user.is_secretary %}
+                $('.loan-employee').removeClass("d-none")
+                $('.lender_employee').removeClass("d-none")
+                $('#regular-value').addClass('d-none')
+                $(".dynamic_controller").addClass("d-none")
+                $("#unit_select").addClass("d-none")
+                $('#dq-select-').addClass('d-none')
+                $('#regular-value').addClass('d-none')
+                $('#usd-sell').addClass('d-none')
+                $('#usd-buy').addClass('d-none')
+                $('.lender-user-select').addClass('d-none')
+            {% else %}
+                $('.loan-employee').addClass("d-none")
+                $('.lender_employee').removeClass("d-none")
+                $('#regular-value').removeClass('d-none')
+                $(".dynamic_controller").addClass("d-none")
+                $("#unit_select").addClass("d-none")
+                $('#dq-select-').addClass('d-none')
+                $('#usd-sell').addClass('d-none')
+                $('#usd-buy').addClass('d-none')
+                $('.lender-user-select').addClass('d-none')
+            {% endif %}
               break;
             case 'Pago Abono préstamo empleado':
               $('.lender-user-select').removeClass('d-none')
+              $('.lender_employee').addClass("d-none")
               $('.loan-employee').addClass("d-none")
               $('#regular-value').addClass('d-none')
               $(".dynamic_controller").addClass("d-none")
@@ -973,6 +982,7 @@
               break;
             case 'Compra de Inventario Unidad':
               $('.loan-employee').addClass('d-none')
+              $('.lender_employee').addClass("d-none")
               $('.lender-user-select').addClass('d-none')
               $('#regular-value').removeClass('d-none')
               $(".dynamic_controller").removeClass("d-none")
@@ -990,6 +1000,7 @@
             default:
               $('#usd-sell').addClass('d-none')
               $('.lender-user-select').addClass('d-none')
+              $('.lender_employee').addClass("d-none")
               $('#usd-buy').addClass('d-none')
               $('#regular-value').removeClass('d-none')
               $('#dq-select-').addClass('d-none')

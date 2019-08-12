@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import View
@@ -103,6 +104,9 @@ class PartnerCreate(LoginRequiredMixin, View):
                 'office': office
             }
             box_daily_square = box_daily_square_manager.create_box(data)
+        for g in request.POST.getlist("groups[]"):
+            group = Group.objects.get(pk=g)
+            group.user_set.add(user)
         if int(initial_value) > 0:
             ip = get_ip(request)
             data = {
