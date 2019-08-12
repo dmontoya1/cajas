@@ -86,11 +86,11 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             elif request.data['destine_box'] == 'CAJA_COLOMBIA':
                 box_colombia_manager = MovementBoxColombiaManager()
                 data['box'] = get_object_or_404(BoxColombia, name="Caja Colombia"),
-                box_colombia_manager.create_colombia_movement(data)
+                box_colombia_manager.create_box_colombia_movement(data)
             elif request.data['destine_box'] == 'CAJA_BANCO':
                 box_colombia_manager = MovementBoxColombiaManager()
                 data['box'] = get_object_or_404(BoxColombia, name="Caja Banco"),
-                box_colombia_manager.create_bank_colombia_movement(data)
+                box_colombia_manager.create_box_bank_colombia_movement(data)
 
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return Response(
