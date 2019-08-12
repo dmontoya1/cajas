@@ -148,23 +148,24 @@ class CreateDailySquareMovement(APIView):
 
         elif concept.name == "Préstamo Personal Empleado":
             loan_manager = LoanManager()
-            data_loan = {
-                'request': request,
-                'value': request_data['value_loan'],
-                'value_cop': request_data['value_cop'],
-                'interest': request_data['interest'],
-                'time': request_data['time'],
-                'exchange': request_data['exchange'],
-                'office': office_.pk,
-                'loan_type': 'EMP',
-                'lender': request_data['lender_employee'],
-                'box_from': request_data['box_from'],
-            }
-            if request_data['box_from'] == 'partner':
-                data_loan['provider'] = request_data['partner_provider']
-            loan_manager.create_employee_loan(data_loan)
-            data['value'] = request_data['value_loan']
-            movement = daily_square_manager.create_movement(data)
+            if request.user.is_superuser or request.user.is_secretary():
+                data_loan = {
+                    'request': request,
+                    'value': request_data['value_loan'],
+                    'value_cop': request_data['value_cop'],
+                    'interest': request_data['interest'],
+                    'time': request_data['time'],
+                    'exchange': request_data['exchange'],
+                    'office': office_.pk,
+                    'loan_type': 'EMP',
+                    'lender': request_data['lender_employee'],
+                    'box_from': request_data['box_from'],
+                }
+                if request_data['box_from'] == 'partner':
+                    data_loan['provider'] = request_data['partner_provider']
+                loan_manager.create_employee_loan(data_loan)
+                data['value'] = request_data['value_loan']
+                movement = daily_square_manager.create_movement(data)
         elif concept.name == "Compra de Inventario Unidad":
             movement = daily_square_manager.create_movement(data)
             values = request.data["elemts"].split(",")
