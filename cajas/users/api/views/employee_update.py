@@ -25,6 +25,8 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         user = User.objects.get(pk=item.user.pk)
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
+        user.email = request.data['email']
+        user.username = request.data['email']
         if request.data['is_daily_square'] == "true":
             user.is_daily_square = True
         if "password1" in request.data:
