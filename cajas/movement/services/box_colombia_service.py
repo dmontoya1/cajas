@@ -71,7 +71,7 @@ class MovementBoxColombiaManager(object):
                 don_juan_usd_manager.create_movement(data)
             elif data['destine_box'] == 'CAJA_OFICINA':
                 last_movement = get_last_movement(MovementOffice, 'box_office', data['box_office'], data['date'])
-                if type(data['box_office'] is not BoxOffice):
+                if type(data['box_office']) is not BoxOffice:
                     data['box_office'] = BoxOffice.objects.get(pk=data['box_office'])
                 movement = MovementOffice.objects.create(
                     box_office=data['box_office'],
@@ -136,7 +136,6 @@ class MovementBoxColombiaManager(object):
             name='Traslado entre cajas Colombia',
             concept_type=ConceptType.DOUBLE
         )
-        concept = get_object_or_404(Concept, pk=data['concept'])
         try:
             concept = get_object_or_404(Concept, pk=data['concept'])
             data['concept'] = concept
@@ -151,7 +150,7 @@ class MovementBoxColombiaManager(object):
             if data['destine_box'] == 'CAJA_DON_JUAN':
                 movement = MovementDonJuan.objects.create(
                     box_don_juan=get_object_or_404(BoxDonJuan, office=data['office']),
-                    concept=concept,
+                    concept=data['concept'],
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
@@ -159,6 +158,12 @@ class MovementBoxColombiaManager(object):
                     responsible=data['responsible'],
                     ip=data['ip']
                 )
+                update_movement_balance_on_create(last_movement, movement)
+                update_all_movements_balance_on_create(
+                    MovementDonJuan,
+                    'box_don_juan',
+                    data['box'],
+                    data['date'],
             elif data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
                 data['box'] = get_object_or_404(BoxDonJuan, office=data['office']),
@@ -170,15 +175,26 @@ class MovementBoxColombiaManager(object):
             elif data['destine_box'] == 'CAJA_COLOMBIA':
                 self.create_movement_box_colombia(data)
             elif data['destine_box'] == 'CAJA_OFICINA':
+                last_movement = get_last_movement(MovementOffice, 'box_office', data['box_office'], data['date'])
+                if type(data['box_office']) is not BoxOffice:
+                    data['box_office'] = BoxOffice.objects.get(pk=data['box_office'])
                 movement = MovementOffice.objects.create(
-                    box_office=data['office'].box,
-                    concept=concept,
+                    box_office=data['box_office'],
+                    concept=data['concept'],
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
                     date=data['date'],
                     responsible=data['responsible'],
                     ip=data['ip'],
+                )
+                update_movement_balance_on_create(last_movement, movement)
+                update_all_movements_balance_on_create(
+                    MovementOffice,
+                    'box_office',
+                    data['box_office'],
+                    data['date'],
+                    movement
                 )
 
     def create_bank_colombia_movement(self, data):
