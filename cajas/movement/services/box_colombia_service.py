@@ -20,8 +20,11 @@ class MovementBoxColombiaManager(object):
             name='Traslado entre cajas Colombia',
             concept_type=ConceptType.DOUBLE
         )
-        concept = get_object_or_404(Concept, pk=data['concept'])
-        data['concept'] = concept
+        try:
+            concept = get_object_or_404(Concept, pk=data['concept'])
+            data['concept'] = concept
+        except:
+            data['concept'] = data['concept']
         movement_colombia = self.create_movement_box_colombia(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -131,7 +134,11 @@ class MovementBoxColombiaManager(object):
             concept_type=ConceptType.DOUBLE
         )
         concept = get_object_or_404(Concept, pk=data['concept'])
-        data['concept'] = concept
+        try:
+            concept = get_object_or_404(Concept, pk=data['concept'])
+            data['concept'] = concept
+        except:
+            data['concept'] = data['concept']
         self.create_bank_colombia_movement(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
