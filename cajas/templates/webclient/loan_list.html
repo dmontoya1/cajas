@@ -191,7 +191,7 @@
                         {% if perms.loans.add_loanhistory %}
                           <ul class="ul-buttons">
                             <li>
-                              <button type="button" class="add-movement add-interest" data-id="{{ l.id }}"
+                              <button type="button" class="btn add-movement add-interest" data-id="{{ l.id }}"
                                       data-toggle="modal"
                                       data-interest="{{ l.get_interest_payment }}"
                                       data-target="#modalAddInterest"
@@ -202,7 +202,7 @@
                               </button>
                             </li>
                             <li>
-                              <button type="button" class="see-box add-pay"
+                              <button type="button" class="btn see-box add-pay"
                                       data-id="{{ l.id }}"
                                       data-interest-pay="{{ l.get_interest_actual_month_payment }}"
                                       data-box-balance-positive="{{ l.get_lender_box_balance_positive }}"
@@ -213,7 +213,7 @@
                               </button>
                             </li>
                             <li>
-                              <button type="button" class="add-loan add-new-loan" data-id="{{ l.pk }}">
+                              <button type="button" class="btn add-loan add-new-loan" data-id="{{ l.pk }}">
                                 <i class="fas fa-plus mr-1"></i>
                                 Préstamo
                               </button>
