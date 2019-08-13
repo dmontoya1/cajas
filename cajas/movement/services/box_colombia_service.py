@@ -164,6 +164,8 @@ class MovementBoxColombiaManager(object):
                     'box_don_juan',
                     data['box'],
                     data['date'],
+                    movement
+                )
             elif data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
                 data['box'] = get_object_or_404(BoxDonJuan, office=data['office']),
