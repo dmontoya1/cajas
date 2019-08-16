@@ -186,7 +186,7 @@
                           {% get_dq_box_is_close office partner.user as box_is_close %}
                           {% if perms.movement.add_movementdailysquare and not box_is_close %}
                             <li>
-                              <button type="button" class="add-movement-button" data-id="{{ partner.user.pk }}"
+                              <button type="button" class="btn add-movement-button" data-id="{{ partner.user.pk }}"
                                       data-toggle="modal" data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir
                                 Movimiento
                               </button>
@@ -196,7 +196,7 @@
                           {% endif %}
                           {% if perms.boxes.change_boxdailysquare %}
                             <li><a href="{% url 'webclient:daily_square_box' office.slug partner.user.pk %}"
-                                   class="see-box"><i
+                                   class="btn see-box"><i
                               class="fas fa-eye mr-2"></i>Ver cuadre diario</a></li>
                           {% endif %}
                         </ul>
@@ -215,7 +215,7 @@
                             {% get_dq_box_id office d as box_id %}
                             {% get_dq_box_is_close office d as box_is_close %}
                             <li>
-                              <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                              <button type="button" class="btn add-movement-button" data-id="{{ d.pk }}"
                                       data-toggle="modal"
                                       data-target="#addMovement"><i class="fas fa-plus mr-2"></i>Añadir Movimiento
                               </button>
@@ -231,9 +231,9 @@
                                 <i class="fas fa-power-off mr-2"></i>Abrir Caja</a></li>
                             {% endif %}
                             {% if perms.boxes.change_boxdailysquare %}
-                              <li><a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box"><i
+                              <li><a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="btn see-box"><i
                                 class="fas fa-eye mr-2"></i>Ver cuadre diario</a></li>
-                              <li><a href="{% url 'webclient:daily_square_venda' office.slug d.pk %}" class="see-box"><i
+                              <li><a href="{% url 'webclient:daily_square_venda' office.slug d.pk %}" class="btn see-box"><i
                                 class="fas fa-calendar-check mr-2"></i>Venda+</a></li>
                             {% endif %}
                           </ul>
@@ -254,7 +254,7 @@
                             {% get_dq_box_is_close office d as box_is_close %}
                             {% if perms.movement.add_movementdailysquare and not box_is_close and d == request.user %}
                               <li>
-                                <button type="button" class="add-movement-button" data-id="{{ d.pk }}"
+                                <button type="button" class="btn add-movement-button" data-id="{{ d.pk }}"
                                         data-toggle="modal"
                                         data-target="#addMovement">
                                   <i class="fas fa-plus mr-2"></i>
@@ -271,12 +271,12 @@
                             {% endif %}
                             {% if perms.boxes.change_boxdailysquare %}
                               <li>
-                                <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="see-box">
+                                <a href="{% url 'webclient:daily_square_box' office.slug d.pk %}" class="btn see-box">
                                   <i class="fas fa-eye mr-2"></i>Ver cuadre diario
                                 </a>
                               </li>
                               <li>
-                                <a href="{% url 'webclient:daily_square_venda' office.slug d.pk %}" class="see-box">
+                                <a href="{% url 'webclient:daily_square_venda' office.slug d.pk %}" class="btn see-box">
                                   <i class="fas fa-calendar-check mr-2"></i>Venda+
                                 </a>
                               </li>

@@ -187,7 +187,7 @@
                       <td><a href="{% url 'webclient:investment_pay_list' office.slug i.pk %}">Pagos</a></td>
                       <td>
                         {% if perms.investments.add_investmentpay %}
-                          <button type="button" class="add-movement add-pay" data-id="{{ i.pk }}" data-toggle="modal"
+                          <button type="button" class="btn add-movement add-pay" data-id="{{ i.pk }}" data-toggle="modal"
                                   data-target="#modalAddPayment">
                             <i class="fas fa-plus mr-1"></i>
                             Realizar pago

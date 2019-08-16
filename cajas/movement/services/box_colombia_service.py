@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
+from cajas.boxes.models.box_office import BoxOffice
 from cajas.concepts.models.concepts import Concept, ConceptType
 
 from ..models import MovementBoxColombia, MovementDonJuan, MovementOffice
@@ -20,8 +21,11 @@ class MovementBoxColombiaManager(object):
             name='Traslado entre cajas Colombia',
             concept_type=ConceptType.DOUBLE
         )
-        concept = get_object_or_404(Concept, pk=data['concept'])
-        data['concept'] = concept
+        try:
+            concept = get_object_or_404(Concept, pk=data['concept'])
+            data['concept'] = concept
+        except:
+            data['concept'] = data['concept']
         movement_colombia = self.create_movement_box_colombia(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -67,6 +71,8 @@ class MovementBoxColombiaManager(object):
                 don_juan_usd_manager.create_movement(data)
             elif data['destine_box'] == 'CAJA_OFICINA':
                 last_movement = get_last_movement(MovementOffice, 'box_office', data['box_office'], data['date'])
+                if type(data['box_office']) is not BoxOffice:
+                    data['box_office'] = BoxOffice.objects.get(pk=data['box_office'])
                 movement = MovementOffice.objects.create(
                     box_office=data['box_office'],
                     concept=data['concept'],
@@ -130,8 +136,11 @@ class MovementBoxColombiaManager(object):
             name='Traslado entre cajas Colombia',
             concept_type=ConceptType.DOUBLE
         )
-        concept = get_object_or_404(Concept, pk=data['concept'])
-        data['concept'] = concept
+        try:
+            concept = get_object_or_404(Concept, pk=data['concept'])
+            data['concept'] = concept
+        except:
+            data['concept'] = data['concept']
         self.create_bank_colombia_movement(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -141,13 +150,21 @@ class MovementBoxColombiaManager(object):
             if data['destine_box'] == 'CAJA_DON_JUAN':
                 movement = MovementDonJuan.objects.create(
                     box_don_juan=get_object_or_404(BoxDonJuan, office=data['office']),
-                    concept=concept,
+                    concept=data['concept'],
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
                     date=data['date'],
                     responsible=data['responsible'],
                     ip=data['ip']
+                )
+                update_movement_balance_on_create(last_movement, movement)
+                update_all_movements_balance_on_create(
+                    MovementDonJuan,
+                    'box_don_juan',
+                    data['box'],
+                    data['date'],
+                    movement
                 )
             elif data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
@@ -160,15 +177,26 @@ class MovementBoxColombiaManager(object):
             elif data['destine_box'] == 'CAJA_COLOMBIA':
                 self.create_movement_box_colombia(data)
             elif data['destine_box'] == 'CAJA_OFICINA':
+                last_movement = get_last_movement(MovementOffice, 'box_office', data['box_office'], data['date'])
+                if type(data['box_office']) is not BoxOffice:
+                    data['box_office'] = BoxOffice.objects.get(pk=data['box_office'])
                 movement = MovementOffice.objects.create(
-                    box_office=data['office'].box,
-                    concept=concept,
+                    box_office=data['box_office'],
+                    concept=data['concept'],
                     movement_type=data['movement_type'],
                     value=data['value'],
                     detail=data['detail'],
                     date=data['date'],
                     responsible=data['responsible'],
                     ip=data['ip'],
+                )
+                update_movement_balance_on_create(last_movement, movement)
+                update_all_movements_balance_on_create(
+                    MovementOffice,
+                    'box_office',
+                    data['box_office'],
+                    data['date'],
+                    movement
                 )
 
     def create_bank_colombia_movement(self, data):
