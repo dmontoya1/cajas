@@ -145,7 +145,12 @@ class CreateDailySquareMovement(APIView):
             movement.movement_cd = movement_cd
             movement.user = dq_target
             movement.save()
-
+            email_manager.send_cd_transfer_email(
+                request,
+                movement.box_daily_square.user.get_full_name(),
+                movement.value,
+                dq_target.email
+            )
         elif concept.name == "Préstamo Personal Empleado":
             loan_manager = LoanManager()
             if request.user.is_superuser or request.user.is_secretary():

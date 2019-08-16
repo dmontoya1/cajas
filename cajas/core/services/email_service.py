@@ -80,6 +80,20 @@ class EmailManager(object):
         subject = "Movimiento entre oficinas rechazado"
         self.send_email(ctx, subject, email_to)
 
+    def send_cd_transfer_email(self, request, dq_from, value, email_to):
+        url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
+        ctx = {
+            "title": "Te han hecho un traslado de efeectivo",
+            "content": "El cuadre diario {} te ha hecho un traslado de efectivo por valor de ${}.".format(
+                dq_from,
+                value,
+            ),
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Te han hecho un traslado de efeectivo"
+        self.send_email(ctx, subject, email_to)
+
     def send_office_mail(self, request, email_to):
         url = 'http://{}{}'.format(request.get_host(), reverse('webclient:home'))
         ctx = {
