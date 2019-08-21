@@ -148,6 +148,8 @@ class MovementBoxColombiaManager(object):
             else:
                 data['movement_type'] = MovementBoxColombia.IN
             if data['destine_box'] == 'CAJA_DON_JUAN':
+                data['box'] = BoxDonJuan.objects.get(office=data['office'])
+                last_movement = get_last_movement(MovementDonJuan, 'box_don_juan', data['box'], data['date'])
                 movement = MovementDonJuan.objects.create(
                     box_don_juan=get_object_or_404(BoxDonJuan, office=data['office']),
                     concept=data['concept'],
