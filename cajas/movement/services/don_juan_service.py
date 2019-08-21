@@ -18,6 +18,7 @@ class DonJuanManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
+        print(data['box'])
         last_movement = get_last_movement(MovementDonJuan, 'box_don_juan', data['box'], data['date'])
         try:
             movement = MovementDonJuan.objects.create(
