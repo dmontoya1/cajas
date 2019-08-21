@@ -42,10 +42,13 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
              Q(related_employee__office=office.office)) &
             Q(is_daily_square=True)).distinct()
         context['dq_list'] = dq_list
+        if self.request.GET.get('all'):
+            movements = box_daily_square.movements.all()
+        else:
+            movements = box_daily_square.movements.all()[:50]
         try:
             employee = Employee.objects.get(
                 Q(user=user) & Q(office_country=office))
-
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
                 units = group.units.filter(Q(partner__office=office) |
@@ -90,5 +93,6 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['today'] = today.strftime('%d/%m/%Y')
         context['past_mvments'] = past_mvments
         context['categories'] = Category.objects.all()
+        context['movements'] = movements
 
         return context
