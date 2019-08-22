@@ -179,6 +179,8 @@
                   <h3 class="mb-3">Caja Don Juan</h3>
                   <h3 class="float-right">SALDO CAJA: $
                     {{ box.balance|intcomma }}{{ box.office.country.currency.abbr }} </h3>
+                <br><br>
+                  <a href="?all=true" class="btn float-right " style="background: #5c6bc0; color: #fff;">Ver todos los movimientos</a>
                   <thead>
                   <tr>
                     <th>Responsable</th>
@@ -192,7 +194,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for m in box.movements.all %}
+                  {% for m in movements %}
                     <tr>
                       <td>{{ m.responsible.get_full_name }}</td>
                       <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
