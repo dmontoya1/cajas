@@ -28,4 +28,10 @@ class OfficeBox(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         context['office'] = office
         context['categories'] = Category.objects.all()
         context['offices'] = OfficeCountry.objects.all()
+        box_office = office.box
+        if self.request.GET.get('all'):
+            movements = box_office.movements.all()
+        else:
+            movements = box_office.movements.all()[:50]
+        context['movements'] = movements
         return context

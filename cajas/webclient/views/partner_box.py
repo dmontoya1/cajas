@@ -24,7 +24,12 @@ class PartnerBox(LoginRequiredMixin, TemplateView):
         box_partner = get_object_or_404(BoxPartner, partner=partner)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
+        if self.request.GET.get('all'):
+            movements = box_partner.movements.all()
+        else:
+            movements = box_partner.movements.all()[:50]
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['box'] = box_partner
+        context['movements'] = movements
         return context
