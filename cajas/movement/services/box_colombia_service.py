@@ -33,6 +33,7 @@ class MovementBoxColombiaManager(object):
             else:
                 data['movement_type'] = MovementBoxColombia.IN
             if data['destine_box'] == 'CAJA_DON_JUAN':
+                data['box'] = BoxDonJuan.objects.get(office=data['office'])
                 last_movement = get_last_movement(MovementDonJuan, 'box_don_juan', data['box'], data['date'])
                 try:
                     movement = MovementDonJuan.objects.create(
