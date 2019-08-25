@@ -264,7 +264,7 @@ X_FRAME_OPTIONS = 'ALLOWALL'
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_USER = 'SAC Sistema Administración de Cajas <no-reply@sac.ilanalab.com>'
+EMAIL_USER = 'SAC Sistema Administración de Cajas <no-reply@globalsac.co>'
 EMAIL_HOST_USER = 'sac_ilana'
 EMAIL_HOST_PASSWORD = 'tbZk3tv9NSKzNwx'
 EMAIL_PORT = 587
