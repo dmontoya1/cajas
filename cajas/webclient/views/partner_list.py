@@ -41,7 +41,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             employee = None
         try:
             group = get_object_or_none(DailySquareUnits, employee=employee)
-        except Group.DoesNotExist:
+        except:
             group = None
         context['employee'] = employee
         if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
