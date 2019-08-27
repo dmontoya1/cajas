@@ -61,15 +61,14 @@
           Requerimiento de retiro de socio
         </a>
       </li>
-
-      <li class="menu-item-has-children dropdown">
+    {% endif %}
+    {% if request.user.is_superuser or request.user.is_secretary %}
+       <li class="menu-item-has-children dropdown">
         <a href="#" data-toggle="modal" data-target="#migrate">
           <i class="fas fa-retweet mr-3"></i>
           Migracion de socios
         </a>
       </li>
-    {% endif %}
-    {% if request.user.is_superuser or request.user.is_secretary %}
       <li class="menu-item-has-children dropdown">
         <a href="{% url 'webclient:reports' %}">
           <i class="fas fa-chart-line mr-3"></i>

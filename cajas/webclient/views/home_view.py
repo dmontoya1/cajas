@@ -32,8 +32,10 @@ class Home(LoginRequiredMixin, TemplateView):
                 if user.related_employee.get().is_admin_charge():
                     if user.related_employee.get().office.all().exists():
                         context['offices'] = user.related_employee.get().office.all()
+                        context['partners_offices'] = Partner.objects.filter(office__office__in=context['offices'])
                     else:
                         context['offices_country'] = user.related_employee.get().office_country.all()
+                        context['partners_offices'] = Partner.objects.filter(office__in=context['offices_country'])
                 else:
                     context['offices'] = user.related_employee.get().office_country.all()
             except Exception as e:
@@ -56,9 +58,8 @@ class Home(LoginRequiredMixin, TemplateView):
                         context['actual_partners'] = Partner.objects.filter(user=user)
                 except Employee.DoesNotExist:
                     context['actual_partners'] = Partner.objects.filter(user=user)
-
         else:
             context['offices'] = Office.objects.all()
-            context['all_offices'] = OfficeCountry.objects.all().order_by('office')
             context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        context['all_offices'] = OfficeCountry.objects.all().order_by('office')
         return context
