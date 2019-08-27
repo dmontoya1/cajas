@@ -21,7 +21,7 @@ class Group(models.Model):
     )
 
     def __str__(self):
-        return "Administrador {}".format(self.admin.user)
+        return "Administrador {}".format(self.admin.user.get_full_name())
 
     class Meta:
         verbose_name = 'Administrador de grupo'
