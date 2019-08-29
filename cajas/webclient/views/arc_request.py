@@ -37,15 +37,22 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
             last_movement_office = box_office.movements.filter(
                 date__lte=end_date,
             ).first()
-            data['office'] = last_movement_office.balance
-            total_office = last_movement_office.balance
-
+            if not last_movement_office:
+                data['office'] = 0
+                total_office = 0
+            else:
+                data['office'] = last_movement_office.balance
+                total_office = last_movement_office.balance
             # Don Juan Movements
             last_movement_don_juan = box_donjuan.movements.filter(
                 date__lte=end_date,
             ).first()
-            data['don_juan'] = last_movement_don_juan.balance
-            total_don_juan = last_movement_don_juan.balance
+            if not last_movement_don_juan:
+                data['don_juan'] = 0
+                total_don_juan = 0
+            else:
+                data['don_juan'] = last_movement_don_juan.balance
+                total_don_juan = last_movement_don_juan.balance
 
             # Partners Movements
             for box in box_partners:
