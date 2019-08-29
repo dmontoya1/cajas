@@ -44,6 +44,8 @@ class MovementDailySquareManager(object):
             user=data['user'],
             office=data['office'],
         )
+        if data['lender']:
+            movement.temp_employee = data['lender']
         update_movement_balance_on_create(last_movement, movement)
         update_all_movements_balance_on_create(
             MovementDailySquare,
@@ -106,6 +108,9 @@ class MovementDailySquareManager(object):
 
     def __is_movement_type_updated(self, movement, movement_type):
         return movement.movement_type != movement_type
+
+    def __is_date_updated(self, movement, date):
+        return movement.date != date
 
     def __is_money_delivery_and_target_has_changed(self, concept, movement, dq):
         if concept.name == 'Traslado de Efectivo entre Cuadres Diarios':
@@ -415,6 +420,7 @@ class MovementDailySquareManager(object):
                 raise Exception('user has exceed limit')
         else:
             current_movement_daily_square.update(**object_data)
+
         current_movement = MovementDailySquare.objects.get(pk=data['pk'])
         update_all_movement_balance_on_update(
             MovementDailySquare,

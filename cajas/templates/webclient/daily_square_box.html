@@ -1555,6 +1555,12 @@
             $("#dq-select option[value='" + data.user + "']").prop("selected", true);
             $("#dq-select").trigger("change")
           }
+          if (data.temp_employee){
+            $("#lender_employee").prop("selected", false);
+            $("#lender_employee option[value='" + data.temp_employee + "']").prop("selected", true);
+            $("#lender_employee").trigger("change")
+            $("#loan_value").val(data.value)
+          }
           if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
             axios.get(`/api/movements/${mov_pk}/dq-request-item-detail/`)
               .then(function (response) {
