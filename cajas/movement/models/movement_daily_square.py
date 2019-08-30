@@ -8,6 +8,7 @@ from cajas.movement.models.movement_office import MovementOffice
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.users.models.employee import Employee
 from .movement_mixin import MovementMixin
 
 User = get_user_model()
@@ -98,6 +99,13 @@ class MovementDailySquare(MovementMixin):
         'Detalle del rechazo del movimiento',
         blank=True,
         null=True
+    )
+    temp_employee = models.ForeignKey(
+        Employee,
+        verbose_name='Empleado temporal prestamo',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
     )
 
     def __str__(self):

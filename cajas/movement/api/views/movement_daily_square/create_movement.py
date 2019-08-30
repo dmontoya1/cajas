@@ -17,6 +17,7 @@ from cajas.loans.models.loan import Loan
 from cajas.loans.services.loan_service import LoanManager
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.users.models.employee import Employee
 from cajas.webclient.views.get_ip import get_ip
 from cajas.webclient.views.utils import get_object_or_none
 
@@ -156,8 +157,8 @@ class CreateDailySquareMovement(APIView):
             if request.user.is_superuser or request.user.is_secretary():
                 data_loan = {
                     'request': request,
-                    'value': request_data['value_loan'],
-                    'value_cop': request_data['value_cop'],
+                    'value': request_data['value'],
+                    'value_cop': 0,
                     'interest': request_data['interest'],
                     'time': request_data['time'],
                     'exchange': request_data['exchange'],
@@ -169,8 +170,8 @@ class CreateDailySquareMovement(APIView):
                 if request_data['box_from'] == 'partner':
                     data_loan['provider'] = request_data['partner_provider']
                 loan_manager.create_employee_loan(data_loan)
-                data['value'] = request_data['value_loan']
-                movement = daily_square_manager.create_movement(data)
+            data['lender'] = Employee.objects.get(pk=int(request_data['lender_employee']))
+            movement = daily_square_manager.create_movement(data)
         elif concept.name == "Compra de Inventario Unidad":
             movement = daily_square_manager.create_movement(data)
             values = request.data["elemts"].split(",")

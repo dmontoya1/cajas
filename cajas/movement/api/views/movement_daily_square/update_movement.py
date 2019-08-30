@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.concepts.models.concepts import Concept
 from cajas.inventory.models.brand import Brand
+from cajas.loans.services.loan_service import LoanManager
 from cajas.webclient.views.get_ip import get_ip
 
 from ....models.movement_daily_square import MovementDailySquare
@@ -36,7 +37,7 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
             daily_square_manager.update_daily_square_movement(data)
             if concept.name == "Compra de Inventario Unidad":
                 movement = get_object_or_404(MovementDailySquare, pk=kwargs['pk'])
-                items = MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
+                MovementDailySquareRequestItem.objects.filter(movement=movement).delete()
                 values = request.data["elemts"].split(",")
                 for value in values:
                     if request.data["form[form][" + value + "][name]"] == '' or \
@@ -60,6 +61,29 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                                 brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                                 price=request.data["form[form][" + value + "][price]"]
                             )
+            elif concept.name == 'Préstamo Personal Empleado':
+                movement = MovementDailySquare.objects.get(pk=data['pk'])
+                loan_manager = LoanManager()
+                if request.user.is_superuser or request.user.is_secretary():
+                    data_loan = {
+                        'request': request,
+                        'value': data['value'],
+                        'value_cop': 0,
+                        'interest': data['interest'],
+                        'time': data['time'],
+                        'exchange': data['exchange'],
+                        'office': request.session['office'],
+                        'loan_type': 'EMP',
+                        'lender': data['lender_employee'],
+                        'box_from': data['box_from'],
+                        'date': data['date'],
+                    }
+                    if data['box_from'] == 'partner':
+                        data_loan['provider'] = data['partner_provider']
+                    loan_manager.create_employee_loan(data_loan)
+                movement.review = True
+                movement.status = MovementDailySquare.APPROVED
+                movement.save()
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
                 status=status.HTTP_201_CREATED
