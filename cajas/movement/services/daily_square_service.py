@@ -44,8 +44,11 @@ class MovementDailySquareManager(object):
             user=data['user'],
             office=data['office'],
         )
-        if data['lender']:
-            movement.temp_employee = data['lender']
+        try:
+            if data['lender']:
+                movement.temp_employee = data['lender']
+        except:
+            pass
         update_movement_balance_on_create(last_movement, movement)
         update_all_movements_balance_on_create(
             MovementDailySquare,
@@ -426,7 +429,7 @@ class MovementDailySquareManager(object):
             MovementDailySquare,
             'box_daily_square',
             current_user_box_daily_square,
-            current_movement.date,
+            data['date'],
             current_movement.pk,
             current_movement
         )
