@@ -180,6 +180,7 @@
                     <th>Valor COP</th>
                     <th>Saldo</th>
                     <th>Saldo COP</th>
+                    <th></th>
                   </tr>
                   </thead>
                   <tbody>
@@ -199,6 +200,22 @@
                       <td>
                         <strong>$ {{ p.balance_cop|floatformat:2|intcomma }}</strong>
                       </td>
+                    <td>
+                      {% if perms.loans.change_loanhistory %}
+                        <ul class="ul-buttons">
+                          <li>
+                            <button type="button" class="btn add-movement edit-item" id="edit-item"
+                                    data-id="{{ p.id }}"
+                                    data-toggle="modal"
+                                    data-target="#modalEditLoan"
+                            >
+                              <i class="fas fa-edit mr-1"></i>
+                              Editar
+                            </button>
+                          </li>
+                        </ul>
+                      {% endif %}
+                    </td>
                     </tr>
                   {% endfor %}
                   </tbody>
@@ -233,6 +250,7 @@
         <div class="modal-body">
           <form method="POST" class="add-loan" action="{% url 'webclient:loan_create' office.slug %}">
             {% csrf_token %}
+          <input type="hidden" id="method_modal" name="method_modal" value="" data-id="">
             <input type="hidden" name="office" value="{{ office.pk }}">
             <div class="form-row">
               <div class="form-group col-md-6">
@@ -374,6 +392,59 @@
     </div>
   </div>
 
+  <!-- Modal edit loan -->
+  <div class="modal fade" id="modalEditLoan" role="dialog" aria-labelledby="modalAddLoanTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="modalTitleLoan">Registrar Préstamo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <form method="POST" class="edit-loan-payment">
+            {% csrf_token %}
+            <input type="hidden" name="loan_pk" id="loan_pk" value="">
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="history_type">Tipo</label>
+                <select class="form-control" id="history_type" name="history_type" style="width: 100%; height: 20px;" required>
+                  <option disabled value="IN">Interes</option>
+                  <option disabled value="LO">Prestamo</option>
+                  <option disabled value="AB">Abono</option>
+
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value_history">Valor</label>
+                <input class="form-control" type="number" name="value" id="value_history" value=""
+                       placeholder="Valor" required>
+              </div>
+              <div class="form-group col-md-6 box-select">
+                <label for="date">Fecha</label>
+                <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd"
+                       style="width: 100%;" autocomplete="off" required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="value_cop_history">Monto (COP)</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop_history" value="0" >
+              </div>
+              <div class="form-group col-md-6">
+                <label for="exchange_history">Tasa de cambio</label>
+                <input class="form-control" type="text" name="exchange" id="exchange_history"
+                       value="" placeholder="No hay tasa de cambio configurada" readonly>
+              </div>
+            </div>
+            <hr>
+            <button type="submit" class="btn btn-submit btn-submit-edit">Editar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -426,7 +497,86 @@
           language: "es"
         });
       });
+      $('#history_type').select2({
+        language: "es"
+      });
     });
+
+    $('#value_history').keyup(function () {
+      value = $(this).val()
+      exchange = $('#exchange_history').val()
+      console.log(exchange)
+      total = value * exchange
+      $('#value_cop_history').val(parseInt(total))
+    })
+
+    $(".edit-item").on("click", function () {
+      var mov_pk = $(this).data("id")
+      $('.edit-loan-payment')[0].reset();
+      $("#method_modal").data("id", "")
+      $('#modalTitleLoan').text("Editar Pago")
+      $('.btn-add-pay').text('Editar')
+      axios.get(`/api/loans/loan-history/${mov_pk}/detail`)
+        .then(function (response) {
+          console.log(response.data)
+          data = response.data
+          $("#history_type option").prop("selected", false);
+          $("#history_type option[value='" + data.history_type + "']").prop("selected", true);
+          $("#history_type").trigger("change")
+          $("#loan_pk").val(data.id)
+          $("#date").val(data.date)
+          $("#value_history").val(data.value)
+          $("#value_cop_history").val(data.value_cop)
+          if (data.history_type == 'AB' || data.history_type == 'IN'){
+            $("#exchange_history").val('{{ exchange.exchange_cop_abono }}')
+          }
+          else {
+            $("#exchange_history").val('{{ exchange.exchange_cop }}')
+          }
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    $('.edit-loan-payment').on('submit', function (ev) {
+      ev.preventDefault()
+      $('.btn-submit-edit').attr('disabled', true)
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      data_send = $(this).serialize()
+      mov_pk = $("#loan_pk").val()
+      axios.patch(`/api/loans/loan-history/${mov_pk}/detail`, data_send)
+      .then(function (response) {
+        console.log(response.data)
+        data = response.data
+        Swal.fire({
+          type: 'success',
+          title: 'Exitoso',
+          text: 'Se ha modificado el historial con exito',
+        }).then((result) => {
+          if (result.value) {
+            location.reload()
+          }
+        })
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error)
+        Swal.fire({
+          title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+          text: error,
+          type: 'error',
+          showCancelButton: false,
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'Aceptar'
+        }).then((result) => {
+          if (result.value) {
+            location.reload()
+          }
+        })
+      })
+    })
 
     $('#loan_type').on('change', function () {
       if ($(this).val() === 'DIR') {
