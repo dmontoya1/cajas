@@ -13,7 +13,7 @@ from ..services.box_colombia_service import MovementBoxColombiaManager
 from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
     update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 
 class MovementOfficeManager(object):
@@ -103,6 +103,9 @@ class MovementOfficeManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
+    def __is_date_updated(self, movement, new_date):
+        return movement.date != new_date
+
     def update_office_movement(self, data):
         current_movement_office = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_office.first()
@@ -121,13 +124,14 @@ class MovementOfficeManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_office.update(**object_data)
-        update_all_movement_balance_on_update(
+
+        first_movement = MovementOffice.objects.filter(box_office=current_movement.box_office).last()
+        update_movement_balance_full_box(
             MovementOffice,
             'box_office',
-            current_movement.box_office,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+            current_movement_office,
+            first_movement.date,
+            first_movement
         )
 
     def delete_office_movement(self, data):
