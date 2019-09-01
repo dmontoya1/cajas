@@ -35,9 +35,18 @@ class MovementDailySquareAdmin(admin.ModelAdmin):
                      'box_daily_square__user__last_name',
                      'detail'
                      )
-    # list_select_related = (
-    #     'box_daily_square',
-    # )
+    show_full_result_count = False
+    list_select_related = (
+        'box_daily_square',
+        'concept',
+        'movement_don_juan',
+        'movement_don_juan_usd',
+        'movement_partner',
+        'movement_office',
+        'movement_cd',
+        'unit',
+        'office'
+    )
 
 
 class MovementDonJuanInline(admin.TabularInline):
