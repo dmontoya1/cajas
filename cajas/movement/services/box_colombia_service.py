@@ -10,7 +10,7 @@ from ..models import MovementBoxColombia, MovementDonJuan, MovementOffice
 from ..services.don_juan_usd_service import DonJuanUSDManager
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 
 class MovementBoxColombiaManager(object):
@@ -263,6 +263,14 @@ class MovementBoxColombiaManager(object):
             current_movement.date,
             current_movement.pk,
             current_movement
+        )
+        first_movement = MovementBoxColombia.objects.filter(box_office=current_movement.box_office).last()
+        update_movement_balance_full_box(
+            MovementBoxColombia,
+            'box_office',
+            current_movement.box_office,
+            first_movement.date,
+            first_movement
         )
 
     def delete_box_colombia_movement(self, data):

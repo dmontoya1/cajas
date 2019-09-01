@@ -4,7 +4,7 @@ from cajas.concepts.models.concepts import Concept, ConceptType
 from ..models.movement_don_juan import MovementDonJuan
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 
 class DonJuanManager(object):
@@ -18,7 +18,6 @@ class DonJuanManager(object):
 
     def create_movement(self, data):
         self.__validate_data(data)
-        print(data['box'])
         last_movement = get_last_movement(MovementDonJuan, 'box_don_juan', data['box'], data['date'])
         try:
             movement = MovementDonJuan.objects.create(
@@ -65,6 +64,9 @@ class DonJuanManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
+    def __is_date_updated(self, movement, new_date):
+        return movement.date != new_date
+
     def update_don_juan_movement(self, data):
         current_don_juan_movement = self.__get_movement_by_pk(data['pk'])
         current_movement = current_don_juan_movement.first()
@@ -83,13 +85,14 @@ class DonJuanManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_don_juan_movement.update(**object_data)
-        update_all_movement_balance_on_update(
+
+        first_movement = MovementDonJuan.objects.filter(box_don_juan=current_movement.box_don_juan).last()
+        update_movement_balance_full_box(
             MovementDonJuan,
             'box_don_juan',
             current_movement.box_don_juan,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+            first_movement.date,
+            first_movement
         )
         return current_don_juan_movement.first()
 

@@ -117,6 +117,20 @@ def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, mov
     )
 
 
+def update_movement_balance_full_box(model, box_name, box, date_mv, movement):
+    related_movements = get_related_movement_by_date(
+        model,
+        box_name,
+        box,
+        date_mv,
+    )
+    update_movements_balance(
+        related_movements,
+        movement.balance,
+        box
+    )
+
+
 def update_movement_type_value(movement_type, movement, value):
     if movement_type == 'IN':
         movement.balance += (int(value) * 2)

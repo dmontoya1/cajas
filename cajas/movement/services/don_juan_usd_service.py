@@ -4,7 +4,7 @@ from cajas.concepts.models.concepts import Concept
 from ..models.movement_don_juan_usd import MovementDonJuanUsd
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 
 class DonJuanUSDManager(object):
@@ -77,6 +77,14 @@ class DonJuanUSDManager(object):
             current_movement.date,
             current_movement.pk,
             current_movement
+        )
+        first_movement = MovementDonJuanUsd.objects.filter(box_don_juan=current_movement.box_don_juan).last()
+        update_movement_balance_full_box(
+            MovementDonJuanUsd,
+            'box_don_juan',
+            current_movement.box_don_juan,
+            first_movement.date,
+            first_movement
         )
 
     def delete_don_juan_movement(self, data):

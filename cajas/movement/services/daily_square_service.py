@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
@@ -16,7 +16,7 @@ from ..models import MovementDailySquare, MovementPartner, MovementDonJuan, Move
 from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
     update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 
 class MovementDailySquareManager(object):
@@ -112,8 +112,8 @@ class MovementDailySquareManager(object):
     def __is_movement_type_updated(self, movement, movement_type):
         return movement.movement_type != movement_type
 
-    def __is_date_updated(self, movement, date):
-        return movement.date != date
+    def __is_date_updated(self, movement, new_date):
+        return movement.date != new_date
 
     def __is_money_delivery_and_target_has_changed(self, concept, movement, dq):
         if concept.name == 'Traslado de Efectivo entre Cuadres Diarios':
@@ -424,14 +424,13 @@ class MovementDailySquareManager(object):
         else:
             current_movement_daily_square.update(**object_data)
 
-        current_movement = MovementDailySquare.objects.get(pk=data['pk'])
-        update_all_movement_balance_on_update(
+        first_movement = MovementDailySquare.objects.filter(box_daily_square=current_user_box_daily_square).last()
+        update_movement_balance_full_box(
             MovementDailySquare,
             'box_daily_square',
             current_user_box_daily_square,
-            data['date'],
-            current_movement.pk,
-            current_movement
+            first_movement.date,
+            first_movement
         )
 
     def delete_daily_square_movement(self, data):

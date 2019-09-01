@@ -13,7 +13,7 @@ from ..services.don_juan_service import DonJuanManager
 from ..services.office_service import MovementOfficeManager
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+    update_movement_balance, update_movement_balance_full_box
 
 donjuan_manager = DonJuanManager()
 
@@ -308,6 +308,9 @@ class MovementPartnerManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
+    def __is_date_updated(self, movement, new_date):
+        return movement.date != new_date
+
     def update_partner_movement(self, data):
         current_movement_partner = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_partner.first()
@@ -326,13 +329,14 @@ class MovementPartnerManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_partner.update(**object_data)
-        update_all_movement_balance_on_update(
+
+        first_movement = MovementPartner.objects.filter(box_partner=current_movement.box_partner).last()
+        update_movement_balance_full_box(
             MovementPartner,
             'box_partner',
             current_movement.box_partner,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+            first_movement.date,
+            first_movement
         )
 
     def delete_partner_movement(self, data):
