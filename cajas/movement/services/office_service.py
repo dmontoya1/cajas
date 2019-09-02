@@ -106,6 +106,9 @@ class MovementOfficeManager(object):
     def __is_date_updated(self, movement, new_date):
         return movement.date != new_date
 
+    def __is_movement_date_update(self, movement, new_date):
+        return movement.date != new_date
+
     def update_office_movement(self, data):
         current_movement_office = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_office.first()
@@ -124,15 +127,23 @@ class MovementOfficeManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_office.update(**object_data)
-
-        first_movement = MovementOffice.objects.filter(box_office=current_movement.box_office).last()
-        update_movement_balance_full_box(
+        update_all_movement_balance_on_update(
             MovementOffice,
             'box_office',
-            current_movement_office,
-            first_movement.date,
-            first_movement
+            current_movement.box_office,
+            current_movement.date,
+            current_movement.pk,
+            current_movement
         )
+        if self.__is_movement_date_update(current_movement, data['date']):
+            first_movement = MovementOffice.objects.filter(box_office=current_movement.box_office).last()
+            update_movement_balance_full_box(
+                MovementOffice,
+                'box_office',
+                current_movement_office,
+                first_movement.date,
+                first_movement
+            )
 
     def delete_office_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
