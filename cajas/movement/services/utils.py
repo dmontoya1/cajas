@@ -117,7 +117,7 @@ def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, mov
     )
     # logger.exception(related_movements)
     for mv in related_movements:
-        print(mv.date, "|", mv.pk, "|", mv.concept, "|", mv.value, "|", mv.balance)
+        logger.exception(mv.date, "|", mv.pk, "|", mv.concept, "|", mv.value, "|", mv.balance)
     update_movements_balance(
         related_movements,
         movement.balance,
