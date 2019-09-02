@@ -311,6 +311,9 @@ class MovementPartnerManager(object):
     def __is_date_updated(self, movement, new_date):
         return movement.date != new_date
 
+    def __is_movement_date_update(self, movement, new_date):
+        return movement.date != new_date
+
     def update_partner_movement(self, data):
         current_movement_partner = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_partner.first()
@@ -329,15 +332,23 @@ class MovementPartnerManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_partner.update(**object_data)
-
-        first_movement = MovementPartner.objects.filter(box_partner=current_movement.box_partner).last()
-        update_movement_balance_full_box(
+        update_all_movement_balance_on_update(
             MovementPartner,
             'box_partner',
             current_movement.box_partner,
-            first_movement.date,
-            first_movement
+            current_movement.date,
+            current_movement.pk,
+            current_movement
         )
+        if self.__is_movement_date_update(current_movement, data['date']):
+            first_movement = MovementPartner.objects.filter(box_partner=current_movement.box_partner).last()
+            update_movement_balance_full_box(
+                MovementPartner,
+                'box_partner',
+                current_movement.box_partner,
+                first_movement.date,
+                first_movement
+            )
 
     def delete_partner_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])

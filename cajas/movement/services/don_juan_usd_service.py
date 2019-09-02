@@ -51,6 +51,9 @@ class DonJuanUSDManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
+    def __is_movement_date_update(self, movement, new_date):
+        return movement.date != new_date
+
     def update_don_juan_movement(self, data):
         current_don_juan_movement = self.__get_movement_by_pk(data['pk'])
         current_movement = current_don_juan_movement.first()
@@ -78,14 +81,15 @@ class DonJuanUSDManager(object):
             current_movement.pk,
             current_movement
         )
-        first_movement = MovementDonJuanUsd.objects.filter(box_don_juan=current_movement.box_don_juan).last()
-        update_movement_balance_full_box(
-            MovementDonJuanUsd,
-            'box_don_juan',
-            current_movement.box_don_juan,
-            first_movement.date,
-            first_movement
-        )
+        if self.__is_movement_date_update(current_movement, data['date']):
+            first_movement = MovementDonJuanUsd.objects.filter(box_don_juan=current_movement.box_don_juan).last()
+            update_movement_balance_full_box(
+                MovementDonJuanUsd,
+                'box_don_juan',
+                current_movement.box_don_juan,
+                first_movement.date,
+                first_movement
+            )
 
     def delete_don_juan_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])

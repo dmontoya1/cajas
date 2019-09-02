@@ -237,6 +237,9 @@ class MovementBoxColombiaManager(object):
     def __is_movement_value_updated(self, movement, value):
         return movement.value != value
 
+    def __is_movement_date_update(self, movement, new_date):
+        return movement.date != new_date
+
     def update_office_movement(self, data):
         current_movement_office = self.__get_movement_by_pk(data['pk'])
         current_movement = current_movement_office.first()
@@ -264,14 +267,15 @@ class MovementBoxColombiaManager(object):
             current_movement.pk,
             current_movement
         )
-        first_movement = MovementBoxColombia.objects.filter(box_office=current_movement.box_office).last()
-        update_movement_balance_full_box(
-            MovementBoxColombia,
-            'box_office',
-            current_movement.box_office,
-            first_movement.date,
-            first_movement
-        )
+        if self.__is_movement_date_update(current_movement, data['date']):
+            first_movement = MovementBoxColombia.objects.filter(box_office=current_movement.box_office).last()
+            update_movement_balance_full_box(
+                MovementBoxColombia,
+                'box_office',
+                current_movement.box_office,
+                first_movement.date,
+                first_movement
+            )
 
     def delete_box_colombia_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
