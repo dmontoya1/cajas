@@ -9,7 +9,7 @@ from cajas.concepts.models.concepts import Concept, ConceptType
 from ..models import MovementBoxColombia, MovementDonJuan, MovementOffice
 from ..services.don_juan_usd_service import DonJuanUSDManager
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_all_movements_balance_on_create, update_movements_balance, update_movement_type_value, \
     update_movement_balance, update_movement_balance_full_box
 
 
@@ -253,28 +253,31 @@ class MovementBoxColombiaManager(object):
         object_data['date'] = data['date']
         data['movement'] = current_movement
         data['box'] = current_movement.box_office
-
         if self.__is_movement_type_updated(current_movement, data['movement_type']):
             current_movement = update_movement_type_value(data['movement_type'], current_movement, data['value'])
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_office.update(**object_data)
-        update_all_movement_balance_on_update(
-            MovementBoxColombia,
-            'box_office',
-            current_movement.box_office,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+        all_movements = current_movement.box_office.movements.order_by('date', 'pk')
+        update_movements_balance(
+            all_movements,
+            0,
+            current_movement.box_office
         )
+        # update_all_movement_balance_on_update(
+        #     MovementBoxColombia,
+        #     'box_office',
+        #     current_movement.box_office,
+        #     current_movement.date,
+        #     current_movement.pk,
+        #     current_movement
+        # )
         if self.__is_movement_date_update(current_movement, data['date']):
-            first_movement = MovementBoxColombia.objects.filter(box_office=current_movement.box_office).last()
-            update_movement_balance_full_box(
-                MovementBoxColombia,
-                'box_office',
-                current_movement.box_office,
-                first_movement.date,
-                first_movement
+            all_movements = current_movement.box_office.movements.order_by('date', 'pk')
+            update_movements_balance(
+                all_movements,
+                0,
+                current_movement.box_office
             )
 
     def delete_box_colombia_movement(self, data):

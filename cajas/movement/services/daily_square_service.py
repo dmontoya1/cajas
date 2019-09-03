@@ -409,7 +409,6 @@ class MovementDailySquareManager(object):
 
         current_movement = MovementDailySquare.objects.get(pk=data['pk'])
         all_movements = current_user_box_daily_square.movements.order_by('date', 'pk')
-        print(all_movements)
         update_movements_balance(
             all_movements,
             0,
@@ -424,13 +423,11 @@ class MovementDailySquareManager(object):
         #     current_movement
         # )
         if self.__is_movement_date_update(current_movement, data['date']):
-            first_movement = MovementDailySquare.objects.filter(box_daily_square=current_user_box_daily_square).last()
-            update_movement_balance_full_box(
-                MovementDailySquare,
-                'box_daily_square',
-                current_user_box_daily_square,
-                first_movement.date,
-                first_movement
+            all_movements = current_user_box_daily_square.movements.order_by('date', 'pk')
+            update_movements_balance(
+                all_movements,
+                0,
+                current_user_box_daily_square
             )
 
     def delete_daily_square_movement(self, data):
