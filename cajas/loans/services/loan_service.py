@@ -104,8 +104,12 @@ class LoanManager(object):
         self.__validate_data(data)
         lender_employee = get_object_or_404(Employee, pk=data['lender'])
         lender = lender_employee.user
-        old_loan = Loan.objects.filter(lender=lender, loan_type=LoanType.EMPLEADO).last()
         office = get_object_or_404(OfficeCountry, pk=data['office'])
+        old_loan = Loan.objects.filter(
+            lender=lender,
+            office=office,
+            loan_type=LoanType.EMPLEADO
+        ).last()
         concept = get_object_or_404(Concept, name='Préstamo Personal Empleado')
 
         data_mov = {
@@ -207,7 +211,12 @@ class LoanManager(object):
             document_type=data['document_type'],
             document_id=data['document_id']
         )
-        old_loan = Loan.objects.filter(lender=lender, provider=provider, loan_type=LoanType.TERCERO).last()
+        old_loan = Loan.objects.filter(
+            lender=lender,
+            provider=provider,
+            office=office,
+            loan_type=LoanType.TERCERO
+        ).last()
         if not old_loan:
             loan = Loan.objects.create(
                 provider=provider,
