@@ -13,7 +13,7 @@ from ..services.don_juan_service import DonJuanManager
 from ..services.office_service import MovementOfficeManager
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance, update_movement_balance_full_box
+    update_movement_balance, update_movement_balance_full_box, update_movements_balance
 
 donjuan_manager = DonJuanManager()
 
@@ -332,23 +332,29 @@ class MovementPartnerManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_partner.update(**object_data)
-        update_all_movement_balance_on_update(
-            MovementPartner,
-            'box_partner',
-            current_movement.box_partner,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+        # update_all_movement_balance_on_update(
+        #     MovementPartner,
+        #     'box_partner',
+        #     current_movement.box_partner,
+        #     current_movement.date,
+        #     current_movement.pk,
+        #     current_movement
+        # )
+        all_movements = current_movement.box_partner.movements.order_by('date', 'pk')
+        update_movements_balance(
+            all_movements,
+            0,
+            current_movement.box_partner
         )
-        if self.__is_movement_date_update(current_movement, data['date']):
-            first_movement = MovementPartner.objects.filter(box_partner=current_movement.box_partner).last()
-            update_movement_balance_full_box(
-                MovementPartner,
-                'box_partner',
-                current_movement.box_partner,
-                first_movement.date,
-                first_movement
-            )
+        # if self.__is_movement_date_update(current_movement, data['date']):
+        #     first_movement = MovementPartner.objects.filter(box_partner=current_movement.box_partner).last()
+        #     update_movement_balance_full_box(
+        #         MovementPartner,
+        #         'box_partner',
+        #         current_movement.box_partner,
+        #         first_movement.date,
+        #         first_movement
+        #     )
 
     def delete_partner_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])

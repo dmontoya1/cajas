@@ -127,13 +127,19 @@ class MovementOfficeManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_movement_office.update(**object_data)
-        update_all_movement_balance_on_update(
-            MovementOffice,
-            'box_office',
-            current_movement.box_office,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+        # update_all_movement_balance_on_update(
+        #     MovementOffice,
+        #     'box_office',
+        #     current_movement.box_office,
+        #     current_movement.date,
+        #     current_movement.pk,
+        #     current_movement
+        # )
+        all_movements = current_movement.box_office.movements.order_by('date', 'pk')
+        update_movements_balance(
+            all_movements,
+            0,
+            current_movement.box_office
         )
         if self.__is_movement_date_update(current_movement, data['date']):
             first_movement = MovementOffice.objects.filter(box_office=current_movement.box_office).last()

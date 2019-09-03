@@ -9,8 +9,8 @@ logger = logging.getLogger('sentry.errors')
 def get_next_related_movement_by_date_and_pk(model, box_name, box, date_mv, pk):
     if len(model.objects.filter(**{box_name: box}).filter(date=date_mv, pk__gt=pk)) > 0:
         return model.objects.filter(**{box_name: box}).filter(
-            date__gte=date_mv,
-        ).exclude(Q(date=date_mv) and Q(pk__lt=pk)).exclude(pk=pk).order_by('date', 'pk')
+            Q(date__gte=date_mv)
+        ).exclude(Q(date=date_mv) and Q(pk__lte=pk)).order_by('date', 'pk')
     else:
         return model.objects.filter(**{box_name: box}).filter(
             date__gt=date_mv,
@@ -117,6 +117,7 @@ def update_all_movement_balance_on_update(model, box_name, box, date_mv, pk, mov
         pk
     )
     for mv in related_movements:
+        logger.exception(mv.pk, '|', mv.date, '|', mv.concept, '|', mv.value, '|', mv.balance)
         print(mv.pk, '|', mv.date, '|', mv.concept, '|', mv.value, '|', mv.balance)
     update_movements_balance(
         related_movements,

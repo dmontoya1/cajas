@@ -3,7 +3,7 @@ from cajas.concepts.models.concepts import Concept
 
 from ..models.movement_don_juan_usd import MovementDonJuanUsd
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+    update_all_movements_balance_on_create, update_movements_balance, update_movement_type_value, \
     update_movement_balance, update_movement_balance_full_box
 
 
@@ -73,13 +73,19 @@ class DonJuanUSDManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_don_juan_movement.update(**object_data)
-        update_all_movement_balance_on_update(
-            MovementDonJuanUsd,
-            'box_don_juan',
-            current_movement.box_don_juan,
-            current_movement.date,
-            current_movement.pk,
-            current_movement
+        # update_all_movement_balance_on_update(
+        #     MovementDonJuanUsd,
+        #     'box_don_juan',
+        #     current_movement.box_don_juan,
+        #     current_movement.date,
+        #     current_movement.pk,
+        #     current_movement
+        # )
+        all_movements = current_movement.box_don_juan.movements.order_by('date', 'pk')
+        update_movements_balance(
+            all_movements,
+            0,
+            current_movement.box_don_juan
         )
         if self.__is_movement_date_update(current_movement, data['date']):
             first_movement = MovementDonJuanUsd.objects.filter(box_don_juan=current_movement.box_don_juan).last()
