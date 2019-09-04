@@ -1129,9 +1129,10 @@
               }
             })
           .catch(function (error) {
+            console.log(error.response.data)
               Swal.fire({
                 title: 'Error!',
-                text: error.response.data.detail,
+                text: error.response.data,
                 type: 'error',
                 allowOutsideClick: false
               })

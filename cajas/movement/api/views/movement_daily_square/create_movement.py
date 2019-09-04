@@ -198,7 +198,7 @@ class CreateDailySquareMovement(APIView):
                             price=request.data["form[form][" + value + "][price]"]
                         )
         elif concept.name == 'Pago Abono préstamo empleado':
-            data['user'] = request.data['lender-user']
+            data['user'] = User.objects.get(pk=request.data['lender-user'])
             movement = daily_square_manager.create_movement(data)
         else:
             if user:
