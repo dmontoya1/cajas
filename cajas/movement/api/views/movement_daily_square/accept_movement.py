@@ -115,10 +115,6 @@ class AcceptMovement(APIView):
                 movement_office_manager = MovementOfficeManager()
                 office_movement = movement_office_manager.create_movement(data)
                 movement.movement_office = office_movement
-            elif relationship == Relationship.LOAN:
-                pass
-            elif relationship == Relationship.CHAIN:
-                pass
         if movement.concept.name == "Compra de Inventario Unidad":
             movement_items = MovementDailySquareRequestItem.objects.filter(
                 movement=movement
@@ -149,9 +145,9 @@ class AcceptMovement(APIView):
                 data = {
                     'concept': movement.concept,
                     'movement_type': 'IN',
-                    'value': request.data['value'],
+                    'value': movement.value,
                     'detail': 'Pago abono {}'.format(loan),
-                    'date': request.data['date'],
+                    'date': movement.date,
                     'responsible': request.user,
                     'ip': get_ip(request)
                 }
@@ -166,24 +162,27 @@ class AcceptMovement(APIView):
                 else:
                     data['box_office'] = loan.office.box
                     movement = movement_office_manager.create_movement(data)
-                new_balance = loan.balance - request.data['value']
+                new_balance = loan.balance - movement.value
                 LoanHistory.objects.create(
                     loan=loan,
                     history_type=LoanHistory.ABONO,
                     movement_type=LoanHistory.OUT,
-                    value=request.data['value'],
+                    value=movement.value,
                     value_cop=0,
-                    date=request.data['date'],
+                    date=movement.date,
                     balance_cop=0,
                     balance=new_balance
                 )
-            except Loan.DoesNotExists:
+                loan.balance = new_balance
+                loan.save()
+            except Loan.DoesNotExist:
                 return Response(
                     'No se pudo encontrar el préstamo para el usuario {}'.format(user.get_full_name()),
                     status=status.HTTP_400_BAD_REQUEST
                 )
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
+        print('Movimiento save')
         movement.save()
 
         return Response(
