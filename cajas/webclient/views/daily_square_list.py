@@ -12,9 +12,8 @@ from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 from cajas.users.models import User, DailySquareUnits, Employee, Partner, GroupEmployee
-from cajas.webclient.views.utils import get_object_or_none
 
-from .utils import is_secretary
+from .utils import is_secretary, get_object_or_none, is_admin_senior
 
 logger = logging.getLogger(__name__)
 

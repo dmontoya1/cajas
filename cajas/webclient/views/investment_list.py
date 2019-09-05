@@ -7,6 +7,8 @@ from cajas.users.models.partner import Partner
 from cajas.investments.models.investment import Investment
 from cajas.office.models.officeCountry import OfficeCountry
 
+from .utils import is_secretary
+
 
 class InvestmentList(LoginRequiredMixin, TemplateView):
     """
@@ -21,7 +23,7 @@ class InvestmentList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary():
+            if self.request.user.is_superuser or is_secretary(self.request.user, office):
                 investments = Investment.objects.filter(partner__office=office)
             else:
                 partner = Partner.objects.get(user=self.request.user, office=office)

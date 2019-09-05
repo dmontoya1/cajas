@@ -207,7 +207,7 @@
                             {% endif %}
                             {% if not m.review %}
                               {% if perms.movement.add_movementdonjuan and perms.movement.add_movementpartner %}
-                                {% if request.user.is_secretary or request.user.is_superuser %}
+                                {% if is_secretary or request.user.is_superuser %}
                                   {% get_office_arqueada office as deficit %}
                                   <li><a href="#" class="accept-mv" data-id="{{ m.pk }}">Aprobar</a></li>
                                   <li><a href="#" class="decline-mv" data-id="{{ m.pk }}">Rechazar</a></li>
@@ -349,7 +349,7 @@
             </div>
           </div>
         </div>
-        {% if request.user.is_secretary or request.user.is_superuser %}
+        {% if is_secretary or request.user.is_superuser %}
           <a href="" id="add-movement-btn" class="float" data-toggle="modal" data-target="#addMovement">
             <i class="fa fa-plus my-float"></i>
           </a>
@@ -1676,7 +1676,7 @@
         maxDate: '0',
         timepicker: false,
       });
-    {% elif request.user.is_secretary  %}
+    {% elif is_secretary  %}
       $('.datetimepicker_dailysquare').datetimepicker({
         format: 'Y-m-d',
         minDate: '-1970/01/04',

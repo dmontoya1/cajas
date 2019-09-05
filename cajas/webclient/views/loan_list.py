@@ -12,7 +12,7 @@ from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.general_config.models.exchange import Exchange
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.office.models.officeCountry import OfficeCountry
-from cajas.webclient.views.utils import get_object_or_none
+from .utils import get_object_or_none, is_secretary, is_admin_senior
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -40,7 +40,8 @@ class LoanList(LoginRequiredMixin, TemplateView):
         except:
             group = None
 
-        if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
+        if self.request.user.is_superuser or is_secretary(self.request.user, office) or \
+            is_admin_senior(self.request.user, office):
             context['loans'] = Loan.objects.filter(office=office)
             context['partners'] = Partner.objects.filter(office=office, is_active=True)
             context['employees'] = Employee.objects.filter(

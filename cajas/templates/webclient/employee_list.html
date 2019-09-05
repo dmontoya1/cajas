@@ -184,7 +184,7 @@
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_superuser %}
+                        {% if is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}
@@ -205,7 +205,7 @@
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_superuser %}
+                        {% if is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}

@@ -11,7 +11,9 @@ from cajas.api.CsrfExempt import CsrfExemptSessionAuthentication
 from cajas.concepts.models.concepts import Concept
 from cajas.inventory.models.brand import Brand
 from cajas.loans.services.loan_service import LoanManager
+from cajas.office.models.officeCountry import OfficeCountry
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import is_secretary
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....services.daily_square_service import MovementDailySquareManager
@@ -33,6 +35,9 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
         data['responsible'] = request.user
         data['ip'] = get_ip(request)
         concept = Concept.objects.get(pk=request.POST['concept'])
+        office_country = OfficeCountry.objects.select_related('office', 'country', 'box').get(
+            pk=request.session['office']
+        )
         try:
             daily_square_manager.update_daily_square_movement(data)
             if concept.name == "Compra de Inventario Unidad":
@@ -64,7 +69,7 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
             elif concept.name == 'Préstamo Personal Empleado':
                 movement = MovementDailySquare.objects.get(pk=data['pk'])
                 loan_manager = LoanManager()
-                if request.user.is_superuser or request.user.is_secretary():
+                if request.user.is_superuser or is_secretary(request.user, office_country):
                     data_loan = {
                         'request': request,
                         'value': data['value'],

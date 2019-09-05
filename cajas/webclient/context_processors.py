@@ -29,11 +29,14 @@ def webclient_processor(request):
             Q(office=office_country.office))
         try:
             session_employee = Employee.objects.get(
-                Q(user=request.user) and
-                Q(office_country=office_country) or
-                Q(office=office_country.office)
+                user=request.user, office=office_country.office
             )
-        except:
+        except Employee.DoesNotExist:
+            session_employee = Employee.objects.get(
+                Q(user=request.user) and
+                (Q(office_country=office_country) or Q(office=office_country.office))
+            )
+        except Exception as e:
             session_employee = None
         if session_employee.charge == secretary:
             is_secretary = True
@@ -46,20 +49,20 @@ def webclient_processor(request):
         else:
             is_admin_senior = False
     else:
-
         session_employee = Employee.objects.filter(
             user=request.user
         ).first()
-        if session_employee.charge == secretary:
-            is_secretary = True
-            is_admin_senior = False
-        elif session_employee.charge == admin_senior:
-            is_secretary = False
-            is_admin_senior = True
-        if session_employee.charge == secretary or session_employee.charge == admin_senior:
-            is_admin_charge = True
-        else:
-            is_admin_senior = False
+        if session_employee:
+            if session_employee.charge == secretary:
+                is_secretary = True
+                is_admin_senior = False
+            elif session_employee.charge == admin_senior:
+                is_secretary = False
+                is_admin_senior = True
+            if session_employee.charge == secretary or session_employee.charge == admin_senior:
+                is_admin_charge = True
+            else:
+                is_admin_senior = False
         partners = None
         employees = None
     all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)

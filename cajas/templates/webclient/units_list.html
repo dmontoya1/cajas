@@ -183,7 +183,7 @@
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
                         <td>
-                          {% if request.user.is_secretary or request.user.is_superuser %}
+                          {% if is_secretary or request.user.is_superuser %}
                             <a href="#" class="edit-item" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#editUnit">Editar</a>
                             <a href="#" class="decline-mv" data-id="{{ u.id }}">Inhabilitar</a>

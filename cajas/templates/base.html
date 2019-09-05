@@ -99,7 +99,7 @@
       {% block index_actions %}
         <!-- Widgets  -->
         <div class="row">
-          {% if request.user.is_superuser or request.user.is_secretary or request.user.is_daily_square %}
+          {% if request.user.is_superuser or is_secretary or request.user.is_daily_square %}
             <div class="col-lg-3 col-md-6">
               <div class="card">
                 <div class="card-body">
