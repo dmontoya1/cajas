@@ -12,9 +12,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or is_admin_charge %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -87,7 +87,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -202,7 +202,7 @@
                         </ul>
                       </td>
                     </tr>
-                  {% elif request.user.is_superuser or request.user.is_secretary %}
+                  {% elif request.user.is_superuser or is_secretary %}
                     {% for d in dailys %}
                       <tr>
                         <td>{{ d.first_name }}</td>
@@ -288,7 +288,7 @@
                   {% endif %}
                   </tbody>
                 </table>
-                {% if request.user.is_superuser or request.user.is_secretary %}
+                {% if request.user.is_superuser or is_secretary %}
                   <h2 class="float-right">Saldo total de Cuadres diarios: ${{ dq_total|default:0|intcomma }}</h2>
                 {% endif %}
               </div>
@@ -702,7 +702,7 @@
               $('.lender-user-select').addClass('d-none')
               break;
             case 'Préstamo Personal Empleado':
-              {% if request.user.is_superuser or request.user.is_secretary %}
+              {% if request.user.is_superuser or is_secretary %}
                 $('.loan-employee').removeClass("d-none")
                 $('.lender_employee').removeClass("d-none")
                 $('#regular-value').addClass('d-none')
@@ -1060,7 +1060,7 @@
         })
     })
 
-    {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+    {% if request.user.is_superuser or is_admin_charge %}
       $('.datetimepicker_dailysquare').datetimepicker({
         format: 'Y-m-d',
         minDate: '-1970/01/04',

@@ -14,6 +14,8 @@ from cajas.units.models.units import Unit
 from cajas.users.models import User, DailySquareUnits, Employee, Partner, GroupEmployee
 from cajas.webclient.views.utils import get_object_or_none
 
+from .utils import is_secretary
+
 logger = logging.getLogger(__name__)
 
 
@@ -28,23 +30,27 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super(DailySquareList, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(OfficeCountry, slug=slug)
+        office = OfficeCountry.objects.select_related('office').get(slug=slug)
         context['office'] = office
-        offices = OfficeCountry.objects.all()
+        offices = OfficeCountry.objects.select_related('office', 'country').all()
         users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
                                     Q(related_employee__office=office.office))
-        units = Unit.objects.filter(Q(partner__office=office) |
-                                    (Q(partner__code='DONJUAN') &
-                                     (Q(collector__related_employee__office_country=office) |
-                                      Q(collector__related_employee__office=office.office)
-                                      ))).distinct()
+        units = Unit.objects.select_related(
+            'partner',
+            'collector',
+            'supervisor'
+        ).filter(
+            Q(partner__office=office) | (Q(partner__code='DONJUAN') &
+             (Q(collector__related_employee__office_country=office) |
+             Q(collector__related_employee__office=office.office)
+              ))).distinct()
         dq_list = User.objects.filter(
             (Q(partner__office=office) | Q(related_employee__office_country=office) |
              Q(related_employee__office=office.office)) &
             Q(is_daily_square=True)).distinct()
         context['dq_list'] = dq_list
         try:
-            if self.request.user.is_superuser or self.request.user.is_secretary():
+            if self.request.user.is_superuser or is_secretary(self.request.user, office):
                 context['dailys'] = User.objects.filter(
                     Q(is_daily_square=True) &
                     (Q(related_employee__office=office.office) |
@@ -59,9 +65,9 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 context['dq_total'] = dq_total
 
             else:
-                employee = Employee.objects.get(
+                employee = Employee.objects.select_related('user', 'charge').get(
                     Q(user=self.request.user) & Q(office_country=office))
-                groups = GroupEmployee.objects.filter(
+                groups = GroupEmployee.objects.select_related('group', 'supervisor', 'supervisor__user').filter(
                     Q(group__admin=employee) & Q(group__office=office)
                 )
                 if len(groups) > 0:
@@ -91,6 +97,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                                        ))).distinct()
         except Exception as e:
             logger.exception(str(e))
+            print("EXCEPTION 2", e)
             context['partner'] = Partner.objects.get(user=self.request.user, office=office)
         now = datetime.now()
         context['exchange'] = get_object_or_none(

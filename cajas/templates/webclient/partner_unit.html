@@ -11,9 +11,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or is_admin_charge %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -87,7 +87,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -179,7 +179,7 @@
                         <td>{{ u.partner }}</td>
                         <td>{{ u.collector|default:"Sin cobrador" }}</td>
                         <td>{{ u.supervisor|default:"Sin supervisor" }}</td>
-                        
+
                         <td><a href="#" class="units_inventory" data-id="{{ u.id }}" data-toggle="modal"
                                data-target="#modalDetail">Ver detalle</a></td>
                         <td>
@@ -239,7 +239,7 @@
           </div>
           <div class="form-row">
               <div class="form-group col-md-12">
-                  <h5 class="text-center">Inventario de unidad</h5>              
+                  <h5 class="text-center">Inventario de unidad</h5>
               </div>
               <div class="form-group col-md-12">
                   <div class="table-responsive">
@@ -424,7 +424,7 @@
                         <a href="#" class="btn btn-danger" id="minus5">Eliminar</a>
                     </div>
                     <div class="col-md-3 pt-1 text-center">
-                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>                      
+                        <a href="#" class="btn btn-primary" id="plus5">Agregar Item</a>
                     </div>
                 </div>
               </div>
@@ -533,7 +533,7 @@
         $("#edit_name").val(data.name)
         $("#edit_partner").val(data.partner.user.first_name  + " " + data.partner.user.last_name)
         $('#total_price').val(data.unit_price)
-        
+
         if(data.collector != null){
           $("#edit_collector option").prop("selected", false);
           $("#edit_collector option[value='" + data.collector.id + "']").prop("selected", true);
@@ -786,7 +786,7 @@
           })
         })
     })
-    
+
     //dynamic form fill select brand input depending category
     $("#plus_button").on("click", function(){
       $(document).on('change','.category_control',function(){
@@ -894,7 +894,7 @@
           }
         }
       });
-      
+
       var dynamic_form = $("#dynamic_form").dynamicForm("#dynamic_form", "#plus5", "#minus5", {
         limit: 15,
         formPrefix: "form",

@@ -62,7 +62,7 @@
         </a>
       </li>
     {% endif %}
-    {% if request.user.is_superuser or request.user.is_secretary %}
+    {% if request_user.is_superuser or is_secretary %}
        <li class="menu-item-has-children dropdown">
         <a href="#" data-toggle="modal" data-target="#migrate">
           <i class="fas fa-retweet mr-3"></i>
@@ -118,7 +118,7 @@
       </div>
     {% endfor %}
   {% else %}
-    {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+    {% if request.user.is_superuser or is_admin_charge %}
       {% if offices %}
         {% for office in offices %}
           <div class="row country-row">
@@ -133,7 +133,7 @@
               <div class="col-lg-4 col-xlg-4 col-md-6">
                 <div class="card blog-widget">
                   <div class="card-body">
-                    {% if request.user.is_superuser or request.user.is_secretary %}
+                    {% if request.user.is_superuser or is_secretary %}
                       <a href="{% url 'webclient:office' o.slug %}">
                     {% else %}
                       <a href="{% url 'webclient:employee_list' o.slug %}">
@@ -145,7 +145,7 @@
                     </div>
                     <span class="office-name">{{ o }}</span>
                     </a><br>
-                    {% if request.user.is_superuser or request.user.is_secretary %}
+                    {% if request.user.is_superuser or is_secretary %}
                       <label class="label label-rounded label-success">Notificaciones </label>
                       <i class="fas fa-bell" style="color: #60d3b0"></i>
                       <ul class="notify-list">
@@ -191,7 +191,7 @@
             <div class="col-lg-4 col-xlg-4 col-md-6">
               <div class="card blog-widget">
                 <div class="card-body">
-                  {% if request.user.is_superuser or request.user.is_secretary %}
+                  {% if request.user.is_superuser or is_secretary %}
                     <a href="{% url 'webclient:office' office.slug %}">
                   {% else %}
                     <a href="{% url 'webclient:employee_list' office.slug %}">

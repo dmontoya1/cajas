@@ -2,7 +2,6 @@ from datetime import datetime, date, timedelta
 
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.boxes.models.box_daily_square import BoxDailySquare
@@ -26,55 +25,80 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
     template_name = 'webclient/daily_square_box.html'
 
     def get_context_data(self, **kwargs):
+        request_user = self.request.user
         context = super(DailySquareBox, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
-        office = get_object_or_404(OfficeCountry, slug=slug)
+        office = OfficeCountry.objects.select_related('office').get(slug=slug)
         user_pk = self.kwargs['pk']
         user = User.objects.get(pk=user_pk)
-        users = User.objects.filter(Q(partner__office=office) | Q(related_employee__office_country=office) |
-                                    Q(related_employee__office=office.office))
-        box_daily_square = get_object_or_404(BoxDailySquare, user=user, office=office)
-        offices = OfficeCountry.objects.all()
-        partners = Partner.objects.filter(
-            Q(office=box_daily_square.office) | Q(code='DONJUAN')).order_by('user__first_name')
+        users = User.objects.filter(
+            Q(partner__office=office) | Q(related_employee__office_country=office) |
+            Q(related_employee__office=office.office)
+        )
+        box_daily_square = BoxDailySquare.objects.select_related('user', 'office').get(user=user, office=office)
+        offices = OfficeCountry.objects.select_related('office', 'country').all()
+        partners = Partner.objects.select_related('user', 'office', 'direct_partner').filter(
+           Q(office=box_daily_square.office) | Q(code='DONJUAN')).order_by('user__first_name')
         dq_list = User.objects.filter(
-            (Q(partner__office=office) | Q(related_employee__office_country=office) |
-             Q(related_employee__office=office.office)) &
-            Q(is_daily_square=True)).distinct()
-        context['dq_list'] = dq_list
+           (Q(partner__office=office) | Q(related_employee__office_country=office) |
+            Q(related_employee__office=office.office)) & Q(is_daily_square=True)).distinct()
         if self.request.GET.get('all'):
-            movements = box_daily_square.movements.all()
+            movements = MovementDailySquare.objects.select_related(
+                'responsible',
+                'concept',
+                'movement_don_juan',
+                'movement_don_juan_usd',
+                'movement_partner',
+                'movement_office',
+            ).filter(
+                box_daily_square=box_daily_square
+            )
         else:
-            movements = box_daily_square.movements.all()[:50]
+            movements = MovementDailySquare.objects.select_related(
+                'responsible',
+                'concept',
+                'movement_don_juan',
+                'movement_don_juan_usd',
+                'movement_partner',
+                'movement_office',
+                'responsible',
+            ).filter(
+                box_daily_square=box_daily_square
+            )[:50]
         try:
             employee = Employee.objects.get(
                 Q(user=user) & Q(office_country=office))
             group = get_object_or_none(DailySquareUnits, employee=employee)
             if group and group.units.all().exists():
-                units = group.units.filter(Q(partner__office=office) |
+                units = group.units.select_related(
+                            'partner',
+                            'collector',
+                            'supervisor'
+                        ).filter(Q(partner__office=office) |
                                             (Q(partner__code='DONJUAN') &
                                              (Q(collector__related_employee__office_country=office) |
                                               Q(collector__related_employee__office=office.office)
                                               ))).distinct()
             else:
-                units = Unit.objects.filter(Q(partner__office=office) |
-                                            (Q(partner__code='DONJUAN') &
-                                             (Q(collector__related_employee__office_country=office) |
-                                              Q(collector__related_employee__office=office.office)
-                                              ))).distinct()
-        except Employee.DoesNotExist:
-            units = Unit.objects.filter(Q(partner__office=office) |
+                units = Unit.objects.select_related(
+                            'partner',
+                            'collector',
+                            'supervisor'
+                        ).filter(Q(partner__office=office) |
                                         (Q(partner__code='DONJUAN') &
                                          (Q(collector__related_employee__office_country=office) |
                                           Q(collector__related_employee__office=office.office)
                                           ))).distinct()
-        past_mvments = MovementDailySquare.objects.filter(
-            box_daily_square=box_daily_square,
-            box_daily_square__is_closed=False,
-            review=False
-        ).exclude(
-            date=date.today()
-        )
+        except Employee.DoesNotExist:
+            units = Unit.objects.select_related(
+                            'partner',
+                            'collector',
+                            'supervisor'
+                        ).filter(Q(partner__office=office) |
+                                        (Q(partner__code='DONJUAN') &
+                                         (Q(collector__related_employee__office_country=office) |
+                                          Q(collector__related_employee__office=office.office)
+                                          ))).distinct()
         now = datetime.now()
         context['exchange'] = get_object_or_none(
             Exchange,
@@ -91,8 +115,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['users'] = users
         context['units'] = units
         context['today'] = today.strftime('%d/%m/%Y')
-        context['past_mvments'] = past_mvments
         context['categories'] = Category.objects.all()
         context['movements'] = movements
-
+        context['request_user'] = request_user
         return context

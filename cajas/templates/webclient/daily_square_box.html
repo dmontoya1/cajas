@@ -13,9 +13,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or is_admin_charge %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -89,7 +89,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -166,7 +166,7 @@
                   <h3 class="mb-4">Cuadre Diario de {{ box_user.get_full_name }} ({{ box_user.pk }})
                     {% if box.is_closed %}
                       <span style="color:red">Cerrada</span>
-                      {% if request.user.is_superuser or request.user.is_secretary %}
+                      {% if request.user.is_superuser or is_secretary %}
                         <a href="#" class="open-box" data-id="{{ box_id }}">
                           <i class="fas fa-power-off mr-2"></i>Abrir Caja</a>
                       {% endif %}
@@ -177,7 +177,7 @@
                   </h3><br><br>
                   <a href="?all=true" class="btn float-right " style="background: #5c6bc0; color: #fff;">Ver todos los movimientos</a>
 
-                  {% if request.user.is_superuser or request.user.is_secretary %}
+                  {% if request.user.is_superuser or is_secretary %}
                     <thead>
                     <tr>
                       <th></th>
@@ -195,7 +195,7 @@
                       <tr>
                         <td>
                           <ul class="ul-buttons">
-                            {% if request.user.is_superuser or request.user.is_secretary %}
+                            {% if request.user.is_superuser or is_secretary %}
                               <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                      data-target="#addMovement">Editar</a></li>
                             {% elif m.date|date:"d/m/Y" == today and not box.is_closed %}
@@ -308,7 +308,7 @@
                             {% if request.user.is_superuser %}
                               <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                      data-target="#addMovement">Editar</a></li>
-                            {% elif request.user.is_secretary %}
+                            {% elif is_secretary %}
                               {% if m.date|three_last_days %}
                                 <li><a href="#" class="edit-item" data-id="{{ m.id }}" data-toggle="modal"
                                        data-target="#addMovement">Editar</a></li>
@@ -948,7 +948,7 @@
               $('.lender-user-select').addClass('d-none')
               break;
             case 'Préstamo Personal Empleado':
-              {% if request.user.is_superuser or request.user.is_secretary %}
+              {% if request.user.is_superuser or is_secretary %}
                 $('.loan-employee').removeClass("d-none")
                 $('.lender_employee').removeClass("d-none")
                 $('#regular-value').addClass('d-none')

@@ -12,7 +12,7 @@ from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 
-from .utils import get_object_or_none
+from .utils import get_object_or_none, is_secretary, is_admin_senior
 logger = logging.getLogger(__name__)
 
 
@@ -44,7 +44,8 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         except:
             group = None
         context['employee'] = employee
-        if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
+        if self.request.user.is_superuser or is_secretary(self.request.user, office) \
+            or is_admin_senior(self.request.user, office):
             context['partners'] = Partner.objects.filter(
                 office=office,
                 is_active=True,
