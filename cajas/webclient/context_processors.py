@@ -15,6 +15,9 @@ def webclient_processor(request):
     is_secretary = None
     is_admin_senior = None
     is_admin_charge = None
+    partners = None
+    employees = None
+    session_employee = None
     if 'office' in request.session:
         office_country = OfficeCountry.objects.select_related('office', 'country', 'box').get(
             pk=request.session['office']
@@ -48,7 +51,7 @@ def webclient_processor(request):
             is_admin_charge = True
         else:
             is_admin_senior = False
-    else:
+    elif not request.user.is_anonymous:
         session_employee = Employee.objects.filter(
             user=request.user
         ).first()
@@ -63,8 +66,7 @@ def webclient_processor(request):
                 is_admin_charge = True
             else:
                 is_admin_senior = False
-        partners = None
-        employees = None
+
     all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
     concepts = Concept.objects.filter(is_active=True)
     context = {
