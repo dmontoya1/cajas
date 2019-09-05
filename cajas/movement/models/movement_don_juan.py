@@ -1,3 +1,4 @@
+
 from django.db import models
 
 from cajas.boxes.models.box_don_juan import BoxDonJuan

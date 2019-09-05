@@ -73,14 +73,7 @@ class DonJuanUSDManager(object):
         if self.__is_movement_value_updated(current_movement, data['value']):
             current_movement = update_movement_balance(current_movement, data['value'])
         current_don_juan_movement.update(**object_data)
-        # update_all_movement_balance_on_update(
-        #     MovementDonJuanUsd,
-        #     'box_don_juan',
-        #     current_movement.box_don_juan,
-        #     current_movement.date,
-        #     current_movement.pk,
-        #     current_movement
-        # )
+
         all_movements = current_movement.box_don_juan.movements.order_by('date', 'pk')
         update_movements_balance(
             all_movements,
