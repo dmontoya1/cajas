@@ -75,7 +75,7 @@ def delete_movement_by_box(current_movement, box, model, box_name):
         )
 
 
-def get_last_movement(model, box_name, box, date_mv,):
+def get_last_movement(model, box_name, box, date_mv):
     if len(model.objects.filter(**{box_name: box}).filter(date=date_mv)) > 0:
         return model.objects.filter(**{box_name: box}).filter(date=date_mv).order_by('date', 'pk').last()
     else:

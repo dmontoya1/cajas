@@ -58,7 +58,7 @@
 
       {% if perms.office.change_supervisorcalendar %}
         <li class="menu-item-has-children dropdown">
-          <a href="{% url 'webclient:calendar' office.slug %}">
+          <a href="{% url 'webclient:groups' office.slug %}">
             <img src="{% static 'icons/ICONOS-05.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
             Grupos
           </a>
@@ -245,6 +245,6 @@
     });
 
 
-    
+
   </script>
 {% endblock %}

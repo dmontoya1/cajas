@@ -25,7 +25,7 @@ class MovementBoxColombiaManager(object):
             concept = get_object_or_404(Concept, pk=data['concept'])
             data['concept'] = concept
         except:
-            data['concept'] = data['concept']
+            concept = data['concept']
         movement_colombia = self.create_movement_box_colombia(data)
         if concept == transfer_concept:
             if data['movement_type'] == MovementBoxColombia.IN:
@@ -264,21 +264,6 @@ class MovementBoxColombiaManager(object):
             0,
             current_movement.box_office
         )
-        # update_all_movement_balance_on_update(
-        #     MovementBoxColombia,
-        #     'box_office',
-        #     current_movement.box_office,
-        #     current_movement.date,
-        #     current_movement.pk,
-        #     current_movement
-        # )
-        if self.__is_movement_date_update(current_movement, data['date']):
-            all_movements = current_movement.box_office.movements.order_by('date', 'pk')
-            update_movements_balance(
-                all_movements,
-                0,
-                current_movement.box_office
-            )
 
     def delete_box_colombia_movement(self, data):
         current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
