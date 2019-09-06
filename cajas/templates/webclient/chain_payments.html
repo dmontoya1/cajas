@@ -200,7 +200,7 @@
 {% endblock %}
 
 {% block extra_js %}
-
+  <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/natural.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('#table').DataTable({
@@ -211,6 +211,9 @@
           'excel', 'print'
         ],
         "order": [[1, "asc"]],
+        columnDefs: [
+           { type: 'natural', targets: 1 }
+         ],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
