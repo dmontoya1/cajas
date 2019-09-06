@@ -4,7 +4,7 @@ from cajas.concepts.models.concepts import Concept
 from ..models.movement_don_juan_usd import MovementDonJuanUsd
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_movements_balance, update_movement_type_value, \
-    update_movement_balance, update_movement_balance_full_box
+    update_movement_balance
 
 
 class DonJuanUSDManager(object):

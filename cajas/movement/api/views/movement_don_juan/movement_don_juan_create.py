@@ -9,7 +9,6 @@ from rest_framework import status
 from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
-from cajas.boxes.models.box_office import BoxOffice
 from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.core.services.email_service import EmailManager
