@@ -5,15 +5,16 @@ from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.concepts.models.concepts import Concept, ConceptType
+from cajas.inventory.models.category import Category
+from cajas.inventory.models.brand import Brand
+from cajas.office.services.office_item_create import OfficeItemsManager
 
 from ..models.movement_office import MovementOffice
 from ..services.don_juan_service import DonJuanManager
 from ..services.don_juan_usd_service import DonJuanUSDManager
 from ..services.box_colombia_service import MovementBoxColombiaManager
-from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
-    update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
-    update_movement_balance
+from .utils import update_movements_balance, update_movement_balance_on_create, delete_movement_by_box, \
+    get_last_movement, update_all_movements_balance_on_create, update_movement_type_value, update_movement_balance
 
 
 class MovementOfficeManager(object):
@@ -67,6 +68,14 @@ class MovementOfficeManager(object):
                 else:
                     data['movement_type'] = 'IN'
                 box_colombia_manager.create_bank_colombia_movement(data)
+        if "brand" in data:
+            data["brand"] = get_object_or_404(Brand, pk=data["brand"])
+            data["category"] = get_object_or_404(Category, pk=data["category"])
+            office_items_manager = OfficeItemsManager()
+            # aux["brand"] = brand
+            # aux["category"] = category
+            office_items_manager.create_office_item(data)
+
 
     def create_movement(self, data):
         self.__validate_data(data)
