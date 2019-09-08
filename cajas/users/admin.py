@@ -41,17 +41,22 @@ class EmployeeAdmin(admin.ModelAdmin):
 class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    list_display = ['get_full_name', 'code', 'partner_type', ]
+    list_display = ['get_full_name', 'code', 'partner_type', 'get_direct_partner']
     search_fields = ['user__first_name', 'user__last_name', 'code', ]
     extra = 0
     list_filter = ['office', 'office__office', 'office__country']
     inlines = [UnitInline, ]
     readonly_fields = ('code', 'consecutive')
+    fieldsets = (("Datos Socio",
+        {"fields": ("user", 'office', 'code', 'partner_type', 'direct_partner', 'consecutive', 'is_active',
+                    'buyer_unit_partner')}),)
 
-    class Media:
-        js = (
-            'js/admin/partner_admin.js',
-        )
+    def get_direct_partner(self, obj):
+        if obj.direct_partner:
+            return obj.direct_partner.get_full_name()
+        return 'Don Juan'
+
+    get_direct_partner.short_description = 'Socio Directo'
 
 
 @admin.register(User)
@@ -59,7 +64,7 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales", 
+    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales",
         {"fields": ("document_type", 'document_id', 'is_abstract', 'is_daily_square')}),)
     list_display = ["email", "first_name", "last_name", "is_daily_square"]
     readonly_fields = ('last_login', 'date_joined')
