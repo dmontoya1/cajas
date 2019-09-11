@@ -174,7 +174,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if partners %}
+                  {% if request.user.is_superuser or request.user.is_secretary or request.user.is_admin_senior %}
                     {% for p in partners %}
                       <tr>
                         <td>{{ p.user.first_name }}</td>

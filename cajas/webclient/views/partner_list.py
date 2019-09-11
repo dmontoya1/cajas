@@ -44,7 +44,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         except:
             group = None
         context['employee'] = employee
-        if employee and self.request.user.is_superuser or self.request.user.is_secretary() or employee.is_admin_charge():
+        if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
             context['partners'] = Partner.objects.filter(
                 office=office,
                 is_active=True,
