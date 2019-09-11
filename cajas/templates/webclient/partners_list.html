@@ -174,7 +174,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.is_secretary or request.user.is_admin_senior %}
+                  {% if partners %}
                     {% for p in partners %}
                       <tr>
                         <td>{{ p.user.first_name }}</td>
@@ -631,7 +631,7 @@
       slug = "{{ office.slug }}"
       $("#partner_id").val(pk)
 
-      //get partner units 
+      //get partner units
       $("#concept").on("change", function () {
         if ($("#concept option:selected").text() == "Compra de Inventario Unidad de tipo Simple") {
           axios.get(`/api/units/${pk}/list`)
