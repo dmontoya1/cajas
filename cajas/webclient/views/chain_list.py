@@ -33,6 +33,7 @@ class ChainList(LoginRequiredMixin, TemplateView):
                         if chain_user.user == partner.user and chain not in chains_list and partner.office == office:
                             chains_list.append(chain)
 
+
         context['office'] = office
         context['chains'] = chains_list
         return context
