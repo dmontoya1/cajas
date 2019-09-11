@@ -38,13 +38,16 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             employee = Employee.objects.get(
                 Q(user=self.request.user) & Q(office_country=office))
         except Employee.DoesNotExist:
+            logger.exception("Empleado no existe")
             employee = None
+        logger.exception(employee)
         try:
             group = get_object_or_none(DailySquareUnits, employee=employee)
         except:
             group = None
         context['employee'] = employee
-        if self.request.user.is_superuser or self.request.user.is_secretary() or employee.user.is_admin_senior():
+        if self.request.user.is_superuser or self.request.user.is_secretary() or employee.is_admin_charge():
+            logger.exception("Es Cargo Adminsitrador")
             context['partners'] = Partner.objects.filter(
                 office=office,
                 is_active=True,
