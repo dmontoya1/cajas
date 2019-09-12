@@ -184,10 +184,10 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% for p in loan.related_payments.all %}
+                  {% for p in payments %}
                     <tr>
                       <td><span>{{ p.date|date:"Y-m-d" }}</span></td>
-                      <td>{{ p.get_history_type_display }}</td>
+                      <td>{{ p.get_history_type_display }} {{ p.pk }}</td>
                       <td>
                         $ {{ p.value|floatformat:2|intcomma }}
                       </td>
@@ -465,7 +465,7 @@
             title: '{{ loan }} ({{ loan.loan_type }})'
           }
         ],
-        "order": [[0, "des"]],
+        "order": [[0, "asc"]],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",
