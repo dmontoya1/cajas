@@ -24,37 +24,24 @@ def webclient_processor(request):
         )
         partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(
             (Q(office__pk=request.session['office']) |
-             Q(code='DONJUAN'))
-            & Q(is_active=True)
+             Q(code='DONJUAN')), Q(is_active=True)
         )
         employees = Employee.objects.select_related('user', 'charge', 'dailysquareunits').filter(
-            Q(office_country=office_country) or
-            Q(office=office_country.office))
-        try:
-            session_employee = Employee.objects.get(
-                user=request.user, office=office_country.office
-            )
-        except Employee.DoesNotExist:
-            session_employee = Employee.objects.get(
-                Q(user=request.user) and
-                (Q(office_country=office_country) or Q(office=office_country.office))
-            )
-        except Exception as e:
-            session_employee = None
-        if session_employee.charge == secretary:
-            is_secretary = True
-            is_admin_senior = False
-        elif session_employee.charge == admin_senior:
-            is_secretary = False
-            is_admin_senior = True
-        if session_employee.charge == secretary or session_employee.charge == admin_senior:
-            is_admin_charge = True
-        else:
-            is_admin_senior = False
+            Q(office_country=office_country) | Q(office=office_country.office)
+        )
+        if not request.user.is_superuser:
+            try:
+                session_employee = Employee.objects.get(
+                    Q(user=request.user), (Q(office_country=office_country) | Q(office=office_country.office))
+                )
+            except Exception as e:
+                print(e)
+                session_employee = None
     elif not request.user.is_anonymous:
         session_employee = Employee.objects.filter(
             user=request.user
         ).first()
+    if not request.user.is_superuser:
         if session_employee:
             if session_employee.charge == secretary:
                 is_secretary = True

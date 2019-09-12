@@ -62,7 +62,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
                     dq_total += box.balance
                 context['dq_total'] = dq_total
-
             else:
                 employee = Employee.objects.select_related('user', 'charge').get(
                     Q(user=self.request.user) & Q(office_country=office))
@@ -77,7 +76,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                     if employee.user.is_daily_square and employee.user not in dailys:
                         dailys.append(employee.user)
                     context['dailys'] = dailys
-                elif employee.is_admin_senior():
+                elif is_admin_senior(self.request.user, office):
                     context['dailys'] = User.objects.filter(
                         Q(is_daily_square=True) &
                         (Q(related_employee__office=office.office) |
@@ -95,8 +94,6 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                                                        Q(collector__related_employee__office=office.office)
                                                        ))).distinct()
         except Exception as e:
-            logger.exception(str(e))
-            print("EXCEPTION 2", e)
             context['partner'] = Partner.objects.get(user=self.request.user, office=office)
         now = datetime.now()
         context['exchange'] = get_object_or_none(
