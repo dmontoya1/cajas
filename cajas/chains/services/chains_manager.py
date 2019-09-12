@@ -4,21 +4,22 @@ from datetime import datetime, date
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
 from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.users.models.partner import Partner
 from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
+from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.webclient.views.get_ip import get_ip
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
 from ..models.user_place import UserPlace
 from ..models.user_place_pay import UserPlacePay
+
+movement_partner_manager = MovementPartnerManager()
+don_juan_manager = DonJuanManager()
 
 
 class ChainManager(object):
@@ -57,6 +58,32 @@ class ChainManager(object):
                 place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
             )
 
+    def get_users_for_place_to_pay_chain(self, chain, month):
+        place = ChainPlace.objects.get(
+            chain=chain,
+            pay_date__month=month
+        )
+        return place.related_users.all()
+
+    def pay_month_chain_user(self, data, user):
+        concept = Concept.objects.get(name="Pago Puesto Cadena")
+        data_pay = {
+            'concept': concept,
+            'movement_type': 'IN',
+            'value': data['value'],
+            'detail': 'Pago cadena {}'.format(data['chain']),
+            'date': datetime.now(),
+            'responsible': data['responsible'],
+            'ip': data['ip']
+        }
+        if user == 'DONJUAN':
+            data_pay['box'] = BoxDonJuan.objects.get(office=data['office'])
+            don_juan_manager.create_movement(data_pay)
+        else:
+            data_pay['box'] = data['partner'].box
+            movement_partner_manager.create_simple(data_pay)
+
+
     def get_partner_by_user_and_office(self, user, office):
         return Partner.objects.get(user=user, office=office)
 
@@ -64,29 +91,51 @@ class ChainManager(object):
         try:
             concept = Concept.objects.get(name="Pago Puesto Cadena")
             partner = self.get_partner_by_user_and_office(user_place.user, data['office'])
-            MovementPartner.objects.create(
-                box_partner=partner.box,
-                concept=concept,
-                movement_type='OUT',
-                value=data['pay_value'],
-                detail='Pagos puesto de la cadena {}'.format(user_place.chain_place.chain),
-                date=datetime.now(),
-                responsible=data['responsible'],
-                ip=data['ip']
-            )
+            data = {
+                'box': partner.box,
+                'concept': concept,
+                'movement_type': 'OUT',
+                'value': data['pay_value'],
+                'detail': 'Pagos puesto de la cadena {}'.format(user_place.chain_place.chain),
+                'date': datetime.now(),
+                'responsible': data['responsible'],
+                'ip': data['ip']
+            }
+            movement_partner_manager.create_simple(data)
             return True
         except Partner.DoesNotExist:
             return False
 
     def internal_chain_pay(self, data):
         user_place = UserPlace.objects.get(pk=data['user_place'])
-        parter_payment = self.create_chain_pay_partner_movement(data, user_place)
-        if parter_payment:
-            UserPlacePay.objects.create(
+        partner_payment = self.create_chain_pay_partner_movement(data, user_place)
+        if partner_payment:
+            place_paid = UserPlacePay.objects.create(
                 user_place=user_place,
                 pay_value=data['pay_value'],
                 date=data['date']
             )
+            date_month = datetime.strptime(data['date'], "%Y-%m-%d").date()
+            users_in_place = self.get_users_for_place_to_pay_chain(
+                place_paid.user_place.chain_place.chain,
+                date_month.month
+            )
+            for user_place in users_in_place:
+                data_pay = {
+                    'office': data['office'],
+                    'value': int(float(data['pay_value']) * user_place.place_porcentaje / float(100)),
+                    'chain': user_place.chain_place.chain,
+                    'responsible': data['responsible'],
+                    'ip': data['ip']
+                }
+
+                if user_place.user.document_id == '1':
+                    user_ = 'DONJUAN'
+                else:
+                    user_ = 'SOCIO'
+                    print(user_place.user)
+                    data_pay['partner'] = Partner.objects.get(user=user_place.user, office=data['office'])
+                self.pay_month_chain_user(data_pay, user_)
             return True
         return False
 

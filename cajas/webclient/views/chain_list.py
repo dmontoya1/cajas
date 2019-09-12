@@ -30,8 +30,9 @@ class ChainList(LoginRequiredMixin, TemplateView):
             for chain in chains:
                 for chain_place in chain.related_places.all():
                     for chain_user in chain_place.related_users.all():
-                        if chain_user.user == partner.user and chain not in chains_list:
+                        if chain_user.user == partner.user and chain not in chains_list and partner.office == office:
                             chains_list.append(chain)
+
 
         context['office'] = office
         context['chains'] = chains_list
