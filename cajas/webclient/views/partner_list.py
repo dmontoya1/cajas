@@ -37,19 +37,11 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         if not self.request.user.is_superuser:
             try:
                 employee = Employee.objects.get(
-                    Q(user=self.request.user) and (Q(office_country=office) or Q(office=office.office))
-                )
-            except Employee.DoesNotExist:
-                employee = Employee.objects.get(
-                    Q(user=self.request.user) and
-                    (Q(office_country=office) or Q(office=office.office))
+                    Q(user=self.request.user), (Q(office_country=office) | Q(office=office.office))
                 )
             except Exception as e:
                 employee = None
-            try:
-                group = get_object_or_none(DailySquareUnits, employee=employee)
-            except:
-                group = None
+            group = get_object_or_none(DailySquareUnits, employee=employee)
             context['employee'] = employee
             if is_secretary(self.request.user, office) or is_admin_senior(self.request.user, office):
                 context['partners'] = Partner.objects.filter(
@@ -59,7 +51,10 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 ).exclude(partner_type='DJ')
             else:
                 partners = list()
-                partner = Partner.objects.get(office=office, user=self.request.user)
+                try:
+                    partner = Partner.objects.get(office=office, user=self.request.user)
+                except:
+                    partner = None
                 if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
                     units = group.units.filter(Q(partner__office=office) |
                                                (Q(partner__code='DONJUAN') &
