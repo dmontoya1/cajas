@@ -118,4 +118,5 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['movements'] = movements
         context['request_user'] = request_user
+        context['abbr'] = box_daily_square.office.country.abbr
         return context
