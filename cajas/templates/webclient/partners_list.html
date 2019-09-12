@@ -11,9 +11,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or is_admin_charge %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -39,7 +39,7 @@
           </a>
         </li>
       {% endif %}
-      {% if request.user.is_superuser or request.user.is_secretary %}
+      {% if request.user.is_superuser or is_secretary %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -87,7 +87,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -174,7 +174,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.is_secretary or request.user.is_admin_senior %}
+                  {% if request.user.is_superuser or is_admin_charge %}
                     {% for p in partners %}
                       <tr>
                         <td>{{ p.user.first_name }}</td>
@@ -214,7 +214,7 @@
                         <td>{{ p.user.first_name }}</td>
                         <td>{{ p.user.last_name }}</td>
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
-                        <td>{{ p.get_p_type_display }}</td>
+                        <td>{{ p.get_partner_type_display }}</td>
                         <td>{{ p.user.email }}</td>
                         <td><a href="#" class="partner_detail" data-id="{{ p.id }}" data-toggle="modal"
                                data-target="#modalDetail">Detalle</a></td>
@@ -700,7 +700,7 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "asc"]],
+        "order": [[2, "asc"]],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",

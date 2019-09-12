@@ -1,4 +1,9 @@
 
+from django.db.models import Q
+
+from cajas.users.models.charges import Charge
+from cajas.users.models.employee import Employee
+
 
 def _get_queryset(klass):
     if hasattr(klass, '_default_manager'):
@@ -29,3 +34,28 @@ def get_object_or_none(klass, *args, **kwargs):
         return queryset.get(*args, **kwargs)
     except queryset.model.DoesNotExist:
         return None
+
+
+def is_secretary(user, office):
+    secretary = Charge.objects.get(name="Secretaria")
+    try:
+        employee = Employee.objects.get(
+            Q(user=user),
+            (Q(office_country=office) | Q(office=office.office))
+        )
+        return employee.charge == secretary
+    except Employee.DoesNotExist:
+        return False
+
+
+def is_admin_senior(user, office):
+    admin = Charge.objects.get(name="Administrador Senior")
+    try:
+        employee = Employee.objects.get(
+                Q(user=user),
+                Q(office_country=office) |
+                Q(office=office.office)
+            )
+        return employee.charge == admin
+    except Employee.DoesNotExist:
+        return False

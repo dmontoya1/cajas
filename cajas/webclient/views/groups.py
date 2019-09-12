@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 from cajas.users.models.employee import Employee
 from cajas.users.models.group import Group
 from cajas.office.models.officeCountry import OfficeCountry
+from .utils import is_secretary
 
 
 class Groups(LoginRequiredMixin, TemplateView):
@@ -21,7 +22,7 @@ class Groups(LoginRequiredMixin, TemplateView):
         context = super(Groups, self).get_context_data(**kwargs)
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
-        if self.request.user.is_superuser or self.request.user.is_secretary():
+        if self.request.user.is_superuser or is_secretary(self.request.user, office):
             context['employees'] = Employee.objects.filter(
                 Q(office_country=office) |
                 Q(office=office.office)

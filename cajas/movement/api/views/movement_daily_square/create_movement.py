@@ -19,7 +19,7 @@ from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 from cajas.users.models.employee import Employee
 from cajas.webclient.views.get_ip import get_ip
-from cajas.webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none, is_secretary
 
 from ....services.daily_square_service import MovementDailySquareManager
 from ....models.movement_don_juan_usd import MovementDonJuanUsd
@@ -154,7 +154,7 @@ class CreateDailySquareMovement(APIView):
             )
         elif concept.name == "Préstamo Personal Empleado":
             loan_manager = LoanManager()
-            if request.user.is_superuser or request.user.is_secretary():
+            if request.user.is_superuser or is_secretary(request.user, office):
                 data_loan = {
                     'request': request,
                     'value': request_data['value'],

@@ -41,28 +41,3 @@ class User(AbstractUser):
             return "{} ({})".format(self.get_full_name(), self.document_id)
         return self.username
 
-    def is_employee(self):
-        try:
-            if self.related_employee.get():
-                return True
-            return False
-        except:
-            return False
-
-    def is_secretary(self):
-        secretary = Charge.objects.get(name="Secretaria")
-        try:
-            if self.related_employee.get().charge == secretary:
-                return True
-            return False
-        except:
-            return False
-
-    def is_admin_senior(self):
-        admin_senior = Charge.objects.get(name="Administrador Senior")
-        try:
-            if self.related_employee.get().charge == admin_senior:
-                return True
-            return False
-        except:
-            return False

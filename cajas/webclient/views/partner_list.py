@@ -12,7 +12,7 @@ from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 
-from .utils import get_object_or_none
+from .utils import get_object_or_none, is_secretary, is_admin_senior
 logger = logging.getLogger(__name__)
 
 
@@ -34,51 +34,64 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         units = Unit.objects.filter(partner__office=office)
-        try:
-            employee = Employee.objects.get(
-                Q(user=self.request.user) & Q(office_country=office))
-        except Employee.DoesNotExist:
-            employee = None
-        try:
-            group = get_object_or_none(DailySquareUnits, employee=employee)
-        except:
-            group = None
-        context['employee'] = employee
-        if self.request.user.is_superuser or self.request.user.is_secretary() or self.request.user.is_admin_senior():
+        if not self.request.user.is_superuser:
+            try:
+                employee = Employee.objects.get(
+                    Q(user=self.request.user) and (Q(office_country=office) or Q(office=office.office))
+                )
+            except Employee.DoesNotExist:
+                employee = Employee.objects.get(
+                    Q(user=self.request.user) and
+                    (Q(office_country=office) or Q(office=office.office))
+                )
+            except Exception as e:
+                employee = None
+            try:
+                group = get_object_or_none(DailySquareUnits, employee=employee)
+            except:
+                group = None
+            context['employee'] = employee
+            if is_secretary(self.request.user, office) or is_admin_senior(self.request.user, office):
+                context['partners'] = Partner.objects.filter(
+                    office=office,
+                    is_active=True,
+                    box__box_status=BoxStatus.ABIERTA,
+                ).exclude(partner_type='DJ')
+            else:
+                partners = list()
+                partner = Partner.objects.get(office=office, user=self.request.user)
+                if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
+                    units = group.units.filter(Q(partner__office=office) |
+                                               (Q(partner__code='DONJUAN') &
+                                                (Q(collector__related_employee__office_country=office) |
+                                                 Q(collector__related_employee__office=office.office) |
+                                                 Q(supervisor__related_employee__office_country=office) |
+                                                 Q(supervisor__related_employee__office=office.office)
+                                                 ))).distinct()
+                    for u in units:
+                        if u.partner not in partners:
+                            partners.append(u.partner)
+                elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
+                    if partner not in partners:
+                        partners.append(partner)
+                    mini_partners = Partner.objects.filter(direct_partner=partner)
+                    for p in mini_partners:
+                        if p not in partners:
+                            partners.append(p)
+                if self.request.user.groups.filter(name='Socios').exists():
+                    if partner not in partners:
+                        partners.append(partner)
+                    mini_partners = Partner.objects.filter(direct_partner=partner)
+                    for p in mini_partners:
+                        if p not in partners:
+                            partners.append(p)
+                context['partner'] = partners
+        else:
             context['partners'] = Partner.objects.filter(
                 office=office,
                 is_active=True,
                 box__box_status=BoxStatus.ABIERTA,
             ).exclude(partner_type='DJ')
-        else:
-            partners = list()
-            partner = Partner.objects.get(office=office, user=self.request.user)
-            if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
-                units = group.units.filter(Q(partner__office=office) |
-                                           (Q(partner__code='DONJUAN') &
-                                            (Q(collector__related_employee__office_country=office) |
-                                             Q(collector__related_employee__office=office.office) |
-                                             Q(supervisor__related_employee__office_country=office) |
-                                             Q(supervisor__related_employee__office=office.office)
-                                             ))).distinct()
-                for u in units:
-                    if u.partner not in partners:
-                        partners.append(u.partner)
-            elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
-                if partner not in partners:
-                    partners.append(partner)
-                mini_partners = Partner.objects.filter(direct_partner=partner)
-                for p in mini_partners:
-                    if p not in partners:
-                        partners.append(p)
-            if self.request.user.groups.filter(name='Socios').exists():
-                if partner not in partners:
-                    partners.append(partner)
-                mini_partners = Partner.objects.filter(direct_partner=partner)
-                for p in mini_partners:
-                    if p not in partners:
-                        partners.append(p)
-            context['partner'] = partners
         context['groups'] = Group.objects.all()
         context['categories'] = Category.objects.all()
         context['office'] = office

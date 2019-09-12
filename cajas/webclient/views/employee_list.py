@@ -8,6 +8,7 @@ from django.views.generic import TemplateView
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.office.models.officeCountry import OfficeCountry
+from .utils import is_secretary, is_admin_senior
 
 logger = logging.getLogger(__name__)
 
@@ -30,12 +31,8 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         try:
-            if (self.request.user.is_superuser or self.request.user.is_secretary() or
-                 self.request.user.is_admin_senior()):
-                print('INto if')
-                print(self.request.user.is_superuser)
-                print(self.request.user.is_secretary)
-                print(self.request.user.is_admin_senior)
+            if (self.request.user.is_superuser or is_secretary(self.request.user, office) or
+                 is_admin_senior(self.request.user, office)):
                 context['employees'] = Employee.objects.filter(office_country=office, user__is_active=True)
                 context['employees1'] = Employee.objects.filter(office=office.office, user__is_active=True)
                 context['charges'] = Charge.objects.all().exclude(name="Presidente")

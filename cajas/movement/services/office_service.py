@@ -115,8 +115,6 @@ class MovementOfficeManager(object):
     def __is_date_updated(self, movement, new_date):
         return movement.date != new_date
 
-    def __is_movement_date_update(self, movement, new_date):
-        return movement.date != new_date
 
     def update_office_movement(self, data):
         current_movement_office = self.__get_movement_by_pk(data['pk'])

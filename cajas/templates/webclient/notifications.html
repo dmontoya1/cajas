@@ -11,9 +11,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+        {% if request.user.is_superuser or is_admin_charge %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -87,7 +87,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -169,7 +169,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+                  {% if request.user.is_superuser or is_admin_charge %}
                     {% for n in notifications%}
                        <tr>
                         <td>{{ n.office_sender }}</td>

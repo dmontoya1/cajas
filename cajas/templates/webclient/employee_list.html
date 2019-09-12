@@ -11,9 +11,9 @@
   <ul class="nav navbar-nav">
     <li class="active">
       <a href="
-        {% if request.user.is_superuser or request.user.is_secretary %}
+        {% if request.user.is_superuser or is_secretary %}
           {% url 'webclient:office' office.slug %}
-        {% elif request.user.is_employee %}
+        {% elif request.user.session_employee %}
           {% url 'webclient:employee_list' office.slug %}
         {% else %}
           {% url 'webclient:partners_list' office.slug %}
@@ -87,7 +87,7 @@
           Lista de inversiones
         </a>
       </li>
-      {% if request.user.is_superuser or request.user.related_employee.get.is_admin_charge %}
+      {% if request.user.is_superuser or is_admin_charge %}
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:closeout_boxes' office.slug %}">
             <img src="{% static 'icons/ICONOS-04.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
@@ -184,7 +184,7 @@
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_superuser %}
+                        {% if is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}
@@ -205,7 +205,7 @@
                            data-target="#modalDetail">Ver detalle</a></td>
                       <td><a href="{% url 'webclient:daily_square_units' office.slug e.pk %}">Ver Grupo</a></td>
                       <td>
-                        {% if request.user.is_secretary or request.user.is_superuser %}
+                        {% if is_secretary or request.user.is_superuser %}
                           <a href="#" class="edit-item" data-id="{{ e.id }}" data-toggle="modal"
                              data-target="#editEmployee">Editar</a>
                         {% endif %}
