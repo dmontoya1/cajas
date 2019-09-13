@@ -41,7 +41,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                 )
             except Exception as e:
                 employee = None
-            group = get_object_or_none(DailySquareUnits, employee=employee)
+            group = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
             context['employee'] = employee
             if is_secretary(self.request.user, office) or is_admin_senior(self.request.user, office):
                 context['partners'] = Partner.objects.filter(
