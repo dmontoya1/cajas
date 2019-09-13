@@ -93,4 +93,4 @@ class LoanHistory(models.Model):
     class Meta:
         verbose_name = 'Historial de préstamo'
         verbose_name_plural = 'Historial de préstamos'
-        ordering = ['-date', '-pk']
+        ordering = ['date', 'pk']

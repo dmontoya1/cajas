@@ -178,7 +178,6 @@ class LoanPaymentManager(object):
                 balance=new_balance
             )
 
-
     def interest_load_payment(self, request):
         loan = get_object_or_404(Loan, pk=request.data['loan'])
         LoanHistory.objects.create(

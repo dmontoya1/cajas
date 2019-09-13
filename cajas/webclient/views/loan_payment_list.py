@@ -7,6 +7,7 @@ from django.views.generic import TemplateView
 
 from cajas.general_config.models.exchange import Exchange
 from cajas.loans.models.loan import Loan
+from cajas.loans.models.loan_history import LoanHistory
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.webclient.views.utils import get_object_or_none
 
@@ -26,7 +27,9 @@ class LoanPaymentList(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         loan = get_object_or_404(Loan, pk=self.kwargs['pk'])
+        payments = LoanHistory.objects.filter(loan=loan)
         context['loan'] = loan
+        context['payments'] = payments
         context['office'] = office
         now = datetime.now()
         context['exchange'] = get_object_or_none(

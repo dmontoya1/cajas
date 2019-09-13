@@ -36,7 +36,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
         except Employee.DoesNotExist:
             employee = None
         try:
-            group = get_object_or_none(DailySquareUnits, employee=employee)
+            group = get_object_or_none(DailySquareUnits, employee=employee, employee__oficce_country=office)
         except:
             group = None
 

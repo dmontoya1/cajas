@@ -778,9 +778,7 @@
           Swal.fire({
             type: 'error',
             title: 'Error',
-            text: error,
-          }).then(function () {
-            location.reload()
+            text: error.response.data,
           })
         })
     })

@@ -1,4 +1,5 @@
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
@@ -23,6 +24,14 @@ class EmployeeUpdate(generics.RetrieveUpdateAPIView):
         charge = Charge.objects.get(pk=request.data["charge"])
         item = Employee.objects.get(pk=kwargs['pk'])
         user = User.objects.get(pk=item.user.pk)
+        old_user = User.objects.filter(Q(email=request.data['email']) | Q(username=request.data['email'])).exclude(
+            pk=item.user.pk
+        )
+        if old_user.exists():
+            return Response(
+                'Ya existe un usuario con este correo',
+                status=status.HTTP_400_BAD_REQUEST
+            )
         user.first_name = request.data["first_name"]
         user.last_name = request.data["last_name"]
         user.email = request.data['email']
