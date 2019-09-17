@@ -67,12 +67,14 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                         if u.partner not in partners:
                             partners.append(u.partner)
                 elif employee and employee.user.groups.filter(name='Administrador de Grupo S.C').exists():
+                    logger.exception("El user tiene Admin de Grupo Sin Caja")
                     if partner not in partners:
                         partners.append(partner)
                     mini_partners = Partner.objects.filter(direct_partner=partner)
                     for p in mini_partners:
                         if p not in partners:
                             partners.append(p)
+                    logger.exception("Lista de socios", partners)
                 if self.request.user.groups.filter(name='Socios').exists():
                     if partner not in partners:
                         partners.append(partner)
