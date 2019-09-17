@@ -187,7 +187,7 @@
                   {% for p in payments %}
                     <tr>
                       <td><span>{{ p.date|date:"Y-m-d" }}</span></td>
-                      <td>{{ p.get_history_type_display }} {{ p.pk }}</td>
+                      <td>{{ p.get_history_type_display }}</td>
                       <td>
                         $ {{ p.value|floatformat:2|intcomma }}
                       </td>
