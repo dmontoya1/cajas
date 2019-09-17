@@ -68,23 +68,19 @@ SHARED_APPS = [
     'jet',
     'jet.dashboard',
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django.contrib.admin',
-    'crispy_forms',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'crispy_forms',
     'rest_framework',
     'django_celery_beat',
-]
-
-TENANT_APPS = [
-    'django.contrib.contenttypes',
     'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
     'cajas.chains.apps.ChainsConfig',
@@ -99,6 +95,18 @@ TENANT_APPS = [
     'cajas.reports.apps.ReportsConfig',
     'cajas.units.apps.UnitsConfig',
     'cajas.users.apps.UsersAppConfig',
+]
+
+TENANT_APPS = [
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'cajas.api.apps.ApiConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
