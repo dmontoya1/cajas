@@ -5,13 +5,14 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 
 from cajas.boxes.models.box_don_juan import BoxDonJuan
-from cajas.users.models.partner import Partner
 from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.users.models.partner import Partner
+from cajas.users.models.user import User
 from cajas.webclient.views.get_ip import get_ip
 from ..models.chain import Chain
 from ..models.chain_place import ChainPlace
@@ -51,10 +52,10 @@ class ChainManager(object):
     def create_users_place(self, data, place, i):
         counters = data['counters']
         for j in range(0, int(counters['counter_{}'.format(i)])):
-            partner = get_object_or_404(Partner, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
+            user = get_object_or_404(User, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
             UserPlace.objects.create(
                 chain_place=place,
-                user=partner.user,
+                user=user,
                 place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
             )
 
@@ -82,7 +83,6 @@ class ChainManager(object):
         else:
             data_pay['box'] = data['partner'].box
             movement_partner_manager.create_simple(data_pay)
-
 
     def get_partner_by_user_and_office(self, user, office):
         return Partner.objects.get(user=user, office=office)
@@ -133,7 +133,6 @@ class ChainManager(object):
                     user_ = 'DONJUAN'
                 else:
                     user_ = 'SOCIO'
-                    print(user_place.user)
                     data_pay['partner'] = Partner.objects.get(user=user_place.user, office=data['office'])
                 self.pay_month_chain_user(data_pay, user_)
             return True
