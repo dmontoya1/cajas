@@ -9,12 +9,7 @@ DEBUG = True
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='J4Ho7pqECJa6LeHtqa5sSMV7AsF9A3AoRG3U8mNOXC6m644ze8vMZXuI2GtsNljN')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
-    "localhost",
-    "localhost.org",
-    "0.0.0.0",
-    "127.0.0.1",
-    "192.168.0.15",
-    "192.168.0.21",
+    "*",
 ]
 
 # CACHES
@@ -62,3 +57,4 @@ INSTALLED_APPS += ['django_extensions']  # noqa F405
 
 API_KEY = env('API_KEY')
 
+DEFAULT_FILE_STORAGE = 'tenant_schemas.storage.TenantFileSystemStorage'

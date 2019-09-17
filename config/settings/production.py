@@ -95,7 +95,7 @@ class MediaRootS3Boto3Storage(S3Boto3Storage):
 
 
 # endregion
-DEFAULT_FILE_STORAGE = 'config.settings.production.MediaRootS3Boto3Storage'
+DEFAULT_FILE_STORAGE = "tenant_schemas.storage.TenantFileSystemStorage"
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/'
 
 # TEMPLATES
