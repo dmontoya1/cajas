@@ -2,6 +2,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+
+from cajas.office.models.officeCountry import OfficeCountry
 from .chain_place import ChainPlace
 
 User = get_user_model()
@@ -22,6 +24,13 @@ class UserPlace(models.Model):
         verbose_name='Usuario',
         on_delete=models.SET_NULL,
         related_name='related_chains',
+        null=True, blank=True
+    )
+    office = models.ForeignKey(
+        OfficeCountry,
+        verbose_name='Oficina a la que pertenece el usuario',
+        related_name='related_places',
+        on_delete=models.SET_NULL,
         null=True, blank=True
     )
     place_porcentaje = models.FloatField(

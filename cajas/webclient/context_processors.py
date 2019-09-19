@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.db.models import Q
 
-from cajas.users.models.partner import Partner
-from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.charges import Charge
+from cajas.users.models.employee import Employee
+from cajas.users.models.partner import Partner
+from cajas.users.models.user import User
 
 
 def webclient_processor(request):
@@ -55,12 +56,16 @@ def webclient_processor(request):
                 is_admin_senior = False
 
     all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
+    all_users = User.objects.all().exclude(email='super@admin.com')
+    all_offices = OfficeCountry.objects.all()
     concepts = Concept.objects.filter(is_active=True)
     context = {
         'API_KEY': settings.API_KEY,
         'concepts': concepts,
         'partners': partners,
         'all_partners': all_partners,
+        'all_users': all_users,
+        'all_offices': all_offices,
         'office_employees': employees,
         'session_employee': session_employee,
         'is_admin_charge': is_admin_charge,

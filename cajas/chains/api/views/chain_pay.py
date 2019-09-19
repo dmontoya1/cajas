@@ -21,6 +21,7 @@ class ChainPay(APIView):
         data['ip'] = get_ip(request)
         data['office'] = OfficeCountry.objects.get(pk=request.session['office'])
         function_response = chain_manager.internal_chain_pay(data)
+        print(function_response)
         if function_response:
             return Response(
                 'Se ha creado el pago exitosamente',

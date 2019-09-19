@@ -73,7 +73,7 @@
         <div class="header-menu">
           {% if request.session.office %}
             {% if request.user.is_superuser or is_secretary %}
-              <a href="{% url 'webclient:arc_request' %} " type="button" class="arqueo">Solicitar Arqueo</a>
+              <a href="{% url 'webclient:arc_request' %}" class="btn arqueo">Solicitar Arqueo</a>
             {% endif %}
           {% endif %}
           <div class="user-area dropdown float-right">
