@@ -430,6 +430,16 @@
                   <textarea class="form-control" name="conditions" rows="3" cols="5" required></textarea>
                 </div>
                 <div class="form-group col-md-6">
+                  <label for="investment_type">Tipo de inversión</label>
+                  <select class="form-control" id="investment_type" name="investment_type"
+                          style="width: 100%; height: 20px;"
+                          required>
+                    <option value="" selected disabled>Selecciona el tipo de inversión</option>
+                    <option value="PE">Personal</option>
+                    <option value="BS">De Negocio</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
                   <label for="date">Fecha creación inversión</label>
                   <input class="form-control" type="date" name="date" id="date" required>
                 </div>
@@ -437,7 +447,7 @@
                   <label for="total_value">Valor Total</label>
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text">$</div>
+                      <div class="input-group-text">$COP</div>
                     </div>
                     <input type="number" class="form-control" name="total_value" id="total_value" value="0"
                            placeholder="Valor Total" required>
@@ -447,7 +457,7 @@
                   <label for="initial_value">Cuota Inicial</label>
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text">$</div>
+                      <div class="input-group-text">$COP</div>
                     </div>
                     <input type="number" class="form-control" name="initial_value" id="initial_value" value="0"
                            placeholder="Cuota inicial" required>
@@ -457,7 +467,7 @@
                   <label for="monthly_pay">Valor pago mensual</label>
                   <div class="input-group mb-2">
                     <div class="input-group-prepend">
-                      <div class="input-group-text">$</div>
+                      <div class="input-group-text">$COP</div>
                     </div>
                     <input type="number" class="form-control" name="monthly_pay" id="monthly_pay" value="0"
                            placeholder="Valor del Pago Mensual" required>
@@ -473,16 +483,7 @@
                            placeholder="Plazo en meses (opcional)">
                   </div>
                 </div>
-                <div class="form-group col-md-6">
-                  <label for="investment_type">Tipo de inversión</label>
-                  <select class="form-control" id="investment_type" name="investment_type"
-                          style="width: 100%; height: 20px;"
-                          required>
-                    <option value="" selected disabled>Selecciona el tipo de inversión</option>
-                    <option value="PE">Personal</option>
-                    <option value="BS">De Negocio</option>
-                  </select>
-                </div>
+
               </div>
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-primary">Crear</button>
