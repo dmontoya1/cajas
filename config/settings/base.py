@@ -75,6 +75,8 @@ SHARED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'tenant_users.permissions',  # Defined in both shared apps and tenant apps
+    'tenant_users.tenants',  # defined only in shared apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -107,11 +109,13 @@ TENANT_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'cajas.api.apps.ApiConfig',
+    'tenant_users.permissions',  # Defined in both shared apps and tenant apps
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 TENANT_MODEL = "tenant.Platform"
+TENANT_USERS_DOMAIN = env("TENANT_USERs_DOMAIN")
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
