@@ -193,11 +193,11 @@
                       </select>
                     </div>
                     <div class="form-group col-md-6">
-                      <a class="btn btn-add float-left mr-md-0" data-toggle="modal"
+                      <a class="btn btn-add arqueo float-left mr-md-0" data-toggle="modal"
                       data-target="#modalUser">Agregar Usuario Externo</a>
                     </div>
                   </div>
-                  
+
                   <hr>
                   <div class="places">
                     <div class="form-row places-list">
@@ -218,7 +218,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Socio</h5>
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Usuario Externo</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -324,7 +324,7 @@
       for (i = 1; i <= $(this).val(); i++) {
         $('.places-list').append(
           `
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-12">
                 <div class="places-item">
                   <span class="place-name">Puesto ${i}</span>
                   <div class="form-row">
@@ -335,7 +335,7 @@
                   </div>
                   <div class="form-group" id="dynamic_form_${i}">
                     <div class="row" id="field">
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <label for="partner">Usuario</label>
                         <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
                           <option value="" selected disabled>Selecciona un usuario</option>
@@ -345,6 +345,15 @@
                         </select>
                       </div>
                       <div class="col-md-4">
+                        <label for="office">Oficina</label>
+                        <select class="form-control select2-test" name="office_${i}" id="office_${i}" style="width: 100%">
+                          <option value="" selected disabled>Selecciona una oficina</option>
+                          {% for o in offices %}
+                            <option value="{{o.pk}}">{{o}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-md-2">
                           <label for="place_porcentaje">Porcentaje</label>
                           <div class="input-group mb-2">
                             <div class="input-group-prepend">

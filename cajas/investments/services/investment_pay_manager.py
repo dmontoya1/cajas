@@ -18,7 +18,7 @@ class InvestmentPayManager(object):
     def add_payment(self, request):
         investment = get_object_or_404(Investment, pk=request.data['investment'])
         self.create_payment(request)
-        investment.balance -= int(request.data['value'])
+        investment.balance -= int(request.data['value_cop'])
         investment.save()
 
         concept = get_object_or_404(Concept, name='Inversión Negocios', concept_type=ConceptType.DOUBLE)
@@ -38,9 +38,10 @@ class InvestmentPayManager(object):
 
     def create_payment(self, request):
         investment = get_object_or_404(Investment, pk=request.data['investment'])
-        investment_pay = InvestmentPay.objects.create(
+        InvestmentPay.objects.create(
             investment=investment,
             value=request.data['value'],
+            value_cop=request.data['value_cop'],
             date=request.data['date'],
             detail=request.data['detail']
         )

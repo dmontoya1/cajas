@@ -175,6 +175,7 @@
                     <tr>
                       <th>Fecha</th>
                       <th>Valor</th>
+                      <th>Valor COP</th>
                       <th>Detalle</th>
                     </tr>
                   </thead>
@@ -183,6 +184,7 @@
                     <tr>
                       <td>{{ i.date }}</td>
                       <td>$ {{ i.value|intcomma }}</td>
+                      <td>$ {{ i.value_cop|intcomma }}</td>
                       <td>{{ i.detail }}</td>
                     </tr>
                   {% endfor %}
@@ -221,12 +223,17 @@
             {% csrf_token %}
             <input type="hidden" name="investment" id="investment" value="{{ investment.pk }}">
             <div class="form-row">
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-4">
                 <label for="value">Valor del abono</label>
                 <input class="form-control" type="number" name="value" id="value" value=""
-                       placeholder="Ingresa el valor a abonar" placeholder="$" required autocomplete="off">
+                       placeholder="Valor divisa local" placeholder="$" required>
               </div>
-              <div class="form-group col-md-6 box-select">
+              <div class="form-group col-md-4">
+                <label for="value_cop">Valor del abono en COP</label>
+                <input class="form-control" type="number" name="value_cop" id="value_cop" value=""
+                       placeholder="Valor en COP" placeholder="$" required>
+              </div>
+              <div class="form-group col-md-4 box-select">
                 <label for="date">Fecha del abono</label>
                 <input type="text" name="date" id="date" class="form-control datetimepicker" placeholder="yyyy-mm-dd" style="width: 100%;" autocomplete="off" required>
               </div>
@@ -255,7 +262,7 @@
         buttons: [
           'excel', 'print'
         ],
-        "order": [[1, "asc"]],
+        "order": [[0, "asc"]],
         language: {
           "sProcessing": "Procesando...",
           "sLengthMenu": "Mostrar _MENU_ registros",

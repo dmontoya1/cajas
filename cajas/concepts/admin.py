@@ -17,7 +17,7 @@ class ConceptAdmin(admin.ModelAdmin):
     search_fields = ['name', 'counterpart__name']
     inlines = [StopAdmin, ]
 
-    class Media:
-        js = (
-            'js/admin/concept_admin.js',
-        )
+    #class Media:
+        #js = (
+            #'js/admin/concept_admin.js',
+        #)

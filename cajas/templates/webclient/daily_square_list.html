@@ -262,7 +262,7 @@
                                 </button>
                               </li>
                               <li>
-                                <a href="#" class="close-box-dq" data-id="{{ box_id }}">
+                                <a href="#" class="btn close-box-dq" data-id="{{ box_id }}">
                                   <i class="fas fa-power-off mr-2"></i>Cerrar Caja
                                 </a>
                               </li>
@@ -525,6 +525,44 @@
               </div>
             </div>
             <!--end Replication-->
+            <!-- Appears if concept equals to compra inventario oficina-->
+            <div id="inventory_form" class="d-none">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="name">Nombre </label>
+                  <input type="text" id="name" name="name_office" class="form-control" placeholder="Nombre del item">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="category-office">Categoría </label>
+                  <select class="form-control" id="category-office" name="category_office" style="width: 100%; height: 20px;">
+                    <option disabled value="" selected>Selecciona una categoría</option>
+                    {% for category in categories %}
+                      <option value="{{ category.pk }}">{{ category }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="brand-office">Marca </label>
+                  <select class="form-control" id="brand-office" name="brand_office" style="width: 100%; height: 20px;">
+                    <option disabled value="" selected>Selecciona una marca</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="price">Precio</label>
+                  <input type="number" class="form-control" id="price" name="price_office" placeholder="Precio del item"
+                  >
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="description">Descripción</label>
+                  <textarea rows="2" style="resize: none;" class="form-control" id="description_office" name="description"
+                            placeholder="Ingresa una descripción"></textarea>
+                </div>
+              </div>
+            </div>
 
             <!-- Appears if concept is Employee loan-->
             <div class="form-row lender_employee d-none">
@@ -686,6 +724,7 @@
               $('#regular-value').addClass('d-none')
               $('#dq-select-').addClass('d-none')
               $('.lender-user-select').addClass('d-none')
+              $('#inventory_form').addClass(('d-none'))
               break;
             case 'Venta Dólares':
               $('#usd-sell').removeClass('d-none')
@@ -693,6 +732,7 @@
               $('#regular-value').addClass('d-none')
               $('#dq-select-').addClass('d-none')
               $('.lender-user-select').addClass('d-none')
+              $('#inventory_form').addClass(('d-none'))
               break;
             case 'Traslado de Efectivo entre Cuadres Diarios':
               $('#dq-select-').removeClass('d-none')
@@ -700,6 +740,7 @@
               $('#usd-sell').addClass('d-none')
               $('#usd-buy').addClass('d-none')
               $('.lender-user-select').addClass('d-none')
+              $('#inventory_form').addClass(('d-none'))
               break;
             case 'Préstamo Personal Empleado':
               {% if request.user.is_superuser or is_secretary %}
@@ -713,6 +754,7 @@
                 $('#usd-sell').addClass('d-none')
                 $('#usd-buy').addClass('d-none')
                 $('.lender-user-select').addClass('d-none')
+                $('#inventory_form').addClass(('d-none'))
             {% else %}
                 $('.loan-employee').addClass("d-none")
                 $('.lender_employee').removeClass("d-none")
@@ -723,6 +765,7 @@
                 $('#usd-sell').addClass('d-none')
                 $('#usd-buy').addClass('d-none')
                 $('.lender-user-select').addClass('d-none')
+                $('#inventory_form').addClass(('d-none'))
             {% endif %}
               break;
             case 'Pago Abono préstamo empleado':
@@ -736,6 +779,21 @@
               $('#regular-value').removeClass('d-none')
               $('#usd-sell').addClass('d-none')
               $('#usd-buy').addClass('d-none')
+              $('#inventory_form').addClass(('d-none'))
+              break;
+            case 'Compra Inventario Oficina':
+              $('#inventory_form').removeClass(('d-none'))
+              $('.lender-user-select').addClass('d-none')
+              $('.lender_employee').addClass("d-none")
+              $('.loan-employee').addClass("d-none")
+              $('#regular-value').addClass('d-none')
+              $(".dynamic_controller").addClass("d-none")
+              $("#unit_select").addClass("d-none")
+              $('#dq-select-').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('.office-select').addClass('d-none')
               break;
             case 'Compra de Inventario Unidad':
               $('.loan-employee').addClass('d-none')
@@ -744,6 +802,7 @@
               $('#regular-value').removeClass('d-none')
               $(".dynamic_controller").removeClass("d-none")
               $("#unit_select").removeClass("d-none")
+              $('#inventory_form').addClass(('d-none'))
               $("#plus5").on("click", function () {
                 if ($("#method_modal").val() === "add") {
                   if ($('#dynamic_form').parent().find("[id^='dynamic_form']").length >= 1) {
@@ -766,6 +825,7 @@
               $('.loan-employee').addClass('d-none')
               $("#unity").val("")
               $("#unity").prop("required", false)
+              $('#inventory_form').addClass(('d-none'))
 
               // deactivate required prop and clean inputs beacause these are going to be hidden
               $('.add-movement .dynamic_controller *').filter(':input').each(function () {
@@ -835,6 +895,27 @@
           })
       }
     });
+
+    $('#category-office').on('change', function () {
+      axios.get(`/api/inventory/${$(this).val()}/brand`)
+        .then(function (response) {
+          data = response.data
+
+          $('#brand-office').empty()
+          $.each(data, function (k, v) {
+            $('#brand-office').append(
+              `<option value=${v.id}>${v.name}</option>`
+            )
+          })
+          $('#brand-office').prepend(
+            '<option value="" selected disabled>Selecciona una marca</option>'
+          )
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
 
     $(document).ready(function () {
       $('#table').DataTable({
@@ -929,6 +1010,12 @@
         language: "es"
       });
       $('#lender-user').select2({
+        language: "es"
+      });
+      $('#category-office').select2({
+        language: "es"
+      });
+      $('#brand-office').select2({
         language: "es"
       });
     });
