@@ -12,6 +12,7 @@ from cajas.concepts.models.concepts import Concept, Relationship
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.office.services.office_item_create import OfficeItemsManager
 from cajas.units.models.unitItems import UnitItems
 from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
@@ -138,6 +139,20 @@ class AcceptMovement(APIView):
                         item_create.is_replacement = True
                     item_create.save()
             movement_items.delete()
+        elif movement.concept.name == "Compra Inventario Oficina":
+            movement_items = MovementDailySquareRequestItem.objects.filter(
+                movement=movement
+            ).first()
+            data_items = {
+                'office': office,
+                'name': movement_items.name,
+                'description': movement_items.description,
+                'price': movement_items.price,
+                'brand': movement_items.brand
+            }
+            office_items_manager = OfficeItemsManager()
+            office_items_manager.create_office_item(data_items)
+            movement_items.delete()
         elif movement.concept.name == 'Pago Abono préstamo empleado':
             try:
                 user = movement.user
@@ -182,7 +197,6 @@ class AcceptMovement(APIView):
                 )
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
-        print('Movimiento save')
         movement.save()
 
         return Response(
