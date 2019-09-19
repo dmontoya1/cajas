@@ -68,7 +68,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         try:
             employee = Employee.objects.get(
                 Q(user=user) & Q(office_country=office))
-            group = get_object_or_none(DailySquareUnits, employee=employee)
+            group = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
             if group and group.units.all().exists():
                 units = group.units.select_related(
                             'partner',
@@ -118,4 +118,5 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['movements'] = movements
         context['request_user'] = request_user
+        context['abbr'] = box_daily_square.office.country.abbr
         return context

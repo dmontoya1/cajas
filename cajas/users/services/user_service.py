@@ -1,4 +1,5 @@
 
+from django.db.models import Q
 from django.contrib.auth.hashers import make_password
 from django.db.models import Q
 
@@ -21,7 +22,7 @@ class UserManager:
         daily_square = False
         email = ""
         try:
-            user = User.objects.get(Q(email=data['email']) or Q(username=data['email']))
+            user = User.objects.get(Q(username=data['email']) | Q(email=data['email']))
         except User.DoesNotExist:
             if data['is_daily_square'] == "true":
                 daily_square = True

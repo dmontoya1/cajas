@@ -40,22 +40,22 @@ def is_secretary(user, office):
     secretary = Charge.objects.get(name="Secretaria")
     try:
         employee = Employee.objects.get(
-                    Q(user=user) and
-                    Q(office=office.office)
-                )
+            Q(user=user),
+            (Q(office_country=office) | Q(office=office.office))
+        )
         return employee.charge == secretary
     except Employee.DoesNotExist:
         return False
 
 
 def is_admin_senior(user, office):
-    secretary = Charge.objects.get(name="Administrador Senior")
+    admin = Charge.objects.get(name="Administrador Senior")
     try:
         employee = Employee.objects.get(
-                Q(user=user) and
-                Q(office_country=office) or
+                Q(user=user),
+                Q(office_country=office) |
                 Q(office=office.office)
             )
-        return employee.charge == secretary
+        return employee.charge == admin
     except Employee.DoesNotExist:
         return False

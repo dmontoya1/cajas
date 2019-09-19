@@ -553,7 +553,6 @@
       e.preventDefault()
       $('#addEmployee_submit').attr('disabled', true)
       var bodyFormData = new FormData();
-
       bodyFormData.append("office", $(this).context.office.value)
       bodyFormData.append("first_name", $(this).context.first_name.value)
       bodyFormData.append("last_name", $(this).context.last_name.value)
@@ -568,7 +567,9 @@
       bodyFormData.append("cv", $(this).context.cv.files[0])
       bodyFormData.append("passport", $(this).context.passport.files[0])
       bodyFormData.append("is_daily_square", $("#is_daily_square").is(":checked") ? true : false)
-
+      $.each($("#groups option:selected"), function(i, input) {
+        bodyFormData.append("groups[]", input.value);
+      });
       axios.post("{% url 'api:users:employee_create' %}", bodyFormData)
         .then(function (response) {
           data = response.data
@@ -777,9 +778,7 @@
           Swal.fire({
             type: 'error',
             title: 'Error',
-            text: error,
-          }).then(function () {
-            location.reload()
+            text: error.response.data,
           })
         })
     })

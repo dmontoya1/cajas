@@ -35,10 +35,9 @@ class EmployeeCreate(APIView):
         aux['office'] = office
 
         employee_manager.create_employee(request.data, aux)
-        for g in request.POST.getlist("groups[]"):
+        for g in request.data.getlist("groups[]"):
             group = Group.objects.get(pk=g)
             group.user_set.add(user)
-
         if request.data["is_daily_square"] == "true":
             box_daily_square_manager.create_box(aux)
 

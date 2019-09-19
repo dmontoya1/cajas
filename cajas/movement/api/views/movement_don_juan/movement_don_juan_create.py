@@ -12,16 +12,17 @@ from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.core.services.email_service import EmailManager
-from cajas.movement.models.movement_office import MovementOffice
-from cajas.movement.services.box_colombia_service import MovementBoxColombiaManager
-from cajas.movement.services.don_juan_service import DonJuanManager
-from cajas.movement.services.movement_between_office_service import MovementBetweenOfficesManager
-from cajas.movement.services.don_juan_usd_service import DonJuanUSDManager
 from cajas.office.models.notifications import Notifications
 from cajas.office.models.officeCountry import OfficeCountry
 
-from ....models.movement_don_juan import MovementDonJuan
 from ...serializers.movement_don_juan_serializer import MovementDonJuanSerializer
+from ....models.movement_don_juan import MovementDonJuan
+from ....models.movement_office import MovementOffice
+from ....services.box_colombia_service import MovementBoxColombiaManager
+from ....services.don_juan_service import DonJuanManager
+from ....services.don_juan_usd_service import DonJuanUSDManager
+from ....services.movement_between_office_service import MovementBetweenOfficesManager
+from ....services.office_service import MovementOfficeManager
 
 from cajas.webclient.views.get_ip import get_ip
 
@@ -76,21 +77,21 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             else:
                 data['movement_type'] = MovementOffice.IN
             if request.data['destine_box'] == 'CAJA_OFICINA':
-                don_juan_manager = DonJuanManager()
-                data['box'] = get_object_or_404(BoxDonJuan, office=request.data['office']),
-                don_juan_manager.create_movement(data)
+                office_manager = MovementOfficeManager()
+                data['box_office'] = office.box
+                office_manager.create_movement(data)
             elif request.data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
-                data['box'] = get_object_or_404(BoxDonJuanUSD, office=request.data['office']),
+                data['box'] = get_object_or_404(BoxDonJuanUSD, office=office)
                 don_juan_usd_manager.create_movement(data)
             elif request.data['destine_box'] == 'CAJA_COLOMBIA':
                 box_colombia_manager = MovementBoxColombiaManager()
-                data['box'] = get_object_or_404(BoxColombia, name="Caja Colombia"),
-                box_colombia_manager.create_box_colombia_movement(data)
+                data['box'] = get_object_or_404(BoxColombia, name="Caja Colombia")
+                box_colombia_manager.create_movement_box_colombia(data)
             elif request.data['destine_box'] == 'CAJA_BANCO':
                 box_colombia_manager = MovementBoxColombiaManager()
-                data['box'] = get_object_or_404(BoxColombia, name="Caja Banco"),
-                box_colombia_manager.create_box_bank_colombia_movement(data)
+                data['box'] = get_object_or_404(BoxColombia, name="Caja Banco")
+                box_colombia_manager.create_bank_colombia_movement(data)
 
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return Response(
