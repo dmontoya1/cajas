@@ -17,22 +17,20 @@ class ReportDebt(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportDebt, self).get_context_data(**kwargs)
-        if self.request.user.is_secretary():
+        if self.request.user.is_superuser:
+            context['countries'] = Country.objects.all()
+            context['offices'] = Office.objects.all()
+            context['offices_country'] = OfficeCountry.objects.all()
+            context['partners'] = Partner.objects.all()
+        else:
             employee = self.request.user.related_employee.get()
             offices = employee.office.all()
             offices_country = list()
             for o in offices:
                 for oc in o.related_office_country.all():
                     offices_country.append(oc)
-            parners = Partner.objects.filter(office__in=offices_country)
+            partners = Partner.objects.filter(office__in=offices_country)
             context['offices_country'] = offices_country
             context['offices'] = offices
-            context['partners'] = parners
-        else:
-            context['countries'] = Country.objects.all()
-            context['offices'] = Office.objects.all()
-            context['offices_country'] = OfficeCountry.objects.all()
-            context['partners'] = Partner.objects.all()
+            context['partners'] = partners
         return context
-
-
