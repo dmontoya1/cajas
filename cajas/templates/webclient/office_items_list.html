@@ -184,7 +184,7 @@
                                data-target="#editOfficeItem">Editar</a>
                           {% endif %}
                           {% if perms.office.delete_officeitems %}
-                            <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
+                            <a href="#" class="delete-office-item decline-mv" data-id="{{ i.pk }}">Eliminar</a>
                           {% endif %}
                         </td>
                       </tr>
@@ -217,7 +217,7 @@
                   </thead>
                   <tbody>
                   {% for unit in unit_items %}
-                    {% if not i.is_deleted %}
+                    {% if not unit.is_deleted %}
                       <tr>
                         <td>{{ unit.unit }}</td>
                         <td>{{ unit.name }}</td>
@@ -226,11 +226,11 @@
                         <td>{{ unit.description|default:"Sin descripcion" }}</td>
                         <td class="text-center">
                           {% if perms.units.change_unititems %}
-                            <a href="#" class="edit-item" data-id="{{ i.id }}" data-toggle="modal"
+                            <a href="#" class="edit-item" data-id="{{ unit.id }}" data-toggle="modal"
                                data-target="#editUnitItem">Editar</a>
                           {% endif %}
                           {% if perms.units.delete_unititems %}
-                            <a href="#" class="decline-mv" data-id="{{ i.pk }}">Eliminar</a>
+                            <a href="#" class="delete-unit-item decline-mv" data-id="{{ unit.id }}">Eliminar</a>
                           {% endif %}
                         </td>
                       </tr>
@@ -513,8 +513,8 @@
         })
     })
 
-    //delete items
-    $('.decline-mv').on('click', function () {
+    //delete office items
+    $('.delete-office-item').on('click', function () {
       pk = $(this).data('id')
       const {value: text} = Swal.fire({
         title: 'Escribe el motivo de eliminación del item',
@@ -529,6 +529,44 @@
       }).then((result) => {
         if (result.value) {
           axios.delete(`/api/office/${pk}/office-item-delete`,
+            {data: {description: result.value}}
+          )
+            .then(function (response) {
+              Swal.fire({
+                title: 'Exitoso!',
+                text: response.data,
+                type: 'success',
+                allowOutsideClick: false
+              }).then((result) => {
+                if (result.value) {
+                  location.reload()
+                }
+              })
+            })
+            .catch(function (error) {
+              console.log(error);
+              console.log(error.response)
+            });
+        }
+      })
+    })
+
+    //delete units items
+    $('.delete-unit-item').on('click', function () {
+      pk = $(this).data('id')
+      const {value: text} = Swal.fire({
+        title: 'Escribe el motivo de eliminación del item',
+        input: 'textarea',
+        inputPlaceholder: 'Se elimina el item porque ...',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return !value && 'Debes escribir el motivo del eliminación'
+        },
+        allowOutsideClick: false,
+        showCloseButton: true
+      }).then((result) => {
+        if (result.value) {
+          axios.delete(`/api/units/${pk}/delete-item`,
             {data: {description: result.value}}
           )
             .then(function (response) {
