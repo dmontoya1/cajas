@@ -159,13 +159,13 @@ class ChainManager(object):
         office = get_object_or_404(OfficeCountry, pk=data['office'])
         old_user = place.user
         new_user = get_object_or_404(User, pk=data['user'])
-        if int(old_user.document_id) == 1:
+        if old_user.document_id == str(1):
             old_partner = Partner.objects.get(code='DONJUAN')
         elif place.office:
             old_partner = get_object_or_404(Partner, user=old_user, office=place.office)
         else:
             old_partner = None
-        if int(new_user.document_id) == 1:
+        if new_user.document_id == str(1):
             new_partner = Partner.objects.get(code='DONJUAN')
         else:
             new_partner = get_object_or_404(Partner, user=new_user, office=office)
@@ -174,7 +174,6 @@ class ChainManager(object):
         pay_date = place.chain_place.pay_date
         concept = get_object_or_404(Concept, name="Devolución Pago Cadenas")
         if old_user != new_user:
-            print("OLD USER difernte de NEW USER")
             if pay_date > today:
                 payments = place.related_payments.all().aggregate(Sum('pay_value'))
                 total = payments['pay_value__sum']
