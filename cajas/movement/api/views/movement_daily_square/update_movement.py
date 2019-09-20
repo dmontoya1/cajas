@@ -94,7 +94,6 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                 status=status.HTTP_201_CREATED
             )
         except Exception as e:
-
             logger.exception(str(e))
             print(e)
             return Response(

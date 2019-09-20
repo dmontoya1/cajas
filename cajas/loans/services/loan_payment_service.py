@@ -7,8 +7,6 @@ from django.shortcuts import get_object_or_404
 from cajas.boxes.models import BoxDonJuan
 from cajas.concepts.models.concepts import Concept, ConceptType
 from cajas.general_config.models.exchange import Exchange
-from cajas.loans.models.loan import LoanType
-from cajas.loans.models.loan_history import LoanHistory
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.movement.services.office_service import MovementOfficeManager
@@ -17,7 +15,8 @@ from cajas.users.models import Partner
 from cajas.webclient.views.get_ip import get_ip
 from cajas.webclient.views.utils import get_object_or_none
 
-from ..models.loan import Loan
+from ..models.loan import Loan, LoanType
+from ..models.loan_history import LoanHistory
 
 movement_don_juan_manager = DonJuanManager()
 movement_partner_manager = MovementPartnerManager()
@@ -190,3 +189,65 @@ class LoanPaymentManager(object):
             balance=loan.balance,
             balance_cop=loan.balance_cop
         )
+
+    def update_loan_history(self, loan, data):
+        loan.value = data['value']
+        loan.value_cop = data['value_cop']
+        loan.date = data['date']
+        loan.save()
+
+    def update_all_payments_balance_partner_loan(self, payments, loan, exchange):
+        balance_cop = 0
+        for payment in payments:
+            if payment.history_type == LoanHistory.LOAN:
+                payment.balance_cop = balance_cop + payment.value_cop
+                payment.balance = payment.balance_cop / exchange.exchange_cop_abono
+                payment.save()
+            elif payment.history_type == LoanHistory.ABONO:
+                payment.balance_cop = balance_cop - payment.value_cop
+                payment.balance = payment.balance_cop / exchange.exchange_cop_abono
+                payment.save()
+            else:
+                payment.balance_cop = balance_cop
+                payment.balance = payment.balance_cop / exchange.exchange_cop_abono
+                payment.save()
+            balance_cop = payment.balance_cop
+        loan.balance_cop = balance_cop
+        loan.balance = balance_cop / exchange.exchange_cop_abono
+        loan.save()
+
+    def update_all_payments_balance_employee_loan(self, payments, loan, exchange):
+        balance = 0
+        for payment in payments:
+            if payment.history_type == LoanHistory.LOAN:
+                payment.balance = balance + payment.value
+                payment.balance_cop = 0
+                payment.save()
+            elif payment.history_type == LoanHistory.ABONO:
+                payment.balance = balance - payment.value
+                payment.balance_cop = 0
+                payment.save()
+            else:
+                payment.balance = balance
+                payment.balance_cop = 0
+                payment.save()
+            balance = payment.balance
+        loan.balance = balance
+        loan.balance_cop = 0
+        loan.save()
+
+    def update_loan_payment(self, data, office):
+        loan_payment = LoanHistory.objects.get(pk=data['loan_pk'])
+        loan = loan_payment.loan
+        self.update_loan_history(loan_payment, data)
+        all_payments = loan.related_payments.order_by('date', 'pk')
+        exchange = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=datetime.now().month,
+        )
+        if loan.loan_type == LoanType.SOCIO_DIRECTO:
+            self.update_all_payments_balance_partner_loan(all_payments, loan, exchange)
+        else:
+            self.update_all_payments_balance_employee_loan(all_payments, loan, exchange)
+        print(all_payments)
