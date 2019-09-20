@@ -15,6 +15,10 @@ class InvestmentPay(models.Model):
     value = models.IntegerField(
         'Valor del pago'
     )
+    value_cop = models.IntegerField(
+        'Valor del pago COP',
+        default=0
+    )
     detail = models.TextField(
         'Detalle del pago',
         default=''
@@ -30,3 +34,4 @@ class InvestmentPay(models.Model):
     class Meta:
         verbose_name = 'Pago de Inversión'
         verbose_name_plural = 'Pagos de Inversión'
+        ordering = ['date', 'pk']

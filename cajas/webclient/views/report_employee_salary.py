@@ -18,7 +18,12 @@ class ReportEmployeeSalary(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportEmployeeSalary, self).get_context_data(**kwargs)
-        if self.request.user.is_secretary():
+        if self.request.user.is_superuser:
+            context['countries'] = Country.objects.all()
+            context['offices'] = Office.objects.all()
+            context['offices_country'] = OfficeCountry.objects.all()
+            context['employees'] = Employee.objects.filter(user__related_collector_units__isnull=False).distinct()
+        else:
             employee = self.request.user.related_employee.get()
             offices = employee.office.all()
             offices_country = list()
@@ -31,11 +36,4 @@ class ReportEmployeeSalary(LoginRequiredMixin, TemplateView):
                 (Q(office__in=offices) | Q(office_country__in=offices_country)) &
                 Q(user__related_collector_units__isnull=False)
             ).distinct()
-        else:
-            context['countries'] = Country.objects.all()
-            context['offices'] = Office.objects.all()
-            context['offices_country'] = OfficeCountry.objects.all()
-            context['employees'] = Employee.objects.filter(user__related_collector_units__isnull=False).distinct()
         return context
-
-
