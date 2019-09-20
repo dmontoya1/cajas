@@ -1,10 +1,11 @@
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .charges import Charge
+from tenant_users.tenants.models import UserProfile
 
 
-class User(AbstractUser):
+class User(UserProfile):
 
     CEDULA_CIUDADANIA = 'CC'
     CEDULA_EXTRANJERA = 'CE'

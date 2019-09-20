@@ -3,7 +3,7 @@ from tenant_schemas.models import TenantMixin
 from tenant_users.tenants.models import TenantBase
 
 
-class Platform(TenantMixin):
+class Platform(TenantBase):
     name = models.CharField(max_length=100)
     created_on = models.DateField(auto_now_add=True)
 

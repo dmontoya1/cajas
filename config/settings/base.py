@@ -115,7 +115,7 @@ TENANT_APPS = [
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 TENANT_MODEL = "tenant.Platform"
-TENANT_USERS_DOMAIN = env("TENANT_USERs_DOMAIN")
+TENANT_USERS_DOMAIN = env("TENANT_USERS_DOMAIN")
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ MIGRATION_MODULES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    'tenant_users.permissions.backend.UserBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
