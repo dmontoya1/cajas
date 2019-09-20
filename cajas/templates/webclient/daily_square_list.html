@@ -267,7 +267,13 @@
                                 </a>
                               </li>
                             {% else %}
-                              <li><span style="color: #f16975;">La caja esta cerrada</span></li>
+                              <li>
+                                {% if not box_is_close %}
+                                  <span style="color: #7dd1af;">Caja abierta</span>
+                                {% else %}
+                                  <span style="color: #f16975;">Caja cerrada</span>
+                                {% endif %}
+                              </li>
                             {% endif %}
                             {% if perms.boxes.change_boxdailysquare %}
                               <li>
