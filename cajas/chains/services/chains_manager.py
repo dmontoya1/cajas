@@ -51,14 +51,23 @@ class ChainManager(object):
 
     def create_users_place(self, data, place, i):
         counters = data['counters']
-        for j in range(0, int(counters['counter_{}'.format(i)])):
-            user = get_object_or_404(User, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
-            UserPlace.objects.create(
-                chain_place=place,
-                user=user,
-                office=OfficeCountry.objects.get(pk=int(data['form[form][{}][office_{}]'.format(j, i)])),
-                place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
-            )
+        if data['chain_type'] == 'EX':
+            for j in range(0, int(counters['counter_{}'.format(i)])):
+                user = get_object_or_404(User, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
+                UserPlace.objects.create(
+                    chain_place=place,
+                    user=user,
+                    place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
+                )
+        else:
+            for j in range(0, int(counters['counter_{}'.format(i)])):
+                user = get_object_or_404(User, pk=int(data['form[form][{}][partner_{}]'.format(j, i)]))
+                UserPlace.objects.create(
+                    chain_place=place,
+                    user=user,
+                    office=OfficeCountry.objects.get(pk=int(data['form[form][{}][office_{}]'.format(j, i)])),
+                    place_porcentaje=data['form[form][{}][place_porcentaje_{}]'.format(j, i)],
+                )
 
     def get_users_for_place_to_pay_chain(self, chain, month):
         place = ChainPlace.objects.get(
