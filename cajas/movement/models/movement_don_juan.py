@@ -16,6 +16,21 @@ class MovementDonJuan(MovementMixin):
         blank=True, null=True,
         related_name='movements'
     )
+    movement_box_colombia = models.IntegerField(
+        "Movimiento Caja Colombia",
+        blank=True,
+        null=True
+    )
+    movement_office = models.IntegerField(
+        "Movimiento Oficina PK",
+        blank=True,
+        null=True
+    )
+    movement_don_juan_usd = models.IntegerField(
+        "Movimiento Don Juan Dólares PK",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         if self.box_don_juan.office is not None:
