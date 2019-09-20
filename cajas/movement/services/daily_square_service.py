@@ -13,9 +13,8 @@ from cajas.units.models.units import Unit
 from cajas.webclient.views.utils import get_object_or_none
 from ..models import MovementDailySquare, MovementPartner, MovementDonJuan, MovementOffice, \
     MovementDonJuanUsd
-from .utils import update_movements_balance, get_next_related_movement_by_date_and_pk, \
-    update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
-    update_all_movements_balance_on_create, update_all_movement_balance_on_update, update_movement_type_value, \
+from .utils import update_movements_balance, update_movement_balance_on_create, delete_movement_by_box, \
+    get_last_movement, update_all_movements_balance_on_create, update_movement_type_value, \
     update_movement_balance, update_movement_balance_full_box
 
 
@@ -302,7 +301,7 @@ class MovementDailySquareManager(object):
             )
             self.update_movement_value(current_movement.movement_office, data['value'])
             first_movement = MovementOffice.objects.filter(
-                box_daily_square= current_movement.movement_office.box_office
+                box_office=current_movement.movement_office.box_office
             ).last()
             update_movement_balance_full_box(
                 MovementOffice,
@@ -332,8 +331,8 @@ class MovementDailySquareManager(object):
         if movement.movement_don_juan:
             delete_movement_by_box(
                 movement.movement_don_juan,
-                MovementDonJuan,
                 movement.movement_don_juan.box_don_juan,
+                MovementDonJuan,
                 'box_don_juan'
             )
         if movement.movement_don_juan_usd:
@@ -414,14 +413,6 @@ class MovementDailySquareManager(object):
             0,
             current_user_box_daily_square
         )
-        # update_all_movement_balance_on_update(
-        #     MovementDailySquare,
-        #     'box_daily_square',
-        #     current_user_box_daily_square,
-        #     data['date'],
-        #     current_movement.pk,
-        #     current_movement
-        # )
         if self.__is_movement_date_update(current_movement, data['date']):
             all_movements = current_user_box_daily_square.movements.order_by('date', 'pk')
             update_movements_balance(

@@ -15,6 +15,26 @@ class MovementBoxColombia(MovementMixin):
         blank=True, null=True,
         related_name='movements'
     )
+    movement_don_juan = models.IntegerField(
+        "Movimiento Don Juan PK",
+        blank=True,
+        null=True
+    )
+    movement_office = models.IntegerField(
+        "Movimiento Oficina PK",
+        blank=True,
+        null=True
+    )
+    movement_don_juan_usd = models.IntegerField(
+        "Movimiento Don Juan Dólares PK",
+        null=True,
+        blank=True
+    )
+    movement_box_colombia = models.IntegerField(
+        "Movimiento Caja Colombia PK",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return "Movimiento de {}".format(self.box_office.office)

@@ -72,6 +72,7 @@ class MovementDonJuanCreate(generics.CreateAPIView):
                     concept=concept, detail=request.POST['detail'], value=request.POST['value']
                 )
         if concept == transfer_concept:
+            data['concept'] = concept.counterpart
             if request.data['movement_type'] == MovementOffice.IN:
                 data['movement_type'] = MovementOffice.OUT
             else:
@@ -79,20 +80,24 @@ class MovementDonJuanCreate(generics.CreateAPIView):
             if request.data['destine_box'] == 'CAJA_OFICINA':
                 office_manager = MovementOfficeManager()
                 data['box_office'] = office.box
-                office_manager.create_movement(data)
+                movement_office = office_manager.create_movement(data)
+                movement.movement_office = movement_office.pk
             elif request.data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
                 data['box'] = get_object_or_404(BoxDonJuanUSD, office=office)
-                don_juan_usd_manager.create_movement(data)
+                movement_don_juan_usd = don_juan_usd_manager.create_movement(data)
+                movement.movement_don_juan_usd = movement_don_juan_usd
             elif request.data['destine_box'] == 'CAJA_COLOMBIA':
                 box_colombia_manager = MovementBoxColombiaManager()
                 data['box'] = get_object_or_404(BoxColombia, name="Caja Colombia")
-                box_colombia_manager.create_movement_box_colombia(data)
+                movement_box_colombia = box_colombia_manager.create_movement_box_colombia(data)
+                movement.movement_box_colombia = movement_box_colombia.pk
             elif request.data['destine_box'] == 'CAJA_BANCO':
                 box_colombia_manager = MovementBoxColombiaManager()
                 data['box'] = get_object_or_404(BoxColombia, name="Caja Banco")
-                box_colombia_manager.create_bank_colombia_movement(data)
-
+                movement_box_bank_colombia = box_colombia_manager.create_bank_colombia_movement(data)
+                movement.movement_box_colombia = movement_box_bank_colombia
+            movement.save()
         messages.add_message(request, messages.SUCCESS, 'Se ha añadido el movimiento exitosamente')
         return Response(
             'Se ha añadido el movimiento exitosamente',
