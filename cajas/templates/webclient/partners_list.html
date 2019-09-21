@@ -175,7 +175,7 @@
                   </thead>
                   <tbody>
                   {% if request.user.is_superuser or is_admin_charge %}
-                    {% for p in partners %}
+                    {% for p in list_partners %}
                       <tr>
                         <td>{{ p.user.first_name }} AC</td>
                         <td>{{ p.user.last_name }}</td>
