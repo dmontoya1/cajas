@@ -28,9 +28,8 @@ class InvestmentList(LoginRequiredMixin, TemplateView):
             else:
                 partner = Partner.objects.get(user=self.request.user, office=office)
                 investments = Investment.objects.filter(partner=partner)
-        except Exception as e:
-            partner = Partner.objects.get(user=self.request.user, office=office)
-            investments = Investment.objects.filter(partner=partner)
+        except Partner.DoesNotExist:
+            investments = {}
         context['office'] = office
         context['investments'] = investments
         return context
