@@ -40,11 +40,12 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     Q(user=self.request.user), (Q(office_country=office) | Q(office=office.office))
                 )
             except Exception as e:
+                logger.exception(e)
                 employee = None
             group = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
             context['employee'] = employee
             if is_secretary(self.request.user, office) or is_admin_senior(self.request.user, office):
-                context['partners'] = Partner.objects.filter(
+                context['list_partners'] = Partner.objects.filter(
                     office=office,
                     is_active=True,
                     box__box_status=BoxStatus.ABIERTA,
@@ -84,7 +85,7 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                             partners.append(p)
                 context['partner'] = partners
         else:
-            context['partners'] = Partner.objects.filter(
+            context['list_partners'] = Partner.objects.filter(
                 office=office,
                 is_active=True,
                 box__box_status=BoxStatus.ABIERTA,
@@ -93,4 +94,5 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
+        logger.exception("Context", context)
         return context

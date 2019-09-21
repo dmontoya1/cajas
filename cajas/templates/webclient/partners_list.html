@@ -177,7 +177,7 @@
                   {% if request.user.is_superuser or is_admin_charge %}
                     {% for p in partners %}
                       <tr>
-                        <td>{{ p.user.first_name }}</td>
+                        <td>{{ p.user.first_name }} AC</td>
                         <td>{{ p.user.last_name }}</td>
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.get_partner_type_display }}</td>
@@ -211,7 +211,7 @@
                   {% elif partner %}
                     {% for p in partner %}
                       <tr>
-                        <td>{{ p.user.first_name }}</td>
+                        <td>{{ p.user.first_name }} PA</td>
                         <td>{{ p.user.last_name }}</td>
                         <td>{{ p.code|default:"Sin Codigo" }}</td>
                         <td>{{ p.get_partner_type_display }}</td>
