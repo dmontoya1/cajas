@@ -413,7 +413,7 @@ class MovementBoxColombiaManager(object):
                 movement_don_juan_usd,
                 movement_don_juan_usd.box_don_juan,
                 MovementDonJuanUsd,
-                'box_don_juan_usd'
+                'box_don_juan'
             )
         if movement.movement_box_colombia:
             movement_box_colombia = MovementBoxColombia.objects.get(pk=movement.movement_box_colombia)
