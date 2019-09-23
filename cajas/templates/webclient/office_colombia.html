@@ -305,8 +305,7 @@
                 </div>
                 <div class="form-group col-md-6 value-usd d-none">
                   <label for="value_usd">Valor USD</label>
-                  <input type="number" class="form-control" id="value_usd" name="value_usd" placeholder="Valor en dólares"
-                         required>
+                  <input type="number" class="form-control" id="value_usd" name="value_usd" placeholder="Valor en dólares">
                 </div>
               </div>
             {% endif %}
@@ -455,6 +454,14 @@
               .catch(function (error) {
                 // handle error
                 console.log(error);
+                Swal.fire({
+                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+                  text: error,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+                })
               })
           }
           else if (data.movement_office) {
@@ -466,6 +473,14 @@
         .catch(function (error) {
           // handle error
           console.log(error);
+          Swal.fire({
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            })
         })
     })
 
