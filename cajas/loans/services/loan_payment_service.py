@@ -216,7 +216,7 @@ class LoanPaymentManager(object):
         loan.balance = balance_cop / exchange.exchange_cop_abono
         loan.save()
 
-    def update_all_payments_balance_employee_loan(self, payments, loan, exchange):
+    def update_all_payments_balance_employee_loan(self, payments, loan):
         balance = 0
         for payment in payments:
             if payment.history_type == LoanHistory.LOAN:
@@ -249,5 +249,4 @@ class LoanPaymentManager(object):
         if loan.loan_type == LoanType.SOCIO_DIRECTO:
             self.update_all_payments_balance_partner_loan(all_payments, loan, exchange)
         else:
-            self.update_all_payments_balance_employee_loan(all_payments, loan, exchange)
-        print(all_payments)
+            self.update_all_payments_balance_employee_loan(all_payments, loan)

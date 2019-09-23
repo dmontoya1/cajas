@@ -11,6 +11,7 @@ from cajas.boxes.models import BoxDonJuan
 from cajas.concepts.models.concepts import Concept, Relationship
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
+from cajas.loans.services.loan_payment_service import LoanPaymentManager
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.office.services.office_item_create import OfficeItemsManager
 from cajas.units.models.unitItems import UnitItems
@@ -188,8 +189,11 @@ class AcceptMovement(APIView):
                     balance_cop=0,
                     balance=new_balance
                 )
-                loan.balance = new_balance
-                loan.save()
+                loan_history_manager = LoanPaymentManager()
+                loan_history_manager.update_all_payments_balance_employee_loan(
+                    loan.related_payments.order_by('date', 'pk'),
+                    loan,
+                )
             except Loan.DoesNotExist:
                 return Response(
                     'No se pudo encontrar el préstamo para el usuario {}'.format(user.get_full_name()),
