@@ -25,7 +25,7 @@ class MovementMixin(models.Model):
     concept = models.ForeignKey(
         Concept,
         verbose_name='Concepto',
-        on_delete=models.SET(get_sentinel_concept),
+        on_delete=models.SET_NULL,
         blank=True, null=True
     )
     movement_type = models.CharField(
