@@ -168,6 +168,7 @@ class CreateDailySquareMovement(APIView):
                     'loan_type': 'EMP',
                     'lender': request_data['lender_employee'],
                     'box_from': request_data['box_from'],
+                    'date': date,
                 }
                 if request_data['box_from'] == 'partner':
                     data_loan['provider'] = request_data['partner_provider']
