@@ -69,10 +69,13 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
             elif concept.name == 'Préstamo empleado':
                 movement = MovementDailySquare.objects.get(pk=data['pk'])
                 loan_manager = LoanManager()
+                value = data['value']
+                if data['value'] == '':
+                    value = data['loan_value']
                 if request.user.is_superuser or is_secretary(request.user, office_country):
                     data_loan = {
                         'request': request,
-                        'value': data['value'],
+                        'value': value,
                         'value_cop': 0,
                         'interest': data['interest'],
                         'time': data['time'],
@@ -86,8 +89,8 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                     if data['box_from'] == 'partner':
                         data_loan['provider'] = data['partner_provider']
                     loan_manager.create_employee_loan(data_loan)
-                movement.review = True
-                movement.status = MovementDailySquare.APPROVED
+                    movement.review = True
+                    movement.status = MovementDailySquare.APPROVED
                 movement.save()
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
