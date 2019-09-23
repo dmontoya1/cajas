@@ -70,7 +70,8 @@ class MovementBoxColombiaManager(object):
                 movement_colombia.movement_don_juan = movement_don_juan.pk
             elif data['destine_box'] == 'CAJA_DON_JUAN_USD':
                 don_juan_usd_manager = DonJuanUSDManager()
-                data['box'] = get_object_or_404(BoxDonJuanUSD, office=data['office']),
+                data['box'] = get_object_or_404(BoxDonJuanUSD, office=data['office'])
+                data['value'] = data['value_usd']
                 movement_usd = don_juan_usd_manager.create_movement(data)
                 movement_colombia.movement_don_juan_usd = movement_usd.pk
             elif data['destine_box'] == 'CAJA_OFICINA':
@@ -291,9 +292,9 @@ class MovementBoxColombiaManager(object):
             movement_don_juan_usd = MovementDonJuanUsd.objects.get(pk=current_movement.movement_don_juan_usd)
             update_movement_balance(
                 movement_don_juan_usd,
-                data['value']
+                data['value_usd']
             )
-            self.update_movement_value(movement_don_juan_usd, data['value'])
+            self.update_movement_value(movement_don_juan_usd, data['value_usd'])
             first_movement = MovementDonJuanUsd.objects.filter(
                 box_don_juan=movement_don_juan_usd.box_don_juan
             ).last()
