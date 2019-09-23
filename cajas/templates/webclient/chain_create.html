@@ -340,7 +340,7 @@
                         <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
                           <option value="" selected disabled>Selecciona un usuario</option>
                           {% for p in users %}
-                            <option value="{{p.pk}}">{{p}}</option>
+                            <option value="{{p.pk}}">{{p.get_full_name}}</option>
                           {% endfor %}
                         </select>
                       </div>
