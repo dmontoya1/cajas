@@ -748,7 +748,7 @@
               $('.lender-user-select').addClass('d-none')
               $('#inventory_form').addClass(('d-none'))
               break;
-            case 'Préstamo Personal Empleado':
+            case 'Préstamo empleado':
               {% if request.user.is_superuser or is_secretary %}
                 $('.loan-employee').removeClass("d-none")
                 $('.lender_employee').removeClass("d-none")
@@ -774,7 +774,7 @@
                 $('#inventory_form').addClass(('d-none'))
             {% endif %}
               break;
-            case 'Pago Abono préstamo empleado':
+            case 'Abono Préstamo Empleado':
               $('.lender-user-select').removeClass('d-none')
               $('.lender_employee').addClass("d-none")
               $('.loan-employee').addClass("d-none")
@@ -1064,6 +1064,7 @@
         $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
       }
       data_send = $(this).serialize()
+      console.log(data_send)
       axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
         .then(function (response) {
           msg = response.data

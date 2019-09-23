@@ -66,7 +66,7 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                                 brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                                 price=request.data["form[form][" + value + "][price]"]
                             )
-            elif concept.name == 'Préstamo Personal Empleado':
+            elif concept.name == 'Préstamo empleado':
                 movement = MovementDailySquare.objects.get(pk=data['pk'])
                 loan_manager = LoanManager()
                 if request.user.is_superuser or is_secretary(request.user, office_country):

@@ -32,7 +32,7 @@ class LoanPaymentManager(object):
         if request.data['history_type'] == LoanHistory.ABONO:
             self.create_payment(request)
             if loan.loan_type == LoanType.EMPLEADO:
-                concept = get_object_or_404(Concept, name='Pago Abono préstamo empleado')
+                concept = get_object_or_404(Concept, name='Abono Préstamo Empleado')
                 data = {
                     'concept': concept,
                     'movement_type': 'IN',

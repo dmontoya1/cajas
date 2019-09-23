@@ -154,7 +154,7 @@ class AcceptMovement(APIView):
             office_items_manager = OfficeItemsManager()
             office_items_manager.create_office_item(data_items)
             movement_items.delete()
-        elif movement.concept.name == 'Pago Abono préstamo empleado':
+        elif movement.concept.name == 'Abono Préstamo Empleado':
             try:
                 user = movement.user
                 loan = Loan.objects.get(lender=user, loan_type=LoanType.EMPLEADO)
