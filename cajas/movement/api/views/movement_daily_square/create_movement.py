@@ -154,7 +154,7 @@ class CreateDailySquareMovement(APIView):
                 dq_target.email
             )
 
-        elif concept.name == "Préstamo Personal Empleado":
+        elif concept.name == "Préstamo empleado":
             loan_manager = LoanManager()
             if request.user.is_superuser or is_secretary(request.user, office):
                 data_loan = {
@@ -210,7 +210,7 @@ class CreateDailySquareMovement(APIView):
                 price=request.data["price_office"],
                 is_replacement=False
             )
-        elif concept.name == 'Pago Abono préstamo empleado':
+        elif concept.name == 'Abono Préstamo Empleado':
             data['user'] = User.objects.get(pk=request.data['lender-user'])
             movement = daily_square_manager.create_movement(data)
         else:

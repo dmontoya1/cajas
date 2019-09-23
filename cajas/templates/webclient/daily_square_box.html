@@ -981,7 +981,7 @@
               $('.lender-user-select').addClass('d-none')
               $('#inventory_form').addClass(('d-none'))
               break;
-            case 'Préstamo Personal Empleado':
+            case 'Préstamo empleado':
               {% if request.user.is_superuser or is_secretary %}
                 $('.loan-employee').removeClass("d-none")
                 $('.lender_employee').removeClass("d-none")
@@ -1007,7 +1007,7 @@
                 $('#inventory_form').addClass(('d-none'))
             {% endif %}
               break;
-            case 'Pago Abono préstamo empleado':
+            case 'Abono Préstamo Empleado':
               $('.lender-user-select').removeClass('d-none')
               $('.lender_employee').addClass("d-none")
               $('.loan-employee').addClass("d-none")
