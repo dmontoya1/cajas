@@ -23,6 +23,6 @@ class ChainCreate(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        context['users'] = User.objects.all().exclude(email="super@admin.com")
+        context['users'] = User.objects.all().exclude(email="super@admin.com").order_by('first_name')
         context['offices'] = OfficeCountry.objects.all().order_by('slug')
         return context
