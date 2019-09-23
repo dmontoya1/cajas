@@ -670,7 +670,7 @@
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <label for="loan_value">Monto del préstamo ({{ office.country.currency.abbr }})</label>
-                    <input class="form-control" type="number" name="value_loan" id="loan_value"
+                    <input class="form-control" type="number" name="loan_value" id="loan_value"
                            placeholder="Ingresa el monto del préstamo">
                   </div>
                   <div class="form-group col-md-6">
@@ -1316,6 +1316,7 @@
         $(this).append('<input type="hidden" name="elemts" value="' + elemts + '" >')
       }
       data_send = $(this).serialize()
+      console.log(data_send)
       if ($("#method_modal").val() === "add") {
         axios.post('{% url 'api:movements:create_dq_movement' %}', data_send)
           .then(function (response) {

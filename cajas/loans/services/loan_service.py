@@ -126,7 +126,6 @@ class LoanManager(object):
         else:
             time = data['time']
         if not old_loan:
-            print(data)
             if data['box_from'] == 'partner':
                 provider = get_object_or_404(Partner, pk=data['provider'])
                 loan = Loan.objects.create(
@@ -165,7 +164,7 @@ class LoanManager(object):
                     lender=lender,
                     office=office,
                     loan_type=data['loan_type'],
-                    value=float(int(data['value'])),
+                    value=data['value'],
                     value_cop=0,
                     interest=data['interest'],
                     time=time,

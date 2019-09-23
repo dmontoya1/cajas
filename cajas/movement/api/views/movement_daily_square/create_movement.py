@@ -156,10 +156,13 @@ class CreateDailySquareMovement(APIView):
 
         elif concept.name == "Préstamo empleado":
             loan_manager = LoanManager()
+            value = request_data['value']
+            if request_data['value'] == '':
+                value = request_data['loan_value']
             if request.user.is_superuser or is_secretary(request.user, office):
                 data_loan = {
                     'request': request,
-                    'value': request_data['value'],
+                    'value': value,
                     'value_cop': 0,
                     'interest': request_data['interest'],
                     'time': request_data['time'],
@@ -174,6 +177,7 @@ class CreateDailySquareMovement(APIView):
                     data_loan['provider'] = request_data['partner_provider']
                 loan_manager.create_employee_loan(data_loan)
             data['lender'] = Employee.objects.get(pk=int(request_data['lender_employee']))
+            data['value'] = value
             movement = daily_square_manager.create_movement(data)
 
         elif concept.name == "Compra de Inventario Unidad":
