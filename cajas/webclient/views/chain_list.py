@@ -27,7 +27,7 @@ class ChainList(LoginRequiredMixin, TemplateView):
         partners = Partner.objects.filter(office=office)
         chains = Chain.objects.all()
         for chain in chains:
-            if chain not in chains and chain.office == office:
+            if chain not in chains_list and chain.office == office:
                 chains_list.append(chain)
         for partner in partners:
             for chain in chains:
@@ -35,8 +35,6 @@ class ChainList(LoginRequiredMixin, TemplateView):
                     for chain_user in chain_place.related_users.all():
                         if chain_user.user == partner.user and chain not in chains_list and partner.office == office:
                             chains_list.append(chain)
-
-
         context['office'] = office
         context['chains'] = chains_list
         return context
