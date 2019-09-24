@@ -25,13 +25,22 @@ class OfficeCommitmentsAdmin(admin.StackedInline):
     extra = 1
 
 
+@admin.register(OfficeCountry)
+class OfficeCountryAdmin(admin.ModelAdmin):
+    """
+    """
+
+    list_display = ('__str__', )
+    search_fields = ('number', )
+
+
 class OfficeCountryInline(admin.StackedInline):
     """
     """
 
     model = OfficeCountry
     extra = 0
-    readonly_fields = ('slug', 'consecutive',)
+    readonly_fields = ('consecutive',)
 
 
 @admin.register(Office)
