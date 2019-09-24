@@ -1,6 +1,6 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
-# POSTGRES_ENGINE=tenant_schemas.postgresql_backend
+POSTGRES_ENGINE=tenant_schemas.postgresql_backend
 # POSTGRES_HOST=postgres
 # POSTGRES_PORT=5432
 # POSTGRES_DB=cajas

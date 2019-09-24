@@ -8,14 +8,14 @@ import tenant_schemas.postgresql_backend.base
 def create_first_register(apps, schema):
     Platform = apps.get_model('tenant', 'platform')
     Platform.objects.create(
-        domain_url='globalsac.com',
+        domain_url='127.0.0.1',
         schema_name='public',
         name='SAC',
     )
     Platform.objects.create(
-        domain_url='globalsac.com',
-        schema_name='public',
-        name='SAC',
+        domain_url='p1.127.0.0.1',
+        schema_name='p1',
+        name='SAC P1',
     )
 
 class Migration(migrations.Migration):
