@@ -100,7 +100,7 @@ class ChainManager(object):
     def create_chain_pay_partner_movement(self, data, user_place):
         try:
             concept = Concept.objects.get(name="Pago Puesto Cadena")
-            if int(user_place.user.document_id) == 1:
+            if user_place.user.document_id == str(1):
                 data = {
                     'box': BoxDonJuan.objects.get(office=user_place.office),
                     'concept': concept,
@@ -153,7 +153,7 @@ class ChainManager(object):
                     'ip': data['ip']
                 }
 
-                if user_place.user.document_id == '1':
+                if user_place.user.document_id == str(1):
                     user_ = 'DONJUAN'
                 else:
                     user_ = 'SOCIO'
