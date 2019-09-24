@@ -46,7 +46,7 @@ class PartnerAdmin(admin.ModelAdmin):
     extra = 0
     list_filter = ['office', 'office__office', 'office__country']
     inlines = [UnitInline, ]
-    readonly_fields = ('code', 'consecutive')
+    readonly_fields = ('consecutive', )
     fieldsets = (("Datos Socio",
         {"fields": ("user", 'office', 'code', 'partner_type', 'direct_partner', 'consecutive', 'is_active',
                     'buyer_unit_partner')}),)
