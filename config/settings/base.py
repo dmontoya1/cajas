@@ -74,20 +74,6 @@ SHARED_APPS = [
     'crispy_forms',
     'rest_framework',
     'django_celery_beat',
-    'cajas.api.apps.ApiConfig',
-    'cajas.boxes.apps.BoxesConfig',
-    'cajas.chains.apps.ChainsConfig',
-    'cajas.core.apps.CoreConfig',
-    'cajas.concepts.apps.ConceptsConfig',
-    'cajas.general_config.apps.GeneralConfigConfig',
-    'cajas.inventory.apps.InventoryConfig',
-    'cajas.investments.apps.InvestmentsConfig',
-    'cajas.loans.apps.LoansConfig',
-    'cajas.movement.apps.MovementConfig',
-    'cajas.office.apps.OfficeConfig',
-    'cajas.reports.apps.ReportsConfig',
-    'cajas.units.apps.UnitsConfig',
-    'cajas.users.apps.UsersAppConfig',
 ]
 
 TENANT_APPS = [
@@ -104,6 +90,20 @@ TENANT_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
+    'cajas.api.apps.ApiConfig',
+    'cajas.boxes.apps.BoxesConfig',
+    'cajas.chains.apps.ChainsConfig',
+    'cajas.core.apps.CoreConfig',
+    'cajas.concepts.apps.ConceptsConfig',
+    'cajas.general_config.apps.GeneralConfigConfig',
+    'cajas.inventory.apps.InventoryConfig',
+    'cajas.investments.apps.InvestmentsConfig',
+    'cajas.loans.apps.LoansConfig',
+    'cajas.movement.apps.MovementConfig',
+    'cajas.office.apps.OfficeConfig',
+    'cajas.reports.apps.ReportsConfig',
+    'cajas.units.apps.UnitsConfig',
+    'cajas.users.apps.UsersAppConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]

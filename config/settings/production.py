@@ -135,6 +135,11 @@ SENTRY_CLIENT = env('DJANGO_SENTRY_CLIENT', default='raven.contrib.django.raven_
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
+    'filters': {
+        'tenant_context': {
+            '()': 'tenant_schemas.log.TenantContextFilter'
+        },
+    },
     'root': {
         'level': 'WARNING',
         'handlers': ['sentry'],
@@ -144,16 +149,22 @@ LOGGING = {
             'format': '%(levelname)s %(asctime)s %(module)s '
                       '%(process)d %(thread)d %(message)s'
         },
+        'tenant_context': {
+            'format': '[%(schema_name)s:%(domain_url)s] '
+            '%(levelname)-7s %(asctime)s %(message)s',
+        },
     },
     'handlers': {
         'sentry': {
             'level': 'ERROR',
             'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+            'filters': ['tenant_context'],
         },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+            'filters': ['tenant_context'],
         }
     },
     'loggers': {
