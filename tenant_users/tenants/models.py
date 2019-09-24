@@ -4,7 +4,6 @@ from django.db import connection
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     Permission, Group
 from django.contrib.auth import get_user_model
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.dispatch import Signal
@@ -201,7 +200,7 @@ class TenantBase(TenantMixin):
 
 
 class UserProfileManager(BaseUserManager):
-    def _create_user(self, username, email, password, is_staff, is_superuser, is_verified, **extra_fields):
+    def _create_user(self, email, password, is_staff, is_superuser, is_verified, **extra_fields):
         # Do some schema validation to protect against calling create user from inside
         # a tenant. Must create public tenant permissions during user creation. This
         # happens during assign role. This function cannot be used until a public
@@ -220,7 +219,6 @@ class UserProfileManager(BaseUserManager):
             password = self.make_random_password(length=30)
 
         email = self.normalize_email(email)
-        username = self.model.normalize_username(username)
 
         profile = UserModel.objects.filter(email=email).first()
         if profile and profile.is_active:
@@ -237,7 +235,6 @@ class UserProfileManager(BaseUserManager):
             profile = UserModel()
 
         profile.email = email
-        profile.username = username
         profile.is_active = True
         profile.is_verified = is_verified
         profile.set_password(password)
@@ -310,21 +307,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixinFacade):
     Requires use of the ModelBackend
     """
 
-    username_validator = UnicodeUsernameValidator()
-    EMAIL_FIELD = 'email'
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = "email"
     objects = UserProfileManager()
-    username = models.CharField(
-        _('username'),
-        max_length=150,
-        unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[username_validator],
-        error_messages={
-            'unique': _("A user with that username already exists."),
-        },
-    )
 
     tenants = models.ManyToManyField(
         settings.TENANT_MODEL,
@@ -333,36 +317,19 @@ class UserProfile(AbstractBaseUser, PermissionsMixinFacade):
         help_text=_('The tenants this user belongs to.'),
         related_name="user_set"
     )
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
 
     email = models.EmailField(
         _("Email Address"),
         unique = True,
         db_index = True,
     )
-    is_staff = models.BooleanField(
-        _('staff status'),
-        default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
-    )
 
-    is_active = models.BooleanField(
-        _('active'),
-        default=True,
-        help_text=_(
-            'Designates whether this user should be treated as active. '
-            'Unselect this instead of deleting accounts.'
-        ),
-    )
-    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
+    is_active = models.BooleanField(_('active'), default=True)
 
     # Tracks whether the user's email has been verified
     is_verified = models.BooleanField(_('verified'), default=False)
 
     class Meta:
-        verbose_name = _('user')
-        verbose_name_plural = _('users')
         abstract = True
 
     def has_verified_email(self):
@@ -379,6 +346,3 @@ class UserProfile(AbstractBaseUser, PermissionsMixinFacade):
 
     def get_short_name(self):
         return self.email
-
-    def get_full_name(self):
-        return str(self)  # just use __unicode__ here.

@@ -68,18 +68,9 @@ SHARED_APPS = [
     'jet',
     'jet.dashboard',
     'django.contrib.auth',
-    'django.contrib.admin',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'tenant_users.permissions',  # Defined in both shared apps and tenant apps
-    'tenant_users.tenants',  # defined only in shared apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
+    # 'tenant_users.tenants',  # defined only in shared apps
     'crispy_forms',
     'rest_framework',
     'django_celery_beat',
@@ -109,7 +100,10 @@ TENANT_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'cajas.api.apps.ApiConfig',
-    'tenant_users.permissions',  # Defined in both shared apps and tenant apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -128,7 +122,7 @@ MIGRATION_MODULES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#authentication-backends
 AUTHENTICATION_BACKENDS = [
-    'tenant_users.permissions.backend.UserBackend',
+    'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
@@ -307,7 +301,6 @@ ADMINS = [
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
-
 
 # django-allauth
 # ------------------------------------------------------------------------------

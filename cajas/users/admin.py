@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext, gettext_lazy as _
 
 from cajas.units.admin import UnitInline
 
@@ -60,14 +61,21 @@ class PartnerAdmin(admin.ModelAdmin):
 
 
 @admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
+class UserAdmin(admin.ModelAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales",
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    ) + (("Datos personales",
         {"fields": ("document_type", 'document_id', 'is_abstract', 'is_daily_square')}),)
     list_display = ["email", "first_name", "last_name", "is_daily_square"]
-    readonly_fields = ('last_login', 'date_joined')
+    readonly_fields = ('last_login',)
     search_fields = ["first_name", 'last_name', 'document_id', 'email', 'username']
     inlines = [EmployeeAdminInline, ]
 

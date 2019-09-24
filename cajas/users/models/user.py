@@ -2,10 +2,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from tenant_users.tenants.models import UserProfile
 
-
-class User(UserProfile):
+class User(AbstractUser):
 
     CEDULA_CIUDADANIA = 'CC'
     CEDULA_EXTRANJERA = 'CE'
