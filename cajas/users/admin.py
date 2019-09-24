@@ -26,22 +26,27 @@ class EmployeeAdminInline(admin.StackedInline):
 class EmployeeAdmin(admin.ModelAdmin):
 
     model = Employee
-    list_display = ['get_full_name', 'charge', 'salary_type', 'salary']
+    list_display = ['get_full_name', 'charge', 'salary_type', 'salary', 'get_office_country']
     search_fields = ['user__first_name', 'user__last_name', 'salary', ]
     list_filter = ['charge', ]
     inlines = [DailySquareUnitsInline, ]
+
+    def get_office_country(self, obj):
+        return "\n -".join([str(o) for o in obj.office_country.all()])
 
     class Media:
         js = (
             'js/admin/employee_admin.js',
         )
 
+    get_office_country.short_description = 'Oficina País'
+
 
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
 
     model = Partner
-    list_display = ['get_full_name', 'code', 'partner_type', 'get_direct_partner']
+    list_display = ['get_full_name', 'code', 'partner_type', 'get_direct_partner',]
     search_fields = ['user__first_name', 'user__last_name', 'code', ]
     extra = 0
     list_filter = ['office', 'office__office', 'office__country']
