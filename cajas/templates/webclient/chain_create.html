@@ -192,7 +192,12 @@
                         <option value="EX">Externa</option>
                       </select>
                     </div>
+                    <div class="form-group col-md-6">
+                      <a class="btn btn-add arqueo float-left mr-md-0" data-toggle="modal"
+                      data-target="#modalUser">Agregar Usuario Externo</a>
+                    </div>
                   </div>
+
                   <hr>
                   <div class="places">
                     <div class="form-row places-list">
@@ -203,6 +208,62 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Modal add user -->
+  <div class="modal fade" id="modalUser" role="dialog" aria-labelledby="modalPartnerTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-center" id="exampleModalLongTitle">Añadir Usuario Externo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" id="add-user">
+            {% csrf_token %}
+            <input type="hidden" name="office" value="{{ office.pk }}">
+            <input type="hidden" name="is_daily_square" value="false">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="concept">Nombres</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Nombres"
+                       required>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="concept">Apellidos</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Apellidos"
+                       required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="document_type">Tipo de Documento</label>
+                <select class="form-control" id="document_type" name="document_type" required>
+                  <option selected disabled value="">Selecciona el tipo de documento</option>
+                  <option value="CC">Cédula de Ciudadanía</option>
+                  <option value="CE">Cédula Extranjera</option>
+                  <option value="PA">Pasaporte</option>
+                </select>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="document_id">Número de documento</label>
+                <input type="text" class="form-control" id="document_id" name="document_id"
+                       placeholder="Número de documento" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label for="email">Correo electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="email@mail.com" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-submit btn-add-user">Añadir</button>
+          </form>
         </div>
       </div>
     </div>
@@ -263,7 +324,7 @@
       for (i = 1; i <= $(this).val(); i++) {
         $('.places-list').append(
           `
-              <div class="form-group col-md-6">
+              <div class="form-group col-md-12">
                 <div class="places-item">
                   <span class="place-name">Puesto ${i}</span>
                   <div class="form-row">
@@ -274,16 +335,25 @@
                   </div>
                   <div class="form-group" id="dynamic_form_${i}">
                     <div class="row" id="field">
-                      <div class="col-md-6">
-                        <label for="partner">Socio</label>
+                      <div class="col-md-4">
+                        <label for="partner">Usuario</label>
                         <select class="form-control select2-test" name="partner_${i}" id="partner_${i}" style="width: 100%">
-                          <option value="" selected disabled>Selecciona un socio</option>
-                          {% for p in all_partners %}
-                            <option value="{{p.pk}}">{{p}}</option>
+                          <option value="" selected disabled>Selecciona un usuario</option>
+                          {% for p in users %}
+                            <option value="{{p.pk}}">{{p.get_full_name}}</option>
                           {% endfor %}
                         </select>
                       </div>
                       <div class="col-md-4">
+                        <label for="office">Oficina</label>
+                        <select class="form-control select2-test" name="office_${i}" id="office_${i}" style="width: 100%">
+                          <option value="" selected disabled>Selecciona una oficina</option>
+                          {% for o in offices %}
+                            <option value="{{o.pk}}">{{o}}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="col-md-2">
                           <label for="place_porcentaje">Porcentaje</label>
                           <div class="input-group mb-2">
                             <div class="input-group-prepend">
@@ -296,7 +366,7 @@
                           <a href="#" class="btn btn-danger minus_${i} minus_btn" data-id="${i}" id="minus_${i}"><i class="fas fa-trash-alt"></i></a>
                       </div>
                     </div>
-                    <a href="#" class="btn btn-dynamic mt-4 plus_${i} plus_btn" data-id="${i}" id="plus_${i}">Agregar socio</a>
+                    <a href="#" class="btn btn-dynamic mt-4 plus_${i} plus_btn" data-id="${i}" id="plus_${i}">Agregar usuario</a>
                   </div>
                 </div>
               </div>
@@ -340,6 +410,34 @@
             confirmButtonText: 'Aceptar'
           }).then(() => {
             location.href = "{% url 'webclient:chain_list' office.slug %}"
+          })
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+    })
+
+    $("#add-user").on('submit', function (ev) {
+      ev.preventDefault()
+      form = $(this)
+      submitButton = form.find('#submit-customer-1').eq(0)
+      submitButton.addClass('disabled')
+      submitButton.attr('disabled', true)
+      data = form.serialize()
+      axios.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token }}'
+      axios.post("{% url 'api:users:user_create' %}", data)
+      .then(function (response) {
+          data = response.data
+          Swal.fire({
+            title: 'Exitoso',
+            text: data,
+            type: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#60d3b0',
+            confirmButtonText: 'Aceptar'
+          }).then(() => {
+            location.reload()
           })
         })
         .catch(function (error) {

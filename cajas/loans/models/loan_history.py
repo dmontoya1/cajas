@@ -57,7 +57,6 @@ class LoanHistory(models.Model):
     )
     date = models.DateField(
         'Fecha del pago',
-
     )
     balance = models.FloatField(
         'Saldo a la Fecha',
@@ -72,23 +71,6 @@ class LoanHistory(models.Model):
         if self.history_type:
             return "{} de {}".format(self.get_history_type_display(), self.loan)
         return "Pago de {}".format(self.loan)
-
-    def save(self, *args, **kwargs):
-        loan = self.loan
-        office = self.loan.office
-        exchange = get_object_or_none(
-            Exchange,
-            currency=office.country.currency,
-            month__month=datetime.now().month,
-        )
-        if self.history_type == self.ABONO:
-            loan.balance_cop -= float(self.value_cop)
-            loan.balance = loan.balance_cop / exchange.exchange_cop_abono
-        elif self.history_type == self.LOAN:
-            loan.balance += float(self.value)
-            loan.balance_cop += float(self.value_cop)
-        loan.save()
-        super(LoanHistory, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Historial de préstamo'

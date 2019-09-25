@@ -42,9 +42,15 @@ class LoanList(LoginRequiredMixin, TemplateView):
 
         if self.request.user.is_superuser or is_secretary(self.request.user, office) or \
             is_admin_senior(self.request.user, office):
-            context['loans'] = Loan.objects.filter(office=office)
-            context['partners'] = Partner.objects.filter(office=office, is_active=True)
-            context['employees'] = Employee.objects.filter(
+            context['loans'] = Loan.objects.select_related(
+                'provider', 'provider__user', 'lender', 'office', 'office__country',
+            ).filter(office=office)
+            context['partners'] = Partner.objects.select_related(
+                'user', 'office', 'office__country'
+            ).filter(office=office, is_active=True)
+            context['employees'] = Employee.objects.select_related(
+                'user', 'charge'
+            ).filter(
                 Q(user__is_active=True) &
                 (Q(office_country=office) | Q(office=office.office))
             )

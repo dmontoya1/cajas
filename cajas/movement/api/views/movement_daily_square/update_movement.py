@@ -66,13 +66,16 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                                 brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                                 price=request.data["form[form][" + value + "][price]"]
                             )
-            elif concept.name == 'Préstamo Personal Empleado':
+            elif concept.name == 'Préstamo empleado':
                 movement = MovementDailySquare.objects.get(pk=data['pk'])
                 loan_manager = LoanManager()
+                value = data['value']
+                if data['value'] == '':
+                    value = data['loan_value']
                 if request.user.is_superuser or is_secretary(request.user, office_country):
                     data_loan = {
                         'request': request,
-                        'value': data['value'],
+                        'value': value,
                         'value_cop': 0,
                         'interest': data['interest'],
                         'time': data['time'],
@@ -86,15 +89,14 @@ class UpdateDailySquareMovement(generics.RetrieveUpdateDestroyAPIView):
                     if data['box_from'] == 'partner':
                         data_loan['provider'] = data['partner_provider']
                     loan_manager.create_employee_loan(data_loan)
-                movement.review = True
-                movement.status = MovementDailySquare.APPROVED
+                    movement.review = True
+                    movement.status = MovementDailySquare.APPROVED
                 movement.save()
             return Response(
                 'Se ha actualizado el movimiento exitosamente',
                 status=status.HTTP_201_CREATED
             )
         except Exception as e:
-
             logger.exception(str(e))
             print(e)
             return Response(

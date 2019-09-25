@@ -11,7 +11,9 @@ from cajas.boxes.models import BoxDonJuan
 from cajas.concepts.models.concepts import Concept, Relationship
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.loans.models.loan_history import LoanHistory
+from cajas.loans.services.loan_payment_service import LoanPaymentManager
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.office.services.office_item_create import OfficeItemsManager
 from cajas.units.models.unitItems import UnitItems
 from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
@@ -138,7 +140,21 @@ class AcceptMovement(APIView):
                         item_create.is_replacement = True
                     item_create.save()
             movement_items.delete()
-        elif movement.concept.name == 'Pago Abono préstamo empleado':
+        elif movement.concept.name == "Compra Inventario Oficina":
+            movement_items = MovementDailySquareRequestItem.objects.filter(
+                movement=movement
+            ).first()
+            data_items = {
+                'office': office,
+                'name': movement_items.name,
+                'description': movement_items.description,
+                'price': movement_items.price,
+                'brand': movement_items.brand
+            }
+            office_items_manager = OfficeItemsManager()
+            office_items_manager.create_office_item(data_items)
+            movement_items.delete()
+        elif movement.concept.name == 'Abono Préstamo Empleado':
             try:
                 user = movement.user
                 loan = Loan.objects.get(lender=user, loan_type=LoanType.EMPLEADO)
@@ -173,8 +189,11 @@ class AcceptMovement(APIView):
                     balance_cop=0,
                     balance=new_balance
                 )
-                loan.balance = new_balance
-                loan.save()
+                loan_history_manager = LoanPaymentManager()
+                loan_history_manager.update_all_payments_balance_employee_loan(
+                    loan.related_payments.order_by('date', 'pk'),
+                    loan,
+                )
             except Loan.DoesNotExist:
                 return Response(
                     'No se pudo encontrar el préstamo para el usuario {}'.format(user.get_full_name()),
@@ -182,7 +201,6 @@ class AcceptMovement(APIView):
                 )
         movement.review = True
         movement.status = MovementDailySquare.APPROVED
-        print('Movimiento save')
         movement.save()
 
         return Response(

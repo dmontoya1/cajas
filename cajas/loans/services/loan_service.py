@@ -69,8 +69,8 @@ class LoanManager(object):
                 value=data['value'],
                 value_cop=data['value_cop'],
                 date=data['date'],
-                balance=data['value'],
-                balance_cop=data['value_cop']
+                balance=float(data['value']),
+                balance_cop=float(data['value_cop'])
             )
         else:
             LoanHistory.objects.create(
@@ -80,8 +80,8 @@ class LoanManager(object):
                 value=data['value'],
                 value_cop=data['value_cop'],
                 date=data['date'],
-                balance=loan.balance + int(data['value']),
-                balance_cop=loan.balance_cop + int(data['value_cop'])
+                balance=float(loan.balance + int(data['value'])),
+                balance_cop=float(loan.balance_cop + int(data['value_cop']))
             )
             loan.interest = data['interest']
             loan.save()
@@ -110,7 +110,7 @@ class LoanManager(object):
             office=office,
             loan_type=LoanType.EMPLEADO
         ).last()
-        concept = get_object_or_404(Concept, name='Préstamo Personal Empleado')
+        concept = get_object_or_404(Concept, name='Préstamo empleado')
 
         data_mov = {
             'concept': concept,
@@ -169,10 +169,11 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=0
+                    balance=float(0)
                 )
                 data_mov['box_office'] = office.box
                 movement_office_manager.create_movement(data_mov)
+
             LoanHistory.objects.create(
                 loan=loan,
                 history_type=LoanHistory.LOAN,
@@ -180,7 +181,7 @@ class LoanManager(object):
                 value=data['value'],
                 value_cop=0,
                 date=data['date'],
-                balance=data['value'],
+                balance=int(data['value']),
                 balance_cop=0
             )
         else:

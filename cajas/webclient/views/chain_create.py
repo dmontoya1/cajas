@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from cajas.users.models.partner import Partner
+from cajas.users.models.user import User
 from cajas.office.models.officeCountry import OfficeCountry
 
 User = get_user_model()
@@ -23,5 +23,6 @@ class ChainCreate(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        context['all_partners'] = Partner.objects.all()
+        context['users'] = User.objects.all().exclude(email="super@admin.com").order_by('first_name')
+        context['offices'] = OfficeCountry.objects.all().order_by('slug')
         return context

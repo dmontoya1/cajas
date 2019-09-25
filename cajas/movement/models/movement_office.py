@@ -15,6 +15,21 @@ class MovementOffice(MovementMixin):
         blank=True, null=True,
         related_name='movements'
     )
+    movement_don_juan = models.IntegerField(
+        "Movimiento Don Juan PK",
+        blank=True,
+        null=True
+    )
+    movement_box_colombia = models.IntegerField(
+        "Movimiento Oficina Colombia PK",
+        blank=True,
+        null=True
+    )
+    movement_don_juan_usd = models.IntegerField(
+        "Movimiento Don Juan Dólares PK",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         if self.box_office:

@@ -6,6 +6,10 @@ from cajas.concepts.models.concepts import Concept
 User = get_user_model()
 
 
+def get_sentinel_concept():
+    return Concept.objects.get(name='Préstamo empleado')
+
+
 class MovementMixin(models.Model):
     """Modelo base para todos los movimientos de las cajas y
     cuadre diario
@@ -48,7 +52,7 @@ class MovementMixin(models.Model):
         blank=True, null=True
     )
     ip = models.GenericIPAddressField(
-        "Dirección IP responsable", 
+        "Dirección IP responsable",
         protocol='both',
         blank=True, null=True
     )

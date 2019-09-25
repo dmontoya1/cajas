@@ -1,11 +1,11 @@
 from django.db.models import Q
 
-from cajas.api.models import APIKey
-from cajas.users.models.partner import Partner
-from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.charges import Charge
+from cajas.users.models.employee import Employee
+from cajas.users.models.partner import Partner
+from cajas.users.models.user import User
 
 
 def webclient_processor(request):

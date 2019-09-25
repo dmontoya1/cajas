@@ -10,7 +10,7 @@
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 * Tags: html, themplate, Ela Admin
 --------------------------------------------------------- */
-/* 
+/*
 
 Googel Fonts  */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700");
@@ -173,11 +173,11 @@ Googel Fonts  */
   margin-bottom: 15px;
 }
 
-/* 
+/*
 
 
 Googel Fonts  */
-/* Googel Fonts End  
+/* Googel Fonts End
 
 */
 .bg-flat-color-1 {
@@ -3785,7 +3785,7 @@ span.place-name {
 
 a.arqueo {
   background: var(--blue);
-  color: #fff;
+  color: #fff !important;
   padding: 0px 30px;
   font-weight: 600;
   border-radius: 10px;

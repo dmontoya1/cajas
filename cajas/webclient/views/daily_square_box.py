@@ -50,6 +50,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                 'movement_don_juan_usd',
                 'movement_partner',
                 'movement_office',
+                'unit'
             ).filter(
                 box_daily_square=box_daily_square
             )
@@ -61,7 +62,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                 'movement_don_juan_usd',
                 'movement_partner',
                 'movement_office',
-                'responsible',
+                'unit'
             ).filter(
                 box_daily_square=box_daily_square
             )[:50]

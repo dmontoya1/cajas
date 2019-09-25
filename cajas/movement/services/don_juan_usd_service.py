@@ -82,6 +82,6 @@ class DonJuanUSDManager(object):
         )
 
     def delete_don_juan_movement(self, data):
-        current_movement_daily_square = self.__get_movement_by_pk(data['pk'])
-        current_movement = current_movement_daily_square.first()
+        current_movement_usd = self.__get_movement_by_pk(data['pk'])
+        current_movement = current_movement_usd.first()
         delete_movement_by_box(current_movement, current_movement.box_don_juan, MovementDonJuanUsd, 'box_don_juan')

@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
-{% load static humanize user_in_office %}
-
+{% load static humanize %}
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'css/datatable/dataTables.bootstrap.min.css' %}">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
@@ -184,8 +183,8 @@
                     </div>
                   </div>
                   <div class="form-row">
-                    <a href="{% url 'webclient:chain_payments' office.slug chain.pk %}" type="button"
-                       class="dispersion-mv">
+                    <a href="{% url 'webclient:chain_payments' office.slug chain.pk %}"
+                       class="btn dispersion-mv">
                       Ver pagos de los socios
                     </a>
                   </div>
@@ -217,24 +216,33 @@
                                 {% for u in p.related_users.all %}
                                   <tr>
                                     <th>{{ u.user }}</th>
-                                    <th>{{ u.user }}</th>
+                                    <th>{{ u.office|default:"Sin Oficina" }}</th>
                                     <td>{{ u.place_porcentaje }}%</td>
                                     <td>${{ u.get_user_value|intcomma }}</td>
                                     <td>
-                                      {% user_in_office u.user office as user_is_in_office %}
-                                      {% if user_is_in_office and perms.chains.add_userplacepay %}
-                                        <button type="button" class="btn-dynamic user-place-pay" data-id="{{ u.pk }}"
+                                      {% if perms.chains.add_userplacepay and office == u.office %}
+                                        <button type="button" class="btn btn-dynamic user-place-pay" data-id="{{ u.pk }}"
                                                 data-value="{{ u.get_user_value }}"
                                                 data-toggle="modal" data-target="#modalAddPayment">
                                           Pagar Puesto
                                         </button>
-                                        <button type="button" class="btn-dynamic user-edit-place" data-id="{{ u.pk }}"
+                                      {% else %}
+                                        <button type="button" class="btn"  disabled>
+                                          Pagar Puesto
+                                        </button>
+                                      {% endif %}
+                                      {% if request.user.is_superuser %}
+                                        <button type="button" class="btn btn-dynamic user-edit-place" data-id="{{ u.pk }}"
                                                 data-value="{{ u.get_user_value }}"
+                                                data-user_pk="{{ u.user.pk }}"
+                                                data-office_pk="{{ u.office.pk }}"
                                                 data-toggle="modal" data-target="#modalEditPlace">
                                           Editar Puesto
                                         </button>
                                       {% else %}
-                                        Este puesto se paga en otra oficina
+                                        <button type="button" class="btn"  disabled>
+                                          Editar Puesto
+                                        </button>
                                       {% endif %}
                                     </td>
                                   </tr>
@@ -306,11 +314,20 @@
             <input type="hidden" name="user_place" id="user_place_edit" value="">
             <div class="form-row">
               <div class="form-group col-md-12">
-                <label for="partner-chain">Socio</label>
-                <select class="form-control" id="partner-chain" name="code" style="width: 100%; height: 20px;">
-                  <option disabled value="" selected>Selecciona un socio</option>
-                  {% for p in partners %}
-                    <option value="{{ p.code }}">{{ p }}</option>
+                <label for="user-chain">Usuario</label>
+                <select class="form-control" id="user-chain" name="user" style="width: 100%; height: 20px;">
+                  <option disabled value="" selected>Selecciona un usuario</option>
+                  {% for u in all_users %}
+                    <option value="{{ u.pk }}">{{ u.get_full_name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group col-md-12">
+                <label for="office-user-chain">Oficina</label>
+                <select class="form-control" id="office-user-chain" name="office" style="width: 100%; height: 20px;">
+                  <option disabled value="" selected>Selecciona una oficina</option>
+                  {% for o in all_offices %}
+                    <option value="{{ o.pk }}">{{ o }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -363,7 +380,10 @@
         }
       });
 
-      $('#partner-chain').select2({
+      $('#user-chain').select2({
+        language: "es"
+      });
+      $('#office-user-chain').select2({
         language: "es"
       });
 
@@ -382,6 +402,17 @@
 
     $('.user-edit-place').on('click', function () {
       $('#user_place_edit').val($(this).data('id'))
+      user_pk = $(this).data('user_pk')
+      office_pk = $(this).data('office_pk')
+      $("#user-chain").prop("selected", false);
+      $("#user-chain option[value='" + user_pk + "']").prop("selected", true);
+      $("#user-chain").trigger('change');
+
+      if (office_pk){
+        $("#office-user-chain").prop("selected", false);
+        $("#office-user-chain option[value='" + office_pk + "']").prop("selected", true);
+        $("#office-user-chain").trigger('change');
+      }
     })
 
     $('.add-user-payment').on('submit', function (e) {
@@ -415,23 +446,23 @@
                 location.reload()
               }
             })
-              .catch(function (error) {
-                Swal.fire({
-                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
-                  text: error.response,
-                  type: 'error',
-                  showCancelButton: false,
-                  confirmButtonColor: '#3085d6',
-                  confirmButtonText: 'Aceptar'
-                }).then((result) => {
-                  if (result.value) {
-                    location.reload()
-                  }
-                })
-              })
             }
-          }
-        )
+       })
+      .catch(function (error) {
+          Swal.fire({
+            title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+
+      })
     })
 
     $('.edit-place').on('submit', function (e) {
@@ -449,21 +480,37 @@
               location.reload()
             }
           })
-            .catch(function (error) {
-              Swal.fire({
-                title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
-                text: error,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'Aceptar'
-              }).then((result) => {
-                if (result.value) {
-                  location.reload()
-                }
-              })
-            })
-        })
+       })
+      .catch(function (error) {
+        if (error.response.status === 404){
+          Swal.fire({
+            title: 'Ooops, Ahora no fui yo, fuiste tu!',
+            text: "El socio seleccionado no pertenece a la oficina seleccionada",
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        }
+        else {
+          Swal.fire({
+            title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+            text: error,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Aceptar'
+          }).then((result) => {
+            if (result.value) {
+              location.reload()
+            }
+          })
+        }
+      })
     })
 
 

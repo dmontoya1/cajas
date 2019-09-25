@@ -25,6 +25,12 @@ class OfficeUSDBox(LoginRequiredMixin, TemplateView):
         slug = self.kwargs['slug']
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
-        context['offices'] = OfficeCountry.objects.all()
+        context['offices'] = OfficeCountry.objects.select_related('office', 'country').all()
         context['box'] = BoxDonJuanUSD.objects.get(office=office)
+        box_office = office.box
+        if self.request.GET.get('all'):
+            movements = box_office.movements.select_related('responsible', 'concept').all()
+        else:
+            movements = box_office.movements.select_related('responsible', 'concept').all()[:50]
+        context['movements'] = movements
         return context

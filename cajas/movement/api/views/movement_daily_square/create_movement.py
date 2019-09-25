@@ -16,6 +16,7 @@ from cajas.core.services.email_service import EmailManager
 from cajas.loans.models.loan import Loan
 from cajas.loans.services.loan_service import LoanManager
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.office.services.office_item_create import OfficeItemsManager
 from cajas.units.models.units import Unit
 from cajas.users.models.employee import Employee
 from cajas.webclient.views.get_ip import get_ip
@@ -152,12 +153,16 @@ class CreateDailySquareMovement(APIView):
                 movement.value,
                 dq_target.email
             )
-        elif concept.name == "Préstamo Personal Empleado":
+
+        elif concept.name == "Préstamo empleado":
             loan_manager = LoanManager()
+            value = request_data['value']
+            if request_data['value'] == '':
+                value = request_data['loan_value']
             if request.user.is_superuser or is_secretary(request.user, office):
                 data_loan = {
                     'request': request,
-                    'value': request_data['value'],
+                    'value': value,
                     'value_cop': 0,
                     'interest': request_data['interest'],
                     'time': request_data['time'],
@@ -166,12 +171,15 @@ class CreateDailySquareMovement(APIView):
                     'loan_type': 'EMP',
                     'lender': request_data['lender_employee'],
                     'box_from': request_data['box_from'],
+                    'date': date,
                 }
                 if request_data['box_from'] == 'partner':
                     data_loan['provider'] = request_data['partner_provider']
                 loan_manager.create_employee_loan(data_loan)
             data['lender'] = Employee.objects.get(pk=int(request_data['lender_employee']))
+            data['value'] = value
             movement = daily_square_manager.create_movement(data)
+
         elif concept.name == "Compra de Inventario Unidad":
             movement = daily_square_manager.create_movement(data)
             values = request.data["elemts"].split(",")
@@ -197,7 +205,16 @@ class CreateDailySquareMovement(APIView):
                             brand=get_object_or_404(Brand, pk=request.data["form[form][" + value + "][brand]"]),
                             price=request.data["form[form][" + value + "][price]"]
                         )
-        elif concept.name == 'Pago Abono préstamo empleado':
+        elif concept.name == "Compra Inventario Oficina":
+            movement = daily_square_manager.create_movement(data)
+            MovementDailySquareRequestItem.objects.create(
+                movement=movement,
+                name=request.data["name_office"],
+                brand=get_object_or_404(Brand, pk=request.data["brand_office"]),
+                price=request.data["price_office"],
+                is_replacement=False
+            )
+        elif concept.name == 'Abono Préstamo Empleado':
             data['user'] = User.objects.get(pk=request.data['lender-user'])
             movement = daily_square_manager.create_movement(data)
         else:

@@ -292,15 +292,21 @@
               </select>
             </div>
             {% if request.user.is_superuser %}
-              <div class="form-group destine-box d-none">
-                <label for="box">Caja de destino</label>
-                <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
-                  <option selected disabled value="">Selecciona la oficina de destino</option>
-                  <option value="CAJA_DON_JUAN">Caja Don Juan</option>
-                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
-                  <option value="CAJA_BANCO">Caja Banco</option>
-                  <option value="CAJA_OFICINA">Caja Oficina</option>
-                </select>
+              <div class="form-row">
+                <div class="form-group destine-box d-none col-md-6">
+                  <label for="box">Caja de destino</label>
+                  <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
+                    <option selected disabled value="">Selecciona la oficina de destino</option>
+                    <option value="CAJA_DON_JUAN">Caja Don Juan</option>
+                    <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                    <option value="CAJA_BANCO">Caja Banco</option>
+                    <option value="CAJA_OFICINA">Caja Oficina</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6 value-usd d-none">
+                  <label for="value_usd">Valor USD</label>
+                  <input type="number" class="form-control" id="value_usd" name="value_usd" placeholder="Valor en dólares">
+                </div>
               </div>
             {% endif %}
             <div class="form-group">
@@ -326,6 +332,14 @@
       } else {
         $(".destine-box").addClass("d-none");
       }
+      $('#box').on('change', function (e) {
+        if ($(this).val() == 'CAJA_DON_JUAN_USD'){
+          $('.value-usd').removeClass('d-none')
+        }
+        else {
+          $('.value-usd').addClass('d-none')
+        }
+      })
 
       axios.get(`/api/concepts/${$(this).val()}/`)
         .then(function (response) {
@@ -407,6 +421,7 @@
       axios.get(`/api/movements/${mov_pk}/detail-box-colombia/`)
         .then(function (response) {
           data = response.data
+          console.log(data)
           $("#concept option").prop("selected", false);
           $("#concept option[value='" + data.concept + "']").prop("selected", true);
           $("#concept").trigger("change")
@@ -416,10 +431,56 @@
           $("#movement_type").trigger("change")
           $("#value").val(data.value)
           $("#detail").val(data.detail)
+          if (data.movement_box_colombia) {
+            $("#box option").prop("selected", false);
+            $("#box option[value='CAJA_BANCO']").prop("selected", true);
+            $("#box").trigger("change")
+          }
+          else if (data.movement_don_juan) {
+            $("#box option").prop("selected", false);
+            $("#box option[value='CAJA_DON_JUAN']").prop("selected", true);
+            $("#box").trigger("change")
+          }
+          else if (data.movement_don_juan_usd) {
+            $("#box option").prop("selected", false);
+            $("#box option[value='CAJA_DON_JUAN_USD']").prop("selected", true);
+            $("#box").trigger("change")
+            axios.get(`/api/movements/${mov_pk}/movement-don-juan-usd-update/`)
+              .then(function (response) {
+                data = response.data
+                console.log(data)
+                $("#value_usd").val(data.value)
+              })
+              .catch(function (error) {
+                // handle error
+                console.log(error);
+                Swal.fire({
+                  title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+                  text: error,
+                  type: 'error',
+                  showCancelButton: false,
+                  confirmButtonColor: '#3085d6',
+                  confirmButtonText: 'Aceptar'
+                })
+              })
+          }
+          else if (data.movement_office) {
+            $("#box option").prop("selected", false);
+            $("#box option[value='CAJA_OFICINA']").prop("selected", true);
+            $("#box").trigger("change")
+          }
         })
         .catch(function (error) {
           // handle error
           console.log(error);
+          Swal.fire({
+              title: 'Ha ocurrido un error. :( No eres tu, Soy yo.',
+              text: error,
+              type: 'error',
+              showCancelButton: false,
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            })
         })
     })
 
