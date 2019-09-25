@@ -27,7 +27,7 @@ class OfficeUSDBox(LoginRequiredMixin, TemplateView):
         context['office'] = office
         context['offices'] = OfficeCountry.objects.select_related('office', 'country').all()
         context['box'] = BoxDonJuanUSD.objects.get(office=office)
-        box_office = office.box
+        box_office = BoxDonJuanUSD.objects.get(office=office)
         if self.request.GET.get('all'):
             movements = box_office.movements.select_related('responsible', 'concept').all()
         else:

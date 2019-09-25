@@ -1,3 +1,6 @@
+
+import logging
+
 from django.db.models import Q
 
 from cajas.api.models import APIKey
@@ -8,12 +11,15 @@ from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 
+logger = logging.getLogger(__name__)
+
 
 def webclient_processor(request):
 
     try:
         secretary = Charge.objects.get(name="Secretaria")
         admin_senior = Charge.objects.get(name="Administrador Senior")
+        president = Charge.objects.get(name="Presidente")
         is_secretary = None
         is_admin_senior = None
         is_admin_charge = None
@@ -55,7 +61,9 @@ def webclient_processor(request):
                     is_admin_charge = True
                 else:
                     is_admin_senior = False
-
+        president = Employee.objects.select_related('user', 'charge', 'dailysquareunits').filter(
+            charge=president
+        ).first()
         all_users = User.objects.all().exclude(email='super@admin.com')
         all_offices = OfficeCountry.objects.all()
         all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
@@ -73,9 +81,10 @@ def webclient_processor(request):
             'is_admin_charge': is_admin_charge,
             'request_user': request.user,
             'is_secretary': is_secretary,
-            'is_admin_senior': is_admin_senior
+            'is_admin_senior': is_admin_senior,
+            'president': president
         }
-    except:
+    except Exception as e:
+        logger.exception("Exception en Context Processor", e)
         context = {}
-
     return context

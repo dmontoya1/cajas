@@ -14,4 +14,4 @@ class TenantAdmin(admin.ModelAdmin):
         schema_name = connection.schema_name
         if schema_name == 'public':
             return super(TenantAdmin, self).get_queryset(request)
-        return {}
+        return []

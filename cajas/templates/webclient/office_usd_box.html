@@ -44,7 +44,7 @@
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Caja Don Juan
+            Caja {{ president }}
           </a>
         </li>
       {% endif %}
@@ -300,6 +300,21 @@
                 {% endfor %}
               </select>
             </div>
+            {% if request.user.is_superuser %}
+              <div class="form-row">
+                <div class="form-group destine-box d-none col-md-6">
+                  <label for="box">Caja de destino</label>
+                  <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
+                    <option selected disabled value="">Selecciona la oficina de destino</option>
+                    <option value="CAJA_COLOMBIA">Caja Colombia</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-6 value-cop d-none">
+                  <label for="value_cop">Valor COP</label>
+                  <input type="number" class="form-control" id="value_cop" name="value_cop" placeholder="Valor en COP">
+                </div>
+              </div>
+            {% endif %}
             <div class="form-group">
               <label for="detail">Detalle</label>
               <textarea class="form-control" id="detail" rows="3" name="detail" placeholder="Ingresa el detalle"
@@ -374,18 +389,32 @@
             $('#usd-sell').removeClass('d-none')
             $('#usd-buy').addClass('d-none')
             $('#regular-value').addClass('d-none')
-          } else {
-            $('#usd-sell').addClass('d-none')
-            $('#usd-buy').addClass('d-none')
-            $('#regular-value').removeClass('d-none')
-          }
+          } else if (data['name'] == "Traslado entre cajas Colombia") {
+              $(".destine-box").removeClass("d-none");
+              $("#name").prop('required', false);
+              $("#category").prop('required', false);
+              $("#brand").prop('required', false);
+              $("#price").prop('required', false);
+              $("#description").prop('required', false);
+            } else {
+              $('#usd-sell').addClass('d-none')
+              $('#usd-buy').addClass('d-none')
+              $('#regular-value').removeClass('d-none')
+            }
         })
         .catch(function (error) {
           // handle error
           console.log(error);
         })
 
-
+      $('#box').on('change', function (e) {
+        if ($(this).val() == 'CAJA_COLOMBIA'){
+          $('.value-cop').removeClass('d-none')
+        }
+        else {
+          $('.value-cop').addClass('d-none')
+        }
+      })
     })
 
     $("#add-movement-btn").on("click", function () {
