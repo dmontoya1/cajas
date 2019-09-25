@@ -10,9 +10,6 @@ from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.concepts.models.concepts import Concept
 from cajas.webclient.views.get_ip import get_ip
 
-from ....models.movement_don_juan_usd import MovementDonJuanUsd
-from ....models.movement_don_juan import MovementDonJuan
-
 from ....services.don_juan_usd_service import DonJuanUSDManager
 from ....services.don_juan_service import DonJuanManager
 
