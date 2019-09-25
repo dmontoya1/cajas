@@ -67,7 +67,6 @@ SHARED_APPS = [
     'cajas.tenant.apps.TenantConfig',
     'jet',
     'jet.dashboard',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
     # 'tenant_users.tenants',  # defined only in shared apps
@@ -85,7 +84,6 @@ TENANT_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'cajas.api.apps.ApiConfig',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

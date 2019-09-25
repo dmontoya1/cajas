@@ -4,7 +4,10 @@ from tenant_schemas.models import TenantMixin
 
 
 class Platform(TenantMixin):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        "Nombre",
+        max_length=100
+    )
     created_on = models.DateField(auto_now_add=True)
 
     # default true, schema will be automatically created and synced when it is saved

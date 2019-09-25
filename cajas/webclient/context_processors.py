@@ -1,6 +1,6 @@
-from django.conf import settings
 from django.db.models import Q
 
+from cajas.api.models import APIKey
 from cajas.users.models.partner import Partner
 from cajas.users.models.employee import Employee
 from cajas.concepts.models.concepts import Concept
@@ -57,8 +57,9 @@ def webclient_processor(request):
 
         all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
         concepts = Concept.objects.filter(is_active=True)
+        api_key, created = APIKey.objects.get_or_create(name='webclient')
         context = {
-            'API_KEY': settings.API_KEY,
+            'API_KEY': api_key.key,
             'concepts': concepts,
             'partners': partners,
             'all_partners': all_partners,

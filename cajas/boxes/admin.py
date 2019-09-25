@@ -73,7 +73,7 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
 
     list_display = ('office', 'balance', 'is_active', 'get_edit_link')
     readonly_fields = ["get_edit_link", ]
-    search_fields = ('office__country__abbr', 'office__number', )
+    search_fields = ('office__country__abbr', )
     exclude = ('last_movement_id', )
 
     def get_edit_link(self, obj=None):

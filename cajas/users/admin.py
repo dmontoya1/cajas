@@ -32,11 +32,6 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_filter = ['charge', ]
     inlines = [DailySquareUnitsInline, ]
 
-    class Media:
-        js = (
-            'js/admin/employee_admin.js',
-        )
-
 
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
@@ -61,21 +56,14 @@ class PartnerAdmin(admin.ModelAdmin):
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
-        }),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-    ) + (("Datos personales",
+    fieldsets = auth_admin.UserAdmin.fieldsets + (("Datos personales",
         {"fields": ("document_type", 'document_id', 'is_abstract', 'is_daily_square')}),)
     list_display = ["email", "first_name", "last_name", "is_daily_square"]
-    readonly_fields = ('last_login',)
+    readonly_fields = ('last_login', 'date_joined')
     search_fields = ["first_name", 'last_name', 'document_id', 'email', 'username']
     inlines = [EmployeeAdminInline, ]
 
