@@ -1,11 +1,17 @@
 
+from django.db import connection
 from django.contrib import admin
 
 from .models import Platform
 
 
-tenant_admin_site = admin.AdminSite(name="tenant-admin")
+@admin.register(Platform)
+class TenantAdmin(admin.ModelAdmin):
 
-admin.site.register(Platform)
-tenant_admin_site.register(Platform)
-tenant_admin_site.unregister(Platform)
+    list_display = ('name', 'schema_name', 'domain_url')
+
+    def get_queryset(self, request):
+        schema_name = connection.schema_name
+        if schema_name == 'public':
+            return super(TenantAdmin, self).get_queryset(request)
+        return {}

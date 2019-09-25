@@ -1,5 +1,6 @@
 from django.db.models import Q
 
+from cajas.api.models import APIKey
 from cajas.concepts.models.concepts import Concept
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.charges import Charge
@@ -55,6 +56,8 @@ def webclient_processor(request):
                 else:
                     is_admin_senior = False
 
+        all_users = User.objects.all().exclude(email='super@admin.com')
+        all_offices = OfficeCountry.objects.all()
         all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
         concepts = Concept.objects.filter(is_active=True)
         api_key, created = APIKey.objects.get_or_create(name='webclient')
@@ -63,6 +66,8 @@ def webclient_processor(request):
             'concepts': concepts,
             'partners': partners,
             'all_partners': all_partners,
+            'all_users': all_users,
+            'all_offices': all_offices,
             'office_employees': employees,
             'session_employee': session_employee,
             'is_admin_charge': is_admin_charge,
