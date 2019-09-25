@@ -6,5 +6,5 @@ set -o nounset
 
 
 python /app/manage.py collectstatic --noinput
-python /app/manage.py migrate --noinput
+python /app/manage.py migrate_schemas --executor=parallel --noinput
 /usr/local/bin/uwsgi --ini /app/uwsgi.ini --logto /app/uwsgi.log
