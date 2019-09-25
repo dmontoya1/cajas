@@ -24,12 +24,13 @@ class InvestmentList(LoginRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         try:
             if self.request.user.is_superuser or is_secretary(self.request.user, office):
-                investments = Investment.objects.filter(partner__office=office)
+                investments = Investment.objects.select_related('partner').filter(partner__office=office)
             else:
                 partner = Partner.objects.get(user=self.request.user, office=office)
-                investments = Investment.objects.filter(partner=partner)
-        except Partner.DoesNotExist:
-            investments = {}
+                investments = Investment.objects.select_related('partner').filter(partner=partner)
+        except Exception as e:
+            partner = Partner.objects.get(user=self.request.user, office=office)
+            investments = Investment.objects.select_related('partner').filter(partner=partner)
         context['office'] = office
         context['investments'] = investments
         return context

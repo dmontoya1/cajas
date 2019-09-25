@@ -177,7 +177,7 @@
                        cellspacing="0" style="width:100%">
                   <h3 class="mb-3">Caja {{ office }}</h3>
                   <h3 class="float-right">SALDO CAJA: $
-                    {{ office.box.balance|intcomma }}{{ office.country.currency.abbr }} </h3><br><br>
+                    {{ office.box.balance|intcomma }} {{ office.country.currency.abbr }} </h3><br><br>
                   <a href="?all=true" class="btn float-right " style="background: #5c6bc0; color: #fff;">Ver todos los movimientos</a>
                   <thead>
                   <tr>
@@ -194,7 +194,7 @@
                   <tbody>
                   {% for m in movements %}
                     <tr>
-                      <td>{{ m.responsible.get_full_name }}</td>
+                      <td>{{ m.responsible }}</td>
                       <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>

@@ -32,17 +32,23 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         try:
             if self.request.user.is_superuser or is_secretary(self.request.user, office) or \
                 is_admin_senior(self.request.user, office):
-                context['units'] = Unit.objects.filter(Q(partner__office=office) |
-                                                       (Q(partner__code='DONJUAN') &
-                                                        (Q(collector__related_employee__office_country=office) |
-                                                         Q(collector__related_employee__office=office.office)
-                                                         ))).distinct()
-                context['employees'] = Employee.objects.filter(
+                context['units'] = Unit.objects.select_related(
+                    'partner', 'partner__user', 'collector', 'supervisor'
+                ).filter(Q(partner__office=office) |
+                           (Q(partner__code='DONJUAN') &
+                            (Q(collector__related_employee__office_country=office) |
+                             Q(collector__related_employee__office=office.office)
+                             ))).distinct()
+                context['employees'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(
                     Q(office_country=office) |
                     Q(office=office.office) &
                     Q(user__is_active=True)
                 )
-                context['partners'] = Partner.objects.filter(
+                context['partners'] = Partner.objects.select_related(
+                        'office', 'box', 'user', 'office__country', 'office__country__currency'
+                ).filter(
                     (Q(office=office) & Q(user__is_active=True)) |
                     Q(code='DONJUAN')
                 )
