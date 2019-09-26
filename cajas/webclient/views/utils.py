@@ -3,6 +3,9 @@ from django.db import connection
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
+from tenant_schemas.utils import tenant_context
+
+from cajas.tenant.models import Platform
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 
@@ -65,8 +68,11 @@ def is_admin_senior(user, office):
 
 def get_president_user():
     charge = get_object_or_404(Charge, name="Presidente")
-    try:
-        employee = Employee.objects.get(charge=charge)
-        return employee.user
-    except:
-        return None
+    schema_name = connection.schema_name
+    tenant = Platform.objects.get(schema_name=schema_name)
+    with tenant_context(tenant):
+        try:
+            employee = Employee.objects.get(charge=charge)
+            return employee.user
+        except:
+            return None
