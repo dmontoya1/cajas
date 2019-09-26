@@ -33,4 +33,4 @@
 10 Crear administrador senior con cuadre diario para la oficina. Se deben seleccionar todas las oficinas por país
 para este usuario.
 11. Crear el usuario secretaria, NO es cuadre diario, Se le asigna la oficina en el campo OFICINA.
-
+12. Crear las categorías y marcas para el inventario

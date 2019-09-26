@@ -21,3 +21,5 @@ Lista de conceptos Obligatorios que deben estar en la plataforma creados:
 19) Aprovisionamiento Oficina
 20) Retiro unidad
 21) Inversión Unidad
+22) Aporte personal socio --> Simple Doble
+23) Aporte socio directo --> Simple
