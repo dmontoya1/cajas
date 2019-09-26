@@ -5,12 +5,12 @@ from cajas.office.models.officeCountry import OfficeCountry
 
 
 class BoxDonJuanUSD(models.Model):
-    """Modelo para la cajas de Don Juan Dolares Por oficina
+    """Modelo para la cajas del Presidente Dolares Por oficina
     """
 
     partner = models.ForeignKey(
         Partner,
-        verbose_name='Don Juan',
+        verbose_name='Presidente',
         on_delete=models.SET_NULL,
         blank=True, null=True
     )
@@ -37,8 +37,8 @@ class BoxDonJuanUSD(models.Model):
     def __str__(self):
         if self.office is not None:
             return "Caja Dólares de {}".format(self.office)
-        return "Caja de don Juan"
+        return "Caja Dólares del Presidente"
 
     class Meta:
-        verbose_name = 'Caja de Don Juan Dolares'
-        verbose_name_plural = 'Cajas de Don Juan Dolares'
+        verbose_name = 'Caja de oficina Dolares'
+        verbose_name_plural = 'Cajas de oficina Dolares'

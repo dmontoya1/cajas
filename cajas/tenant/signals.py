@@ -10,7 +10,7 @@ from cajas.users.models.user import User
 def after_schema_is_created(sender, tenant, **kwargs):
     print("Se acabó de crear un Schema")
     print(tenant.schema_name)
-    tenant1 = Platform(schema_name=tenant.schema_name)  # "Client" is a tenant model
+    tenant1 = Platform(schema_name=tenant.schema_name)
 
     with tenant_context(tenant1):
         email = '{}@sac.com'.format(tenant.schema_name)

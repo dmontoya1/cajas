@@ -60,7 +60,7 @@ class PartnerAdmin(admin.ModelAdmin):
     def get_direct_partner(self, obj):
         if obj.direct_partner:
             return obj.direct_partner.get_full_name()
-        return 'Don Juan'
+        return 'Presidente'
 
     get_direct_partner.short_description = 'Socio Directo'
 

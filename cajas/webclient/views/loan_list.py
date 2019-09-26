@@ -12,8 +12,11 @@ from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.general_config.models.exchange import Exchange
 from cajas.loans.models.loan import Loan, LoanType
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.utils import get_president_user
+
 from .utils import get_object_or_none, is_secretary, is_admin_senior
 
+president = get_president_user()
 User = get_user_model()
 logger = logging.getLogger(__name__)
 
@@ -64,7 +67,7 @@ class LoanList(LoginRequiredMixin, TemplateView):
             loans_list = list()
             if employee and group and self.request.user.groups.filter(name='Administrador de Grupo').exists():
                 units = group.units.filter(Q(partner__office=office) |
-                                           (Q(partner__code='DONJUAN') &
+                                           (Q(partner__user=president) &
                                             (Q(collector__related_employee__office_country=office) |
                                              Q(collector__related_employee__office=office.office) |
                                              Q(supervisor__related_employee__office_country=office) |

@@ -10,8 +10,10 @@ from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
+from cajas.webclient.views.utils import get_president_user
 
 logger = logging.getLogger(__name__)
+president = get_president_user()
 
 
 def webclient_processor(request):
@@ -19,7 +21,6 @@ def webclient_processor(request):
     try:
         secretary = Charge.objects.get(name="Secretaria")
         admin_senior = Charge.objects.get(name="Administrador Senior")
-        president = Charge.objects.get(name="Presidente")
         is_secretary = None
         is_admin_senior = None
         is_admin_charge = None
@@ -31,8 +32,7 @@ def webclient_processor(request):
                 pk=request.session['office']
             )
             partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(
-                (Q(office__pk=request.session['office']) |
-                Q(code='DONJUAN')), Q(is_active=True)
+                (Q(office__pk=request.session['office']) | Q(user=president)), Q(is_active=True)
             )
             employees = Employee.objects.select_related('user', 'charge', 'dailysquareunits').filter(
                 Q(office_country=office_country) | Q(office=office_country.office)
@@ -61,9 +61,7 @@ def webclient_processor(request):
                     is_admin_charge = True
                 else:
                     is_admin_senior = False
-        president = Employee.objects.select_related('user', 'charge', 'dailysquareunits').filter(
-            charge=president
-        ).first()
+
         all_users = User.objects.all().exclude(email='super@admin.com')
         all_offices = OfficeCountry.objects.all()
         all_partners = Partner.objects.select_related('user', 'office', 'buyer_unit_partner').filter(is_active=True)
@@ -82,7 +80,7 @@ def webclient_processor(request):
             'request_user': request.user,
             'is_secretary': is_secretary,
             'is_admin_senior': is_admin_senior,
-            'president': president
+            'president': president.get_full_name()
         }
     except Exception as e:
         logger.exception("Exception en Context Processor", e)

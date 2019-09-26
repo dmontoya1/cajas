@@ -21,11 +21,10 @@ class BoxDonJuanOffice(LoginRequiredMixin, TemplateView):
         concepts = Concept.objects.filter(is_active=True)
         office = get_object_or_404(OfficeCountry, slug=self.kwargs['slug'])
         box = get_object_or_404(BoxDonJuan, office=office)
-        box_office = office.box
         if self.request.GET.get('all'):
-            movements = box_office.movements.select_related('responsible', 'concept').all()
+            movements = box.movements.select_related('responsible', 'concept').all()
         else:
-            movements = box_office.movements.select_related('responsible', 'concept').all()[:50]
+            movements = box.movements.select_related('responsible', 'concept').all()[:50]
         context['office'] = office
         context['box'] = box
         context['concepts'] = concepts

@@ -12,7 +12,7 @@ class MovementBetweenOfficeRequest(MovementMixin):
     BOX_COLOMBIA = 'BCO'
 
     FROM_BOX_TYPE = (
-        (BOX_DON_JUAN, 'Caja de Don Juan'),
+        (BOX_DON_JUAN, 'Caja de Presidente'),
         (BOX_COLOMBIA, 'Caja Colombia')
     )
 

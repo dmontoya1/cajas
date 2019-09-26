@@ -14,6 +14,7 @@ from cajas.office.models import OfficeCountry
 from cajas.users.models import Partner
 from cajas.webclient.views.get_ip import get_ip
 from cajas.webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_president_user
 
 from ..models.loan import Loan, LoanType
 from ..models.loan_history import LoanHistory
@@ -22,6 +23,7 @@ movement_don_juan_manager = DonJuanManager()
 movement_partner_manager = MovementPartnerManager()
 movement_office_manager = MovementOfficeManager()
 User = get_user_model()
+president = get_president_user()
 
 
 class LoanPaymentManager(object):
@@ -43,7 +45,7 @@ class LoanPaymentManager(object):
                     'ip': get_ip(request)
                 }
                 if loan.provider:
-                    if loan.provider.code == 'DONJUAN':
+                    if loan.provider.user == president:
                         data['box'] = BoxDonJuan.objects.get(office=office)
                         return movement_don_juan_manager.create_movement(data)
                     else:

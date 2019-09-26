@@ -11,6 +11,7 @@ from cajas.boxes.models import BoxDonJuan, BoxOffice
 from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
 from cajas.office.models import OfficeCountry
+from cajas.webclient.views.utils import get_president_user
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....services.don_juan_service import DonJuanManager
@@ -55,8 +56,8 @@ class DispersionMovement(APIView):
                     office_manager.create_movement(data)
                 else:
                     partner = get_object_or_404(Partner, pk=request.data["form[form]["+str(i)+"][partner]"])
-
-                    if partner.code == 'DONJUAN':
+                    president = get_president_user()
+                    if partner.user == president:
                         don_juan_manager = DonJuanManager()
                         data['box'] = BoxDonJuan.objects.get(office__slug=request.data['office'])
                         don_juan_manager.create_movement(data)

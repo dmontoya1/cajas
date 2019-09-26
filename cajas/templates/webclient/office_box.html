@@ -43,7 +43,7 @@
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Caja {{ president }}
+            Caja {{ president|default:"Presidente"}}
           </a>
         </li>
       {% endif %}
@@ -300,8 +300,8 @@
                 <label for="box">Caja de destino</label>
                 <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
                   <option selected disabled value="">Selecciona la oficina de destino</option>
-                  <option value="CAJA_DON_JUAN">Caja {{ president }}</option>
-                  <option value="CAJA_DON_JUAN_USD">Caja {{ president }} Dolares</option>
+                  <option value="CAJA_DON_JUAN">Caja {{ president|default:"Presidente"}}</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja {{ president|default:"Presidente"}} Dolares</option>
                   <option value="CAJA_COLOMBIA">Caja Colombia</option>
                   <option value="CAJA_BANCO">Caja Banco</option>
                 </select>

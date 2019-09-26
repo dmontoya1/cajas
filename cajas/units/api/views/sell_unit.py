@@ -13,6 +13,7 @@ from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_president_user
 
 from ...models.units import Unit
 
@@ -38,12 +39,12 @@ class UnitSell(APIView):
         concept = get_object_or_404(Concept, name='Compra de unidad')
         movement_partner_manager = MovementPartnerManager()
         don_juan_manager = DonJuanManager()
-
+        president = get_president_user()
         unit.partner = buyer_partner
         unit.save()
 
         ip = get_ip(request)
-        if seller_partner.code == 'DONJUAN':
+        if seller_partner.user == president:
             data_seller = {
                 'box': BoxDonJuan.objects.get(office__pk=request.session['office']),
                 'concept': concept.counterpart,
@@ -78,7 +79,7 @@ class UnitSell(APIView):
             }
             movement_partner_manager.create_simple(data_seller)
 
-        if buyer_partner.code == 'DONJUAN':
+        if buyer_partner.user == president:
             data_buyer = {
                 'box': BoxDonJuan.objects.get(office__pk=request.session['office']),
                 'concept': concept,

@@ -8,7 +8,9 @@ from cajas.users.models.group_employee import GroupEmployee
 from cajas.users.models.group import Group
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
-from cajas.webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none, get_president_user
+
+president = get_president_user()
 
 
 class Calendar(LoginRequiredMixin, TemplateView):
@@ -31,19 +33,19 @@ class Calendar(LoginRequiredMixin, TemplateView):
             group = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
             if group and group.units.all().exists():
                 units = group.units.filter(Q(partner__office=office) |
-                                           (Q(partner__code='DONJUAN') &
+                                           (Q(partner__user=president) &
                                             (Q(collector__related_employee__office_country=office) |
                                              Q(collector__related_employee__office=office.office)
                                              ))).distinct()
             else:
                 units = Unit.objects.filter(Q(partner__office=office) |
-                                            (Q(partner__code='DONJUAN') &
+                                            (Q(partner__user=president) &
                                              (Q(collector__related_employee__office_country=office) |
                                               Q(collector__related_employee__office=office.office)
                                               ))).distinct()
         except Employee.DoesNotExist:
             units = Unit.objects.filter(Q(partner__office=office) |
-                                        (Q(partner__code='DONJUAN') &
+                                        (Q(partner__user=president) &
                                          (Q(collector__related_employee__office_country=office) |
                                           Q(collector__related_employee__office=office.office)
                                           ))).distinct()

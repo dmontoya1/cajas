@@ -26,7 +26,7 @@ class PartnerType(Enum):
     class Labels:
         DIRECTO = 'Directo'
         INDIRECTO = 'Indirecto'
-        DONJUAN = 'Don Juan'
+        DONJUAN = 'Presidente'
 
 
 class Partner(models.Model):
@@ -99,7 +99,7 @@ class Partner(models.Model):
                     self.direct_partner.consecutive += 1
                     self.direct_partner.save()
             else:
-                self.code = 'DONJUAN'
+                self.code = 'PRESIDENT'
         super(Partner, self).save(*args, **kwargs)
 
     def get_full_name(self):

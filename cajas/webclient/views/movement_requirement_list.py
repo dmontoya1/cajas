@@ -5,6 +5,9 @@ from django.views.generic import TemplateView
 from cajas.movement.models.movement_request import MovementRequest
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.users.models.partner import Partner
+from cajas.webclient.views.utils import get_president_user
+
+president = get_president_user()
 
 
 class MovementRequireList(LoginRequiredMixin, TemplateView):
@@ -20,5 +23,5 @@ class MovementRequireList(LoginRequiredMixin, TemplateView):
         movements = MovementRequest.objects.all().exclude(concept__name='Retiro Socio Directo')
         context['movements'] = movements
         context['all_offices'] = OfficeCountry.objects.all().order_by('office')
-        context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        context['partners_offices'] = Partner.objects.all().exclude(user=president)
         return context

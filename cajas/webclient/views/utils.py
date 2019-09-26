@@ -1,5 +1,7 @@
 
+from django.db import connection
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from cajas.users.models.charges import Charge
 from cajas.users.models.employee import Employee
@@ -59,3 +61,12 @@ def is_admin_senior(user, office):
         return employee.charge == admin
     except Employee.DoesNotExist:
         return False
+
+
+def get_president_user():
+    charge = get_object_or_404(Charge, name="Presidente")
+    try:
+        employee = Employee.objects.get(charge=charge)
+        return employee.user
+    except:
+        return None

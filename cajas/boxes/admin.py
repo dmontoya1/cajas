@@ -67,7 +67,7 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
 
 @admin.register(BoxDonJuan)
 class BoxDonJuanAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de don Juan por oficina
+    """Administrador de las cajas del Presidente por oficina
         Se agrega INLINE con los movimientos
     """
 
@@ -91,7 +91,7 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
 
 @admin.register(BoxDonJuanUSD)
 class BoxDonJuanUSDAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de don Juan por oficina
+    """Administrador de las cajas del presidente por oficina
         Se agrega INLINE con los movimientos
     """
 

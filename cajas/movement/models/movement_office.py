@@ -16,7 +16,7 @@ class MovementOffice(MovementMixin):
         related_name='movements'
     )
     movement_don_juan = models.IntegerField(
-        "Movimiento Don Juan PK",
+        "Movimiento Presidente PK",
         blank=True,
         null=True
     )
@@ -26,7 +26,7 @@ class MovementOffice(MovementMixin):
         null=True
     )
     movement_don_juan_usd = models.IntegerField(
-        "Movimiento Don Juan Dólares PK",
+        "Movimiento Presidente Dólares PK",
         null=True,
         blank=True
     )

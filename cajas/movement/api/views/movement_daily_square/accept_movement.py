@@ -17,12 +17,15 @@ from cajas.office.services.office_item_create import OfficeItemsManager
 from cajas.units.models.unitItems import UnitItems
 from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_president_user
 
 from ....models.movement_daily_square import MovementDailySquare
 from ....models.movement_daily_square_request_item import MovementDailySquareRequestItem
 from ....services.don_juan_service import DonJuanManager
 from ....services.office_service import MovementOfficeManager
 from ....services.partner_service import MovementPartnerManager
+
+president = get_president_user()
 
 
 class AcceptMovement(APIView):
@@ -54,7 +57,7 @@ class AcceptMovement(APIView):
         else:
             relationship = movement.concept.relationship
             if relationship == Relationship.UNIT:
-                if movement.unit.partner.code == 'DONJUAN':
+                if movement.unit.partner.user == president:
                     data = {
                         'box': BoxDonJuan.objects.get(office=movement.box_daily_square.office),
                         'concept': movement.concept,
@@ -168,7 +171,7 @@ class AcceptMovement(APIView):
                     'ip': get_ip(request)
                 }
                 if loan.provider:
-                    if loan.provider.code == 'DONJUAN':
+                    if loan.provider.user == president:
                         data['box'] = BoxDonJuan.objects.get(office=office)
                         movement = don_juan_manager.create_movement(data)
                     else:
