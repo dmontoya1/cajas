@@ -3,6 +3,7 @@ from django.apps import AppConfig
 
 class TenantConfig(AppConfig):
     name = 'cajas.tenant'
+    verbose_name = "Plataformas"
 
     def ready(self):
         try:

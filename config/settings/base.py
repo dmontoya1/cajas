@@ -107,7 +107,7 @@ TENANT_APPS = [
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 TENANT_MODEL = "tenant.Platform"
-TENANT_USERS_DOMAIN = env("TENANT_USERS_DOMAIN")
+# sTENANT_USERS_DOMAIN = env("TENANT_USERS_DOMAIN")
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
