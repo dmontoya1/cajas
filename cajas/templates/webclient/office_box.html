@@ -43,7 +43,7 @@
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Caja Don Juan
+            Caja {{ president|default:"Presidente"}}
           </a>
         </li>
       {% endif %}
@@ -177,7 +177,7 @@
                        cellspacing="0" style="width:100%">
                   <h3 class="mb-3">Caja {{ office }}</h3>
                   <h3 class="float-right">SALDO CAJA: $
-                    {{ office.box.balance|intcomma }}{{ office.country.currency.abbr }} </h3><br><br>
+                    {{ office.box.balance|intcomma }} {{ office.country.currency.abbr }} </h3><br><br>
                   <a href="?all=true" class="btn float-right " style="background: #5c6bc0; color: #fff;">Ver todos los movimientos</a>
                   <thead>
                   <tr>
@@ -194,7 +194,7 @@
                   <tbody>
                   {% for m in movements %}
                     <tr>
-                      <td>{{ m.responsible.get_full_name }}</td>
+                      <td>{{ m.responsible }}</td>
                       <td><span>{{ m.date|date:"Y-m-d" }}</span></td>
                       <td>{{ m.concept.name }}</td>
                       <td>{{ m.detail }}</td>
@@ -300,8 +300,8 @@
                 <label for="box">Caja de destino</label>
                 <select class="form-control" id="box" name="destine_box" style="width: 100%; height: 20px;">
                   <option selected disabled value="">Selecciona la oficina de destino</option>
-                  <option value="CAJA_DON_JUAN">Caja Don Juan</option>
-                  <option value="CAJA_DON_JUAN_USD">Caja Don Juan Dolares</option>
+                  <option value="CAJA_DON_JUAN">Caja {{ president|default:"Presidente"}}</option>
+                  <option value="CAJA_DON_JUAN_USD">Caja {{ president|default:"Presidente"}} Dolares</option>
                   <option value="CAJA_COLOMBIA">Caja Colombia</option>
                   <option value="CAJA_BANCO">Caja Banco</option>
                 </select>

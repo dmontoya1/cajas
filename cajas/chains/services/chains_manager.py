@@ -11,6 +11,8 @@ from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.movement.services.don_juan_service import DonJuanManager
+from cajas.users.models.charges import Charge
+from cajas.users.models.employee import Employee
 from cajas.users.models.partner import Partner
 from cajas.users.models.user import User
 from cajas.webclient.views.get_ip import get_ip
@@ -87,7 +89,7 @@ class ChainManager(object):
             'responsible': data['responsible'],
             'ip': data['ip']
         }
-        if user == 'DONJUAN':
+        if user == 'PRESIDENT':
             data_pay['box'] = BoxDonJuan.objects.get(office=data['office'])
             don_juan_manager.create_movement(data_pay)
         else:
@@ -97,10 +99,15 @@ class ChainManager(object):
     def get_partner_by_user_and_office(self, user, office):
         return Partner.objects.get(user=user, office=office)
 
+    def __get_president_user(self):
+        charge = get_object_or_404(Charge, name="Presidente")
+        employee = get_object_or_404(Employee, charge=charge)
+        return employee.user
+
     def create_chain_pay_partner_movement(self, data, user_place):
         try:
             concept = Concept.objects.get(name="Pago Puesto Cadena")
-            if user_place.user.document_id == str(1):
+            if user_place.user == self.__get_president_user():
                 data = {
                     'box': BoxDonJuan.objects.get(office=user_place.office),
                     'concept': concept,
@@ -132,7 +139,6 @@ class ChainManager(object):
     def internal_chain_pay(self, data):
         user_place = UserPlace.objects.get(pk=data['user_place'])
         partner_payment = self.create_chain_pay_partner_movement(data, user_place)
-        print(partner_payment)
         if partner_payment:
             place_paid = UserPlacePay.objects.create(
                 user_place=user_place,
@@ -153,8 +159,8 @@ class ChainManager(object):
                     'ip': data['ip']
                 }
 
-                if user_place.user.document_id == str(1):
-                    user_ = 'DONJUAN'
+                if user_place.user == self.__get_president_user():
+                    user_ = 'PRESIDENT'
                 else:
                     user_ = 'SOCIO'
                     data_pay['partner'] = self.get_partner_by_user_and_office(user_place.user, user_place.office)
@@ -164,18 +170,19 @@ class ChainManager(object):
 
     def user_place_update(self, request):
         data = request.data
+        president = self.__get_president_user()
         place = get_object_or_404(UserPlace, pk=data['user_place'])
         office = get_object_or_404(OfficeCountry, pk=data['office'])
         old_user = place.user
         new_user = get_object_or_404(User, pk=data['user'])
-        if old_user.document_id == str(1):
-            old_partner = Partner.objects.get(code='DONJUAN')
+        if old_user == president:
+            old_partner = Partner.objects.get(user=president)
         elif place.office:
             old_partner = get_object_or_404(Partner, user=old_user, office=place.office)
         else:
             old_partner = None
-        if new_user.document_id == str(1):
-            new_partner = Partner.objects.get(code='DONJUAN')
+        if new_user == president:
+            new_partner = Partner.objects.get(user=president)
         else:
             new_partner = get_object_or_404(Partner, user=new_user, office=office)
         today = date.today()
@@ -197,7 +204,7 @@ class ChainManager(object):
                         responsible=request.user,
                         ip=get_ip(request)
                     )
-                    if old_partner.code == 'DONJUAN':
+                    if old_partner.user == president:
                         MovementDonJuan.objects.create(
                             box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept.counterpart,
@@ -226,7 +233,7 @@ class ChainManager(object):
                 actual_place = actual_place.name.split(" ")
                 actual_place_number = actual_place[1]
                 total_places = int(chain_places) - int(actual_place_number)
-                concept2 = get_object_or_404(Concept, name="Pago Puestos Cadena")
+                concept2 = get_object_or_404(Concept, name="Pago Puesto Cadena")
                 MovementPartner.objects.create(
                     box_partner=old_partner.box,
                     concept=concept2,
@@ -237,7 +244,7 @@ class ChainManager(object):
                     responsible=request.user,
                     ip=get_ip(request)
                 )
-                if old_partner.code == 'DONJUAN':
+                if old_partner.user == president:
                     MovementDonJuan.objects.create(
                         box_don_juan=BoxDonJuan.objects.get(office=office),
                         concept=concept2.counterpart,

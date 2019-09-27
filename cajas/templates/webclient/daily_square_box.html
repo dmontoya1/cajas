@@ -45,7 +45,7 @@
         <li class="menu-item-has-children dropdown">
           <a href="{% url 'webclient:box_don_juan' office.slug %}">
             <img src="{% static 'icons/ICONOS-02.png' %}" alt="logo-caja" width="20" height="20" class="mr-3">
-            Caja Don Juan
+            Caja {{ president|default:"Presidente"}}
           </a>
         </li>
       {% endif %}
@@ -173,7 +173,7 @@
                     {% endif %}
                   </h3>
                   <h3 class="float-right">SALDO CAJA: $
-                    {{ box.balance|intcomma }}{{ office.country.currency.abbr }}
+                    {{ box.balance|intcomma }} {{ office.country.currency.abbr }}
                   </h3><br><br>
                   <a href="?all=true" class="btn float-right " style="background: #5c6bc0; color: #fff;">Ver todos los movimientos</a>
 
@@ -649,7 +649,7 @@
                     <option selected disabled value="">Selecciona desde donde sale el préstamo</option>
                     <option value="partner">Caja Socio</option>
                     <option value="office">Caja oficina</option>
-                    <option value="donjuan">Caja Don Juan</option>
+                    <option value="donjuan">Caja {{ president|default:"Presidente"}}</option>
                   </select>
                 </div>
               </div>

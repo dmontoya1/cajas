@@ -13,6 +13,7 @@ from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.office_service import MovementOfficeManager
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.webclient.views.get_ip import get_ip
+from cajas.webclient.views.utils import get_president_user
 
 from ..models import Loan, LoanHistory
 from ..models.loan import LoanType
@@ -21,6 +22,7 @@ User = get_user_model()
 donjuan_manager = DonJuanManager()
 movement_parter_manager = MovementPartnerManager()
 movement_office_manager = MovementOfficeManager()
+president = get_president_user()
 
 
 class LoanManager(object):
@@ -44,7 +46,7 @@ class LoanManager(object):
         if lender_partner.direct_partner:
             provider = lender_partner.direct_partner
         else:
-            provider = get_object_or_404(Partner, code='DONJUAN')
+            provider = get_object_or_404(Partner, user=president)
         if data['time'] == '':
             time = 0
         else:
@@ -144,7 +146,7 @@ class LoanManager(object):
                 data_mov['partner'] = provider
                 movement_parter_manager.create_simple(data_mov)
             elif data['box_from'] == 'donjuan':
-                provider = get_object_or_404(Partner, code='DONJUAN')
+                provider = get_object_or_404(Partner, user=president)
                 loan = Loan.objects.create(
                     lender=lender,
                     provider=provider,
@@ -200,7 +202,7 @@ class LoanManager(object):
 
     def create_third_loan(self, data):
         self.__validate_data(data)
-        lender = get_object_or_404(User, username='donjuan')
+        lender = president
         donjuan = get_object_or_404(Partner, user=lender)
         office = get_object_or_404(OfficeCountry, pk=data['office'])
         box_don_juan = BoxDonJuan.objects.get(partner=donjuan, office=office)

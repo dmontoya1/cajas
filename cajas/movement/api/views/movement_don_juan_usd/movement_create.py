@@ -9,8 +9,6 @@ from cajas.boxes.models.box_don_juan import BoxDonJuan
 from cajas.boxes.models.box_don_juan_usd import BoxDonJuanUSD
 from cajas.concepts.models.concepts import Concept
 from cajas.webclient.views.get_ip import get_ip
-from ....models.movement_don_juan_usd import MovementDonJuanUsd
-from ....models.movement_don_juan import MovementDonJuan
 
 from ....services.don_juan_usd_service import DonJuanUSDManager
 from ....services.don_juan_service import DonJuanManager
@@ -70,6 +68,23 @@ class MovementUSDCreate(APIView):
                 'ip': ip,
             }
             don_juan_manager.create_movement(data_send_1)
+        elif concept.name == 'Traslado entre cajas Colombia':
+            data_send['value'] = data['value']
+            don_juan_usd_manager.create_movement(data_send)
+            if data['movement_type'] == 'OUT':
+                contrapart = 'IN'
+            else:
+                contrapart = 'OUT'
+            data_send_1 = {
+                'concept': concept.counterpart,
+                'date': data['date'],
+                'movement_type': contrapart,
+                'value': data['value_cop'],
+                'detail': data['detail'],
+                'responsible': request.user,
+                'ip': ip,
+            }
+            don_juan_usd_manager.create_traslate_movement(data_send_1)
         else:
             data_send['value'] = data['value']
             don_juan_usd_manager.create_movement(data_send)

@@ -656,7 +656,7 @@
     {% for p in partners %}
       partners['{{ p.code }}'] = '{{ p }}'
     {% endfor %}
-    partners['DONJUAN'] = 'Don Juan'
+    partners['PRESIDENT'] = '{{president}}'
 
 
     $('.partner-closeout').on('submit', function (e) {
@@ -950,7 +950,7 @@
       $('#withdraw-reason').append(
         `
           <option value="" selected disabled>Selecciona un motivo</option>
-          <option value="DJ">Caja Don Juan</option>
+          <option value="DJ">Caja {{ president|default:"Presidente"}}</option>
           <option value="PP">Préstamo Personal</option>
           <option value="IN">Inversión Negocios</option>
           <option value="OT">Otros</option>

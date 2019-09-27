@@ -37,13 +37,13 @@ class MovementDailySquare(MovementMixin):
     )
     movement_don_juan = models.OneToOneField(
         MovementDonJuan,
-        verbose_name='Movimiento Don Juan Contrapartida',
+        verbose_name='Movimiento Presidente Contrapartida',
         on_delete=models.SET_NULL,
         null=True, blank=True
     )
     movement_don_juan_usd = models.OneToOneField(
         MovementDonJuanUsd,
-        verbose_name='Movimiento Don Juan Dolares Contrapartida',
+        verbose_name='Movimiento Presidente Dolares Contrapartida',
         on_delete=models.SET_NULL,
         null=True, blank=True
     )

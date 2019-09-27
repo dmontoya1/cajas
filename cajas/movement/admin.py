@@ -50,7 +50,7 @@ class MovementDailySquareAdmin(admin.ModelAdmin):
 
 
 class MovementDonJuanInline(admin.TabularInline):
-    """Inline para los movimientos de la caja de Don Juan
+    """Inline para los movimientos de la caja de Presidente
     """
 
     model = MovementDonJuan
@@ -63,7 +63,7 @@ class MovementDonJuanInline(admin.TabularInline):
 
 @admin.register(MovementDonJuan)
 class MovementDonJuan(admin.ModelAdmin):
-    """Inline para los movimientos de la caja de Don Juan
+    """Inline para los movimientos de la caja de Presidente
     """
 
     list_display = ('box_don_juan', 'date', 'concept', 'detail', 'value',)
@@ -93,7 +93,7 @@ class MovementColombiaAdmin(admin.ModelAdmin):
 
 @admin.register(MovementPartner)
 class MovementPartnerAdmin(admin.ModelAdmin):
-    """Inline para los movimientos de la caja de Don Juan
+    """Inline para los movimientos de la caja de Presidente
     """
 
     list_display = ('box_partner', 'date', 'concept', 'detail', 'value',)

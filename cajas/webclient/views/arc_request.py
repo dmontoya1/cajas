@@ -43,7 +43,7 @@ class ArcRequest(LoginRequiredMixin, TemplateView):
             else:
                 data['office'] = last_movement_office.balance
                 total_office = last_movement_office.balance
-            # Don Juan Movements
+            # Presidente Movements
             last_movement_don_juan = box_donjuan.movements.filter(
                 date__lte=end_date,
             ).first()

@@ -11,8 +11,11 @@ from cajas.inventory.models.category import Category
 from cajas.users.models import Partner, Employee, DailySquareUnits
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_president_user
 
 from .utils import get_object_or_none, is_secretary, is_admin_senior
+
+president = get_president_user()
 logger = logging.getLogger(__name__)
 
 
@@ -45,7 +48,9 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             group = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
             context['employee'] = employee
             if is_secretary(self.request.user, office) or is_admin_senior(self.request.user, office):
-                context['list_partners'] = Partner.objects.filter(
+                context['list_partners'] = Partner.objects.select_related(
+                    'office', 'box', 'user', 'office__country', 'office__country__currency'
+                ).filter(
                     office=office,
                     is_active=True,
                     box__box_status=BoxStatus.ABIERTA,
@@ -53,12 +58,14 @@ class PartnerList(LoginRequiredMixin, TemplateView):
             else:
                 partners = list()
                 try:
-                    partner = Partner.objects.get(office=office, user=self.request.user)
+                    partner = Partner.objects.select_related(
+                        'office', 'box', 'user', 'office__country', 'office__country__currency'
+                    ).get(office=office, user=self.request.user)
                 except:
                     partner = None
                 if employee and group and employee.user.groups.filter(name='Administrador de Grupo').exists():
                     units = group.units.filter(Q(partner__office=office) |
-                                               (Q(partner__code='DONJUAN') &
+                                               (Q(partner__user=president) &
                                                 (Q(collector__related_employee__office_country=office) |
                                                  Q(collector__related_employee__office=office.office) |
                                                  Q(supervisor__related_employee__office_country=office) |
@@ -71,7 +78,9 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     if partner:
                         if partner not in partners:
                             partners.append(partner)
-                        mini_partners = Partner.objects.filter(direct_partner=partner)
+                        mini_partners = Partner.objects.select_related(
+                            'office', 'box', 'user', 'office__country', 'office__country__currency'
+                        ).filter(direct_partner=partner)
                         for p in mini_partners:
                             if p not in partners:
                                 partners.append(p)
@@ -79,13 +88,17 @@ class PartnerList(LoginRequiredMixin, TemplateView):
                     if partner:
                         if partner not in partners:
                             partners.append(partner)
-                        mini_partners = Partner.objects.filter(direct_partner=partner)
+                        mini_partners = Partner.objects.select_related(
+                            'office', 'box', 'user', 'office__country', 'office__country__currency'
+                        ).filter(direct_partner=partner)
                         for p in mini_partners:
                             if p not in partners:
                                 partners.append(p)
                 context['partner'] = partners
         else:
-            context['list_partners'] = Partner.objects.filter(
+            context['list_partners'] = Partner.objects.select_related(
+                'office', 'box', 'user', 'office__country', 'office__country__currency'
+            ).filter(
                 office=office,
                 is_active=True,
                 box__box_status=BoxStatus.ABIERTA,
@@ -94,5 +107,4 @@ class PartnerList(LoginRequiredMixin, TemplateView):
         context['categories'] = Category.objects.all()
         context['office'] = office
         context['units'] = units
-        logger.exception("Context", context)
         return context

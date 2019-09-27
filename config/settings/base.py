@@ -39,9 +39,19 @@ USE_TZ = False
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL'),
+    'default': {
+        'ENGINE': env("POSTGRES_ENGINE"),
+        'NAME': env("POSTGRES_DB"),
+        'USER': env("POSTGRES_USER"),
+        'PASSWORD': env("POSTGRES_PASSWORD"),
+        'HOST': env("POSTGRES_HOST"),
+        'PORT': env("POSTGRES_PORT"),
+    }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
+DATABASE_ROUTERS = (
+    'tenant_schemas.routers.TenantSyncRouter',
+)
 
 # URLS
 # ------------------------------------------------------------------------------
@@ -52,27 +62,32 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # APPS
 # ------------------------------------------------------------------------------
-DJANGO_APPS = [
+SHARED_APPS = [
+    'tenant_schemas',
+    'cajas.tenant.apps.TenantConfig',
     'jet',
     'jet.dashboard',
+    'django.contrib.contenttypes',
+    # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
+    # 'tenant_users.tenants',  # defined only in shared apps
+    'crispy_forms',
+    'rest_framework',
+    'django_celery_beat',
+]
+
+TENANT_APPS = [
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    'django.contrib.admin',
-]
-THIRD_PARTY_APPS = [
-    'crispy_forms',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',
-    'django_celery_beat',
-]
-LOCAL_APPS = [
+    # 'tenant_users.permissions',  # Defined in both shared apps and tenant apps
     'cajas.api.apps.ApiConfig',
     'cajas.boxes.apps.BoxesConfig',
     'cajas.chains.apps.ChainsConfig',
@@ -89,7 +104,10 @@ LOCAL_APPS = [
     'cajas.users.apps.UsersAppConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "tenant.Platform"
+# sTENANT_USERS_DOMAIN = env("TENANT_USERS_DOMAIN")
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -137,7 +155,6 @@ CELERYD_TASK_TIME_LIMIT = 5 * 60
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
 
 
-
 # PASSWORDS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
@@ -169,6 +186,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    "tenant_schemas.middleware.TenantMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -277,11 +295,10 @@ ADMIN_EMAIL = env('ADMIN_EMAIL')
 ADMIN_URL = 'admin/'
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [
-    ("""Daniel Montoya""", 'dmontoya@apptitud.com.co'),
+    ("""Daniel Montoya""", 'dmontoya.lab@gmail.com'),
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
-
 
 # django-allauth
 # ------------------------------------------------------------------------------

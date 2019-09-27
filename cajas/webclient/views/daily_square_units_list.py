@@ -6,6 +6,9 @@ from django.views.generic import TemplateView
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models import Unit
 from cajas.users.models import User, DailySquareUnits, Employee
+from cajas.webclient.views.utils import get_president_user
+
+president = get_president_user()
 
 
 class DailySquareUnitsList(LoginRequiredMixin, TemplateView):
@@ -29,7 +32,7 @@ class DailySquareUnitsList(LoginRequiredMixin, TemplateView):
         context['employee'] = employee
         context['units'] = daily_square_group.units.all()
         context['units_office'] = Unit.objects.filter(Q(partner__office=office) |
-                                                      (Q(partner__code='DONJUAN') &
+                                                      (Q(partner__user=president) &
                                                        (Q(collector__related_employee__office_country=office) |
                                                         Q(collector__related_employee__office=office.office)
                                                         ))).distinct()

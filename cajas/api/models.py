@@ -2,6 +2,8 @@
 import uuid
 from django.db import models
 
+from .helpers import generate_key
+
 
 class APIKey(models.Model):
     """
@@ -14,6 +16,11 @@ class APIKey(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     key = models.CharField(max_length=40, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = generate_key()
+        super(APIKey, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Llave de API"

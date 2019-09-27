@@ -22,7 +22,9 @@ from cajas.movement.models.movement_partner import MovementPartner
 from cajas.movement.models.movement_don_juan import MovementDonJuan
 from cajas.movement.services.partner_service import MovementPartnerManager
 from cajas.webclient.views.get_ip import get_ip
-from cajas.webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none, get_president_user
+
+president = get_president_user()
 
 
 class PartnerCloseout(APIView):
@@ -66,7 +68,7 @@ class PartnerCloseout(APIView):
                         responsible=request.user,
                         ip=get_ip(request)
                     )
-                    if partner_destiny.code == 'DONJUAN':
+                    if partner_destiny.user == president:
                         MovementDonJuan.objects.create(
                             box_don_juan=BoxDonJuan.objects.get(office=office),
                             concept=concept1.counterpart,

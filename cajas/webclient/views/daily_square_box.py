@@ -13,7 +13,9 @@ from cajas.movement.models.movement_daily_square import MovementDailySquare
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 from cajas.users.models import Employee, DailySquareUnits
-from cajas.webclient.views.utils import get_object_or_none
+from cajas.webclient.views.utils import get_object_or_none, get_president_user
+
+president = get_president_user()
 
 
 class DailySquareBox(LoginRequiredMixin, TemplateView):
@@ -38,7 +40,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
         box_daily_square = BoxDailySquare.objects.select_related('user', 'office').get(user=user, office=office)
         offices = OfficeCountry.objects.select_related('office', 'country').all()
         partners = Partner.objects.select_related('user', 'office', 'direct_partner').filter(
-           Q(office=box_daily_square.office) | Q(code='DONJUAN')).order_by('user__first_name')
+           Q(office=box_daily_square.office) | Q(user=president)).order_by('user__first_name')
         dq_list = User.objects.filter(
            (Q(partner__office=office) | Q(related_employee__office_country=office) |
             Q(related_employee__office=office.office)) & Q(is_daily_square=True)).distinct()
@@ -50,6 +52,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                 'movement_don_juan_usd',
                 'movement_partner',
                 'movement_office',
+                'unit'
             ).filter(
                 box_daily_square=box_daily_square
             )
@@ -61,7 +64,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                 'movement_don_juan_usd',
                 'movement_partner',
                 'movement_office',
-                'responsible',
+                'unit'
             ).filter(
                 box_daily_square=box_daily_square
             )[:50]
@@ -75,7 +78,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                             'collector',
                             'supervisor'
                         ).filter(Q(partner__office=office) |
-                                            (Q(partner__code='DONJUAN') &
+                                            (Q(partner__user=president) &
                                              (Q(collector__related_employee__office_country=office) |
                                               Q(collector__related_employee__office=office.office)
                                               ))).distinct()
@@ -85,7 +88,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                             'collector',
                             'supervisor'
                         ).filter(Q(partner__office=office) |
-                                        (Q(partner__code='DONJUAN') &
+                                        (Q(partner__user=president) &
                                          (Q(collector__related_employee__office_country=office) |
                                           Q(collector__related_employee__office=office.office)
                                           ))).distinct()
@@ -95,7 +98,7 @@ class DailySquareBox(LoginRequiredMixin, TemplateView):
                             'collector',
                             'supervisor'
                         ).filter(Q(partner__office=office) |
-                                        (Q(partner__code='DONJUAN') &
+                                        (Q(partner__user=president) &
                                          (Q(collector__related_employee__office_country=office) |
                                           Q(collector__related_employee__office=office.office)
                                           ))).distinct()

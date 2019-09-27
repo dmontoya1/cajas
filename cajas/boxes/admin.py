@@ -67,13 +67,13 @@ class BoxDailySquareAdmin(admin.ModelAdmin):
 
 @admin.register(BoxDonJuan)
 class BoxDonJuanAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de don Juan por oficina
+    """Administrador de las cajas del Presidente por oficina
         Se agrega INLINE con los movimientos
     """
 
     list_display = ('office', 'balance', 'is_active', 'get_edit_link')
     readonly_fields = ["get_edit_link", ]
-    search_fields = ('office__country__abbr', 'office__number', )
+    search_fields = ('office__country__abbr', )
     exclude = ('last_movement_id', )
 
     def get_edit_link(self, obj=None):
@@ -91,7 +91,7 @@ class BoxDonJuanAdmin(admin.ModelAdmin):
 
 @admin.register(BoxDonJuanUSD)
 class BoxDonJuanUSDAdmin(admin.ModelAdmin):
-    """Administrador de las cajas de don Juan por oficina
+    """Administrador de las cajas del presidente por oficina
         Se agrega INLINE con los movimientos
     """
 

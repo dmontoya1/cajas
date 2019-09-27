@@ -1,7 +1,11 @@
 
+from django.shortcuts import get_object_or_404
+
+from cajas.boxes.models.box_colombia import BoxColombia
 from cajas.concepts.models.concepts import Concept
 
 from ..models.movement_don_juan_usd import MovementDonJuanUsd
+from ..models.movement_box_colombia import MovementBoxColombia
 from .utils import update_movement_balance_on_create, delete_movement_by_box, get_last_movement, \
     update_all_movements_balance_on_create, update_movements_balance, update_movement_type_value, \
     update_movement_balance
@@ -34,6 +38,41 @@ class DonJuanUSDManager(object):
             MovementDonJuanUsd,
             'box_don_juan',
             data['box'],
+            data['date'],
+            movement
+        )
+        return movement
+
+    def create_traslate_movement(self, data):
+        box = BoxColombia.objects.get(name='Caja Colombia')
+        last_movement = get_last_movement(MovementBoxColombia, 'box_office', box, data['date'])
+        try:
+            movement = MovementBoxColombia.objects.create(
+                box_office=box,
+                concept=data['concept'],
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip'],
+            )
+        except:
+            movement = MovementBoxColombia.objects.create(
+                box_office=box,
+                concept=get_object_or_404(Concept, pk=data['concept']),
+                movement_type=data['movement_type'],
+                value=data['value'],
+                detail=data['detail'],
+                date=data['date'],
+                responsible=data['responsible'],
+                ip=data['ip'],
+            )
+        update_movement_balance_on_create(last_movement, movement)
+        update_all_movements_balance_on_create(
+            MovementBoxColombia,
+            'box_office',
+            box,
             data['date'],
             movement
         )
