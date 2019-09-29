@@ -14,7 +14,7 @@ User = get_user_model()
 class DailySquareUnitsInline(admin.StackedInline):
 
     model = DailySquareUnits
-    extra = 1
+    extra = 0
 
 
 class EmployeeAdminInline(admin.StackedInline):
