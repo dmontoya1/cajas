@@ -33,14 +33,22 @@ class EmployeeList(LoginRequiredMixin, TemplateView):
         try:
             if (self.request.user.is_superuser or is_secretary(self.request.user, office) or
                  is_admin_senior(self.request.user, office)):
-                context['employees'] = Employee.objects.filter(office_country=office, user__is_active=True)
-                context['employees1'] = Employee.objects.filter(office=office.office, user__is_active=True)
+                context['employees'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(office_country=office, user__is_active=True)
+                context['employees1'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(office=office.office, user__is_active=True)
                 context['charges'] = Charge.objects.all().exclude(name="Presidente")
             else:
-                context['employees'] = Employee.objects.filter(office_country=office, user=self.request.user)
+                context['employees'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(office_country=office, user=self.request.user)
         except Exception as e:
             logger.exception(str(e))
-            context['employees'] = Employee.objects.filter(office_country=office, user=self.request.user)
+            context['employees'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(office_country=office, user=self.request.user)
 
         context['office'] = office
         context['groups'] = Group.objects.all()

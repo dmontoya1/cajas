@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext, gettext_lazy as _
 
 from cajas.units.admin import UnitInline
 
@@ -59,7 +60,7 @@ class PartnerAdmin(admin.ModelAdmin):
     def get_direct_partner(self, obj):
         if obj.direct_partner:
             return obj.direct_partner.get_full_name()
-        return 'Don Juan'
+        return 'Presidente'
 
     get_direct_partner.short_description = 'Socio Directo'
 

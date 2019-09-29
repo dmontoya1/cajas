@@ -1,0 +1,25 @@
+Lista de conceptos Obligatorios que deben estar en la plataforma creados:
+
+1) Traslado entre cajas Colombia --> Doble
+2) Traslado entre cajas Colombia --> Simple
+3) Ingreso Préstamo Socio Directo
+4) Préstamo empleado
+5) Ingreso Préstamo Terceros
+6) Otros Egresos
+7) Otros Ingresos
+8) Abono Préstamo Empleado
+9) Pago Abono préstamo socio --> Doble
+10) Pago Abono préstamo terceros
+11) Pago Interés préstamo empleado
+12) Pago Interés Préstamo Socio Directo
+13) Pago Interés Préstamo
+14) Devolución Pago Cadenas
+15) Pago Puesto Cadena
+16) Inversión Negocios --> Doble
+17) Compra de unidad
+18) Retiro de Socio
+19) Aprovisionamiento Oficina
+20) Retiro unidad
+21) Inversión Unidad
+22) Aporte personal socio --> Simple Doble
+23) Aporte socio directo --> Simple

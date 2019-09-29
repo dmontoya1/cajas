@@ -50,5 +50,5 @@ if settings.DEBUG:
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
-admin.site.site_header = 'Administrador NFC Inversiones'
-admin.site.site_title = 'Administrador NFC Inversiones'
+admin.site.site_header = 'Administrador SAC'
+admin.site.site_title = 'Administrador SAC'

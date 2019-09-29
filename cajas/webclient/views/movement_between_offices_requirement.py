@@ -5,6 +5,9 @@ from django.views.generic import TemplateView
 from cajas.movement.models.movement_between_office_request import MovementBetweenOfficeRequest
 from cajas.users.models.partner import Partner
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.utils import get_president_user
+
+president = get_president_user()
 
 
 class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
@@ -28,5 +31,5 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
                 )
         context['movements'] = movements
         context['all_offices'] = OfficeCountry.objects.all().order_by('office')
-        context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+        context['partners_offices'] = Partner.objects.all().exclude(president=president)
         return context

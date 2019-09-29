@@ -11,10 +11,12 @@ from cajas.users.models.partner import Partner
 from cajas.inventory.models import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_president_user
 
 from .utils import is_admin_senior, is_secretary
 
 logger = logging.getLogger(__name__)
+president = get_president_user()
 
 
 class UnitsList(LoginRequiredMixin, TemplateView):
@@ -32,19 +34,25 @@ class UnitsList(LoginRequiredMixin, TemplateView):
         try:
             if self.request.user.is_superuser or is_secretary(self.request.user, office) or \
                 is_admin_senior(self.request.user, office):
-                context['units'] = Unit.objects.filter(Q(partner__office=office) |
-                                                       (Q(partner__code='DONJUAN') &
-                                                        (Q(collector__related_employee__office_country=office) |
-                                                         Q(collector__related_employee__office=office.office)
-                                                         ))).distinct()
-                context['employees'] = Employee.objects.filter(
+                context['units'] = Unit.objects.select_related(
+                    'partner', 'partner__user', 'collector', 'supervisor'
+                ).filter(Q(partner__office=office) |
+                           (Q(partner__user=president) &
+                            (Q(collector__related_employee__office_country=office) |
+                             Q(collector__related_employee__office=office.office)
+                             ))).distinct()
+                context['employees'] = Employee.objects.select_related(
+                    'user', 'charge',
+                ).filter(
                     Q(office_country=office) |
                     Q(office=office.office) &
                     Q(user__is_active=True)
                 )
-                context['partners'] = Partner.objects.filter(
+                context['partners'] = Partner.objects.select_related(
+                        'office', 'box', 'user', 'office__country', 'office__country__currency'
+                ).filter(
                     (Q(office=office) & Q(user__is_active=True)) |
-                    Q(code='DONJUAN')
+                    Q(user=president)
                 )
                 context['categories'] = Category.objects.all()
             else:

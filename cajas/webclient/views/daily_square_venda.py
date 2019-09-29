@@ -13,6 +13,9 @@ from cajas.concepts.models.concepts import Concept
 from cajas.movement.models.movement_daily_square import MovementDailySquare
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
+from cajas.webclient.views.utils import get_president_user
+
+president = get_president_user()
 
 
 class DailySquareVenda(LoginRequiredMixin, TemplateView):
@@ -36,7 +39,7 @@ class DailySquareVenda(LoginRequiredMixin, TemplateView):
         total_withdraws = 0
         total_investments = 0
         units = Unit.objects.filter(Q(partner__office=office) |
-                                    (Q(partner__code='DONJUAN') &
+                                    (Q(partner__user=president) &
                                      (Q(collector__related_employee__office_country=office) |
                                       Q(collector__related_employee__office=office.office)
                                       ))).distinct()

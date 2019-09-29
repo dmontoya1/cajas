@@ -27,11 +27,11 @@ class OfficeBox(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
         office = get_object_or_404(OfficeCountry, slug=slug)
         context['office'] = office
         context['categories'] = Category.objects.all()
-        context['offices'] = OfficeCountry.objects.all()
+        context['offices'] = OfficeCountry.objects.select_related('office', 'country').all()
         box_office = office.box
         if self.request.GET.get('all'):
-            movements = box_office.movements.all()
+            movements = box_office.movements.select_related('responsible', 'concept').all()
         else:
-            movements = box_office.movements.all()[:50]
+            movements = box_office.movements.select_related('responsible', 'concept').all()[:50]
         context['movements'] = movements
         return context

@@ -3,7 +3,6 @@ from datetime import datetime
 
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from cajas.boxes.models import BoxDailySquare
@@ -12,10 +11,12 @@ from cajas.inventory.models.category import Category
 from cajas.office.models.officeCountry import OfficeCountry
 from cajas.units.models.units import Unit
 from cajas.users.models import User, DailySquareUnits, Employee, Partner, GroupEmployee
+from cajas.webclient.views.utils import get_president_user
 
 from .utils import is_secretary, get_object_or_none, is_admin_senior
 
 logger = logging.getLogger(__name__)
+president = get_president_user()
 
 
 class DailySquareList(LoginRequiredMixin, TemplateView):
@@ -39,7 +40,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
             'collector',
             'supervisor'
         ).filter(
-            Q(partner__office=office) | (Q(partner__code='DONJUAN') &
+            Q(partner__office=office) | (Q(partner__user=president) &
              (Q(collector__related_employee__office_country=office) |
              Q(collector__related_employee__office=office.office)
               ))).distinct()
@@ -59,7 +60,9 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 ).distinct()
                 dq_total = 0
                 for dq in dq_list:
-                    box, created = BoxDailySquare.objects.get_or_create(user=dq, office=office)
+                    box, created = BoxDailySquare.objects.select_related(
+                        'user', 'office', 'office__country'
+                    ).get_or_create(user=dq, office=office)
                     dq_total += box.balance
                 context['dq_total'] = dq_total
             else:
@@ -89,7 +92,7 @@ class DailySquareList(LoginRequiredMixin, TemplateView):
                 group_units = get_object_or_none(DailySquareUnits, employee=employee, employee__office_country=office)
                 if group_units and group_units.units.all().exists():
                     units = group_units.units.filter(Q(partner__office=office) |
-                                                     (Q(partner__code='DONJUAN') &
+                                                     (Q(partner__user=president) &
                                                       (Q(collector__related_employee__office_country=office) |
                                                        Q(collector__related_employee__office=office.office)
                                                        ))).distinct()

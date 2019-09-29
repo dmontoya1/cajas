@@ -7,8 +7,10 @@ from django.views.generic import TemplateView
 from cajas.users.models import Partner, Employee
 from cajas.office.models.office import Office
 from cajas.office.models.officeCountry import OfficeCountry
+from cajas.webclient.views.utils import get_president_user
 
 logger = logging.getLogger(__name__)
+president = get_president_user()
 
 
 class Home(LoginRequiredMixin, TemplateView):
@@ -60,7 +62,6 @@ class Home(LoginRequiredMixin, TemplateView):
                     context['actual_partners'] = Partner.objects.filter(user=user)
         else:
             context['offices'] = Office.objects.all()
-            context['partners_offices'] = Partner.objects.all().exclude(code='DONJUAN')
+            context['partners_offices'] = Partner.objects.all().exclude(user=president)
         context['all_offices'] = OfficeCountry.objects.all().order_by('office')
-        # print(context)
         return context
