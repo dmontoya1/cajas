@@ -31,5 +31,5 @@ class MovementBetweenOfficesRequire(LoginRequiredMixin, TemplateView):
                 )
         context['movements'] = movements
         context['all_offices'] = OfficeCountry.objects.all().order_by('office')
-        context['partners_offices'] = Partner.objects.all().exclude(president=president)
+        context['partners_offices'] = Partner.objects.all().exclude(user=president)
         return context
