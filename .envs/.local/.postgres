@@ -1,13 +1,9 @@
 # PostgreSQL
 # ------------------------------------------------------------------------------
 POSTGRES_ENGINE=tenant_schemas.postgresql_backend
-# POSTGRES_HOST=postgres
-# POSTGRES_PORT=5432
-# POSTGRES_DB=cajas
-# POSTGRES_USER=offIdZZyrifEHVkimoPTqiSozqvfSPOK
-# POSTGRES_PASSWORD=OfUzaYipMuNqQUjc0zcpLvsXPdwbHm62rR7MB8f1APkzPznLZCgYbtWZ1glz0onW
-POSTGRES_HOST=cajas.chfm7qntsqxs.us-east-1.rds.amazonaws.com
+POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=sac_production
-POSTGRES_USER=sac_master
-POSTGRES_PASSWORD=p8yjfE3V4Q23fHT
+POSTGRES_DB=cajas
+POSTGRES_USER=offIdZZyrifEHVkimoPTqiSozqvfSPOK
+POSTGRES_PASSWORD=OfUzaYipMuNqQUjc0zcpLvsXPdwbHm62rR7MB8f1APkzPznLZCgYbtWZ1glz0onW
+

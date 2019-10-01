@@ -19,6 +19,7 @@ from .views.groups import Groups
 from .views.home_view import Home
 from .views.investment_list import InvestmentList
 from .views.investment_pay_list import InvestmentPaymentList
+from .views.landing import Landing
 from .views.loan_create import LoanCreate
 from .views.loan_list import LoanList
 from .views.loan_payment_list import LoanPaymentList
@@ -120,4 +121,7 @@ urlpatterns = [
     path("office/<slug:slug>/investments-list/", InvestmentList.as_view(), name='investment_list'),
     path("office/<slug:slug>/investment/<int:pk>/payments/", InvestmentPaymentList.as_view(),
          name='investment_pay_list'),
+
+    # Landing
+    path("landing/", Landing.as_view(), name='landing'),
 ]

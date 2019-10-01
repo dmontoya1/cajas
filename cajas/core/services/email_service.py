@@ -178,3 +178,21 @@ class EmailManager(object):
                 }
                 subject = "Tope informativo"
                 self.send_email(ctx, subject, e.user.email)
+
+    def send_landing_email(self, data):
+        domain = Site.objects.get_current().domain
+        url = 'https://{}{}'.format(domain, reverse('webclient:landing'))
+        ctx = {
+            "title": "Se quieren contactar contigo desde la Landing",
+            "content": "Alguien está interesado en obtener los servicios de SAC. Te dejo los datos: \n"
+                       "Nombre: {}. Correo: {}. Teléfono: {}. Mensaje: {}".format(
+                        data['name'],
+                        data['email'],
+                        data['phone'],
+                        data['message']
+            ),
+            "url": url,
+            "action": "Ir a la plataforma"
+        }
+        subject = "Se qiueren contactar contigo desde la landing"
+        self.send_email(ctx, subject, settings.ADMIN_EMAIL)
