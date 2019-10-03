@@ -198,8 +198,12 @@ class LoanPaymentManager(object):
         loan.save()
 
     def update_all_payments_balance_partner_loan(self, payments, loan, exchange):
-        balance_cop = 0
-        for payment in payments:
+        balance_cop = loan.value_cop
+        first_movement = payments.first()
+        list_payments = list(payments)
+        if first_movement.history_type == LoanHistory.LOAN:
+            list_payments.pop(0)
+        for payment in list_payments:
             if payment.history_type == LoanHistory.LOAN:
                 payment.balance_cop = balance_cop + payment.value_cop
                 payment.balance = payment.balance_cop / exchange.exchange_cop_abono
@@ -218,8 +222,12 @@ class LoanPaymentManager(object):
         loan.save()
 
     def update_all_payments_balance_employee_loan(self, payments, loan):
-        balance = 0
-        for payment in payments:
+        balance = loan.value
+        first_movement = payments.first()
+        list_payments = list(payments)
+        if first_movement.history_type == LoanHistory.LOAN:
+            list_payments.pop(0)
+        for payment in list_payments:
             if payment.history_type == LoanHistory.LOAN:
                 payment.balance = balance + payment.value
                 payment.balance_cop = 0
