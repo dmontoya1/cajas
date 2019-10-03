@@ -5,24 +5,28 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from cajas.boxes.models.box_don_juan import BoxDonJuan
-from cajas.users.models.employee import Employee
-from cajas.users.models.partner import Partner
 from cajas.concepts.models.concepts import Concept
-from cajas.office.models.officeCountry import OfficeCountry
+from cajas.general_config.models.exchange import Exchange
 from cajas.movement.services.don_juan_service import DonJuanManager
 from cajas.movement.services.office_service import MovementOfficeManager
 from cajas.movement.services.partner_service import MovementPartnerManager
+from cajas.office.models.officeCountry import OfficeCountry
+from cajas.users.models.employee import Employee
+from cajas.users.models.partner import Partner
 from cajas.webclient.views.get_ip import get_ip
-from cajas.webclient.views.utils import get_president_user
+from cajas.webclient.views.utils import get_president_user, get_object_or_none
 
 from ..models import Loan, LoanHistory
 from ..models.loan import LoanType
+
+from .loan_payment_service import LoanPaymentManager
 
 User = get_user_model()
 donjuan_manager = DonJuanManager()
 movement_parter_manager = MovementPartnerManager()
 movement_office_manager = MovementOfficeManager()
 president = get_president_user()
+loan_payment_manager = LoanPaymentManager()
 
 
 class LoanManager(object):
@@ -43,6 +47,11 @@ class LoanManager(object):
             loan_type=LoanType.SOCIO_DIRECTO,
             office=office
         ).last()
+        exchange = get_object_or_none(
+            Exchange,
+            currency=office.country.currency,
+            month__month=datetime.now().month,
+        )
         if lender_partner.direct_partner:
             provider = lender_partner.direct_partner
         else:
@@ -62,7 +71,8 @@ class LoanManager(object):
                 interest=data['interest'],
                 time=time,
                 exchange=data['exchange'],
-                balance=0
+                balance=float(data['value']),
+                balance_cop=float(data['value_cop'])
             )
             LoanHistory.objects.create(
                 loan=loan,
@@ -100,6 +110,8 @@ class LoanManager(object):
             'ip': get_ip(data['request'])
         }
         movement_parter_manager.create_double(data)
+        all_payments = loan.related_payments.order_by('date', 'pk')
+        loan_payment_manager.update_all_payments_balance_partner_loan(all_payments, loan, exchange)
         return loan
 
     def create_employee_loan(self, data):
@@ -107,7 +119,7 @@ class LoanManager(object):
         lender_employee = get_object_or_404(Employee, pk=data['lender'])
         lender = lender_employee.user
         office = get_object_or_404(OfficeCountry, pk=data['office'])
-        old_loan = Loan.objects.filter(
+        loan = Loan.objects.filter(
             lender=lender,
             office=office,
             loan_type=LoanType.EMPLEADO
@@ -127,7 +139,7 @@ class LoanManager(object):
             time = 0
         else:
             time = data['time']
-        if not old_loan:
+        if not loan:
             if data['box_from'] == 'partner':
                 provider = get_object_or_404(Partner, pk=data['provider'])
                 loan = Loan.objects.create(
@@ -140,7 +152,8 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=0
+                    balance=data['value'],
+                    balance_cop=0
                 )
                 data_mov['box'] = provider.box
                 data_mov['partner'] = provider
@@ -157,7 +170,8 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=0
+                    balance=data['value'],
+                    balance_cop=0
                 )
                 data_mov['box'] = BoxDonJuan.objects.get(office=office)
                 donjuan_manager.create_movement(data_mov)
@@ -171,7 +185,8 @@ class LoanManager(object):
                     interest=data['interest'],
                     time=time,
                     exchange=data['exchange'],
-                    balance=float(0)
+                    balance=data['value'],
+                    balance_cop=0
                 )
                 data_mov['box_office'] = office.box
                 movement_office_manager.create_movement(data_mov)
@@ -188,17 +203,20 @@ class LoanManager(object):
             )
         else:
             LoanHistory.objects.create(
-                loan=old_loan,
+                loan=loan,
                 history_type=LoanHistory.LOAN,
                 movement_type=LoanHistory.IN,
                 value=data['value'],
                 value_cop=0,
                 date=data['date'],
-                balance=old_loan.balance + int(data['value']),
+                balance=loan.balance + int(data['value']),
                 balance_cop=0
             )
-            old_loan.interest = data['interest']
-            old_loan.save()
+            loan.interest = data['interest']
+            loan.save()
+
+        all_payments = loan.related_payments.order_by('date', 'pk')
+        loan_payment_manager.update_all_payments_balance_employee_loan(all_payments, loan)
 
     def create_third_loan(self, data):
         self.__validate_data(data)

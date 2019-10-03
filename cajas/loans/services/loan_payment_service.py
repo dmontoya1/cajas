@@ -13,8 +13,7 @@ from cajas.movement.services.office_service import MovementOfficeManager
 from cajas.office.models import OfficeCountry
 from cajas.users.models import Partner
 from cajas.webclient.views.get_ip import get_ip
-from cajas.webclient.views.utils import get_object_or_none
-from cajas.webclient.views.utils import get_president_user
+from cajas.webclient.views.utils import get_object_or_none, get_president_user
 
 from ..models.loan import Loan, LoanType
 from ..models.loan_history import LoanHistory
@@ -187,7 +186,7 @@ class LoanPaymentManager(object):
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
             value_cop=request.data['value_cop'],
-            date=datetime.now(),
+            date=request.data['date'],
             balance=loan.balance,
             balance_cop=loan.balance_cop
         )
