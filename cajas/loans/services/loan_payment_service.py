@@ -186,7 +186,7 @@ class LoanPaymentManager(object):
             movement_type=LoanHistory.OUT,
             value=request.data['value'],
             value_cop=request.data['value_cop'],
-            date=datetime.now(),
+            date=request.data['date'],
             balance=loan.balance,
             balance_cop=loan.balance_cop
         )
