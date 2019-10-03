@@ -21,8 +21,6 @@ logger = logging.getLogger(__name__)
 def webclient_processor(request):
     schema_name = connection.schema_name
     tenant = Platform.objects.get(schema_name=schema_name)
-    print("Contexto: ", schema_name)
-    print("Contexto", tenant)
 
     with tenant_context(tenant):
         try:
@@ -94,7 +92,6 @@ def webclient_processor(request):
                 'is_admin_senior': is_admin_senior,
                 'president': president.get_full_name()
             }
-            print("Contextoooo: ", context['president'])
         except Exception as e:
             print(e)
             logger.exception("Exception en Context Processor", e)
