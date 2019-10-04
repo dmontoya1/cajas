@@ -218,7 +218,7 @@ class LoanPaymentManager(object):
                 payment.save()
             balance_cop = payment.balance_cop
         loan.balance_cop = balance_cop
-        loan.balance = balance_cop / exchange.exchange_cop_abono
+        loan.balance = float(balance_cop) / exchange.exchange_cop_abono
         loan.save()
 
     def update_all_payments_balance_employee_loan(self, payments, loan):
